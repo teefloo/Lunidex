@@ -6,10 +6,12 @@ import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { useTCGDemoOwnership } from '@/hooks/useTCGDemoOwnership';
 import { getCollectionSetAlbum } from '@/lib/api/tcg';
+import type { TCGSetAlbumData } from '@/types/tcg';
 import { TCGAlbumPage } from '@/components/tcg/TCGAlbumPage';
 import { useMounted } from '@/hooks/useMounted';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import Header from '@/components/layout/Header';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
 import { SyncStatusPanel } from '@/components/auth/SyncStatusPanel';
@@ -25,6 +27,7 @@ import { usePrimeDexStore } from '@/store/primedex';
 interface TCGSetAlbumPageProps {
   setId: string;
   language: string;
+  initialAlbum?: TCGSetAlbumData;
   activation?: boolean;
   collectionKey?: string;
   returnQuery?: string;
@@ -35,6 +38,7 @@ interface TCGSetAlbumPageProps {
 export function TCGSetAlbumPage({
   setId,
   language,
+  initialAlbum,
   activation = false,
   collectionKey,
   returnQuery,
@@ -101,6 +105,7 @@ export function TCGSetAlbumPage({
   const albumQuery = useQuery({
     queryKey: ['tcg', 'collection-set-album-v3', setId, resolvedLang],
     queryFn: ({ signal }) => getCollectionSetAlbum(setId, resolvedLang, signal),
+    initialData: initialAlbum,
     staleTime: 60 * 60 * 1000,
     retry: false,
     enabled: mounted,
@@ -110,15 +115,24 @@ export function TCGSetAlbumPage({
     <div className="app-page">
       <Header />
       <main className="page-shell page-shell--header-offset relative pb-40">
+        <Breadcrumbs
+          items={[
+            { label: t('common.home', { defaultValue: 'Home' }), href: localeHref('/') },
+            { label: t('tcg.collection_title'), href: localeHref('/tcg/collection') },
+            { label: albumQuery.data?.set.name ?? setId },
+          ]}
+          homeLabel={t('common.home', { defaultValue: 'Home' })}
+          className="!px-0 !pt-0 mb-6"
+        />
         {(user && authLoading) || (!isDemo && syncStatus !== 'ready') || albumQuery.isPending || (albumQuery.isError && !albumQuery.data) ? (
           <div className="mb-6">
             <Link
               href={isDemo ? localeHref(`/tcg/start?${startQuery}`) : collectionHref}
               className="inline-flex min-h-11 items-center text-sm font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring"
             >
-              ← {t('tcg.collection_title')}
+              ← {isDemo ? t('tcg.demo.exit_demo') : t('tcg.collection_title')}
             </Link>
-            <h1 className="mt-3 text-2xl font-black uppercase tracking-tight sm:text-3xl">
+            <h1 className="mt-3 text-2xl font-black tracking-tight sm:text-3xl">
               {t('tcg.collection_title')}
             </h1>
             <p className="mt-1 max-w-2xl text-sm font-bold uppercase leading-relaxed tracking-[0.08em] text-foreground/60">
@@ -179,10 +193,17 @@ export function TCGSetAlbumPage({
             />
           </>
         ) : (
-          <div className="flex items-center justify-center py-20">
-            <p className="text-sm font-black uppercase tracking-[0.1em] text-foreground/30">
-              {t('tcg.set_not_found', { defaultValue: 'Set not found' })}
-            </p>
+          <div className="mx-auto flex max-w-2xl flex-col items-center justify-center rounded-sm border border-dashed border-border/60 px-5 py-12 text-center">
+            <h1 className="text-2xl font-black">{t('tcg.demo.unavailable_set_title')}</h1>
+            <p className="mt-2 max-w-md text-sm leading-6 text-foreground/60">{t('tcg.demo.unavailable_set_description')}</p>
+            <div className="mt-5 flex flex-wrap justify-center gap-3">
+              <Link href={localeHref(`/tcg/start?${startQuery}`)} className="inline-flex min-h-11 items-center rounded-sm border border-primary/40 px-4 text-sm font-bold text-primary hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+                {t('tcg.demo.choose_another_set')}
+              </Link>
+              <Link href={collectionHref} className="inline-flex min-h-11 items-center rounded-sm border border-border px-4 text-sm font-bold hover:bg-muted/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+                {t('tcg.collection_title')}
+              </Link>
+            </div>
           </div>
         )}
       </main>

@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   AlertTriangle,
@@ -14,7 +14,6 @@ import {
   Boxes,
   CalendarDays,
   Check,
-  ChevronDown,
   CloudOff,
   Database,
   Download,
@@ -79,7 +78,7 @@ import {
   type SealedProductDetailResponse,
   type SealedSourcesResponse,
 } from '@/lib/api/tcg-sealed';
-import { SEALED_SUBVIEWS, getSealedSubnavPath } from '@/lib/tcg-sealed-navigation';
+import { SealedWorkspaceNavigation } from '@/components/tcg/SealedWorkspaceNavigation';
 import type {
   SealedProduct,
   SealedProductLanguage,
@@ -274,75 +273,6 @@ function ProductPriceHistoryChart({ prices, transactions, language, t }: { price
     <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-[10px] font-bold uppercase tracking-[0.1em] text-foreground/55">{series.map((item) => <span key={item.key} className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full" style={{ backgroundColor: item.color }} aria-hidden="true" />{item.label}</span>)}<span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-emerald-400" aria-hidden="true" />{t('tcg.sealed.buy')}</span><span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-violet-400" aria-hidden="true" />{t('tcg.sealed.sell')}</span></div>
     <div className="mt-2 flex justify-between text-[10px] font-bold uppercase tracking-[0.12em] text-foreground/40"><span>{dateLabel(prices[0]?.day, language)}</span><span>{money(prices.at(-1)?.metrics.trendCents, language)}</span><span>{dateLabel(prices.at(-1)?.day, language)}</span></div>
   </div>;
-}
-
-function SealedSubnav({ view, localizedHref, t }: { view: SealedView; localizedHref: (path: string) => string; t: (key: string, options?: Record<string, unknown>) => string }) {
-  const reportMenuRef = useRef<HTMLDetailsElement>(null);
-  const toolsMenuRef = useRef<HTMLDetailsElement>(null);
-  const primaryViews = SEALED_SUBVIEWS.filter((item) => item.section === 'main');
-  const reportViews = SEALED_SUBVIEWS.filter((item) => item.section === 'reports');
-  const toolViews = SEALED_SUBVIEWS.filter((item) => item.section === 'tools');
-  const activeReport = reportViews.some((item) => item.key === view);
-  const activeTool = toolViews.some((item) => item.key === view);
-
-  useEffect(() => {
-    const closeOnOutsidePointer = (event: PointerEvent) => {
-      if (!(event.target instanceof Node)) return;
-      for (const menu of [reportMenuRef.current, toolsMenuRef.current]) {
-        if (menu?.open && !menu.contains(event.target)) menu.open = false;
-      }
-    };
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return;
-      const openedMenu = [reportMenuRef.current, toolsMenuRef.current].find((menu) => menu?.open);
-      if (!openedMenu) return;
-      event.preventDefault();
-      openedMenu.open = false;
-      openedMenu.querySelector('summary')?.focus();
-    };
-    document.addEventListener('pointerdown', closeOnOutsidePointer);
-    document.addEventListener('keydown', closeOnEscape);
-    return () => {
-      document.removeEventListener('pointerdown', closeOnOutsidePointer);
-      document.removeEventListener('keydown', closeOnEscape);
-    };
-  }, []);
-  const renderLinks = (items: (typeof SEALED_SUBVIEWS)[number][]) => items.map((item) => (
-    <Link
-      key={item.key}
-      href={localizedHref(item.path)}
-      aria-current={view === item.key ? 'page' : undefined}
-      data-active={view === item.key ? 'true' : undefined}
-      className="sealed-subnav-link"
-    >
-      {t(`tcg.sealed.${item.labelKey}`)}
-    </Link>
-  ));
-
-  return (
-    <nav className="sealed-subnav" aria-label={t('tcg.sealed.title')}>
-      <div className="sealed-subnav-primary">{renderLinks(primaryViews)}</div>
-      <details ref={reportMenuRef} className="sealed-subnav-menu">
-        <summary className={activeReport ? 'sealed-subnav-menu-trigger is-active' : 'sealed-subnav-menu-trigger'}>
-          {t('tcg.sealed.reports', { defaultValue: 'Reports' })}<ChevronDown aria-hidden="true" className="h-3.5 w-3.5" />
-        </summary>
-        <div className="sealed-subnav-menu-panel">{renderLinks(reportViews)}</div>
-      </details>
-      <details ref={toolsMenuRef} className="sealed-subnav-menu">
-        <summary className={activeTool ? 'sealed-subnav-menu-trigger is-active' : 'sealed-subnav-menu-trigger'}>
-          {t('nav.tools', { defaultValue: 'Tools' })}<ChevronDown aria-hidden="true" className="h-3.5 w-3.5" />
-        </summary>
-        <div className="sealed-subnav-menu-panel">{renderLinks(toolViews)}</div>
-      </details>
-      <Link
-        href={localizedHref(getSealedSubnavPath('market'))}
-        aria-current={view === 'market' ? 'page' : undefined}
-        className="sealed-subnav-link sealed-subnav-market"
-      >
-        {t('tcg.nav_sealed_market', { defaultValue: 'Public sealed market' })}
-      </Link>
-    </nav>
-  );
 }
 
 function PeriodBar({
@@ -746,7 +676,7 @@ export function SealedPortfolioPage({ view: rawView, productId }: { view: string
   };
 
   if (view === 'market') return <PageFrame>
-    <SealedSubnav view="market" localizedHref={localizedHref} t={t} />
+    <SealedWorkspaceNavigation view="market" />
     <PublicMarketCatalogueView
       data={publicMarket.data}
       error={publicMarket.error}
@@ -761,10 +691,10 @@ export function SealedPortfolioPage({ view: rawView, productId }: { view: string
     />
   </PageFrame>;
 
-  const navigationView = view === 'product' ? 'collection' : view;
+  const navigationView = view === 'product' ? 'portfolio-product' : view;
   const privatePageContext = (
     <>
-      <SealedSubnav view={navigationView} localizedHref={localizedHref} t={t} />
+      <SealedWorkspaceNavigation view={navigationView} currentLabel={view === 'product' ? t('tcg.sealed.product') : undefined} />
       <section className="mb-6 max-w-3xl" aria-labelledby="sealed-page-title">
         <p className="page-eyebrow">{t('tcg.sealed.eyebrow')}</p>
         <h1 id="sealed-page-title" className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">
@@ -783,7 +713,7 @@ export function SealedPortfolioPage({ view: rawView, productId }: { view: string
   const overviewError = overview.error;
   const overviewErrorPresentation = overviewError ? presentSealedError(overviewError, t) : null;
   return <PageFrame>
-    <SealedSubnav view={view === 'product' ? 'collection' : view} localizedHref={localizedHref} t={t} />
+    <SealedWorkspaceNavigation view={navigationView} currentLabel={view === 'product' ? t('tcg.sealed.product') : undefined} />
     <section className="page-header-surface relative mb-6 overflow-hidden p-5 sm:p-7">
       <div className="pointer-events-none absolute -right-24 -top-24 h-56 w-56 rounded-full bg-primary/10 blur-3xl" aria-hidden="true" />
       <div className="relative flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">

@@ -11,13 +11,15 @@ import { TCGCardDetailContent } from './TCGCardDetailContent';
 export function TCGCardDetailRoute({
   card,
   tcgLanguage = 'en',
+  returnHref,
 }: {
   card: TCGCard | null;
   tcgLanguage?: TCGCardLanguage;
+  returnHref?: string;
 }) {
   const localeHref = useLocaleHref();
   const { t } = useTranslation();
-  const returnHref = card?.set?.id
+  const fallbackHref = card?.set?.id
     ? localeHref(`/tcg/sets/${encodeURIComponent(card.set.id)}?tcgLang=${encodeURIComponent(tcgLanguage)}`)
     : localeHref(`/tcg?tcgLang=${encodeURIComponent(tcgLanguage)}`);
 
@@ -25,7 +27,7 @@ export function TCGCardDetailRoute({
     <div className="app-page">
       <main className="page-shell pb-24 pt-8">
         <Link
-          href={returnHref}
+          href={returnHref ?? fallbackHref}
           prefetch={false}
           className="glass-control mb-6 inline-flex min-h-11 items-center gap-2 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
         >

@@ -36,9 +36,9 @@ describe('navigation registry', () => {
   it.each([
     ['/fr/tcg/collection/fr/base-set', 'collection', 'collection'],
     ['/en/tcg/cards/base1-4', 'catalog', 'catalog'],
-    ['/de/tcg/sealed/market/123', 'sealed-market', 'catalog'],
-    ['/fr/tcg/sealed/releases', 'sealed-market', 'catalog'],
-    ['/zh/tcg/sealed/buy-safely', 'sealed-market', 'catalog'],
+    ['/de/tcg/sealed/market/123', 'sealed-market', 'collection'],
+    ['/fr/tcg/sealed/releases', 'sealed-market', 'collection'],
+    ['/zh/tcg/sealed/buy-safely', 'sealed-market', 'collection'],
     ['/ja/pokemon/pikachu', 'pokedex', 'pokedex'],
     ['/ko/compare', 'compare', 'play'],
     ['/fr/quiz', 'quiz', 'play'],

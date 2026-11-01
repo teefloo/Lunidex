@@ -261,7 +261,8 @@ function getTcgResourceProbe(
   requestedTcgLanguage: string | null,
 ): ResourceProbe | null {
   const segments = pathname.split('/').filter(Boolean);
-  if (segments[0] !== locale || segments.length !== 4 || segments[1] !== 'tcg') return null;
+  if (segments[0] !== locale || segments[1] !== 'tcg') return null;
+  if (segments.length !== 4) return null;
 
   let identifier: string;
   try {
@@ -289,7 +290,7 @@ function getTcgResourceProbe(
         : undefined,
     };
   }
-  if (segments[2] === 'sets' || segments[2] === 'collection') {
+  if (segments[2] === 'sets') {
     return {
       kind: 'tcg-set',
       url: `${TCGDEX_BASE_URL}/${probeLocale}/sets/${encodedIdentifier}`,
@@ -587,13 +588,8 @@ export async function proxy(request: NextRequest) {
       return hardNotFoundResponse(request, urlLocale);
     }
     if (isDocumentRequest) {
-      const isPrivateCollectionAlbum = segments.length === 4
-        && segments[1] === 'tcg'
-        && segments[2] === 'collection';
       const probe = getResourceProbe(pathname, urlLocale)
-        ?? (isPrivateCollectionAlbum
-          ? null
-          : getTcgResourceProbe(pathname, urlLocale, request.nextUrl.searchParams.get('tcgLang')));
+        ?? getTcgResourceProbe(pathname, urlLocale, request.nextUrl.searchParams.get('tcgLang'));
       if (probe && (await probeResource(probe)) === false) {
         return hardNotFoundResponse(request, urlLocale);
       }

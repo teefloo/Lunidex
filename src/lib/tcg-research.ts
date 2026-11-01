@@ -277,6 +277,7 @@ function writeList(params: URLSearchParams, key: string, values?: string[] | nul
 
 function normalizeViewMode(viewMode?: TCGCardViewMode | string | null): TCGCardViewMode {
   if (viewMode === 'compact') return DEFAULT_VIEW_MODE;
+  if (viewMode === 'list') return 'table';
   if (viewMode === 'visual' || viewMode === 'table' || viewMode === 'scan') return viewMode;
   return DEFAULT_VIEW_MODE;
 }

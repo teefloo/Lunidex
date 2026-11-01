@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Suspense } from 'react';
 import Header from '@/components/layout/Header';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
+import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
 import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE, localeHref } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
@@ -45,11 +48,18 @@ export async function BoosterExplainer({ kind }: { kind: GuideKind }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumb) }} />
       <Header />
       <main className="page-shell page-shell--header-offset mx-auto max-w-5xl pb-24">
-        <nav aria-label={t('tcg.page_title')} className="mb-8 flex flex-wrap gap-3 text-sm font-semibold">
-          <Link href={localeHref('/tcg', language)} className="glass-btn inline-flex min-h-11 items-center px-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">{t('booster_guides.links.catalog')}</Link>
-          <Link href={localeHref('/tcg/pull-rates', language)} aria-current={kind === 'pull' ? 'page' : undefined} className="glass-btn inline-flex min-h-11 items-center px-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">{t('booster_guides.links.pull')}</Link>
-          <Link href={localeHref('/tcg/booster-value', language)} aria-current={kind === 'value' ? 'page' : undefined} className="glass-btn inline-flex min-h-11 items-center px-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">{t('booster_guides.links.value')}</Link>
-        </nav>
+        <Suspense fallback={<div className="h-12 rounded-sm border border-border/45 bg-card/55" aria-hidden="true" />}>
+          <TCGPageTabs context="catalog" />
+        </Suspense>
+        <Breadcrumbs
+          items={[
+            { label: t('common.home'), href: localeHref('/', language) },
+            { label: t('tcg.page_title'), href: localeHref('/tcg', language) },
+            { label: t(`${prefix}.title`) },
+          ]}
+          homeLabel={t('common.home')}
+          className="!px-0 !pt-0 mb-8"
+        />
         <article className="space-y-10">
           <header className="max-w-3xl">
             <h1 className="text-4xl font-black tracking-tight text-foreground sm:text-5xl">{t(`${prefix}.title`)}</h1>

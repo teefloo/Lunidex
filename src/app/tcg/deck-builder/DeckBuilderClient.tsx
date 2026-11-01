@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { Plus, Minus, Trash2, LayoutGrid, Search, Loader2, X } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import PageHeader from '@/components/layout/PageHeader';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useTranslation } from '@/lib/i18n';
@@ -16,6 +17,7 @@ import { tcgKeys } from '@/lib/api/keys';
 import { getCardMarketValue } from '@/lib/tcg-collection';
 import { cn } from '@/lib/utils';
 import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { capturePostHogEvent } from '@/lib/posthog-client';
 import { POSTHOG_EVENTS } from '@/lib/posthog-events';
 
@@ -23,6 +25,7 @@ const MAX_DECK_SIZE = 60;
 
 export default function DeckBuilderClient() {
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
   const mounted = useMounted();
   const decks = usePrimeDexStore((s) => s.tcgDecks);
   const createDeck = usePrimeDexStore((s) => s.createTCGDeck);
@@ -128,7 +131,16 @@ export default function DeckBuilderClient() {
       <Header />
 
       <main className="page-shell page-shell--header-offset pb-20">
-        <TCGPageTabs />
+        <TCGPageTabs context="catalog" />
+        <Breadcrumbs
+          items={[
+            { label: t('common.home'), href: localeHref('/') },
+            { label: t('tcg.page_title'), href: localeHref('/tcg') },
+            { label: t('tcg.deck_builder.title', { defaultValue: 'Deck Builder' }) },
+          ]}
+          homeLabel={t('common.home')}
+          className="!px-0 !pt-0 mb-6"
+        />
         <PageHeader
           title={t('tcg.deck_builder.title', { defaultValue: 'Deck Builder' })}
           subtitle={t('tcg.deck_builder.subtitle', { defaultValue: 'Build a 60-card Pokémon TCG deck (max 4 copies per card, except basic Energy)' })}

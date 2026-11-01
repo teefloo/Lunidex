@@ -48,6 +48,9 @@ export default async function NotFound() {
           </p>
 
           <nav aria-label={t('not_found_page.quick_navigation')} className="flex flex-col justify-center gap-3 sm:flex-row">
+            <Link href={`/${lang}/tcg`} className="glass-btn px-6 py-3 font-bold">
+              {t('tcg.nav_catalog', { defaultValue: 'TCG catalog' })}
+            </Link>
             <Link href={`/${lang}`} className="glass-btn px-6 py-3 font-bold">
               {t('not_found_page.pokedex_link')}
             </Link>

@@ -26,7 +26,6 @@ export function PrimaryBottomNav() {
             key={item.id}
             href={localeHref(item.path)}
             prefetch={false}
-            aria-current={isActive ? 'page' : undefined}
             data-active={isActive ? 'true' : undefined}
             className="primary-bottom-nav-link"
           >

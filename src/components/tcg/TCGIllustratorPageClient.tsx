@@ -7,6 +7,7 @@ import { useCallback } from 'react';
 import type { TCGIllustratorGallery } from '@/lib/tcg-illustrator-gallery';
 import { buildTCGIllustratorPath } from '@/lib/tcg-illustrators';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
+import { normalizeNavigationPath } from '@/lib/navigation-registry';
 import { useTranslation } from '@/lib/i18n';
 import { TCGCardItem } from './TCGCardItem';
 import { TCGLanguageSelector } from './TCGLanguageSelector';
@@ -26,12 +27,17 @@ export function TCGIllustratorPageClient({ gallery }: { gallery: TCGIllustratorG
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   }, [pathname, router, searchParams]);
 
+  const getCardHref = useCallback((card: TCGIllustratorGallery['cards'][number]) => {
+    const cardParams = new URLSearchParams(searchParams.toString());
+    cardParams.set('tcgLang', gallery.language);
+    const sourceHref = `${normalizeNavigationPath(pathname)}${searchParams.size > 0 ? `?${searchParams.toString()}` : ''}`;
+    cardParams.set('from', sourceHref);
+    return `${localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`)}?${cardParams.toString()}`;
+  }, [gallery.language, localeHref, pathname, searchParams]);
+
   const openCard = useCallback((card: TCGIllustratorGallery['cards'][number]) => {
-    router.push(
-      `${localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`)}?tcgLang=${encodeURIComponent(gallery.language)}`,
-      { scroll: false },
-    );
-  }, [gallery.language, localeHref, router]);
+    router.push(getCardHref(card), { scroll: false });
+  }, [getCardHref, router]);
 
   return (
     <main className="page-shell page-shell--header-offset relative space-y-6 pb-24 pt-4">
@@ -107,6 +113,7 @@ export function TCGIllustratorPageClient({ gallery }: { gallery: TCGIllustratorG
                   card={card}
                   index={index}
                   onClick={openCard}
+                  getCardHref={getCardHref}
                   tcgLanguage={gallery.language}
                 />
               ))}
@@ -125,7 +132,7 @@ export function TCGIllustratorPageClient({ gallery }: { gallery: TCGIllustratorG
                   {t('common.previous')}
                 </Link>
               )}
-              <span className="px-2 text-sm font-bold text-muted-foreground" aria-current="page">
+              <span className="px-2 text-sm font-bold text-muted-foreground">
                 {t('tcg.illustrator_page', { page: gallery.page, total: gallery.pageCount })}
               </span>
               {gallery.page < gallery.pageCount && (

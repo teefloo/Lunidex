@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
-import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
+import { SealedWorkspaceNavigation } from '@/components/tcg/SealedWorkspaceNavigation';
 import { PURCHASE_SAFETY_V1 } from '@/content/tcg/purchase-safety.v1';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
@@ -28,14 +28,16 @@ export default async function BuySafelyPage() {
   const label = (key: string) => t(`tcg.editorial_sealed.labels.${key}`);
   const breadcrumb = buildBreadcrumbJsonLd([
     { name: t('common.home'), path: '/' },
-    { name: t('tcg.page_title'), path: '/tcg' },
+    { name: t('tcg.nav_collection'), path: '/tcg/collection' },
+    { name: t('tcg.sealed.title'), path: '/tcg/sealed' },
+    { name: t('tcg.sealed.public_market.title'), path: '/tcg/sealed/market' },
     { name: t('tcg.editorial_sealed.safety.title'), path },
   ], language);
 
   return <div className="app-page">
     <Header />
     <main id="main-content" tabIndex={-1} className="page-shell page-shell--header-offset relative pb-32 outline-none">
-      <TCGPageTabs />
+      <SealedWorkspaceNavigation view="buy-safely" currentLabel={t('tcg.editorial_sealed.safety.title')} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumb) }} />
       <section className="page-header-surface mb-6 p-5 sm:p-7">
         <p className="page-eyebrow">{label('market_fr')}</p>

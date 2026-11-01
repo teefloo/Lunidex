@@ -67,9 +67,9 @@ export function TCGCollectionPage() {
         className="page-shell page-shell--header-offset relative pb-40"
         aria-labelledby="tcg-collection-title"
       >
-        <TCGPageTabs />
+        <TCGPageTabs context="collection" />
         <div className="mb-6">
-          <h1 id="tcg-collection-title" className="text-2xl font-black uppercase tracking-tight sm:text-3xl">
+          <h1 id="tcg-collection-title" className="text-2xl font-black tracking-tight sm:text-3xl">
             {t('tcg.collection_title')}
           </h1>
           <p className="mt-1 max-w-2xl text-sm font-bold uppercase leading-relaxed tracking-[0.08em] text-foreground/60">

@@ -3,10 +3,12 @@ import Link from 'next/link';
 import { Package, ExternalLink } from 'lucide-react';
 import type { SealedPriceSnapshot, SealedProduct } from '@primedex/core/types/sealed';
 import Header from '@/components/layout/Header';
-import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
+import { SealedWorkspaceNavigation, type SealedWorkspaceView } from '@/components/tcg/SealedWorkspaceNavigation';
 import PublicSealedGuideSection from '@/components/tcg/PublicSealedGuideSection';
 import { publicExpansionName, publicMarketContactHref, publicMarketHref, summarizePublicPrice, type PublicMarketFilters } from '@/lib/tcg-sealed-public-market';
 import type { SupportedLanguage } from '@/lib/languages';
+import { buildBreadcrumbJsonLd } from '@/lib/seo';
+import { serializeJsonLd } from '@/lib/json-ld';
 
 type Translate = (key: string, options?: Record<string, unknown>) => string;
 
@@ -37,8 +39,24 @@ function marketSourceDate(value: string | null, lang: string): string | null {
     : null;
 }
 
-export function MarketFrame({ children }: { children: React.ReactNode }) {
-  return <div className="app-page"><Header /><main id="main-content" tabIndex={-1} className="page-shell page-shell--header-offset relative pb-32 outline-none"><TCGPageTabs />{children}</main></div>;
+export function MarketFrame({
+  children,
+  view = 'market',
+  currentLabel,
+}: {
+  children: React.ReactNode;
+  view?: SealedWorkspaceView;
+  currentLabel?: string;
+}) {
+  return (
+    <div className="app-page">
+      <Header />
+      <main id="main-content" tabIndex={-1} className="page-shell page-shell--header-offset relative pb-32 outline-none">
+        <SealedWorkspaceNavigation view={view} currentLabel={currentLabel} />
+        {children}
+      </main>
+    </div>
+  );
 }
 
 export function MarketProductImage({ product, large = false, t }: { product: SealedProduct; large?: boolean; t: Translate }) {
@@ -54,12 +72,19 @@ function link(lang: SupportedLanguage, filters: PublicMarketFilters): string {
 
 export function SealedMarketPage({ data, filters, lang, t }: { data: PublicMarketData | null; filters: PublicMarketFilters; lang: SupportedLanguage; t: Translate }) {
   const copy = (key: string, options?: Record<string, unknown>) => t(`tcg.sealed.public_market.${key}`, options);
+  const breadcrumb = buildBreadcrumbJsonLd([
+    { name: t('common.home', { defaultValue: 'Home' }), path: '/' },
+    { name: t('tcg.nav_collection', { defaultValue: 'Collection' }), path: '/tcg/collection' },
+    { name: t('tcg.sealed.title', { defaultValue: 'Sealed portfolio' }), path: '/tcg/sealed' },
+    { name: copy('title'), path: '/tcg/sealed/market' },
+  ], lang);
   const pricesById = new Map<number, SealedPriceSnapshot[]>();
   for (const price of data?.prices ?? []) pricesById.set(price.cardmarketProductId, [...(pricesById.get(price.cardmarketProductId) ?? []), price]);
   const today = new Date().toISOString().slice(0, 10);
   const pageCount = Math.max(1, Math.ceil((data?.total ?? 0) / (data?.pageSize ?? 24)));
 
   return <MarketFrame>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumb) }} />
     <header className="page-header-surface mb-7 p-6 sm:p-9">
       <p className="page-eyebrow">{copy('eyebrow')}</p>
       <h1 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">{copy('title')}</h1>

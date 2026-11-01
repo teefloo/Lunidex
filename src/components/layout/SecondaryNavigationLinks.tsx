@@ -9,6 +9,7 @@ import { LanguageSelect } from '@/components/layout/LanguageSelect';
 import {
   NAVIGATION_DESTINATIONS,
   NAVIGATION_GROUPS,
+  PRIMARY_NAVIGATION,
   resolveNavigationDestination,
   type NavigationGroup,
 } from '@/lib/navigation-registry';
@@ -51,14 +52,25 @@ export function SecondaryNavigationLinks({ onNavigate }: SecondaryNavigationLink
         />
       </section>
       {SECONDARY_GROUP_ORDER.map((group) => {
+        const rootDestination = PRIMARY_NAVIGATION.find((item) => item.group === group);
         const entries = NAVIGATION_DESTINATIONS.filter((item) => item.group === group && !item.primary && !item.paletteOnly);
-        if (entries.length === 0) return null;
+        if (!rootDestination && entries.length === 0) return null;
         const headingId = `secondary-navigation-${group}`;
 
         return (
           <section key={group} className="secondary-navigation-group" aria-labelledby={headingId}>
             <h2 id={headingId} className="secondary-navigation-heading">
-              {label(NAVIGATION_GROUPS[group].labelKey, NAVIGATION_GROUPS[group].fallback)}
+              {rootDestination?.path ? (
+                <Link
+                  href={localeHref(rootDestination.path)}
+                  prefetch={false}
+                  onNavigate={onNavigate}
+                  data-active={activeDestination?.primary === rootDestination.primary ? 'true' : undefined}
+                  className="secondary-navigation-heading-link"
+                >
+                  {label(rootDestination.labelKey, rootDestination.fallback)}
+                </Link>
+              ) : label(NAVIGATION_GROUPS[group].labelKey, NAVIGATION_GROUPS[group].fallback)}
             </h2>
             <div className="secondary-navigation-links">
               {entries.map((item) => {
@@ -90,7 +102,6 @@ export function SecondaryNavigationLinks({ onNavigate }: SecondaryNavigationLink
                     href={localeHref(item.path)}
                     prefetch={false}
                     onNavigate={onNavigate}
-                    aria-current={isActive ? 'page' : undefined}
                     data-active={isActive ? 'true' : undefined}
                     className="secondary-navigation-link"
                   >

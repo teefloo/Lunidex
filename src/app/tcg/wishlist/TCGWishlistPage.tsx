@@ -2,6 +2,8 @@
 
 import { useMemo } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useLocaleHref } from '@/hooks/useLocaleHref';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { useQueries } from '@tanstack/react-query';
 import { getCardsBySet, getSetById } from '@/lib/api/tcg';
 import { useMounted } from '@/hooks/useMounted';
@@ -20,6 +22,7 @@ import { RecoverableError } from '@/components/ui/RecoverableError';
 
 export function TCGWishlistPage() {
   const { t } = useTranslation();
+  const localeHref = useLocaleHref();
   const mounted = useMounted();
   // Wishlist membership is language-independent; only the displayed card data
   // follows the independent TCG browse preference.
@@ -111,10 +114,19 @@ export function TCGWishlistPage() {
     <div className="app-page">
       <Header />
       <main className="page-shell page-shell--header-offset relative pb-24">
-        <TCGPageTabs />
+        <TCGPageTabs context="collection" />
+        <Breadcrumbs
+          items={[
+            { label: t('common.home'), href: localeHref('/') },
+            { label: t('tcg.collection_title'), href: localeHref('/tcg/collection') },
+            { label: t('tcg.wishlist_title') },
+          ]}
+          homeLabel={t('common.home')}
+          className="!px-0 !pt-0 mb-6"
+        />
         <TCGDataLangBanner resolvedLang={resolvedLang} onTryEnglish={tryEnglish} />
         <div className="mb-6">
-          <h1 className="text-2xl font-black uppercase tracking-tight sm:text-3xl">
+          <h1 className="text-2xl font-black tracking-tight sm:text-3xl">
             {t('tcg.wishlist_title')}
           </h1>
           <p className="mt-1 text-sm font-bold uppercase tracking-[0.08em] text-foreground/40">

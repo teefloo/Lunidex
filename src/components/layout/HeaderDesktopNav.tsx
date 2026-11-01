@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { ChevronDown } from 'lucide-react';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
-import { PRIMARY_NAVIGATION, resolveActivePrimaryNavigation, resolveNavigationDestination } from '@/lib/navigation-registry';
+import { normalizeNavigationPath, PRIMARY_NAVIGATION, resolveActivePrimaryNavigation, resolveNavigationDestination } from '@/lib/navigation-registry';
 import { SecondaryNavigationLinks } from './SecondaryNavigationLinks';
 
 export function HeaderDesktopNav() {
@@ -16,6 +16,8 @@ export function HeaderDesktopNav() {
   const moreRef = useRef<HTMLDetailsElement>(null);
   const activePrimary = resolveActivePrimaryNavigation(pathname);
   const activeDestination = resolveNavigationDestination(pathname);
+  const normalizedPath = normalizeNavigationPath(pathname);
+  const isTcgRoute = normalizedPath === '/tcg' || normalizedPath.startsWith('/tcg/');
   const moreIsActive = activeDestination?.group === 'space' || activeDestination?.group === 'resources';
 
   const closeMore = () => {
@@ -44,12 +46,13 @@ export function HeaderDesktopNav() {
         {PRIMARY_NAVIGATION.map((item) => {
           if (!item.path || !item.primary) return null;
           const isActive = item.primary === activePrimary;
+          const isExactPage = !isTcgRoute && normalizeNavigationPath(item.path) === normalizedPath;
           return (
             <Link
               key={item.id}
               href={localeHref(item.path)}
               prefetch={false}
-              aria-current={isActive ? 'page' : undefined}
+              aria-current={isExactPage ? 'page' : undefined}
               data-active={isActive ? 'true' : undefined}
               className="site-header-nav-link"
             >

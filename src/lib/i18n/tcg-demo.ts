@@ -12,6 +12,10 @@ interface DemoTranslations {
   start_title: string;
   start_description: string;
   try_checklist: string;
+  exit_demo: string;
+  choose_another_set: string;
+  unavailable_set_title: string;
+  unavailable_set_description: string;
   account_transition: string;
 }
 
@@ -25,9 +29,13 @@ export const tcgDemoTranslations = {
     progress: 'Owned {{owned}} / {{total}} · Progress {{percent}}%',
     mark_owned: 'Demo: mark {{name}} as owned',
     mark_missing: 'Demo: mark {{name}} as missing',
-    start_title: 'Try a real set checklist',
+    start_title: 'Try a set checklist',
     start_description: 'Choose a Pokémon TCG set, mark a few cards and see your progress. No account needed to try it. Demo changes are temporary and will not be transferred to your account.',
-    try_checklist: 'Try the checklist without an account',
+    try_checklist: 'Try a set checklist',
+    exit_demo: 'Exit demo',
+    choose_another_set: 'Choose another set',
+    unavailable_set_title: 'Set not found',
+    unavailable_set_description: 'This set is unavailable. Choose another set or return to your collection.',
     account_transition: 'You are now viewing your saved collection. Demo changes were discarded and were not transferred. Your existing collection is unchanged; your next changes can be saved here.',
   },
   fr: {
@@ -39,9 +47,13 @@ export const tcgDemoTranslations = {
     progress: 'Possédées {{owned}} / {{total}} · Progression {{percent}} %',
     mark_owned: 'Démo : marquer {{name}} comme possédée',
     mark_missing: 'Démo : marquer {{name}} comme manquante',
-    start_title: 'Tester la checklist d’un vrai set',
+    start_title: 'Tester la checklist d’une extension',
     start_description: 'Choisis un set Pokémon TCG, marque quelques cartes et vois ta progression. Aucun compte nécessaire pour tester. Les modifications démo sont temporaires et ne seront pas transférées à ton compte.',
-    try_checklist: 'Tester la checklist sans compte',
+    try_checklist: 'Tester la checklist d’une extension',
+    exit_demo: 'Quitter la démo',
+    choose_another_set: 'Choisir une autre extension',
+    unavailable_set_title: 'Extension introuvable',
+    unavailable_set_description: 'Cette extension est indisponible. Choisis-en une autre ou retourne à ta collection.',
     account_transition: 'Tu consultes maintenant ta collection sauvegardée. Les modifications démo ont été effacées sans transfert. Ta collection existante est inchangée ; tes prochaines modifications pourront être sauvegardées ici.',
   },
   es: {
@@ -53,9 +65,13 @@ export const tcgDemoTranslations = {
     progress: 'Obtenidas {{owned}} / {{total}} · Progreso {{percent}}%',
     mark_owned: 'Demo: marcar {{name}} como obtenida',
     mark_missing: 'Demo: marcar {{name}} como faltante',
-    start_title: 'Prueba la lista de una expansión real',
+    start_title: 'Probar la lista de una expansión',
     start_description: 'Elige una expansión Pokémon TCG, marca algunas cartas y consulta tu progreso. No necesitas una cuenta para probar. Los cambios de la demo son temporales y no se transferirán a tu cuenta.',
-    try_checklist: 'Probar la lista sin cuenta',
+    try_checklist: 'Probar la lista de una expansión',
+    exit_demo: 'Salir de la demo',
+    choose_another_set: 'Elegir otra expansión',
+    unavailable_set_title: 'Expansión no encontrada',
+    unavailable_set_description: 'Esta expansión no está disponible. Elige otra o vuelve a tu colección.',
     account_transition: 'Ahora ves tu colección guardada. Los cambios de la demo se han borrado sin transferirse. Tu colección existente no ha cambiado; aquí podrás guardar tus próximos cambios.',
   },
   de: {
@@ -67,9 +83,13 @@ export const tcgDemoTranslations = {
     progress: 'Vorhanden {{owned}} / {{total}} · Fortschritt {{percent}}%',
     mark_owned: 'Demo: {{name}} als vorhanden markieren',
     mark_missing: 'Demo: {{name}} als fehlend markieren',
-    start_title: 'Teste die Checkliste eines echten Sets',
+    start_title: 'Set-Checkliste ausprobieren',
     start_description: 'Wähle ein Pokémon-TCG-Set, markiere einige Karten und sieh deinen Fortschritt. Zum Testen brauchst du kein Konto. Demo-Änderungen sind vorübergehend und werden nicht in dein Konto übernommen.',
-    try_checklist: 'Checkliste ohne Konto testen',
+    try_checklist: 'Set-Checkliste ausprobieren',
+    exit_demo: 'Demo verlassen',
+    choose_another_set: 'Ein anderes Set wählen',
+    unavailable_set_title: 'Set nicht gefunden',
+    unavailable_set_description: 'Dieses Set ist nicht verfügbar. Wähle ein anderes Set oder kehre zu deiner Sammlung zurück.',
     account_transition: 'Du siehst jetzt deine gespeicherte Sammlung. Demo-Änderungen wurden gelöscht und nicht übertragen. Deine bestehende Sammlung ist unverändert; hier kannst du deine nächsten Änderungen speichern.',
   },
   it: {
@@ -81,9 +101,13 @@ export const tcgDemoTranslations = {
     progress: 'Possedute {{owned}} / {{total}} · Progresso {{percent}}%',
     mark_owned: 'Demo: segna {{name}} come posseduta',
     mark_missing: 'Demo: segna {{name}} come mancante',
-    start_title: 'Prova la checklist di un’espansione reale',
+    start_title: 'Prova una checklist di espansione',
     start_description: 'Scegli un’espansione Pokémon TCG, segna alcune carte e controlla i progressi. Non serve un account per provare. Le modifiche demo sono temporanee e non verranno trasferite al tuo account.',
-    try_checklist: 'Prova la checklist senza account',
+    try_checklist: 'Prova una checklist di espansione',
+    exit_demo: 'Esci dalla demo',
+    choose_another_set: 'Scegli un’altra espansione',
+    unavailable_set_title: 'Espansione non trovata',
+    unavailable_set_description: 'Questa espansione non è disponibile. Scegline un’altra o torna alla tua collezione.',
     account_transition: 'Ora stai visualizzando la tua collezione salvata. Le modifiche demo sono state cancellate senza trasferimento. La collezione esistente è invariata; qui potrai salvare le prossime modifiche.',
   },
   ja: {
@@ -95,9 +119,13 @@ export const tcgDemoTranslations = {
     progress: '所持 {{owned}} / {{total}} · 進捗 {{percent}}%',
     mark_owned: 'デモ：{{name}}を所持にする',
     mark_missing: 'デモ：{{name}}を未所持にする',
-    start_title: '実際のセットのチェックリストを試す',
+    start_title: 'セットのチェックリストを試す',
     start_description: 'ポケモンTCGのセットを選び、カードを数枚マークして進捗を確認できます。体験にアカウントは不要です。デモの変更は一時的で、アカウントには引き継がれません。',
-    try_checklist: 'アカウントなしでチェックリストを試す',
+    try_checklist: 'セットのチェックリストを試す',
+    exit_demo: 'デモを終了',
+    choose_another_set: '別のセットを選ぶ',
+    unavailable_set_title: 'セットが見つかりません',
+    unavailable_set_description: 'このセットは利用できません。別のセットを選ぶか、コレクションに戻ってください。',
     account_transition: '保存済みのコレクションを表示しています。デモの変更は削除され、引き継がれていません。既存のコレクションに変更はありません。今後の変更はここで保存できます。',
   },
   ko: {
@@ -109,9 +137,13 @@ export const tcgDemoTranslations = {
     progress: '보유 {{owned}} / {{total}} · 진행률 {{percent}}%',
     mark_owned: '데모: {{name}} 보유로 표시',
     mark_missing: '데모: {{name}} 미보유로 표시',
-    start_title: '실제 세트의 체크리스트 체험하기',
+    start_title: '세트 체크리스트 체험하기',
     start_description: '포켓몬 TCG 세트를 선택하고 카드를 몇 장 표시하여 진행률을 확인하세요. 계정 없이 체험할 수 있습니다. 데모 변경 사항은 일시적이며 계정으로 이전되지 않습니다.',
-    try_checklist: '계정 없이 체크리스트 체험하기',
+    try_checklist: '세트 체크리스트 체험하기',
+    exit_demo: '데모 나가기',
+    choose_another_set: '다른 세트 선택하기',
+    unavailable_set_title: '세트를 찾을 수 없습니다',
+    unavailable_set_description: '이 세트는 이용할 수 없습니다. 다른 세트를 선택하거나 컬렉션으로 돌아가세요.',
     account_transition: '이제 저장된 컬렉션이 표시됩니다. 데모 변경 사항은 삭제되었으며 이전되지 않았습니다. 기존 컬렉션은 그대로입니다. 이후 변경 사항은 여기에서 저장할 수 있습니다.',
   },
   zh: {
@@ -123,9 +155,13 @@ export const tcgDemoTranslations = {
     progress: '已拥有 {{owned}} / {{total}} · 进度 {{percent}}%',
     mark_owned: '演示：将{{name}}标记为已拥有',
     mark_missing: '演示：将{{name}}标记为缺失',
-    start_title: '体验真实系列的卡牌清单',
+    start_title: '体验系列卡牌清单',
     start_description: '选择一个宝可梦TCG系列，标记几张卡牌并查看进度。无需账号即可体验。演示更改是临时的，不会转移到你的账号。',
-    try_checklist: '无需账号体验清单',
+    try_checklist: '体验系列卡牌清单',
+    exit_demo: '退出演示',
+    choose_another_set: '选择其他系列',
+    unavailable_set_title: '未找到该系列',
+    unavailable_set_description: '该系列目前不可用。请选择其他系列或返回收藏。',
     account_transition: '你现在查看的是已保存的收藏。演示更改已清除，未转移到账号。现有收藏没有变化；你可以在此保存后续更改。',
   },
 } satisfies Record<SupportedLanguage, DemoTranslations>;

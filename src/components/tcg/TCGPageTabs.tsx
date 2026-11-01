@@ -13,10 +13,11 @@ import { resolveRequestedTCGCardLanguage } from '@/lib/tcg-language';
 import { usePrimeDexStore } from '@/store/primedex';
 
 interface TCGPageTabsProps {
+  context: 'catalog' | 'collection';
   initialLabels?: Readonly<Record<string, string>>;
 }
 
-export function TCGPageTabs({ initialLabels = {} }: TCGPageTabsProps) {
+export function TCGPageTabs({ context, initialLabels = {} }: TCGPageTabsProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { t } = useTranslation();
@@ -32,23 +33,20 @@ export function TCGPageTabs({ initialLabels = {} }: TCGPageTabsProps) {
       ? browseLanguage
       : null;
   const destination = resolveNavigationDestination(pathname);
-  const isPersonalCollection = destination?.group === 'collection';
+  const isPersonalCollection = context === 'collection';
   const visibleTabs = isPersonalCollection
     ? NAVIGATION_DESTINATIONS.filter((item) => ['collection', 'wishlist', 'investments', 'sealed-portfolio'].includes(item.id) && item.path !== null)
     : NAVIGATION_DESTINATIONS.filter((item) => (item.id === 'catalog' || item.id === 'sealed-market') && item.path !== null);
   const toolItems = NAVIGATION_DESTINATIONS.filter((item) => item.group === 'catalog' && !['catalog', 'sealed-market'].includes(item.id) && item.path !== null);
   const selectedTool = toolItems.find((item) => item.id === destination?.id);
-  const showLanguageSelector = normalizedPathname === '/tcg'
-    || normalizedPathname === '/tcg/collection'
-    || normalizedPathname === '/tcg/wishlist'
-    || normalizedPathname === '/tcg/deck-builder';
+  const showLanguageSelector = true;
   const label = (key: string, fallback: string) => {
     const translated = t(key, { defaultValue: initialLabels[key] ?? fallback });
     return translated === key ? (initialLabels[key] ?? fallback) : translated;
   };
   const buildHref = (path: string) => {
     const href = localizedHref(path);
-    if (!tcgLanguage || (!path.startsWith('/tcg/collection') && path !== '/tcg' && !path.startsWith('/tcg/'))) return href;
+    if (!tcgLanguage) return href;
     const params = new URLSearchParams({ tcgLang: tcgLanguage });
     return `${href}?${params.toString()}`;
   };
@@ -75,19 +73,24 @@ export function TCGPageTabs({ initialLabels = {} }: TCGPageTabsProps) {
   }, []);
 
   return (
-    <nav className="tcg-local-navigation" aria-label={label('tcg.page_title', 'TCG workspace')}>
+    <nav
+      className={cn('tcg-local-navigation', isPersonalCollection && 'tcg-local-navigation--collection')}
+      aria-label={label(isPersonalCollection ? 'tcg.collection_title' : 'tcg.page_title', isPersonalCollection ? 'Collection' : 'TCG catalog')}
+    >
       <div className="tcg-local-navigation-main">
         <div className="tcg-local-navigation-links">
           {visibleTabs.map((item) => {
             if (!item.path) return null;
             const Icon = item.icon;
             const isActive = destination?.id === item.id || (destination?.id === 'collection-start' && item.id === 'collection');
+            const isCurrentWorkspaceRoot = (context === 'catalog' && item.id === 'catalog' && normalizedPathname === '/tcg')
+              || (context === 'collection' && item.id === 'collection' && normalizedPathname === '/tcg/collection');
             const itemLabel = label(item.labelKey, item.fallback);
             return (
               <Link
                 key={item.id}
                 href={buildHref(item.path)}
-                aria-current={isActive ? 'page' : undefined}
+                aria-current={isCurrentWorkspaceRoot ? 'page' : undefined}
                 data-active={isActive ? 'true' : undefined}
                 className="tcg-local-navigation-link"
               >
@@ -99,16 +102,27 @@ export function TCGPageTabs({ initialLabels = {} }: TCGPageTabsProps) {
         </div>
 
         {!isPersonalCollection && toolItems.length > 0 ? (
+          <>
+            {selectedTool?.path ? (
+              <Link
+                href={buildHref(selectedTool.path)}
+                data-active="true"
+                className="tcg-local-navigation-link"
+              >
+                <selectedTool.icon aria-hidden="true" className="h-4 w-4 shrink-0" />
+                <span>{label(selectedTool.labelKey, selectedTool.fallback)}</span>
+              </Link>
+            ) : null}
           <details ref={toolsRef} className="tcg-local-tools">
-            <summary className={cn('tcg-local-navigation-link tcg-local-tools-trigger', selectedTool && 'is-context-active')}>
+            <summary className={cn('tcg-local-navigation-link tcg-local-tools-trigger')}>
               <Wrench aria-hidden="true" className="h-4 w-4 shrink-0" />
-              <span>{selectedTool ? label(selectedTool.labelKey, selectedTool.fallback) : label('nav.tools', 'TCG tools')}</span>
+              <span>{label('nav.tools', 'TCG tools')}</span>
               <ChevronDown aria-hidden="true" className="tcg-local-tools-chevron h-3.5 w-3.5 shrink-0" />
             </summary>
             <div className="tcg-local-tools-menu" onClick={(event) => {
               if ((event.target as HTMLElement).closest('a')) closeTools();
             }}>
-              {toolItems.map((item) => {
+              {toolItems.filter((item) => item.id !== selectedTool?.id).map((item) => {
                 if (!item.path) return null;
                 const Icon = item.icon;
                 const isActive = destination?.id === item.id;
@@ -116,7 +130,6 @@ export function TCGPageTabs({ initialLabels = {} }: TCGPageTabsProps) {
                   <Link
                     key={item.id}
                     href={buildHref(item.path)}
-                    aria-current={isActive ? 'page' : undefined}
                     data-active={isActive ? 'true' : undefined}
                     className="tcg-local-tool-link"
                   >
@@ -127,6 +140,7 @@ export function TCGPageTabs({ initialLabels = {} }: TCGPageTabsProps) {
               })}
             </div>
           </details>
+          </>
         ) : null}
       </div>
 

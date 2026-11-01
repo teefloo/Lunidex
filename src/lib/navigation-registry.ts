@@ -61,9 +61,9 @@ export const NAVIGATION_DESTINATIONS: readonly NavigationDestination[] = [
   { id: 'wishlist', path: '/tcg/wishlist', labelKey: 'tcg.nav_wishlist', fallback: 'Wishlist', icon: Heart, group: 'collection' },
   { id: 'investments', path: '/tcg/investments', labelKey: 'investments.title', fallback: 'Investments', icon: TrendingUp, group: 'collection', aliases: { fr: ['investissements', 'achats', 'portefeuille'], en: ['purchases', 'portfolio', 'investments'] } },
   { id: 'sealed-portfolio', path: '/tcg/sealed', labelKey: 'tcg.nav_sealed', fallback: 'Sealed portfolio', icon: Package, group: 'collection' },
-  { id: 'collection-start', path: '/tcg/start', labelKey: 'lunidex_home.cta_start', fallback: 'Start or resume your collection', icon: Package, group: 'collection' },
+  { id: 'collection-start', path: '/tcg/start', labelKey: 'tcg.demo.start_title', fallback: 'Try a set checklist', icon: Package, group: 'collection' },
 
-  { id: 'sealed-market', path: '/tcg/sealed/market', labelKey: 'tcg.nav_sealed_market', fallback: 'Sealed market', icon: Package, group: 'catalog', routeMatches: ['/tcg/sealed/buy-safely', '/tcg/sealed/releases'], aliases: { fr: ['marché des produits scellés', 'produits scellés'], en: ['sealed products', 'sealed prices'] } },
+  { id: 'sealed-market', path: '/tcg/sealed/market', labelKey: 'tcg.nav_sealed_market', fallback: 'Sealed market', icon: Package, group: 'collection', routeMatches: ['/tcg/sealed/buy-safely', '/tcg/sealed/releases'], aliases: { fr: ['marché des produits scellés', 'produits scellés'], en: ['sealed products', 'sealed prices'] } },
   { id: 'deck-builder', path: '/tcg/deck-builder', labelKey: 'tcg.nav_deck_builder', fallback: 'Deck builder', icon: LayoutGrid, group: 'catalog', aliases: { fr: ['deck', 'construction de deck'], en: ['deck'] } },
   { id: 'pull-rates', path: '/tcg/pull-rates', labelKey: 'booster_guides.links.pull', fallback: 'Pull rates', icon: Sparkles, group: 'catalog', aliases: { fr: ['fréquences de tirage', 'taux de tirage'], en: ['card odds', 'pack odds'] } },
   { id: 'booster-value', path: '/tcg/booster-value', labelKey: 'booster_guides.links.value', fallback: 'Booster value', icon: Calculator, group: 'catalog', aliases: { fr: ['valeur des boosters'], en: ['booster calculator'] } },

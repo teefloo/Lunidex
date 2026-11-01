@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import Header from '@/components/layout/Header';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
 import { SyncStatusPanel } from '@/components/auth/SyncStatusPanel';
 import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
@@ -25,6 +26,7 @@ import { usePrimeDexStore } from '@/store/primedex';
 import { TCGCustomCollectionFormDialog } from './TCGCustomCollectionFormDialog';
 import { TCGCustomCollectionAddPanel } from './TCGCustomCollectionAddPanel';
 import { TCGImageWithFallback } from './TCGImageWithFallback';
+import { TCGPageTabs } from './TCGPageTabs';
 
 interface TCGCustomCollectionDetailProps {
   collectionId: string;
@@ -96,6 +98,16 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
     <div className="app-page">
       <Header />
       <main className="page-shell page-shell--header-offset relative space-y-6 pb-40" aria-labelledby="custom-collection-title">
+        <TCGPageTabs context="collection" />
+        <Breadcrumbs
+          items={[
+            { label: t('common.home'), href: localeHref('/') },
+            { label: t('tcg.collection_title'), href: localeHref('/tcg/collection') },
+            { label: collection?.name ?? t('tcg.custom_collections.title') },
+          ]}
+          homeLabel={t('common.home')}
+          className="!px-0 !pt-0 mb-6"
+        />
         {loading ? (
           <div className="flex min-h-[50vh] items-center justify-center" aria-busy="true" role="status">
             <span className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
@@ -119,7 +131,7 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
             </Link>
             <header className="flex flex-col gap-4 border-b border-border/50 pb-5 sm:flex-row sm:items-start sm:justify-between">
               <div className="min-w-0">
-                <h1 id="custom-collection-title" className="break-words text-2xl font-black uppercase tracking-tight sm:text-3xl">{collection.name}</h1>
+                <h1 id="custom-collection-title" className="break-words text-2xl font-black tracking-tight sm:text-3xl">{collection.name}</h1>
                 {collection.description && <p className="mt-2 max-w-3xl whitespace-pre-wrap break-words text-sm leading-6 text-foreground/65">{collection.description}</p>}
                 <p className="mt-3 text-sm font-bold text-primary">{t('tcg.custom_collections.cards_count', { count: references.length })}</p>
               </div>

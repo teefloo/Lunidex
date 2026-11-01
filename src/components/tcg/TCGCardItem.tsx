@@ -23,6 +23,7 @@ interface TCGCardItemProps {
   card: TCGCard;
   index?: number;
   onClick?: (card: TCGCard) => void;
+  getCardHref?: (card: TCGCard) => string;
   variant?: 'default' | 'compact' | 'list';
   tcgLanguage?: TCGCardLanguage;
   collectionKey?: string;
@@ -32,6 +33,7 @@ export const TCGCardItem = memo(function TCGCardItem({
   card,
   index = 0,
   onClick,
+  getCardHref,
   variant = 'default',
   tcgLanguage,
   collectionKey,
@@ -99,7 +101,7 @@ export const TCGCardItem = memo(function TCGCardItem({
           <div className="min-w-0 flex-1">
             <h3 className="line-clamp-2 max-w-full overflow-hidden break-words text-xs font-black uppercase tracking-tight text-foreground sm:text-[13px]">
               <Link
-                href={`${localeHref(`/tcg/cards/${card.id}`)}?tcgLang=${encodeURIComponent(selectedLanguage)}`}
+                href={getCardHref?.(card) ?? `${localeHref(`/tcg/cards/${card.id}`)}?tcgLang=${encodeURIComponent(selectedLanguage)}`}
                 prefetch={false}
                 onClick={(event) => event.stopPropagation()}
                 className="inline-block min-h-11 max-w-full py-2 align-middle transition-colors hover:text-primary"

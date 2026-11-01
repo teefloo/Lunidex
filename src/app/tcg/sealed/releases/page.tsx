@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
-import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
+import { SealedWorkspaceNavigation } from '@/components/tcg/SealedWorkspaceNavigation';
 import { SEALED_RELEASES_V1 } from '@/content/tcg/sealed-releases.v1';
 import { formatReleaseWindow, sealedReleaseMarketHref } from '@/lib/tcg-release-calendar';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
@@ -43,14 +43,16 @@ export default async function SealedReleasesPage() {
   const releases = sortReleases(SEALED_RELEASES_V1);
   const breadcrumb = buildBreadcrumbJsonLd([
     { name: t('common.home'), path: '/' },
-    { name: t('tcg.page_title'), path: '/tcg' },
+    { name: t('tcg.nav_collection'), path: '/tcg/collection' },
+    { name: t('tcg.sealed.title'), path: '/tcg/sealed' },
+    { name: t('tcg.sealed.public_market.title'), path: '/tcg/sealed/market' },
     { name: t('tcg.editorial_sealed.releases.title'), path },
   ], language);
 
   return <div className="app-page">
     <Header />
     <main id="main-content" tabIndex={-1} className="page-shell page-shell--header-offset relative pb-32 outline-none">
-      <TCGPageTabs />
+      <SealedWorkspaceNavigation view="releases" currentLabel={t('tcg.editorial_sealed.releases.title')} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumb) }} />
       <section className="page-header-surface mb-6 p-5 sm:p-7">
         <p className="page-eyebrow">{label('market_fr')}</p>

@@ -84,7 +84,7 @@ export default async function TCGPage({ searchParams }: TCGPageProps) {
         <Header />
         <main className="page-shell page-shell--header-offset relative pb-24">
           <Suspense fallback={<div className="h-12 flex items-center justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary/30" /></div>}>
-            <TCGPageTabs initialLabels={initialTabLabels} />
+            <TCGPageTabs context="catalog" initialLabels={initialTabLabels} />
           </Suspense>
           <nav className="mx-auto flex max-w-7xl flex-wrap justify-center gap-x-6 gap-y-2 px-4 py-4 text-sm" aria-label={t('lunidex_home.guides_title')}>
             <Link href={localeHref('/guides/pokemon-card-collection-tracker', lang)} className="inline-flex min-h-11 items-center font-bold text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">

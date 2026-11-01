@@ -1,1 +1,1 @@
-export { generateMetadata, default } from '../products/[id]/page';
+export { generateMetadata, default } from '../SealedMarketProductPage';

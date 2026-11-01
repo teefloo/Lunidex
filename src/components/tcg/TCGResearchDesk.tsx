@@ -226,12 +226,16 @@ export function TCGResearchDesk({
       didSyncUrlRef.current = true;
       return;
     }
-    const query = serializeTCGSearchState({
+    const params = new URLSearchParams(serializeTCGSearchState({
       filters: urlFilters,
       viewMode,
       compare: [],
       tcgLang: resolvedLang,
-    });
+    }));
+    if (viewMode === 'table' && searchParams.get('view') === 'list') {
+      params.set('view', 'list');
+    }
+    const query = params.toString();
     const current = searchParams.toString();
     if (query === current) return;
     router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
@@ -340,9 +344,20 @@ export function TCGResearchDesk({
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   }, [pathname, router, searchParams, setTCGBrowseLanguage]);
 
+  const getCardHref = useCallback((card: TCGCard) => {
+    const sourceParams = new URLSearchParams(searchParams.toString());
+    const cardParams = new URLSearchParams(sourceParams);
+    cardParams.set('tcgLang', resolvedLang);
+    sourceParams.delete('from');
+    const sourcePath = normalizeNavigationPath(pathname);
+    const sourceHref = `${sourcePath}${sourceParams.toString() ? `?${sourceParams.toString()}` : ''}`;
+    cardParams.set('from', sourceHref);
+    return `${localeHref(`/tcg/cards/${encodeURIComponent(card.id)}`)}?${cardParams.toString()}`;
+  }, [localeHref, pathname, resolvedLang, searchParams]);
+
   const openCard = useCallback((card: TCGCard) => {
-    router.push(localeHref(`/tcg/cards/${encodeURIComponent(card.id)}?tcgLang=${encodeURIComponent(resolvedLang)}`), { scroll: false });
-  }, [localeHref, resolvedLang, router]);
+    router.push(getCardHref(card), { scroll: false });
+  }, [getCardHref, router]);
 
   const openFilters = useCallback(() => {
     setIsFiltersOpen(true);
@@ -542,6 +557,7 @@ export function TCGResearchDesk({
               <CardResults
                 cards={visibleCards}
                 onCardClick={openCard}
+                getCardHref={getCardHref}
                 viewMode={viewMode}
                 tcgLanguage={resolvedLang}
               />
@@ -774,11 +790,13 @@ function ResultSummary({
 function CardResults({
   cards,
   onCardClick,
+  getCardHref,
   viewMode,
   tcgLanguage,
 }: {
   cards: TCGCard[];
   onCardClick: (card: TCGCard) => void;
+  getCardHref: (card: TCGCard) => string;
   viewMode: TCGCardViewMode;
   tcgLanguage: TCGCardLanguage;
 }) {
@@ -797,6 +815,7 @@ function CardResults({
           card={card}
           index={index}
           onClick={onCardClick}
+          getCardHref={getCardHref}
           variant={isList ? 'list' : 'default'}
           tcgLanguage={tcgLanguage}
         />

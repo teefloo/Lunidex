@@ -50,11 +50,17 @@ export default async function SealedPage({ params, searchParams }: SealedPagePro
   const parsedProductId = first === 'products' && /^\d+$/.test(segments[1] ?? '') ? Number(segments[1]) : NaN;
   const productId = Number.isSafeInteger(parsedProductId) && parsedProductId > 0 ? parsedProductId : undefined;
   const title = routeTitle(productId === undefined ? first : undefined, t);
-  const breadcrumb = buildBreadcrumbJsonLd([
+  const breadcrumbItems = [
     { name: t('common.home', { defaultValue: 'Lunidex' }), path: '/' },
-    { name: t('tcg.page_title', { defaultValue: 'Pokémon TCG' }), path: '/tcg' },
-    { name: title, path: productId === undefined ? '/tcg/sealed' : `/tcg/sealed/products/${productId}` },
-  ], lang);
+    { name: t('tcg.nav_collection', { defaultValue: 'Collection' }), path: '/tcg/collection' },
+    { name: t('tcg.sealed.title', { defaultValue: 'Sealed portfolio' }), path: '/tcg/sealed' },
+  ];
+  if (productId !== undefined) {
+    breadcrumbItems.push({ name: t('tcg.sealed.product', { defaultValue: 'Product detail' }), path: `/tcg/sealed/products/${productId}` });
+  } else if (first !== 'dashboard') {
+    breadcrumbItems.push({ name: title, path: `/tcg/sealed/${segments.join('/')}` });
+  }
+  const breadcrumb = buildBreadcrumbJsonLd(breadcrumbItems, lang);
   return <>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumb) }} />
     <SealedPortfolioPage view={productId === undefined ? first : 'product'} productId={productId} />

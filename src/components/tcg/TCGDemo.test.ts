@@ -234,7 +234,7 @@ describe('TCG demo and account boundaries', () => {
     const query = mocks.queryOptions.find((option) => option.queryKey.includes('activation-sets'));
     expect(query?.enabled).toBe(true);
     expect(query?.retry).toBe(false);
-    expect(container.textContent).toContain('Try a real set checklist');
+    expect(container.textContent).toContain('Try a set checklist');
     expect(container.querySelector('#set-search')).not.toBeNull();
     expect(container.querySelector('a[href*="/tcg/collection/en/base1"]')).not.toBeNull();
     expect(container.querySelector('[aria-busy="true"]')).toBeNull();
@@ -423,7 +423,7 @@ describe('TCG demo and account boundaries', () => {
   it('allows the public set selector and demo when account creation is not configured', async () => {
     mocks.auth.enabled = false;
     await act(async () => root.render(createElement(TCGStartPage)));
-    expect(container.textContent).toContain('Try a real set checklist');
+    expect(container.textContent).toContain('Try a set checklist');
     expect(container.querySelector('a[href="/en/tcg/collection/en/base1?activation=1"]')).not.toBeNull();
     expect(mocks.queryEnabled.at(-1)).toBe(true);
     await render(); await click(cardButton('Alakazam'));

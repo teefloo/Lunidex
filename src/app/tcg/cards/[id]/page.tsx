@@ -11,10 +11,44 @@ import { supportedLanguages } from '@/lib/languages';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { normalizeTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
 import { buildTCGDetailPath, getTCGCardMetaDescriptionKey, PUBLIC_TCG_CARD_ROBOTS } from '@/lib/tcg-seo';
+import { normalizeNavigationPath } from '@/lib/navigation-registry';
 
 interface PageProps {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ tcgLang?: string | string[] | undefined }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}
+
+function getCardReturnHref(
+  query: Awaited<PageProps['searchParams']>,
+  language: string,
+): string | undefined {
+  const value = query.from;
+  const from = Array.isArray(value) ? value[0] : value;
+  if (from && from.startsWith('/') && !from.startsWith('//')) {
+    try {
+      const base = new URL('https://lunidex.invalid');
+      const target = new URL(from, base);
+      const path = normalizeNavigationPath(target.pathname);
+      if (target.origin === base.origin && path.startsWith('/tcg') && !path.startsWith('/tcg/cards/')) {
+        return `/${language}${path}${target.search}`;
+      }
+    } catch {
+      // Ignore malformed return paths and fall back to the card's set.
+    }
+  }
+
+  const hasCatalogState = ['q', 'set', 'view', 'sortBy', 'sortOrder'].some((key) => query[key] !== undefined);
+  if (!hasCatalogState) return undefined;
+  const params = new URLSearchParams();
+  for (const [key, rawValue] of Object.entries(query)) {
+    if (key === 'from') continue;
+    if (Array.isArray(rawValue)) {
+      rawValue.forEach((item) => params.append(key, item));
+    } else if (rawValue !== undefined) {
+      params.set(key, rawValue);
+    }
+  }
+  return `/${language}/tcg${params.size > 0 ? `?${params.toString()}` : ''}`;
 }
 
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
@@ -121,7 +155,7 @@ export default async function TCGCardPage({ params, searchParams }: PageProps) {
         ]}
         homeLabel={t('common.home', { defaultValue: 'Home' })}
       />
-      <TCGCardDetailRoute card={card} tcgLanguage={tcgLanguage} />
+      <TCGCardDetailRoute card={card} tcgLanguage={tcgLanguage} returnHref={getCardReturnHref(query, currentLang)} />
     </>
   );
 }

@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowRight, Search, Sparkles } from 'lucide-react';
 import Header from '@/components/layout/Header';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { TCGImageWithFallback } from '@/components/tcg/TCGImageWithFallback';
 import { fetchCollectionSetCatalog, getSetById } from '@/lib/api/tcg';
 import { useMounted } from '@/hooks/useMounted';
@@ -114,6 +115,17 @@ export function TCGStartPage() {
   const isDemo = mounted && !user;
   const startTitle = t(isDemo ? 'tcg.demo.start_title' : 'tcg.activation.start_title', { defaultValue: 'Add a collection' });
   const startDescription = t(isDemo ? 'tcg.demo.start_description' : 'auth.signup_subtitle');
+  const startBreadcrumbs = (
+    <Breadcrumbs
+      items={[
+        { label: t('common.home'), href: localeHref('/') },
+        { label: t('tcg.collection_title'), href: attributedCollectionHref },
+        { label: startTitle },
+      ]}
+      homeLabel={t('common.home')}
+      className="!px-0 !pt-0 mb-6"
+    />
+  );
   const startContext = (
     <div className="mb-6">
       <Link
@@ -145,6 +157,7 @@ export function TCGStartPage() {
       <div className="app-page">
         <Header />
         <main className="page-shell page-shell--header-offset min-h-dvh pb-40" aria-labelledby="tcg-start-title">
+          {startBreadcrumbs}
           {startContext}
           <div role="status" aria-busy="true" aria-label={t('tcg.collection_loading')} className="flex min-h-[40vh] items-center justify-center">
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
@@ -159,6 +172,7 @@ export function TCGStartPage() {
       <div className="app-page">
         <Header />
         <main className="page-shell page-shell--header-offset min-h-dvh pb-40" aria-labelledby="tcg-start-title">
+          {startBreadcrumbs}
           {startContext}
           <SyncRequiredPanel headingLevel={2} />
         </main>
@@ -171,6 +185,7 @@ export function TCGStartPage() {
       <div className="app-page">
         <Header />
         <main className="page-shell page-shell--header-offset min-h-dvh pb-40" aria-labelledby="tcg-start-title">
+          {startBreadcrumbs}
           {startContext}
           <SyncStatusPanel status={syncStatus} headingLevel={2} />
         </main>
@@ -182,6 +197,7 @@ export function TCGStartPage() {
     <div className="app-page">
       <Header />
       <main className="page-shell page-shell--header-offset pb-24" aria-labelledby="tcg-start-title">
+        {startBreadcrumbs}
         <Link
           href={isDemo ? attributedCatalogHref : attributedCollectionHref}
           className="mb-4 inline-flex min-h-11 items-center text-sm font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring"

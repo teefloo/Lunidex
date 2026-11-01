@@ -260,10 +260,13 @@ export function TCGAlbumPage({
             rememberCollectionScrollRestore();
             router.back();
           }}
-          aria-label={`${t('common.back')} — ${t('tcg.collection_title')}`}
+          aria-label={demoOwnership
+            ? t('tcg.demo.exit_demo')
+            : `${t('common.back')} — ${t('tcg.collection_title')}`}
           className="flex min-h-11 min-w-11 items-center justify-center rounded-sm border border-border/30 text-foreground/40 transition-colors hover:border-primary/30 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          {demoOwnership ? <span>{t('tcg.demo.exit_demo')}</span> : null}
         </Link>
         <div className="flex min-w-0 items-center gap-3">
           {set.logo && (
@@ -278,7 +281,7 @@ export function TCGAlbumPage({
             </div>
           )}
           <div className="min-w-0">
-            <h1 className="text-lg font-black uppercase tracking-tight sm:text-xl">
+            <h1 className="text-lg font-black tracking-tight sm:text-xl">
               {activation && !demoOwnership && !firstValueReached ? t('tcg.activation.album_title') : set.name}
             </h1>
             <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-foreground/40">
@@ -292,7 +295,7 @@ export function TCGAlbumPage({
       {(activation || demoOwnership) && (
         <div className="flex justify-end">
           <Link href={localeHref(startHref)} className="inline-flex min-h-11 items-center rounded-sm border border-border/40 bg-card/45 px-4 text-sm font-bold text-foreground/70 hover:border-primary/35 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
-            {t('tcg.activation.change_set', { defaultValue: 'Change set' })}
+            {t('tcg.demo.choose_another_set')}
           </Link>
         </div>
       )}

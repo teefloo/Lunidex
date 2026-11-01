@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import { SITE_URL } from '@/lib/site';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { buildSubpathLanguages, buildBreadcrumbJsonLd, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { TCGLegacySetAlbumResolver } from '@/components/tcg/TCGLegacySetAlbumResolver';
+import { isTCGCardLanguage } from '@/lib/tcg-language';
 
 interface PageProps {
   params: Promise<{ language: string }>;
@@ -46,6 +48,9 @@ export default async function SetAlbumPage({ params, searchParams }: PageProps) 
   const query = await searchParams;
   const lang = await getServerLanguage();
   const t = await getServerT();
+  if (isTCGCardLanguage(setId)) {
+    redirect(`/${lang}/tcg/collection?tcgLang=${encodeURIComponent(setId)}`);
+  }
   const collectionTitle = t('tcg.collection_title', { defaultValue: 'My Collection' });
   const languageSelectionTitle = t('tcg.collection_choose_language', {
     defaultValue: 'Choose a language for this collection',

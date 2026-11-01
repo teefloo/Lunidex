@@ -1043,6 +1043,23 @@ h1 { letter-spacing: 0; }
   text-transform: uppercase;
 }
 
+.secondary-navigation-heading-link {
+  color: inherit;
+  text-decoration: none;
+  text-underline-offset: 0.2em;
+}
+
+.secondary-navigation-heading-link:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.secondary-navigation-heading-link:focus-visible {
+  border-radius: 0.2rem;
+  outline: 2px solid color-mix(in oklab, var(--primary) 75%, transparent);
+  outline-offset: 2px;
+}
+
 .secondary-navigation-links {
   display: grid;
   gap: 0.125rem;
@@ -1547,6 +1564,31 @@ h1 { letter-spacing: 0; }
   .tcg-local-navigation-main,
   .tcg-local-navigation-links {
     width: 100%;
+  }
+
+  .tcg-local-navigation--collection .tcg-local-navigation-main {
+    display: block;
+  }
+
+  .tcg-local-navigation--collection .tcg-local-navigation-links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.35rem;
+    overflow: visible;
+    padding-bottom: 0;
+  }
+
+  .tcg-local-navigation--collection .tcg-local-navigation-link {
+    width: 100%;
+    min-width: 0;
+    justify-content: flex-start;
+    white-space: normal;
+    text-align: left;
+  }
+
+  .tcg-local-navigation--collection .tcg-local-navigation-link span {
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
 
   .tcg-local-tools {
