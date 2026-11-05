@@ -53,6 +53,7 @@ import { trackProductEvent } from '@/lib/product-measurement';
 import { getFocusTrapTarget } from '@/lib/focus-management';
 import { isTCGIllustratorCredit } from '@/lib/tcg-illustrators';
 import { TCGIllustratorLink } from './TCGIllustratorLink';
+import { showTCGCollectionMilestoneToast, type TCGCollectionMilestone } from './TCGCollectionMilestoneToast';
 import {
   getTCGCardDetailCollectionPresentation,
   getTCGCardOwnershipTogglePresentation,
@@ -78,7 +79,7 @@ export interface TCGCardDetailContentProps {
   priority?: boolean;
   tcgLanguage?: TCGCardLanguage;
   collectionKey?: string;
-  onOwnershipChange?: (owned: boolean) => void;
+  onOwnershipChange?: (owned: boolean) => TCGCollectionMilestone | null;
   demoOwnership?: TCGDemoOwnership;
 }
 
@@ -312,11 +313,15 @@ export function TCGCardDetailContent({
       ? isTCGCollectionCardOwned(resolvedCollectionKey, displayCard.id, nextState.tcgCollectionCards)
       : nextState.isTCGOwned(displayCard.id);
     if (!wasOwned && isNextOwned) {
-      onOwnershipChange?.(true);
-      toast.success(t('tcg.collection_card_added', {
-        name: displayCard.name,
-        defaultValue: `${displayCard.name} added to your collection`,
-      }));
+      const milestone = onOwnershipChange?.(true) ?? null;
+      showTCGCollectionMilestoneToast({
+        milestone,
+        cardAddedMessage: t('tcg.collection_card_added', {
+          name: displayCard.name,
+          defaultValue: `${displayCard.name} added to your collection`,
+        }),
+        collectionCompleteMessage: t('tcg.collection_no_missing'),
+      });
     }
   };
 

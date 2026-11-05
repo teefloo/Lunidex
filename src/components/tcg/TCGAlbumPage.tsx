@@ -22,6 +22,7 @@ import {
   getRarityColor,
 } from '@/lib/tcg-collection';
 import { TCGAlbumCard } from './TCGAlbumCard';
+import type { TCGCollectionMilestone } from './TCGCollectionMilestoneToast';
 import { TCGDemoNotice } from './TCGDemoNotice';
 import { TCGProgressBar } from './TCGProgressBar';
 import { TCGImageWithFallback } from './TCGImageWithFallback';
@@ -220,24 +221,33 @@ export function TCGAlbumPage({
     setIsVariantSheetOpen(true);
   }, [openCard, resolvedCollectionKey]);
 
-  const handleOwnershipChange = useCallback((nowOwned: boolean) => {
+  const handleOwnershipChange = useCallback((nowOwned: boolean): TCGCollectionMilestone | null => {
     if (demoOwnership) {
       if (!firstValueReachedRef.current) {
         firstValueReachedRef.current = true;
         onDemoInteraction?.();
         void trackProductEvent('tcg_demo_first_interaction', undefined, undefined, { set_id: set.id, tcg_language: selectedLanguage });
       }
-      return;
+      return null;
     }
-    if (!nowOwned) return;
+
+    if (!nowOwned) return null;
+
+    const milestone: TCGCollectionMilestone | null = completion.total > 0 && completion.owned === completion.total - 1
+      ? 'completed'
+      : completion.owned === 0 && completion.total > 1
+        ? 'started'
+        : null;
+
     if (!firstValueReachedRef.current) {
       firstValueReachedRef.current = true;
       setFirstValueReached(true);
-      return;
+      return milestone;
     }
     trackReturnAfterActivation('owned_add');
 
-  }, [demoOwnership, onDemoInteraction, selectedLanguage, set.id]);
+    return milestone;
+  }, [completion.owned, completion.total, demoOwnership, onDemoInteraction, selectedLanguage, set.id]);
 
   const toggleDemoOwned = useCallback((cardId: string) => {
     if (!demoOwnership) return;

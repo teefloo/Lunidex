@@ -16,6 +16,7 @@ import { TCGRarityBadge } from './TCGRarityBadge';
 import { TCGCardImage } from './TCGCardImage';
 import { trackProductEvent } from '@/lib/product-measurement';
 import { getTCGAlbumCardPrimaryAction, getTCGCardAccessibleName } from '@/lib/tcg-album-card-actions';
+import { showTCGCollectionMilestoneToast, type TCGCollectionMilestone } from './TCGCollectionMilestoneToast';
 
 interface TCGAlbumCardProps {
   card: TCGCard;
@@ -24,7 +25,7 @@ interface TCGAlbumCardProps {
   showMissing?: boolean;
   onView?: (card: TCGCard) => void;
   onManage?: (card: TCGCard) => void;
-  onOwnershipChange?: (owned: boolean) => void;
+  onOwnershipChange?: (owned: boolean) => TCGCollectionMilestone | null;
   collectionKey?: string;
   language?: TCGCardLanguage;
   priority?: boolean;
@@ -78,8 +79,14 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
       ? nextState.isTCGCollectionCardOwned(collectionKey, card.id)
       : nextState.isTCGOwned(card.id);
     if (!previousOwned && nextOwned) {
-      setActionFeedback(t('tcg.collection_card_added', { name: card.name, defaultValue: `${card.name} added to your collection` }));
-      onOwnershipChange?.(true);
+      const cardAddedMessage = t('tcg.collection_card_added', { name: card.name, defaultValue: `${card.name} added to your collection` });
+      setActionFeedback(cardAddedMessage);
+      const milestone = onOwnershipChange?.(true) ?? null;
+      showTCGCollectionMilestoneToast({
+        milestone,
+        cardAddedMessage,
+        collectionCompleteMessage: t('tcg.collection_no_missing'),
+      });
     }
   };
 
