@@ -1,0 +1,316 @@
+{
+  "catalogLinks": [
+    {
+      "text": "BLAINE'S CHARIZARD",
+      "href": "/en/tcg/cards/gym2-2?tcgLang=en",
+      "visible": true,
+      "inDialog": false,
+      "rect": {
+        "x": 32,
+        "y": 1130.75,
+        "width": 141.921875,
+        "height": 44,
+        "top": 1130.75,
+        "right": 173.921875,
+        "bottom": 1174.75,
+        "left": 32
+      }
+    },
+    {
+      "text": "CHARIZARD",
+      "href": "/en/tcg/cards/30th-c-001?tcgLang=en",
+      "visible": true,
+      "inDialog": false,
+      "rect": {
+        "x": 378,
+        "y": 1130.75,
+        "width": 78.53125,
+        "height": 44,
+        "top": 1130.75,
+        "right": 456.53125,
+        "bottom": 1174.75,
+        "left": 378
+      }
+    },
+    {
+      "text": "CHARIZARD",
+      "href": "/en/tcg/cards/pl4-1?tcgLang=en",
+      "visible": true,
+      "inDialog": false,
+      "rect": {
+        "x": 724,
+        "y": 1130.75,
+        "width": 78.53125,
+        "height": 44,
+        "top": 1130.75,
+        "right": 802.53125,
+        "bottom": 1174.75,
+        "left": 724
+      }
+    },
+    {
+      "text": "CHARIZARD",
+      "href": "/en/tcg/cards/2024sv-1?tcgLang=en",
+      "visible": true,
+      "inDialog": false,
+      "rect": {
+        "x": 1070,
+        "y": 1130.75,
+        "width": 78.53125,
+        "height": 44,
+        "top": 1130.75,
+        "right": 1148.53125,
+        "bottom": 1174.75,
+        "left": 1070
+      }
+    },
+    {
+      "text": "CHARIZARD",
+      "href": "/en/tcg/cards/dp3-3?tcgLang=en",
+      "visible": true,
+      "inDialog": false,
+      "rect": {
+        "x": 32,
+        "y": 1889.5,
+        "width": 78.53125,
+        "height": 44,
+        "top": 1889.5,
+        "right": 110.53125,
+        "bottom": 1933.5,
+        "left": 32
+      }
+    }
+  ],
+  "visibleCount": 24,
+  "afterClick": {
+    "url": "/en/tcg/cards/gym2-2?tcgLang=en",
+    "dialogs": 1,
+    "h1": "Pokémon TCG Catalog",
+    "backButtons": [
+      {
+        "tag": "BUTTON",
+        "label": "Close",
+        "href": null
+      }
+    ],
+    "mainAriaHidden": null
+  },
+  "afterEscape": {
+    "url": "/en/tcg?q=charizard&sortBy=name&sortOrder=asc&tcgLang=en",
+    "dialogs": 0,
+    "h1": "Pokémon TCG Catalog"
+  },
+  "album": {
+    "h1": "30TH CLASSIC COLLECTION",
+    "links": [
+      {
+        "text": "Luni dex",
+        "href": "/en"
+      },
+      {
+        "text": "Collection",
+        "href": "/en/tcg/collection"
+      },
+      {
+        "text": "Catalog",
+        "href": "/en/tcg"
+      },
+      {
+        "text": "Pokédex",
+        "href": "/en/pokedex"
+      },
+      {
+        "text": "Team Builder",
+        "href": "/en/team"
+      },
+      {
+        "text": "",
+        "href": "/en/tcg/start?tcgLang=en"
+      },
+      {
+        "text": "Change set",
+        "href": "/en/tcg/start?tcgLang=en"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "",
+        "aria": "Options for 30th Classic Collection"
+      },
+      {
+        "text": "Create an account to save my p",
+        "aria": null
+      },
+      {
+        "text": "MISSING (30)",
+        "aria": null
+      },
+      {
+        "text": "CHARIZARD\n\n#001\n\nADD",
+        "aria": "Demo: mark Charizard #001 as owned"
+      },
+      {
+        "text": "VIEW CARD",
+        "aria": "View Charizard #001 card"
+      },
+      {
+        "text": "DELCATTY\n\n#002\n\nADD",
+        "aria": "Demo: mark Delcatty #002 as owned"
+      },
+      {
+        "text": "VIEW CARD",
+        "aria": "View Delcatty #002 card"
+      },
+      {
+        "text": "METAGROSS\n\n#003\n\nADD",
+        "aria": "Demo: mark Metagross #003 as owned"
+      },
+      {
+        "text": "VIEW CARD",
+        "aria": "View Metagross #003 card"
+      },
+      {
+        "text": "GENESECT EX\n\n#004\n\nADD",
+        "aria": "Demo: mark Genesect EX #004 as owned"
+      },
+      {
+        "text": "VIEW CARD",
+        "aria": "View Genesect EX #004 card"
+      },
+      {
+        "text": "MISTY\n\n#005\n\nADD",
+        "aria": "Demo: mark Misty #005 as owned"
+      },
+      {
+        "text": "VIEW CARD",
+        "aria": "View Misty #005 card"
+      },
+      {
+        "text": "DARK TYRANITAR\n\n#006\n\nADD",
+        "aria": "Demo: mark Dark Tyranitar #006 as owned"
+      },
+      {
+        "text": "VIEW CARD",
+        "aria": "View Dark Tyranitar #006 card"
+      },
+      {
+        "text": "SNEASEL\n\n#007\n\nADD",
+        "aria": "Demo: mark Sneasel #007 as owned"
+      },
+      {
+        "text": "VIEW CARD",
+        "aria": "View Sneasel #007 card"
+      },
+      {
+        "text": "PIKACHU & ZEKROM GX\n\n#008\n\nADD",
+        "aria": "Demo: mark Pikachu & Zekrom GX #008 as owned"
+      },
+      {
+        "text": "VIEW CARD",
+        "aria": "View Pikachu & Zekrom GX #008 card"
+      },
+      {
+        "text": "GRENINJA BREAK\n\n#009\n\nADD",
+        "aria": "Demo: mark Greninja BREAK #009 as owned"
+      }
+    ],
+    "current": [
+      "Collection",
+      "Collection"
+    ]
+  },
+  "nf": {
+    "url": "/en/__lunidex-not-found",
+    "h1": "Page not found",
+    "headerCount": 0,
+    "navs": [
+      {
+        "label": "Quick navigation",
+        "links": [
+          "Browse Pokédex",
+          "Team Builder",
+          "Who's That Pokémon?"
+        ]
+      },
+      {
+        "label": null,
+        "links": [
+          "Pokédex",
+          "Types",
+          "Team Builder",
+          "TCG Catalog",
+          "Documentation",
+          "Public API guide",
+          "Dashboard",
+          "Quiz"
+        ]
+      },
+      {
+        "label": null,
+        "links": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ]
+      },
+      {
+        "label": null,
+        "links": [
+          "FAQ",
+          "About Lunidex",
+          "Contact"
+        ]
+      },
+      {
+        "label": null,
+        "links": [
+          "PokéAPI",
+          "TCGdex"
+        ]
+      },
+      {
+        "label": "Legal",
+        "links": [
+          "Legal Notice",
+          "Privacy Policy",
+          "Terms of Service",
+          "Cookie Policy"
+        ]
+      }
+    ],
+    "links": [
+      "Skip to main content",
+      "Browse Pokédex",
+      "Team Builder",
+      "Who's That Pokémon?",
+      "Compare",
+      "Types",
+      "Favorites",
+      "Luni dex",
+      "Start my collection",
+      "GitHub",
+      "Pokédex",
+      "Types",
+      "Team Builder",
+      "TCG Catalog",
+      "Documentation",
+      "Public API guide",
+      "Dashboard",
+      "Quiz",
+      "Favorites",
+      "FAQ"
+    ]
+  },
+  "missingSet": {
+    "url": "/en/tcg/collection/en/does-not-exist",
+    "h1": null,
+    "header": 1,
+    "body": "SET NOT FOUND",
+    "links": []
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "modal": {
+    "setPageLinks": 60,
+    "setPageUrl": "/en/tcg/sets/30th-c?tcgLang=en",
+    "open": {
+      "url": "/en/tcg/sets/30th-c?tcgLang=en",
+      "dialog": 0,
+      "h1": "CHARIZARD"
+    },
+    "reopenUrl": "/en/tcg/cards/30th-c-001?tcgLang=en",
+    "back": {
+      "url": "/en/tcg/sets/30th-c?tcgLang=en",
+      "dialog": 0
+    },
+    "forward": {
+      "url": "/en/tcg/cards/30th-c-001?tcgLang=en",
+      "dialog": 1
+    }
+  },
+  "mobile": {
+    "triggerCount": 1,
+    "dialog": {
+      "present": 1,
+      "visible": true,
+      "ariaModal": "true",
+      "linkCount": 30,
+      "links": [
+        "Luni\ndex",
+        "Wishlist",
+        "Investments",
+        "Sealed",
+        "Start my collection",
+        "Sealed market",
+        "Deck Builder",
+        "Pull rates",
+        "Booster value",
+        "Types",
+        "Moves",
+        "Abilities",
+        "Items",
+        "Quiz",
+        "Nuzlocke Tracker",
+        "Compare",
+        "Battle",
+        "Breeding",
+        "EV/IV Calc",
+        "Favorites",
+        "Dashboard",
+        "Friends",
+        "Blog",
+        "Guides",
+        "Documentation and API",
+        "Anniversary tracker",
+        "FAQ",
+        "About Lunidex",
+        "Contact",
+        "Collector app comparison"
+      ],
+      "headings": [
+        "Language",
+        "Collection",
+        "Catalog",
+        "Pokédex",
+        "Play",
+        "My space",
+        "Resources",
+        "Account"
+      ],
+      "bodyOverflow": "hidden"
+    },
+    "trail": [
+      {
+        "t": "Luni\ndex",
+        "a": null
+      },
+      {
+        "t": "",
+        "a": "Close"
+      },
+      {
+        "t": "Auto\n🇺🇸 English\n🇫🇷 Françai",
+        "a": "Language"
+      },
+      {
+        "t": "Wishlist",
+        "a": null
+      },
+      {
+        "t": "Investments",
+        "a": null
+      },
+      {
+        "t": "Sealed",
+        "a": null
+      },
+      {
+        "t": "Start my collection",
+        "a": null
+      },
+      {
+        "t": "Sealed market",
+        "a": null
+      },
+      {
+        "t": "Deck Builder",
+        "a": null
+      },
+      {
+        "t": "Pull rates",
+        "a": null
+      }
+    ],
+    "closed": true,
+    "focusAfterClose": {
+      "a": "More",
+      "tag": "BUTTON"
+    },
+    "bodyOverflowAfter": "visible"
+  },
+  "escape": {
+    "afterModalEscape": {
+      "url": "/en/tcg/sets/30th-c?tcgLang=en",
+      "dialog": 0
+    },
+    "toolsOpened": true,
+    "toolsAfterEscape": false,
+    "toolsFocus": "SUMMARY:Tools",
+    "toolsAfterOutsideClick": false,
+    "moreOpened": true,
+    "moreAfterEscape": false,
+    "moreFocus": "SUMMARY:More",
+    "moreAfterOutsideClick": false
+  },
+  "catalog": {
+    "url": "/en/tcg?q=charizard&tcgLang=en",
+    "cardLinks": 24,
+    "setLinks": 24,
+    "h1": "Pokémon TCG Catalog",
+    "bodyExcerpt": "Catalog Sealed market Tools CARD LANGUAGE CARDS English French Spanish Italian Portuguese Brazilian Portuguese European Portuguese German Dutch Polish Russian Japanese Korean Chinese (Taiwan) Indonesian Thai Chinese (China) Pokémon card collection tracker guide How to estimate a Pokémon card collect",
+    "searchValue": "charizard"
+  }
+}

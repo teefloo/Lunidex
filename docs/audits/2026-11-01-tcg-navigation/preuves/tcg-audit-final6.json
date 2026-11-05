@@ -1,0 +1,135 @@
+{
+  "modal": [
+    {
+      "step": "before-click",
+      "url": "/en/tcg/sets/30th-c?tcgLang=en",
+      "dialogCount": 0
+    },
+    {
+      "step": "after-click",
+      "url": "/en/tcg/cards/30th-c-001?tcgLang=en",
+      "dialogCount": 1,
+      "dialogRole": "dialog",
+      "dialogAriaModal": "true",
+      "dialogLabel": null,
+      "dialogH1": "CHARIZARD",
+      "closeButtons": [
+        "Close",
+        "Open Charizard card",
+        "Add Charizard #001 to my collection",
+        "Add Charizard to wishlist"
+      ],
+      "bodyOverflow": "hidden",
+      "backgroundHidden": null,
+      "activeEl": "Close"
+    },
+    {
+      "step": "after-close-button",
+      "url": "/en/tcg/sets/30th-c?tcgLang=en",
+      "dialogCount": 0,
+      "activeEl": "Open Charizard card"
+    },
+    {
+      "step": "reopen",
+      "url": "/en/tcg/cards/30th-c-001?tcgLang=en",
+      "dialogCount": 1
+    },
+    {
+      "step": "browser-back",
+      "url": "/en/tcg/sets/30th-c?tcgLang=en",
+      "dialogCount": 0,
+      "h1": "30th Classic Collection — Card list & checklist"
+    },
+    {
+      "step": "browser-forward",
+      "url": "/en/tcg/cards/30th-c-001?tcgLang=en",
+      "dialogCount": 1
+    }
+  ],
+  "routes": [
+    {
+      "route": "/en/tcg/cards/does-not-exist",
+      "status": 404,
+      "url": "/en/__lunidex-not-found",
+      "title": "Lunidex — Pokémon TCG Card Catalog & Collection Tracker",
+      "h1": "Page not found",
+      "textLen": 2112,
+      "header": 0,
+      "links": 31
+    },
+    {
+      "route": "/en/tcg/sets/does-not-exist",
+      "status": 404,
+      "url": "/en/__lunidex-not-found",
+      "title": "Lunidex — Pokémon TCG Card Catalog & Collection Tracker",
+      "h1": "Page not found",
+      "textLen": 2112,
+      "header": 0,
+      "links": 31
+    },
+    {
+      "route": "/en/tcg/sealed/market/does-not-exist",
+      "status": 404,
+      "url": "/en/tcg/sealed/market/does-not-exist",
+      "title": "Sealed product market | Lunidex",
+      "h1": "Page not found",
+      "textLen": 2112,
+      "header": 0,
+      "links": 31
+    },
+    {
+      "route": "/en/tcg/illustrators/does-not-exist",
+      "status": 200,
+      "url": "/en/tcg/illustrators/does-not-exist",
+      "title": "Page not found | Lunidex",
+      "h1": "Page not found",
+      "textLen": 2112,
+      "header": 0,
+      "links": 31
+    },
+    {
+      "route": "/en/tcg/collection/en/does-not-exist",
+      "status": 200,
+      "url": "/en/tcg/collection/en/does-not-exist",
+      "title": "does-not-exist — My Collection",
+      "h1": null,
+      "textLen": 1401,
+      "header": 1,
+      "links": 30
+    },
+    {
+      "route": "/en/tcg/collection/xx",
+      "status": 200,
+      "url": "/en/tcg/collection/xx",
+      "title": "Choose a language for this collection — My Collection",
+      "h1": "Sign in or create an account",
+      "textLen": 1430,
+      "header": 0,
+      "links": 25
+    }
+  ],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "Failed to load resource: net::ERR_CONNECTION_REFUSED"
+  ]
+}

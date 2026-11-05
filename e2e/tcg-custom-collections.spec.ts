@@ -479,6 +479,8 @@ test('multilingual binder quantities, filters, removal and series ownership stay
   await expect(list.locator('img').first()).toHaveAttribute('src', /\/fr\//);
   await expect(list.locator('img').last()).toHaveAttribute('src', /\/ja\//);
   const frQuantity = list.getByRole('spinbutton', { name: 'Binder quantity: Dracaufeu (fr)', exact: true });
+  const binderLanguageFilter = page.getByRole('combobox', { name: 'Card language', exact: true })
+    .filter({ has: page.getByRole('option', { name: 'All languages', exact: true }) });
   await frQuantity.focus();
   await frQuantity.press('End');
   await frQuantity.press('Backspace');
@@ -488,10 +490,10 @@ test('multilingual binder quantities, filters, removal and series ownership stay
   await expect.poll(() => (app.getState().tcgCustomCollectionCards as { language: string; quantity: number }[]).find((card) => card.language === 'fr')?.quantity).toBe(4);
   expect(app.getState().tcgCollectionCards).toEqual(seriesBefore);
   await page.screenshot({ path: testInfo.outputPath('multilingual-binder-desktop.png'), fullPage: true });
-  await page.getByRole('combobox', { name: 'Card language', exact: true }).selectOption('ja');
+  await binderLanguageFilter.selectOption('ja');
   await expect(list.getByRole('listitem')).toHaveCount(1);
   await expect(list.getByText('リザードン', { exact: true })).toHaveCount(1);
-  await page.getByRole('combobox', { name: 'Card language', exact: true }).selectOption('');
+  await binderLanguageFilter.selectOption('');
   await page.getByRole('searchbox', { name: 'Search cards', exact: true }).fill('Drac');
   await expect(list.getByRole('listitem')).toHaveCount(1);
   await page.getByRole('searchbox', { name: 'Search cards', exact: true }).fill('');

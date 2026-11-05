@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { connection } from "next/server";
 import { headers } from "next/headers";
-import { Pixelify_Sans, Nunito } from "next/font/google";
+import localFont from "next/font/local";
 import Providers from "./providers";
 import "./globals.css";
 import { cn } from "@/lib/utils";
@@ -29,17 +29,17 @@ import {
   FEATURE_LIST,
 } from "@/lib/site";
 
-const displayFont = Nunito({
-  subsets: ["latin"],
-  weight: "variable",
+const displayFont = localFont({
+  src: "../lib/fonts/Nunito[wght].ttf",
+  weight: "200 1000",
   variable: "--font-nunito",
   display: "optional",
   preload: false,
 });
 
-const brandPixelFont = Pixelify_Sans({
-  subsets: ["latin"],
-  weight: ["400", "700"],
+const brandPixelFont = localFont({
+  src: "../lib/fonts/PixelifySans[wght].ttf",
+  weight: "400 700",
   variable: "--font-pixel",
   display: "optional",
   preload: false,

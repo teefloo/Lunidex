@@ -1,0 +1,65 @@
+{
+  "customMissing": {
+    "url": "/en/tcg/collection/custom/does-not-exist",
+    "h1": "Sign in or create an account",
+    "h2": "",
+    "breadcrumbs": 0,
+    "body": "Sign in or create an account An account is required to save your collection and sync it across devices. SIGN IN",
+    "mainLinkCount": 0,
+    "languageSelector": 1
+  },
+  "customNone": {
+    "url": "/en/tcg/collection/custom/none",
+    "h1": "Sign in or create an account",
+    "h2": "",
+    "breadcrumbs": 0,
+    "body": "Sign in or create an account An account is required to save your collection and sync it across devices. SIGN IN",
+    "mainLinkCount": 0,
+    "languageSelector": 1
+  },
+  "languageChooser": {
+    "url": "/en/tcg/collection/en",
+    "h1": "Sign in or create an account",
+    "h2": "Collection",
+    "breadcrumbs": 0,
+    "body": "",
+    "mainLinkCount": 0,
+    "languageSelector": 0
+  },
+  "illustrator": {
+    "url": "/en/tcg/illustrators/mitsuhiro-arita",
+    "h1": "Page not found",
+    "h2": "The Lost Link Maze",
+    "breadcrumbs": 0,
+    "body": "",
+    "mainLinkCount": 0,
+    "languageSelector": 0
+  },
+  "sealedCollection": {
+    "url": "/en/tcg/sealed/collection",
+    "h1": "Collection",
+    "h2": "",
+    "breadcrumbs": 0,
+    "body": "Dashboard Collection Journal Reports Tools Sealed market PRIVATE TCG SPACE Collection Track sealed Pokémon products, purchases, sales and performance in EUR. Loading sealed portfolio…",
+    "mainLinkCount": 4,
+    "languageSelector": 1
+  },
+  "wishlist": {
+    "url": "/en/tcg/wishlist",
+    "h1": "WISHLIST",
+    "h2": "",
+    "breadcrumbs": 0,
+    "body": "Collection Wishlist Investments Sealed CARD LANGUAGE CARDS English French Spanish Italian Portuguese Brazilian Portuguese European Portuguese German Dutch Polish Russian Japanese Korean Chinese (Taiwan) Indonesian Thai Chinese (China) WISHL",
+    "mainLinkCount": 5,
+    "languageSelector": 2
+  },
+  "investments": {
+    "url": "/en/tcg/investments",
+    "h1": "INVESTMENTS",
+    "h2": "",
+    "breadcrumbs": 0,
+    "body": "Collection Wishlist Investments Sealed INVESTMENTS Track card purchases and the value of your portfolio in euros. Sign in or create an account An account is required to save your collection and sync it across devices. SIGN IN",
+    "mainLinkCount": 4,
+    "languageSelector": 1
+  }
+}

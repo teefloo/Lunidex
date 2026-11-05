@@ -1,0 +1,2319 @@
+{
+  "current": {
+    "desktop": {
+      "/en/tcg": {
+        "currents": [
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "site-header-nav-link"
+          },
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg?tcgLang=en",
+            "cls": "tcg-local-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "primary-bottom-nav-link"
+          }
+        ],
+        "visibleNavs": [
+          {
+            "label": "Primary navigation",
+            "links": [
+              "Collection",
+              "Catalog",
+              "Pokédex",
+              "Team Builder",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Pokémon TCG Catalog",
+            "links": [
+              "Catalog",
+              "Sealed market",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Guides for cards and teams",
+            "links": [
+              "Pokémon card collection t",
+              "How to estimate a Pokémon"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "Pokédex",
+              "Types",
+              "Team Builder",
+              "TCG Catalog",
+              "Documentation",
+              "Public API guide",
+              "Dashboard",
+              "Quiz",
+              "Favorites"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "FAQ",
+              "About Lunidex",
+              "Contact"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "PokéAPI",
+              "TCGdex"
+            ]
+          },
+          {
+            "label": "Legal",
+            "links": [
+              "Legal Notice",
+              "Privacy Policy",
+              "Terms of Service",
+              "Cookie Policy"
+            ]
+          }
+        ],
+        "h1": "Pokémon TCG Catalog"
+      },
+      "/en/tcg/collection": {
+        "currents": [
+          {
+            "tag": "A",
+            "text": "Collection",
+            "href": "/en/tcg/collection",
+            "cls": "site-header-nav-link"
+          },
+          {
+            "tag": "A",
+            "text": "Collection",
+            "href": "/en/tcg/collection",
+            "cls": "tcg-local-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Collection",
+            "href": "/en/tcg/collection",
+            "cls": "primary-bottom-nav-link"
+          }
+        ],
+        "visibleNavs": [
+          {
+            "label": "Primary navigation",
+            "links": [
+              "Collection",
+              "Catalog",
+              "Pokédex",
+              "Team Builder",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Pokémon TCG Catalog",
+            "links": [
+              "Collection",
+              "Wishlist",
+              "Investments",
+              "Sealed"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "Pokédex",
+              "Types",
+              "Team Builder",
+              "TCG Catalog",
+              "Documentation",
+              "Public API guide",
+              "Dashboard",
+              "Quiz",
+              "Favorites"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "FAQ",
+              "About Lunidex",
+              "Contact"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "PokéAPI",
+              "TCGdex"
+            ]
+          },
+          {
+            "label": "Legal",
+            "links": [
+              "Legal Notice",
+              "Privacy Policy",
+              "Terms of Service",
+              "Cookie Policy"
+            ]
+          }
+        ],
+        "h1": "MY COLLECTION"
+      },
+      "/en/tcg/wishlist": {
+        "currents": [
+          {
+            "tag": "A",
+            "text": "Collection",
+            "href": "/en/tcg/collection",
+            "cls": "site-header-nav-link"
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "href": "/en/tcg/wishlist",
+            "cls": "secondary-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Wishlist",
+            "href": "/en/tcg/wishlist?tcgLang=en",
+            "cls": "tcg-local-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Collection",
+            "href": "/en/tcg/collection",
+            "cls": "primary-bottom-nav-link"
+          }
+        ],
+        "visibleNavs": [
+          {
+            "label": "Primary navigation",
+            "links": [
+              "Collection",
+              "Catalog",
+              "Pokédex",
+              "Team Builder",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Pokémon TCG Catalog",
+            "links": [
+              "Collection",
+              "Wishlist",
+              "Investments",
+              "Sealed"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "Pokédex",
+              "Types",
+              "Team Builder",
+              "TCG Catalog",
+              "Documentation",
+              "Public API guide",
+              "Dashboard",
+              "Quiz",
+              "Favorites"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "FAQ",
+              "About Lunidex",
+              "Contact"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "PokéAPI",
+              "TCGdex"
+            ]
+          },
+          {
+            "label": "Legal",
+            "links": [
+              "Legal Notice",
+              "Privacy Policy",
+              "Terms of Service",
+              "Cookie Policy"
+            ]
+          }
+        ],
+        "h1": "WISHLIST"
+      },
+      "/en/tcg/investments": {
+        "currents": [
+          {
+            "tag": "A",
+            "text": "Collection",
+            "href": "/en/tcg/collection",
+            "cls": "site-header-nav-link"
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "href": "/en/tcg/investments",
+            "cls": "secondary-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Investments",
+            "href": "/en/tcg/investments?tcgLang=en",
+            "cls": "tcg-local-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Collection",
+            "href": "/en/tcg/collection",
+            "cls": "primary-bottom-nav-link"
+          }
+        ],
+        "visibleNavs": [
+          {
+            "label": "Primary navigation",
+            "links": [
+              "Collection",
+              "Catalog",
+              "Pokédex",
+              "Team Builder",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Pokémon TCG Catalog",
+            "links": [
+              "Collection",
+              "Wishlist",
+              "Investments",
+              "Sealed"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "Pokédex",
+              "Types",
+              "Team Builder",
+              "TCG Catalog",
+              "Documentation",
+              "Public API guide",
+              "Dashboard",
+              "Quiz",
+              "Favorites"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "FAQ",
+              "About Lunidex",
+              "Contact"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "PokéAPI",
+              "TCGdex"
+            ]
+          },
+          {
+            "label": "Legal",
+            "links": [
+              "Legal Notice",
+              "Privacy Policy",
+              "Terms of Service",
+              "Cookie Policy"
+            ]
+          }
+        ],
+        "h1": "INVESTMENTS"
+      },
+      "/en/tcg/deck-builder": {
+        "currents": [
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "site-header-nav-link"
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "href": "/en/tcg/deck-builder",
+            "cls": "secondary-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "href": "/en/tcg/deck-builder?tcgLang=en",
+            "cls": "tcg-local-tool-link"
+          },
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "primary-bottom-nav-link"
+          }
+        ],
+        "visibleNavs": [
+          {
+            "label": "Primary navigation",
+            "links": [
+              "Collection",
+              "Catalog",
+              "Pokédex",
+              "Team Builder",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Pokémon TCG Catalog",
+            "links": [
+              "Catalog",
+              "Sealed market",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "Pokédex",
+              "Types",
+              "Team Builder",
+              "TCG Catalog",
+              "Documentation",
+              "Public API guide",
+              "Dashboard",
+              "Quiz",
+              "Favorites"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "FAQ",
+              "About Lunidex",
+              "Contact"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "PokéAPI",
+              "TCGdex"
+            ]
+          },
+          {
+            "label": "Legal",
+            "links": [
+              "Legal Notice",
+              "Privacy Policy",
+              "Terms of Service",
+              "Cookie Policy"
+            ]
+          }
+        ],
+        "h1": "Deck Builder"
+      },
+      "/en/tcg/sealed": {
+        "currents": [
+          {
+            "tag": "A",
+            "text": "Collection",
+            "href": "/en/tcg/collection",
+            "cls": "site-header-nav-link"
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "href": "/en/tcg/sealed",
+            "cls": "secondary-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Dashboard",
+            "href": "/en/tcg/sealed",
+            "cls": "sealed-subnav-link"
+          },
+          {
+            "tag": "A",
+            "text": "Collection",
+            "href": "/en/tcg/collection",
+            "cls": "primary-bottom-nav-link"
+          }
+        ],
+        "visibleNavs": [
+          {
+            "label": "Primary navigation",
+            "links": [
+              "Collection",
+              "Catalog",
+              "Pokédex",
+              "Team Builder",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Sealed portfolio",
+            "links": [
+              "Dashboard",
+              "Collection",
+              "Journal",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "Sealed market"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "Pokédex",
+              "Types",
+              "Team Builder",
+              "TCG Catalog",
+              "Documentation",
+              "Public API guide",
+              "Dashboard",
+              "Quiz",
+              "Favorites"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "FAQ",
+              "About Lunidex",
+              "Contact"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "PokéAPI",
+              "TCGdex"
+            ]
+          },
+          {
+            "label": "Legal",
+            "links": [
+              "Legal Notice",
+              "Privacy Policy",
+              "Terms of Service",
+              "Cookie Policy"
+            ]
+          }
+        ],
+        "h1": "Dashboard"
+      },
+      "/en/tcg/sealed/market": {
+        "currents": [
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "site-header-nav-link"
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "href": "/en/tcg/sealed/market",
+            "cls": "secondary-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Sealed market",
+            "href": "/en/tcg/sealed/market",
+            "cls": "tcg-local-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "primary-bottom-nav-link"
+          }
+        ],
+        "visibleNavs": [
+          {
+            "label": "Primary navigation",
+            "links": [
+              "Collection",
+              "Catalog",
+              "Pokédex",
+              "Team Builder",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Pokémon TCG Catalog",
+            "links": [
+              "Catalog",
+              "Sealed market",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Products",
+            "links": [
+              "Previous page",
+              "Next page"
+            ]
+          },
+          {
+            "label": "Sealed product market",
+            "links": [
+              "See releases",
+              "Tips before buying"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "Pokédex",
+              "Types",
+              "Team Builder",
+              "TCG Catalog",
+              "Documentation",
+              "Public API guide",
+              "Dashboard",
+              "Quiz",
+              "Favorites"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "FAQ",
+              "About Lunidex",
+              "Contact"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "PokéAPI",
+              "TCGdex"
+            ]
+          },
+          {
+            "label": "Legal",
+            "links": [
+              "Legal Notice",
+              "Privacy Policy",
+              "Terms of Service",
+              "Cookie Policy"
+            ]
+          }
+        ],
+        "h1": "Sealed product market"
+      },
+      "/en/tcg/sealed/releases": {
+        "currents": [
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "site-header-nav-link"
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "href": "/en/tcg/sealed/market",
+            "cls": "secondary-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Sealed market",
+            "href": "/en/tcg/sealed/market",
+            "cls": "tcg-local-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "primary-bottom-nav-link"
+          }
+        ],
+        "visibleNavs": [
+          {
+            "label": "Primary navigation",
+            "links": [
+              "Collection",
+              "Catalog",
+              "Pokédex",
+              "Team Builder",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Pokémon TCG Catalog",
+            "links": [
+              "Catalog",
+              "Sealed market",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "Pokédex",
+              "Types",
+              "Team Builder",
+              "TCG Catalog",
+              "Documentation",
+              "Public API guide",
+              "Dashboard",
+              "Quiz",
+              "Favorites"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "FAQ",
+              "About Lunidex",
+              "Contact"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "PokéAPI",
+              "TCGdex"
+            ]
+          },
+          {
+            "label": "Legal",
+            "links": [
+              "Legal Notice",
+              "Privacy Policy",
+              "Terms of Service",
+              "Cookie Policy"
+            ]
+          }
+        ],
+        "h1": "Sealed release calendar"
+      },
+      "/en/tcg/sealed/buy-safely": {
+        "currents": [
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "site-header-nav-link"
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "href": "/en/tcg/sealed/market",
+            "cls": "secondary-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Sealed market",
+            "href": "/en/tcg/sealed/market?tcgLang=en",
+            "cls": "tcg-local-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "primary-bottom-nav-link"
+          }
+        ],
+        "visibleNavs": [
+          {
+            "label": "Primary navigation",
+            "links": [
+              "Collection",
+              "Catalog",
+              "Pokédex",
+              "Team Builder",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Pokémon TCG Catalog",
+            "links": [
+              "Catalog",
+              "Sealed market",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "Pokédex",
+              "Types",
+              "Team Builder",
+              "TCG Catalog",
+              "Documentation",
+              "Public API guide",
+              "Dashboard",
+              "Quiz",
+              "Favorites"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "FAQ",
+              "About Lunidex",
+              "Contact"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "PokéAPI",
+              "TCGdex"
+            ]
+          },
+          {
+            "label": "Legal",
+            "links": [
+              "Legal Notice",
+              "Privacy Policy",
+              "Terms of Service",
+              "Cookie Policy"
+            ]
+          }
+        ],
+        "h1": "Buy cards and sealed products with care"
+      },
+      "/en/tcg/sets/30th-c": {
+        "currents": [
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "site-header-nav-link"
+          },
+          {
+            "tag": "SPAN",
+            "text": "30th Classic Collection",
+            "href": null,
+            "cls": "max-w-[min(70vw,28rem)] truncate font-semibold tex"
+          },
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "primary-bottom-nav-link"
+          }
+        ],
+        "visibleNavs": [
+          {
+            "label": "Primary navigation",
+            "links": [
+              "Collection",
+              "Catalog",
+              "Pokédex",
+              "Team Builder",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Breadcrumb",
+            "links": [
+              "Home",
+              "TCG Catalog"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "Pokédex",
+              "Types",
+              "Team Builder",
+              "TCG Catalog",
+              "Documentation",
+              "Public API guide",
+              "Dashboard",
+              "Quiz",
+              "Favorites"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "FAQ",
+              "About Lunidex",
+              "Contact"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "PokéAPI",
+              "TCGdex"
+            ]
+          },
+          {
+            "label": "Legal",
+            "links": [
+              "Legal Notice",
+              "Privacy Policy",
+              "Terms of Service",
+              "Cookie Policy"
+            ]
+          }
+        ],
+        "h1": "30th Classic Collection — Card list & checklist"
+      },
+      "/en/tcg/start": {
+        "currents": [
+          {
+            "tag": "A",
+            "text": "Collection",
+            "href": "/en/tcg/collection",
+            "cls": "site-header-nav-link"
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "href": "/en/tcg/start",
+            "cls": "secondary-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Collection",
+            "href": "/en/tcg/collection",
+            "cls": "primary-bottom-nav-link"
+          }
+        ],
+        "visibleNavs": [
+          {
+            "label": "Primary navigation",
+            "links": [
+              "Collection",
+              "Catalog",
+              "Pokédex",
+              "Team Builder",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "Pokédex",
+              "Types",
+              "Team Builder",
+              "TCG Catalog",
+              "Documentation",
+              "Public API guide",
+              "Dashboard",
+              "Quiz",
+              "Favorites"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "FAQ",
+              "About Lunidex",
+              "Contact"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "PokéAPI",
+              "TCGdex"
+            ]
+          },
+          {
+            "label": "Legal",
+            "links": [
+              "Legal Notice",
+              "Privacy Policy",
+              "Terms of Service",
+              "Cookie Policy"
+            ]
+          }
+        ],
+        "h1": "Start your collection"
+      }
+    },
+    "mobile": {
+      "/en/tcg": {
+        "currents": [
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "site-header-nav-link"
+          },
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg?tcgLang=en",
+            "cls": "tcg-local-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "primary-bottom-nav-link"
+          }
+        ],
+        "visibleNavs": [
+          {
+            "label": "Pokémon TCG Catalog",
+            "links": [
+              "Catalog",
+              "Sealed market",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Guides for cards and teams",
+            "links": [
+              "Pokémon card collection t",
+              "How to estimate a Pokémon"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "Pokédex",
+              "Types",
+              "Team Builder",
+              "TCG Catalog",
+              "Documentation",
+              "Public API guide",
+              "Dashboard",
+              "Quiz",
+              "Favorites"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "FAQ",
+              "About Lunidex",
+              "Contact"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "PokéAPI",
+              "TCGdex"
+            ]
+          },
+          {
+            "label": "Legal",
+            "links": [
+              "Legal Notice",
+              "Privacy Policy",
+              "Terms of Service",
+              "Cookie Policy"
+            ]
+          }
+        ],
+        "h1": "Pokémon TCG Catalog"
+      },
+      "/en/tcg/collection": {
+        "currents": [
+          {
+            "tag": "A",
+            "text": "Collection",
+            "href": "/en/tcg/collection",
+            "cls": "site-header-nav-link"
+          },
+          {
+            "tag": "A",
+            "text": "Collection",
+            "href": "/en/tcg/collection?tcgLang=en",
+            "cls": "tcg-local-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Collection",
+            "href": "/en/tcg/collection",
+            "cls": "primary-bottom-nav-link"
+          }
+        ],
+        "visibleNavs": [
+          {
+            "label": "Pokémon TCG Catalog",
+            "links": [
+              "Collection",
+              "Wishlist",
+              "Investments",
+              "Sealed"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "Pokédex",
+              "Types",
+              "Team Builder",
+              "TCG Catalog",
+              "Documentation",
+              "Public API guide",
+              "Dashboard",
+              "Quiz",
+              "Favorites"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "FAQ",
+              "About Lunidex",
+              "Contact"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "PokéAPI",
+              "TCGdex"
+            ]
+          },
+          {
+            "label": "Legal",
+            "links": [
+              "Legal Notice",
+              "Privacy Policy",
+              "Terms of Service",
+              "Cookie Policy"
+            ]
+          }
+        ],
+        "h1": "MY COLLECTION"
+      },
+      "/en/tcg/wishlist": {
+        "currents": [
+          {
+            "tag": "A",
+            "text": "Collection",
+            "href": "/en/tcg/collection",
+            "cls": "site-header-nav-link"
+          },
+          {
+            "tag": "A",
+            "text": "Wishlist",
+            "href": "/en/tcg/wishlist",
+            "cls": "secondary-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Wishlist",
+            "href": "/en/tcg/wishlist?tcgLang=en",
+            "cls": "tcg-local-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Collection",
+            "href": "/en/tcg/collection",
+            "cls": "primary-bottom-nav-link"
+          }
+        ],
+        "visibleNavs": [
+          {
+            "label": "Pokémon TCG Catalog",
+            "links": [
+              "Collection",
+              "Wishlist",
+              "Investments",
+              "Sealed"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "Pokédex",
+              "Types",
+              "Team Builder",
+              "TCG Catalog",
+              "Documentation",
+              "Public API guide",
+              "Dashboard",
+              "Quiz",
+              "Favorites"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "FAQ",
+              "About Lunidex",
+              "Contact"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "PokéAPI",
+              "TCGdex"
+            ]
+          },
+          {
+            "label": "Legal",
+            "links": [
+              "Legal Notice",
+              "Privacy Policy",
+              "Terms of Service",
+              "Cookie Policy"
+            ]
+          }
+        ],
+        "h1": "WISHLIST"
+      },
+      "/en/tcg/investments": {
+        "currents": [
+          {
+            "tag": "A",
+            "text": "Collection",
+            "href": "/en/tcg/collection",
+            "cls": "site-header-nav-link"
+          },
+          {
+            "tag": "A",
+            "text": "Investments",
+            "href": "/en/tcg/investments",
+            "cls": "secondary-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Investments",
+            "href": "/en/tcg/investments?tcgLang=en",
+            "cls": "tcg-local-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Collection",
+            "href": "/en/tcg/collection",
+            "cls": "primary-bottom-nav-link"
+          }
+        ],
+        "visibleNavs": [
+          {
+            "label": "Pokémon TCG Catalog",
+            "links": [
+              "Collection",
+              "Wishlist",
+              "Investments",
+              "Sealed"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "Pokédex",
+              "Types",
+              "Team Builder",
+              "TCG Catalog",
+              "Documentation",
+              "Public API guide",
+              "Dashboard",
+              "Quiz",
+              "Favorites"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "FAQ",
+              "About Lunidex",
+              "Contact"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "PokéAPI",
+              "TCGdex"
+            ]
+          },
+          {
+            "label": "Legal",
+            "links": [
+              "Legal Notice",
+              "Privacy Policy",
+              "Terms of Service",
+              "Cookie Policy"
+            ]
+          }
+        ],
+        "h1": "INVESTMENTS"
+      },
+      "/en/tcg/deck-builder": {
+        "currents": [
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "site-header-nav-link"
+          },
+          {
+            "tag": "A",
+            "text": "Deck Builder",
+            "href": "/en/tcg/deck-builder",
+            "cls": "secondary-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "href": "/en/tcg/deck-builder?tcgLang=en",
+            "cls": "tcg-local-tool-link"
+          },
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "primary-bottom-nav-link"
+          }
+        ],
+        "visibleNavs": [
+          {
+            "label": "Pokémon TCG Catalog",
+            "links": [
+              "Catalog",
+              "Sealed market",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "Pokédex",
+              "Types",
+              "Team Builder",
+              "TCG Catalog",
+              "Documentation",
+              "Public API guide",
+              "Dashboard",
+              "Quiz",
+              "Favorites"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "FAQ",
+              "About Lunidex",
+              "Contact"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "PokéAPI",
+              "TCGdex"
+            ]
+          },
+          {
+            "label": "Legal",
+            "links": [
+              "Legal Notice",
+              "Privacy Policy",
+              "Terms of Service",
+              "Cookie Policy"
+            ]
+          }
+        ],
+        "h1": "Deck Builder"
+      },
+      "/en/tcg/sealed": {
+        "currents": [
+          {
+            "tag": "A",
+            "text": "Collection",
+            "href": "/en/tcg/collection",
+            "cls": "site-header-nav-link"
+          },
+          {
+            "tag": "A",
+            "text": "Sealed",
+            "href": "/en/tcg/sealed",
+            "cls": "secondary-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Dashboard",
+            "href": "/en/tcg/sealed",
+            "cls": "sealed-subnav-link"
+          },
+          {
+            "tag": "A",
+            "text": "Collection",
+            "href": "/en/tcg/collection",
+            "cls": "primary-bottom-nav-link"
+          }
+        ],
+        "visibleNavs": [
+          {
+            "label": "Sealed portfolio",
+            "links": [
+              "Dashboard",
+              "Collection",
+              "Journal",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "Sealed market"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "Pokédex",
+              "Types",
+              "Team Builder",
+              "TCG Catalog",
+              "Documentation",
+              "Public API guide",
+              "Dashboard",
+              "Quiz",
+              "Favorites"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "FAQ",
+              "About Lunidex",
+              "Contact"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "PokéAPI",
+              "TCGdex"
+            ]
+          },
+          {
+            "label": "Legal",
+            "links": [
+              "Legal Notice",
+              "Privacy Policy",
+              "Terms of Service",
+              "Cookie Policy"
+            ]
+          }
+        ],
+        "h1": "Dashboard"
+      },
+      "/en/tcg/sealed/market": {
+        "currents": [
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "site-header-nav-link"
+          },
+          {
+            "tag": "A",
+            "text": "Sealed market",
+            "href": "/en/tcg/sealed/market",
+            "cls": "secondary-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Sealed market",
+            "href": "/en/tcg/sealed/market?tcgLang=en",
+            "cls": "tcg-local-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "primary-bottom-nav-link"
+          }
+        ],
+        "visibleNavs": [
+          {
+            "label": "Pokémon TCG Catalog",
+            "links": [
+              "Catalog",
+              "Sealed market",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Products",
+            "links": [
+              "Previous page",
+              "Next page"
+            ]
+          },
+          {
+            "label": "Sealed product market",
+            "links": [
+              "See releases",
+              "Tips before buying"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "Pokédex",
+              "Types",
+              "Team Builder",
+              "TCG Catalog",
+              "Documentation",
+              "Public API guide",
+              "Dashboard",
+              "Quiz",
+              "Favorites"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "FAQ",
+              "About Lunidex",
+              "Contact"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "PokéAPI",
+              "TCGdex"
+            ]
+          },
+          {
+            "label": "Legal",
+            "links": [
+              "Legal Notice",
+              "Privacy Policy",
+              "Terms of Service",
+              "Cookie Policy"
+            ]
+          }
+        ],
+        "h1": "Sealed product market"
+      },
+      "/en/tcg/sealed/releases": {
+        "currents": [
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "site-header-nav-link"
+          },
+          {
+            "tag": "A",
+            "text": "Sealed market",
+            "href": "/en/tcg/sealed/market",
+            "cls": "secondary-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Sealed market",
+            "href": "/en/tcg/sealed/market?tcgLang=en",
+            "cls": "tcg-local-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "primary-bottom-nav-link"
+          }
+        ],
+        "visibleNavs": [
+          {
+            "label": "Pokémon TCG Catalog",
+            "links": [
+              "Catalog",
+              "Sealed market",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "Pokédex",
+              "Types",
+              "Team Builder",
+              "TCG Catalog",
+              "Documentation",
+              "Public API guide",
+              "Dashboard",
+              "Quiz",
+              "Favorites"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "FAQ",
+              "About Lunidex",
+              "Contact"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "PokéAPI",
+              "TCGdex"
+            ]
+          },
+          {
+            "label": "Legal",
+            "links": [
+              "Legal Notice",
+              "Privacy Policy",
+              "Terms of Service",
+              "Cookie Policy"
+            ]
+          }
+        ],
+        "h1": "Sealed release calendar"
+      },
+      "/en/tcg/sealed/buy-safely": {
+        "currents": [
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "site-header-nav-link"
+          },
+          {
+            "tag": "A",
+            "text": "Sealed market",
+            "href": "/en/tcg/sealed/market",
+            "cls": "secondary-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Sealed market",
+            "href": "/en/tcg/sealed/market?tcgLang=en",
+            "cls": "tcg-local-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "primary-bottom-nav-link"
+          }
+        ],
+        "visibleNavs": [
+          {
+            "label": "Pokémon TCG Catalog",
+            "links": [
+              "Catalog",
+              "Sealed market",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "Pokédex",
+              "Types",
+              "Team Builder",
+              "TCG Catalog",
+              "Documentation",
+              "Public API guide",
+              "Dashboard",
+              "Quiz",
+              "Favorites"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "FAQ",
+              "About Lunidex",
+              "Contact"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "PokéAPI",
+              "TCGdex"
+            ]
+          },
+          {
+            "label": "Legal",
+            "links": [
+              "Legal Notice",
+              "Privacy Policy",
+              "Terms of Service",
+              "Cookie Policy"
+            ]
+          }
+        ],
+        "h1": "Buy cards and sealed products with care"
+      },
+      "/en/tcg/sets/30th-c": {
+        "currents": [
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "site-header-nav-link"
+          },
+          {
+            "tag": "SPAN",
+            "text": "30th Classic Collection",
+            "href": null,
+            "cls": "max-w-[min(70vw,28rem)] truncate font-semibold tex"
+          },
+          {
+            "tag": "A",
+            "text": "Catalog",
+            "href": "/en/tcg",
+            "cls": "primary-bottom-nav-link"
+          }
+        ],
+        "visibleNavs": [
+          {
+            "label": "Breadcrumb",
+            "links": [
+              "Home",
+              "TCG Catalog"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "Pokédex",
+              "Types",
+              "Team Builder",
+              "TCG Catalog",
+              "Documentation",
+              "Public API guide",
+              "Dashboard",
+              "Quiz",
+              "Favorites"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "FAQ",
+              "About Lunidex",
+              "Contact"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "PokéAPI",
+              "TCGdex"
+            ]
+          },
+          {
+            "label": "Legal",
+            "links": [
+              "Legal Notice",
+              "Privacy Policy",
+              "Terms of Service",
+              "Cookie Policy"
+            ]
+          }
+        ],
+        "h1": "30th Classic Collection — Card list & checklist"
+      },
+      "/en/tcg/start": {
+        "currents": [
+          {
+            "tag": "A",
+            "text": "Collection",
+            "href": "/en/tcg/collection",
+            "cls": "site-header-nav-link"
+          },
+          {
+            "tag": "A",
+            "text": "Start my collection",
+            "href": "/en/tcg/start",
+            "cls": "secondary-navigation-link"
+          },
+          {
+            "tag": "A",
+            "text": "Collection",
+            "href": "/en/tcg/collection",
+            "cls": "primary-bottom-nav-link"
+          }
+        ],
+        "visibleNavs": [
+          {
+            "label": null,
+            "links": [
+              "Pokédex",
+              "Types",
+              "Team Builder",
+              "TCG Catalog",
+              "Documentation",
+              "Public API guide",
+              "Dashboard",
+              "Quiz",
+              "Favorites"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "FAQ",
+              "About Lunidex",
+              "Contact"
+            ]
+          },
+          {
+            "label": null,
+            "links": [
+              "PokéAPI",
+              "TCGdex"
+            ]
+          },
+          {
+            "label": "Legal",
+            "links": [
+              "Legal Notice",
+              "Privacy Policy",
+              "Terms of Service",
+              "Cookie Policy"
+            ]
+          }
+        ],
+        "h1": "Try a real set checklist"
+      }
+    }
+  },
+  "modalFilter": [
+    {
+      "step": "catalog",
+      "url": "/en/tcg?q=charizard&view=list&sortBy=name&sortOrder=asc&tcgLang=en",
+      "links": 24
+    },
+    {
+      "step": "modal-open",
+      "url": "/en/tcg?q=charizard&view=list&sortBy=name&sortOrder=asc&tcgLang=en",
+      "dialog": 0
+    },
+    {
+      "step": "modal-close",
+      "url": "/en/tcg?q=charizard&view=list&sortBy=name&sortOrder=asc&tcgLang=en",
+      "dialog": 0,
+      "links": 24,
+      "search": "charizard"
+    }
+  ],
+  "skip": {
+    "firstTab": {
+      "text": "Skip to main content",
+      "href": "#main-content"
+    },
+    "target": {
+      "exists": true,
+      "tag": "DIV",
+      "tabindex": "-1"
+    },
+    "afterEnter": {
+      "hash": "#main-content",
+      "active": "main-content"
+    }
+  },
+  "album": {
+    "h1": "30TH CLASSIC COLLECTION",
+    "backLinks": [],
+    "headerCurrent": [
+      "Collection"
+    ],
+    "bodyExcerpt": "30TH CLASSIC COLLECTION OWNED — 0/30 Change set Demo checklist 0/30 Owned 0 / 30 · Progress 0% Demo mode — your progress has not been saved. Temporary progress: cleared when you refresh, change sets o"
+  }
+}
