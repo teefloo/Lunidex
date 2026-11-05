@@ -16,6 +16,7 @@ import { useTranslation } from '@/lib/i18n';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { getTCGCard } from '@/lib/api/tcg';
 import { getTCGValueInCurrency, getTCGVariantValue, toCollectionCard } from '@/lib/tcg-collection';
+import { showTCGCollectionMilestoneToast, type TCGCollectionMilestone } from './TCGCollectionMilestoneToast';
 import {
   getTCGCollectionCardOwnerships,
   getTCGDefaultPhysicalVariant,
@@ -29,7 +30,7 @@ interface TCGCollectionVariantSheetProps {
   language: TCGCardLanguage;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onOwnershipChange?: (owned: boolean) => void;
+  onOwnershipChange?: (owned: boolean) => TCGCollectionMilestone | null;
 }
 
 const VARIANT_LABELS: Record<TCGPhysicalVariant, string> = {
@@ -123,6 +124,21 @@ export function TCGCollectionVariantSheet({
     }
   }, [card.id, collectionKey, defaultVariant, hasLoadedDetail, open, qualifyVariant]);
 
+  const notifyOwnershipChange = (previousOwned: boolean, nextOwned: boolean): void => {
+    const newlyOwned = !previousOwned && nextOwned;
+    const milestone = onOwnershipChange?.(newlyOwned) ?? null;
+    if (!newlyOwned || !milestone) return;
+
+    showTCGCollectionMilestoneToast({
+      milestone,
+      cardAddedMessage: t('tcg.collection_card_added', {
+        name: card.name,
+        defaultValue: `${card.name} added to your collection`,
+      }),
+      collectionCompleteMessage: t('tcg.collection_no_missing'),
+    });
+  };
+
   const updateQuantity = (variant: TCGPhysicalVariant, quantity: number): boolean => {
     if (!hasSyncAccess()) {
       requestSyncAccess();
@@ -144,7 +160,7 @@ export function TCGCollectionVariantSheet({
     );
     if (nextQuantity !== quantity) return false;
     const nextOwned = nextState.isTCGCollectionCardOwned(collectionKey, card.id);
-    onOwnershipChange?.(!previousOwned && nextOwned);
+    notifyOwnershipChange(previousOwned, nextOwned);
     return true;
   };
 
@@ -171,7 +187,7 @@ export function TCGCollectionVariantSheet({
     );
     if (nextQuantity !== expectedQuantity) return false;
     const nextOwned = nextState.isTCGCollectionCardOwned(collectionKey, card.id);
-    onOwnershipChange?.(!previousOwned && nextOwned);
+    notifyOwnershipChange(previousOwned, nextOwned);
     return true;
   };
 

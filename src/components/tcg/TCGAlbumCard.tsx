@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { Check, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type {
@@ -52,7 +52,6 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
   onToggleOwned,
 }: TCGAlbumCardProps) {
   const { t } = useTranslation();
-  const [actionFeedback, setActionFeedback] = useState('');
   const accessibleCardName = getTCGCardAccessibleName(card.name, card.localId);
   const addCollectionCard = usePrimeDexStore((state) => state.addTCGCollectionCard);
   const toggleOwned = usePrimeDexStore((state) => state.toggleTCGOwned);
@@ -80,7 +79,6 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
       : nextState.isTCGOwned(card.id);
     if (!previousOwned && nextOwned) {
       const cardAddedMessage = t('tcg.collection_card_added', { name: card.name, defaultValue: `${card.name} added to your collection` });
-      setActionFeedback(cardAddedMessage);
       const milestone = onOwnershipChange?.(true) ?? null;
       showTCGCollectionMilestoneToast({
         milestone,
@@ -171,7 +169,6 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
           ? t('tcg.collection_owned_manage', { count: totalOwnedQuantity, defaultValue: `Owned ×${totalOwnedQuantity} · Manage` })
           : t('tcg.activation.view_card')}
       </button>
-      <span className="sr-only" role="status" aria-live="polite">{actionFeedback}</span>
     </article>
   );
 }, areTCGAlbumCardPropsEqual);
