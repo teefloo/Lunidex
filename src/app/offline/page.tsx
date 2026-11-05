@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ArrowUpRight, RefreshCw, WifiOff } from 'lucide-react';
 
-import LunidexLogo from '@/components/ui/LunidexLogo';
+import { MascotGif } from '@/components/ui/MascotGif';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 
 const OFFLINE_PAGE_STYLES = `
@@ -512,7 +512,12 @@ export default async function OfflinePage() {
             <span className="offline-page__orbit-dot offline-page__orbit-dot--one" />
             <span className="offline-page__orbit-dot offline-page__orbit-dot--two" />
             <span className="offline-page__beacon-mark">
-              <LunidexLogo alt="" sizes="98px" className="offline-page__logo" priority />
+              <MascotGif
+                mascot="cloud-monster-night-bounce"
+                width={120}
+                height={120}
+                className="offline-page__logo"
+              />
               <span className="offline-page__signal">
                 <WifiOff aria-hidden="true" />
               </span>

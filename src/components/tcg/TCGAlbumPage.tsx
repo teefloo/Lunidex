@@ -167,6 +167,14 @@ export function TCGAlbumPage({
 
   const sortedCards = useMemo(() => sortCardsByNumber(cards), [cards]);
   const completion = useMemo(() => getSetCompletion(cards, ownedIds), [cards, ownedIds]);
+  const completionSnapshotRef = useRef({ owned: completion.owned, total: completion.total });
+  useEffect(() => {
+    completionSnapshotRef.current = { owned: completion.owned, total: completion.total };
+  }, [completion.owned, completion.total]);
+  const ownershipChangeContextRef = useRef({ demoOwnership, onDemoInteraction, selectedLanguage, setId: set.id });
+  useEffect(() => {
+    ownershipChangeContextRef.current = { demoOwnership, onDemoInteraction, selectedLanguage, setId: set.id };
+  }, [demoOwnership, onDemoInteraction, selectedLanguage, set.id]);
   const rarityCompletion = useMemo(() => getDisplayableCompletionByRarity(cards, ownedIds), [cards, ownedIds]);
   const missingCards = useMemo(() => getMissingCardsInSet(cards, ownedIds), [cards, ownedIds]);
   const estimateCardsQuery = useQuery({
@@ -222,20 +230,22 @@ export function TCGAlbumPage({
   }, [openCard, resolvedCollectionKey]);
 
   const handleOwnershipChange = useCallback((nowOwned: boolean): TCGCollectionMilestone | null => {
-    if (demoOwnership) {
+    const { demoOwnership: currentDemoOwnership, onDemoInteraction: currentOnDemoInteraction, selectedLanguage: currentLanguage, setId } = ownershipChangeContextRef.current;
+    if (currentDemoOwnership) {
       if (!firstValueReachedRef.current) {
         firstValueReachedRef.current = true;
-        onDemoInteraction?.();
-        void trackProductEvent('tcg_demo_first_interaction', undefined, undefined, { set_id: set.id, tcg_language: selectedLanguage });
+        currentOnDemoInteraction?.();
+        void trackProductEvent('tcg_demo_first_interaction', undefined, undefined, { set_id: setId, tcg_language: currentLanguage });
       }
       return null;
     }
 
     if (!nowOwned) return null;
 
-    const milestone: TCGCollectionMilestone | null = completion.total > 0 && completion.owned === completion.total - 1
+    const progressBeforeChange = completionSnapshotRef.current;
+    const milestone: TCGCollectionMilestone | null = progressBeforeChange.total > 0 && progressBeforeChange.owned === progressBeforeChange.total - 1
       ? 'completed'
-      : completion.owned === 0 && completion.total > 1
+      : progressBeforeChange.owned === 0 && progressBeforeChange.total > 1
         ? 'started'
         : null;
 
@@ -247,7 +257,7 @@ export function TCGAlbumPage({
     trackReturnAfterActivation('owned_add');
 
     return milestone;
-  }, [completion.owned, completion.total, demoOwnership, onDemoInteraction, selectedLanguage, set.id]);
+  }, []);
 
   const toggleDemoOwned = useCallback((cardId: string) => {
     if (!demoOwnership) return;
