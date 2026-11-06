@@ -206,6 +206,21 @@ describe('public sealed catalogue search', () => {
     expect(result).toMatchObject({ total: 3, pricedCount: 2, medianCents: 1250 });
   });
 
+  it('returns only active catalogue expansion IDs for the searchable filter', async () => {
+    const statements: Array<{ query: string; params: unknown[] }> = [];
+    const sql = { query: async (query: string, params: unknown[]) => {
+      statements.push({ query, params });
+      return query.includes('group by expansion_id') ? [{ expansion_id: 6569, product_count: 4 }] : [];
+    } } as unknown as NeonSql;
+
+    const result = await searchPublicSealedCatalogue(sql, '', 0);
+
+    expect(result.expansions).toEqual([{ id: 6569, productCount: 4 }]);
+    const query = statements.find((statement) => statement.query.includes('group by expansion_id'));
+    expect(query?.query).toContain('where active = true');
+    expect(query?.params).toEqual([[52, 53, 54, 1013, 1014, 1015, 1016, 1083, 1654]]);
+  });
+
   it('uses only global catalogue and snapshot tables for public detail', async () => {
     const statements: string[] = [];
     const sql = { query: async (query: string) => {

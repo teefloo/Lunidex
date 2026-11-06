@@ -5,7 +5,8 @@ import type { SealedPriceSnapshot, SealedProduct } from '@primedex/core/types/se
 import Header from '@/components/layout/Header';
 import { SealedWorkspaceNavigation, type SealedWorkspaceView } from '@/components/tcg/SealedWorkspaceNavigation';
 import PublicSealedGuideSection from '@/components/tcg/PublicSealedGuideSection';
-import { publicExpansionName, publicMarketContactHref, publicMarketHref, summarizePublicPrice, type PublicMarketFilters } from '@/lib/tcg-sealed-public-market';
+import { PublicExpansionFilter } from '@/components/tcg/PublicExpansionFilter';
+import { hasPublicExpansionName, publicExpansionName, publicMarketContactHref, publicMarketHref, summarizePublicPrice, type PublicMarketFilters } from '@/lib/tcg-sealed-public-market';
 import type { SupportedLanguage } from '@/lib/languages';
 import { buildBreadcrumbJsonLd } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
@@ -15,6 +16,7 @@ type Translate = (key: string, options?: Record<string, unknown>) => string;
 export interface PublicMarketData {
   products: SealedProduct[];
   prices: SealedPriceSnapshot[];
+  expansions: Array<{ id: number; productCount: number }>;
   categories: Array<{ id: number; name: string; productCount: number; pricedCount: number; medianCents: number | null }>;
   total: number;
   pricedCount: number;
@@ -82,6 +84,16 @@ export function SealedMarketPage({ data, filters, lang, t }: { data: PublicMarke
   for (const price of data?.prices ?? []) pricesById.set(price.cardmarketProductId, [...(pricesById.get(price.cardmarketProductId) ?? []), price]);
   const today = new Date().toISOString().slice(0, 10);
   const pageCount = Math.max(1, Math.ceil((data?.total ?? 0) / (data?.pageSize ?? 24)));
+  const expansionOptions = (data?.expansions ?? []).map(({ id }) => ({
+    id,
+    label: hasPublicExpansionName(id)
+      ? `${publicExpansionName(id, lang)} · #${id}`
+      : copy('unknown_expansion', { id }),
+  }));
+  if (filters.expansion !== undefined && !expansionOptions.some((option) => option.id === filters.expansion)) {
+    const id = filters.expansion;
+    expansionOptions.push({ id, label: copy('unknown_expansion', { id }) });
+  }
 
   return <MarketFrame>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumb) }} />
@@ -94,7 +106,7 @@ export function SealedMarketPage({ data, filters, lang, t }: { data: PublicMarke
     <form action={`/${lang}/tcg/sealed/market`} method="get" autoComplete="off" className="grid gap-3 rounded-sm border border-border/60 bg-card/60 p-4 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_auto] sm:items-end">
       <label className="space-y-1 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.search')}</span><input name="q" type="search" defaultValue={filters.q} maxLength={150} className="glass-control h-11 w-full px-3 text-sm" /></label>
       <label className="space-y-1 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.category')}</span><select name="category" defaultValue={filters.category ?? ''} className="glass-control h-11 w-full px-3 text-sm"><option value="">{copy('all_categories')}</option>{data?.categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</select></label>
-      <label className="space-y-1 text-xs font-bold text-foreground/65"><span>{copy('expansion_id')}</span><input id="sealed-market-expansion" name="expansion" type="number" min="0" step="1" defaultValue={filters.expansion ?? ''} aria-describedby="sealed-market-expansion-hint" className="glass-control h-11 w-full px-3 text-sm" /></label>
+      <PublicExpansionFilter key={filters.expansion ?? 'all'} options={expansionOptions} selectedId={filters.expansion} label={copy('expansion_id')} emptyLabel={copy('all_expansions')} hintId="sealed-market-expansion-hint" />
       <button type="submit" className="inline-flex min-h-11 items-center justify-center rounded-sm border border-primary bg-primary px-4 text-sm font-bold text-primary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">{copy('apply_filters')}</button>
       <p id="sealed-market-expansion-hint" className="text-xs leading-5 text-foreground/55 sm:col-span-4">{copy('expansion_hint')}</p>
     </form>
@@ -106,7 +118,7 @@ export function SealedMarketPage({ data, filters, lang, t }: { data: PublicMarke
         const summary = summarizePublicPrice(pricesById.get(product.cardmarketProductId) ?? [], today);
         return <article key={product.cardmarketProductId} className="flex gap-4 rounded-sm border border-border/60 bg-card/50 p-4">
           <MarketProductImage product={product} t={t} />
-          <div className="flex min-w-0 flex-1 flex-col"><p className="text-xs font-bold text-primary">{product.categoryName} · {publicExpansionName(product.expansionId, lang, t('tcg.unknown'))}</p><h3 className="mt-1 line-clamp-3 text-base font-black leading-snug">{product.name}</h3><p className="mt-3 text-xs text-foreground/50">{copy('latest_trend')} · {t('tcg.sealed.source_prices')}</p><p className="text-xl font-black tabular-nums">{summary.currentCents === null ? t('tcg.sealed.price_unavailable') : marketMoney(summary.currentCents, lang)}</p><p className="mt-1 text-xs text-foreground/55">{copy('updated')}: {marketSourceDate(summary.sourceAt, lang) ?? t('tcg.sealed.source_missing')}</p><p className="mt-1 text-xs text-foreground/55">{copy('change_7d')}: {marketPercent(summary.sevenDayPercent, lang)} · {copy('change_30d')}: {marketPercent(summary.thirtyDayPercent, lang)}</p><Link href={`/${lang}/tcg/sealed/market/${product.cardmarketProductId}`} className="mt-auto inline-flex min-h-11 items-center font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring">{copy('view_product')} →</Link></div>
+          <div className="flex min-w-0 flex-1 flex-col"><p className="text-xs font-bold text-primary">{product.categoryName} · {publicExpansionName(product.expansionId, lang, copy('unknown_expansion', { id: product.expansionId }))}</p><h3 className="mt-1 line-clamp-3 text-base font-black leading-snug">{product.name}</h3><p className="mt-3 text-xs text-foreground/50">{copy('latest_trend')} · {t('tcg.sealed.source_prices')}</p><p className="text-xl font-black tabular-nums">{summary.currentCents === null ? t('tcg.sealed.price_unavailable') : marketMoney(summary.currentCents, lang)}</p><p className="mt-1 text-xs text-foreground/55">{copy('updated')}: {marketSourceDate(summary.sourceAt, lang) ?? t('tcg.sealed.source_missing')}</p><p className="mt-1 text-xs text-foreground/55">{copy('change_7d')}: {marketPercent(summary.sevenDayPercent, lang)} · {copy('change_30d')}: {marketPercent(summary.thirtyDayPercent, lang)}</p><Link href={`/${lang}/tcg/sealed/market/${product.cardmarketProductId}`} className="mt-auto inline-flex min-h-11 items-center font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring">{copy('view_product')} →</Link></div>
         </article>;
       })}</div> : <p className="mt-4 rounded-sm border border-dashed border-border/60 p-10 text-center text-sm text-foreground/60">{t('tcg.sealed.no_catalogue')}</p>}
       {pageCount > 1 ? <nav aria-label={copy('products')} className="mt-7 flex items-center justify-between gap-4"><Link aria-disabled={filters.page === 0} href={link(lang, { ...filters, page: Math.max(0, filters.page - 1) })} className={`text-sm font-bold text-primary ${filters.page === 0 ? 'pointer-events-none opacity-40' : ''}`}>{copy('previous')}</Link><span className="text-sm font-bold tabular-nums">{filters.page + 1} / {pageCount}</span><Link aria-disabled={filters.page + 1 >= pageCount} href={link(lang, { ...filters, page: filters.page + 1 })} className={`text-sm font-bold text-primary ${filters.page + 1 >= pageCount ? 'pointer-events-none opacity-40' : ''}`}>{copy('next')}</Link></nav> : null}

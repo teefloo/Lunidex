@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { SealedPriceSnapshot } from '@primedex/core/types/sealed';
-import { buildPublicPriceChartPoints, parsePublicMarketFilters, publicExpansionName, publicMarketContactHref, publicMarketHref, summarizePublicPrice } from './tcg-sealed-public-market';
+import { buildPublicPriceChartPoints, findPublicExpansionId, hasPublicExpansionName, parsePublicMarketFilters, publicExpansionName, publicMarketContactHref, publicMarketHref, summarizePublicPrice } from './tcg-sealed-public-market';
 
 function price(day: string, trendCents: number | null): SealedPriceSnapshot {
   return { cardmarketProductId: 1, day, sourceAt: day, fetchedAt: day, metrics: { trendCents, avgCents: null, lowCents: null, avg1Cents: null, avg7Cents: null, avg30Cents: null } };
@@ -30,6 +30,24 @@ describe('public sealed market filters', () => {
     expect(publicExpansionName(6569, 'fr')).toBe('Nuit Noire');
     expect(publicExpansionName(6601, 'fr')).toBe('30ᵉ Anniversaire');
     expect(publicExpansionName(123456, 'en')).toBe('#123456');
+    expect(publicExpansionName(123456, 'fr', 'Extension non renseignée (ID 123456)')).toBe('Extension non renseignée (ID 123456)');
+    expect(hasPublicExpansionName(5546)).toBe(true);
+    expect(hasPublicExpansionName(123456)).toBe(false);
+  });
+
+  it('resolves unique exact names or full labels and rejects ambiguous names or free text', () => {
+    const options = [
+      { id: 5546, label: 'Destinées de Paldea · #5546' },
+      { id: 6569, label: 'Nuit Noire · #6569' },
+      { id: 9001, label: 'Promo · #9001' },
+      { id: 9002, label: 'Promo · #9002' },
+    ];
+    expect(findPublicExpansionId('Destinées de Paldea', options)).toBe(5546);
+    expect(findPublicExpansionId('  nuit noire · #6569 ', options)).toBe(6569);
+    expect(findPublicExpansionId('Nuit Noire', options)).toBe(6569);
+    expect(findPublicExpansionId('Promo', options)).toBeUndefined();
+    expect(findPublicExpansionId('Promo · #9002', options)).toBe(9002);
+    expect(findPublicExpansionId('invented set', options)).toBeUndefined();
   });
 });
 

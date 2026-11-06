@@ -80,6 +80,32 @@ export function publicExpansionName(id: number, language: string, unknownLabel =
   return curated ? language === 'fr' ? curated.fr : curated.en : unknownLabel;
 }
 
+export function hasPublicExpansionName(id: number): boolean {
+  return Object.prototype.hasOwnProperty.call(CURATED_EXPANSIONS, id);
+}
+
+export interface PublicExpansionOption {
+  id: number;
+  label: string;
+}
+
+/** Match a full option label, or a unique expansion name, without guessing IDs from free text. */
+export function findPublicExpansionId(value: string, options: readonly PublicExpansionOption[]): number | undefined {
+  const normalized = value.trim().normalize('NFKC').toLocaleLowerCase();
+  if (!normalized) return undefined;
+  const exactLabelMatches = options.filter((option) => (
+    option.label.trim().normalize('NFKC').toLocaleLowerCase() === normalized
+  ));
+  if (exactLabelMatches.length === 1) return exactLabelMatches[0].id;
+  if (exactLabelMatches.length > 1) return undefined;
+
+  const exactNameMatches = options.filter((option) => {
+    const name = option.label.replace(/\s+·\s+#\d+$/, '').trim().normalize('NFKC').toLocaleLowerCase();
+    return name === normalized;
+  });
+  return exactNameMatches.length === 1 ? exactNameMatches[0].id : undefined;
+}
+
 export interface PublicPriceChange {
   currentCents: number | null;
   day: string | null;

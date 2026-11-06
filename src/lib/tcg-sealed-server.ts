@@ -676,9 +676,17 @@ export async function searchPublicSealedCatalogue(
     group by p.category_id, p.category_name
     order by product_count desc, p.category_name asc
   `, [SEALED_CATEGORY_SQL]) as unknown as Array<{ category_id: number | string; category_name: string; product_count: number | string; priced_count: number | string; median_cents: number | string | null }>;
+  const expansionRows = await sql.query(`
+    select expansion_id, count(*)::int as product_count
+    from public.tcg_sealed_products
+    where active = true and category_id = any($1::int[])
+    group by expansion_id
+    order by product_count desc, expansion_id asc
+  `, [SEALED_CATEGORY_SQL]) as unknown as Array<{ expansion_id: number | string; product_count: number | string }>;
   return {
     products,
     prices,
+    expansions: expansionRows.map((row) => ({ id: Number(row.expansion_id), productCount: Number(row.product_count) })),
     categories: categoryRows.map((row) => ({
       id: Number(row.category_id),
       name: row.category_name,
