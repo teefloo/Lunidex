@@ -35,6 +35,7 @@ import {
   getCardMarketValue,
   getTCGValueInCurrency,
   toCollectionCard,
+  type TCGCollectionValuation,
   type TCGOwnedVariant,
   type TCGCollectionValuationResult,
 } from '@/lib/tcg-collection';
@@ -900,7 +901,8 @@ export async function getTCGCustomCollectionCardDetails(
   refs: TCGCustomCollectionCard[],
   signal?: AbortSignal,
 ): Promise<TCGCustomCollectionCardDetail[]> {
-  return mapWithConcurrency(refs, 6, async (ref) => {
+  // Leave half of the shared request budget available for whole-binder pricing.
+  return mapWithConcurrency(refs, 3, async (ref) => {
     throwIfAborted(signal);
     const card = await getTCGCard(ref.cardId, ref.language, signal, { allowEnglishFallback: false });
     throwIfAborted(signal);
@@ -1359,6 +1361,79 @@ export const fetchCollectionValue = async (
     ownedCount,
     unpricedCount: Math.max(0, ownedCount - valuation.pricedCount),
     topCards,
+  };
+};
+
+/**
+ * Estimate the value of physical copies in a custom collection.
+ *
+ * Custom binders may contain cards from several TCG languages. Each language
+ * is valued through the same price path as official series, while zero-quantity
+ * references remain wanted cards and are excluded from the estimate.
+ */
+export const fetchCustomCollectionValue = async (
+  references: readonly TCGCustomCollectionCard[],
+  signal?: AbortSignal,
+  displayCurrency?: TCGDisplayCurrency,
+  options: FetchCollectionValueOptions = {},
+): Promise<TCGCollectionValuation> => {
+  const ownedByLanguage = new Map<TCGCardLanguage, TCGOwnedVariant[]>();
+  let requestedOwnedCount = 0;
+
+  for (const reference of references) {
+    const quantity = reference.quantity ?? 1;
+    if (!Number.isSafeInteger(quantity) || quantity <= 0) continue;
+
+    requestedOwnedCount += quantity;
+    const ownedVariants = ownedByLanguage.get(reference.language) ?? [];
+    ownedVariants.push({ cardId: reference.cardId, variant: 'unspecified', quantity });
+    ownedByLanguage.set(reference.language, ownedVariants);
+  }
+
+  const languageEntries = [...ownedByLanguage.entries()];
+  if (languageEntries.length === 0) {
+    return { groups: [], ownedCount: 0, pricedCount: 0, unpricedCount: 0 };
+  }
+
+  // Share the existing valuation concurrency budget across language groups.
+  const concurrency = Math.max(1, Math.floor(options.concurrency ?? COLLECTION_VALUE_CONCURRENCY));
+  const languageConcurrency = Math.min(languageEntries.length, concurrency);
+  const perLanguageConcurrency = Math.max(1, Math.floor(concurrency / languageConcurrency));
+  const valuations = await mapWithConcurrency(
+    languageEntries,
+    languageConcurrency,
+    ([language, ownedVariants]) => fetchCollectionValue(
+      ownedVariants,
+      language,
+      signal,
+      displayCurrency,
+      { ...options, concurrency: perLanguageConcurrency },
+    ),
+  );
+
+  const totalsByCurrency = new Map<string, { total: number; count: number }>();
+  let pricedCount = 0;
+  for (const valuation of valuations) {
+    pricedCount += valuation.pricedCount;
+    for (const group of valuation.groups) {
+      const existing = totalsByCurrency.get(group.currency);
+      totalsByCurrency.set(group.currency, {
+        total: (existing?.total ?? 0) + group.total,
+        count: (existing?.count ?? 0) + group.count,
+      });
+    }
+  }
+
+  const groups = [...totalsByCurrency.entries()]
+    .map(([currency, value]) => ({ currency, total: Math.round(value.total * 100) / 100, count: value.count }))
+    .sort((left, right) => right.total - left.total || left.currency.localeCompare(right.currency));
+
+  return {
+    groups,
+    ownedCount: requestedOwnedCount,
+    pricedCount,
+    // Include any cards omitted by per-language ID and physical-copy safety caps.
+    unpricedCount: Math.max(0, requestedOwnedCount - pricedCount),
   };
 };
 

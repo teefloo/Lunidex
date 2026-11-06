@@ -1,6 +1,8 @@
 const english = {
   quantity: 'Binder quantity',
   binder_ownership: 'In this binder',
+  estimated_value: 'Estimated binder value',
+  estimated_value_disclaimer: 'Based on available card price data; actual sale prices may differ.',
   all_languages: 'All languages',
   language_unavailable: 'The catalog is unavailable in this language. Choose another card language.',
   tab_series: 'By set',
@@ -71,6 +73,8 @@ export const tcgCustomCollectionsTranslations = {
   fr: localized({
     quantity: 'Quantité dans le classeur',
     binder_ownership: 'Dans ce classeur',
+    estimated_value: 'Valeur estimée du classeur',
+    estimated_value_disclaimer: 'Estimation fondée sur les données de prix disponibles ; les prix de vente réels peuvent varier.',
     all_languages: 'Toutes les langues',
     language_unavailable: 'Le catalogue est indisponible dans cette langue. Choisissez une autre langue de carte.',
 
@@ -101,6 +105,8 @@ export const tcgCustomCollectionsTranslations = {
   es: localized({
     quantity: 'Cantidad en el álbum',
     binder_ownership: 'En este álbum',
+    estimated_value: 'Valor estimado del álbum',
+    estimated_value_disclaimer: 'Estimación basada en los datos de precios disponibles; los precios de venta reales pueden variar.',
     all_languages: 'Todos los idiomas',
     language_unavailable: 'El catálogo no está disponible en este idioma. Elige otro idioma de carta.',
 
@@ -129,6 +135,8 @@ export const tcgCustomCollectionsTranslations = {
   de: localized({
     quantity: 'Anzahl im Ordner',
     binder_ownership: 'In diesem Ordner',
+    estimated_value: 'Geschätzter Wert des Ordners',
+    estimated_value_disclaimer: 'Schätzung auf Grundlage verfügbarer Kartendaten zu Preisen; tatsächliche Verkaufspreise können abweichen.',
     all_languages: 'Alle Sprachen',
     language_unavailable: 'Der Katalog ist in dieser Sprache nicht verfügbar. Wähle eine andere Kartensprache.',
 
@@ -157,6 +165,8 @@ export const tcgCustomCollectionsTranslations = {
   it: localized({
     quantity: 'Quantità nel raccoglitore',
     binder_ownership: 'In questo raccoglitore',
+    estimated_value: 'Valore stimato del raccoglitore',
+    estimated_value_disclaimer: 'Stima basata sui dati di prezzo disponibili per le carte; i prezzi di vendita effettivi possono variare.',
     all_languages: 'Tutte le lingue',
     language_unavailable: 'Il catalogo non è disponibile in questa lingua. Scegli un’altra lingua delle carte.',
 
@@ -183,6 +193,8 @@ export const tcgCustomCollectionsTranslations = {
   ja: localized({
     quantity: 'このコレクションの枚数',
     binder_ownership: 'このコレクションの所持状況',
+    estimated_value: 'カードファイルの推定価格',
+    estimated_value_disclaimer: '利用可能なカード価格データに基づく推定です。実際の販売価格は異なる場合があります。',
     all_languages: 'すべての言語',
     language_unavailable: 'この言語のカタログは利用できません。別のカード言語を選んでください。',
 
@@ -209,6 +221,8 @@ export const tcgCustomCollectionsTranslations = {
   ko: localized({
     quantity: '이 바인더의 수량',
     binder_ownership: '이 바인더의 보유 상태',
+    estimated_value: '바인더 예상 가치',
+    estimated_value_disclaimer: '현재 이용 가능한 카드 가격 데이터를 바탕으로 한 추정치이며 실제 판매 가격은 달라질 수 있습니다.',
     all_languages: '모든 언어',
     language_unavailable: '이 언어의 카탈로그를 사용할 수 없습니다. 다른 카드 언어를 선택하세요.',
 
@@ -235,6 +249,8 @@ export const tcgCustomCollectionsTranslations = {
   zh: localized({
     quantity: '此卡册中的数量',
     binder_ownership: '此卡册中的拥有状态',
+    estimated_value: '卡册估算价值',
+    estimated_value_disclaimer: '根据可用的卡牌价格数据估算，实际成交价格可能有所不同。',
     all_languages: '所有语言',
     language_unavailable: '此语言的目录不可用。请选择其他卡牌语言。',
 

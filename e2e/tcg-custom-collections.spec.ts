@@ -40,6 +40,7 @@ function cardPayload(cardId: string, language = 'en') {
     types: ['Psychic'],
     set: { id: 'base1', name: language === 'fr' ? 'Set de Base' : language === 'ja' ? '第1弾' : 'Base Set', cardCount: { total: 102, official: 102 } },
     variants: { normal: true },
+    pricing: { tcgplayer: { unit: 'USD', normal: { marketPrice: cardId === 'base1-4' ? 2 : cardId === 'base1-001' ? 3 : 50 } } },
   };
 }
 
@@ -186,6 +187,29 @@ async function createBinderAndOpen(page: Page, name: string) {
   await page.locator('main').getByRole('link', { name, exact: true }).click();
   await expect(page.getByRole('heading', { name, level: 1 })).toBeVisible({ timeout: 15_000 });
 }
+
+test('shows the estimated value of positive custom binder quantities across languages', async ({ browser }) => {
+  test.skip(!customE2EEnabled, 'Run with npm run test:e2e:tcg-custom to enable the locally mocked Neon session.');
+  const binder = { id: collectionId, name: 'Valuation binder', createdAt: updatedAt, updatedAt };
+  const references = [
+    { collectionId, cardId: 'base1-4', language: 'en', cardName: 'Charizard', addedAt: updatedAt, quantity: 2 },
+    { collectionId, cardId: 'base1-001', language: 'fr', cardName: 'Card 1', addedAt: updatedAt, quantity: 1 },
+    { collectionId, cardId: 'base1-5', language: 'ja', cardName: 'カード5', addedAt: updatedAt, quantity: 0 },
+  ];
+  const initial = makeState([binder], references);
+  initial.tcgDisplayCurrency = 'USD';
+  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  const app = await mockAuthenticatedApp(context, initial);
+  const page = await context.newPage();
+
+  await page.goto(`/en/tcg/collection/custom/${collectionId}`);
+  await expect(page.getByRole('heading', { name: 'Valuation binder', level: 1 })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByText('Estimated binder value', { exact: true })).toBeVisible();
+  await expect(page.getByText('$7.00', { exact: true })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByText('3/3 cards priced', { exact: true })).toBeVisible();
+  expect(app.getState().tcgCollectionCards).toEqual([]);
+  await context.close();
+});
 
 for (const viewport of [
   { name: 'desktop', width: 1440, height: 900, mobile: false },

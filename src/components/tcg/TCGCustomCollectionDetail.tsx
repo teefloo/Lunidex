@@ -16,7 +16,7 @@ import { useMounted } from '@/hooks/useMounted';
 import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
 import { useAuth } from '@/lib/neon/AuthProvider';
 import { useTranslation } from '@/lib/i18n';
-import { getTCGCustomCollectionCardDetails } from '@/lib/api/tcg';
+import { fetchCustomCollectionValue, getTCGCustomCollectionCardDetails } from '@/lib/api/tcg';
 import { tcgKeys } from '@/lib/api/keys';
 import { getTCGCardImageCandidates } from '@/lib/tcg-images';
 import { cn } from '@/lib/utils';
@@ -43,6 +43,7 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
   const collection = usePrimeDexStore((state) => state.tcgCustomCollections.find((entry) => entry.id === collectionId));
   const allReferences = usePrimeDexStore((state) => state.tcgCustomCollectionCards);
   const references = useMemo(() => allReferences.filter((entry) => entry.collectionId === collectionId), [allReferences, collectionId]);
+  const displayCurrency = usePrimeDexStore((state) => state.tcgDisplayCurrency);
   const browseLanguage = usePrimeDexStore((state) => state.tcgBrowseLanguage);
   const setQuantity = usePrimeDexStore((state) => state.setTCGCustomCollectionCardQuantity);
   const removeCard = usePrimeDexStore((state) => state.removeTCGCustomCollectionCard);
@@ -51,6 +52,13 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
   const [search, setSearch] = useState('');
   const [languageFilter, setLanguageFilter] = useState<TCGCardLanguage | ''>('');
   const filteredReferences = useMemo(() => languageFilter ? references.filter((ref) => ref.language === languageFilter) : references, [references, languageFilter]);
+  const ownedPhysicalCount = useMemo(() => references.reduce((total, reference) => {
+    const quantity = reference.quantity ?? 1;
+    return Number.isSafeInteger(quantity) && quantity > 0 ? total + quantity : total;
+  }, 0), [references]);
+  const valuationReferencesKey = useMemo(() => JSON.stringify(references
+    .map((reference) => [reference.language, reference.cardId, reference.quantity ?? 1] as const)
+    .sort((left, right) => `${left[0]}:${left[1]}`.localeCompare(`${right[0]}:${right[1]}`))), [references]);
   const [page, setPage] = useState(1);
   const [formOpen, setFormOpen] = useState(false);
   const [addPanelOpen, setAddPanelOpen] = useState(false);
@@ -71,6 +79,13 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
     ],
     queryFn: ({ signal }) => getTCGCustomCollectionCardDetails(pageData.items, signal),
     enabled: mounted && syncStatus === 'ready' && Boolean(collection) && pageData.items.length > 0,
+    staleTime: 30 * 60 * 1000,
+    retry: false,
+  });
+  const valuationQuery = useQuery({
+    queryKey: [...tcgKeys.all(), 'custom-collection-value', collectionId, valuationReferencesKey, displayCurrency],
+    queryFn: ({ signal }) => fetchCustomCollectionValue(references, signal, displayCurrency, { concurrency: 3 }),
+    enabled: mounted && syncStatus === 'ready' && Boolean(collection) && ownedPhysicalCount > 0,
     staleTime: 30 * 60 * 1000,
     retry: false,
   });
@@ -147,6 +162,51 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
                 </button>
               </div>
             </header>
+
+            <section className="rounded-sm border border-primary/20 bg-gradient-to-br from-primary/10 via-card/40 to-card/20 p-5" aria-labelledby="custom-collection-value-title" aria-busy={ownedPhysicalCount > 0 && valuationQuery.isPending}>
+              <h2 id="custom-collection-value-title" className="text-[11px] font-black uppercase tracking-[0.12em] text-foreground/70">
+                {t('tcg.custom_collections.estimated_value')}
+              </h2>
+              <p className="mt-1 text-xs leading-5 text-foreground/55">{t('tcg.custom_collections.estimated_value_disclaimer')}</p>
+              {ownedPhysicalCount === 0 ? (
+                <p className="mt-3 text-sm font-bold text-foreground/55">{t('tcg.collection_value_none_owned')}</p>
+              ) : valuationQuery.isPending ? (
+                <p className="mt-3 text-sm font-bold text-foreground/55" aria-live="polite">{t('tcg.collection_loading')}</p>
+              ) : valuationQuery.isError ? (
+                <div className="mt-3 flex flex-wrap items-center gap-3">
+                  <p className="text-sm font-bold text-foreground/55">{t('tcg.collection_value_unavailable')}</p>
+                  <button type="button" onClick={() => void valuationQuery.refetch()} className="inline-flex min-h-11 items-center rounded-sm border border-primary/40 px-3 text-xs font-bold text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                    {t('tcg.custom_collections.retry')}
+                  </button>
+                </div>
+              ) : valuationQuery.data?.groups.length ? (
+                <>
+                  <p className="mt-3 break-words text-2xl font-black tabular-nums text-primary">
+                    {valuationQuery.data.groups.map((group) => formatCustomCollectionCurrency(group, interfaceLanguage)).join(' · ')}
+                  </p>
+                  <p className="mt-1 text-[11px] font-bold text-foreground/55" aria-live="polite">
+                    {t('tcg.collection_value_coverage', { priced: valuationQuery.data.pricedCount, owned: valuationQuery.data.ownedCount })}
+                  </p>
+                  {(valuationQuery.data.unpricedCount ?? 0) > 0 && (
+                    <p className="mt-1 text-[11px] font-bold text-amber-700 dark:text-amber-200/80">
+                      {t('tcg.collection_value_partial', { count: valuationQuery.data.unpricedCount })}
+                    </p>
+                  )}
+                </>
+              ) : (
+                <>
+                  <p className="mt-3 text-sm font-bold text-foreground/55">{t('tcg.collection_value_unavailable')}</p>
+                  <p className="mt-1 text-[11px] font-bold text-foreground/55">
+                    {t('tcg.collection_value_coverage', { priced: valuationQuery.data?.pricedCount ?? 0, owned: valuationQuery.data?.ownedCount ?? ownedPhysicalCount })}
+                  </p>
+                  {(valuationQuery.data?.unpricedCount ?? ownedPhysicalCount) > 0 && (
+                    <p className="mt-1 text-[11px] font-bold text-amber-700 dark:text-amber-200/80">
+                      {t('tcg.collection_value_partial', { count: valuationQuery.data?.unpricedCount ?? ownedPhysicalCount })}
+                    </p>
+                  )}
+                </>
+              )}
+            </section>
 
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <label className="block w-full max-w-xl space-y-2 text-sm font-bold" htmlFor="custom-collection-card-filter">
@@ -297,6 +357,18 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
       </main>
     </div>
   );
+}
+
+function formatCustomCollectionCurrency(group: { currency: string; total: number }, locale: string): string {
+  try {
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: group.currency,
+      maximumFractionDigits: 2,
+    }).format(group.total);
+  } catch {
+    return `${group.total.toFixed(2)} ${group.currency}`;
+  }
 }
 
 

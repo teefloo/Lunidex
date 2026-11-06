@@ -1,11 +1,13 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import {
+  fetchCustomCollectionValue,
   fetchCollectionValue,
   getCollectionValuationTimeoutMs,
   normalizeOwnedVariantsForValuation,
 } from './api/tcg';
 import type { TCGCard } from '@/types/tcg';
+import type { TCGCustomCollectionCard } from '@/types/tcg';
 
 function pricedCard(id: string, setId = 'sv1', amount = 2): TCGCard {
   return {
@@ -188,5 +190,45 @@ describe('fetchCollectionValue', () => {
     expect(result.ownedCount).toBe(20);
     expect(result.pricedCount).toBe(5);
     expect(result.unpricedCount).toBe(15);
+  });
+});
+
+describe('fetchCustomCollectionValue', () => {
+  it('values positive binder quantities per card language and excludes wanted cards', async () => {
+    const calls: string[] = [];
+    const references: TCGCustomCollectionCard[] = [
+      { collectionId: 'binder', cardId: 'sv1-1', language: 'fr', cardName: 'Card 1', addedAt: '2026-01-01T00:00:00.000Z', quantity: 2 },
+      { collectionId: 'binder', cardId: 'sv1-1', language: 'ja', cardName: 'カード1', addedAt: '2026-01-01T00:00:00.000Z', quantity: 1 },
+      { collectionId: 'binder', cardId: 'sv1-2', language: 'en', cardName: 'Card 2', addedAt: '2026-01-01T00:00:00.000Z', quantity: 0 },
+    ];
+
+    const result = await fetchCustomCollectionValue(references, undefined, 'USD', {
+      fetchCard: async (cardId, language) => {
+        calls.push(`${language}:${cardId}`);
+        return pricedCard(cardId, 'sv1', language === 'ja' ? 6 : 2);
+      },
+      cardTimeoutMs: 25,
+    });
+
+    expect(calls.sort()).toEqual(['fr:sv1-1', 'ja:sv1-1']);
+    expect(result).toMatchObject({
+      groups: [{ currency: 'USD', total: 10, count: 3 }],
+      ownedCount: 3,
+      pricedCount: 3,
+      unpricedCount: 0,
+    });
+  });
+
+  it('reports cards omitted by the valuation limit as unpriced', async () => {
+    const result = await fetchCustomCollectionValue([
+      { collectionId: 'binder', cardId: 'sv1-1', language: 'fr', cardName: 'Card 1', addedAt: '2026-01-01T00:00:00.000Z', quantity: 2 },
+      { collectionId: 'binder', cardId: 'sv1-2', language: 'fr', cardName: 'Card 2', addedAt: '2026-01-01T00:00:00.000Z' },
+    ], undefined, 'USD', {
+      maxUniqueCards: 1,
+      fetchCard: async (cardId) => pricedCard(cardId),
+      cardTimeoutMs: 25,
+    });
+
+    expect(result).toMatchObject({ ownedCount: 3, pricedCount: 2, unpricedCount: 1 });
   });
 });
