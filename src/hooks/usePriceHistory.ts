@@ -1,86 +1,101 @@
 import { useQuery } from '@tanstack/react-query';
-import { getSafePriceHistoryResponse, type PriceHistoryStatus } from '@/lib/tcg-price-history';
+import { getSafePriceHistoryResponse, type PriceHistoryStatus, type QualifiedPriceHistoryEntry } from '@/lib/tcg-price-history';
+import type { TCGCardLanguage } from '@/lib/tcg-language';
+import type { TCGPriceVariant } from '@/lib/tcg-qualified-price-history';
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
+export type PriceHistoryEntry = QualifiedPriceHistoryEntry;
+export interface PriceTrend { eurChange: number | null; }
 
-export interface PriceHistoryEntry {
-  id: number;
-  card_id: string;
-  card_name: string;
-  set_id: string;
-  tcgplayer_low: number | null;
-  tcgplayer_mid: number | null;
-  tcgplayer_high: number | null;
-  cardmarket_avg: number | null;
-  cardmarket_low: number | null;
-  cardmarket_trend: number | null;
-  recorded_at: string;
+interface CaptureResponse {
+  status: 'captured' | 'already-current' | 'empty' | 'unavailable';
+  variants: TCGPriceVariant[];
 }
 
-export interface PriceTrend {
-  /** Percentage change over the window (null when not enough data). */
-  usdChange: number | null;
-  eurChange: number | null;
+function validCaptureResponse(value: unknown): CaptureResponse {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return { status: 'unavailable', variants: [] };
+  const response = value as { status?: unknown; variants?: unknown };
+  const variants = Array.isArray(response.variants)
+    ? response.variants.filter((variant): variant is TCGPriceVariant => variant === 'normal' || variant === 'holo' || variant === 'reverse')
+    : [];
+  const status = response.status === 'captured' || response.status === 'already-current' || response.status === 'empty'
+    ? response.status
+    : 'unavailable';
+  return { status, variants };
 }
 
-// ---------------------------------------------------------------------------
-// Fetcher
-// ---------------------------------------------------------------------------
+async function captureCardmarketPrice(cardId: string, language: TCGCardLanguage): Promise<CaptureResponse> {
+  const response = await fetch(`/api/tcg/price-history/${encodeURIComponent(cardId)}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ language }),
+    cache: 'no-store',
+  });
+  if (!response.ok) throw new Error(`Failed to capture Cardmarket price for ${cardId}: ${response.status}`);
+  return validCaptureResponse(await response.json());
+}
 
 async function fetchPriceHistory(
   cardId: string,
+  language: TCGCardLanguage,
+  variant: TCGPriceVariant,
   days: 7 | 30 | 90,
-): Promise<{ history: PriceHistoryEntry[]; status: PriceHistoryStatus }> {
-  // A new contract key also avoids publicly cached legacy responses.
-  const params = new URLSearchParams({ days: String(days), qualification: 'required' });
-  const res = await fetch(`/api/tcg/price-history/${encodeURIComponent(cardId)}?${params}`);
-  if (!res.ok) {
-    throw new Error(`Failed to fetch price history for ${cardId}: ${res.status}`);
-  }
-  return getSafePriceHistoryResponse(await res.json());
+): Promise<{ history: QualifiedPriceHistoryEntry[]; status: PriceHistoryStatus }> {
+  const params = new URLSearchParams({ days: String(days), language, variant });
+  const response = await fetch(`/api/tcg/price-history/${encodeURIComponent(cardId)}?${params}`, { cache: 'no-store' });
+  if (!response.ok) throw new Error(`Failed to fetch price history for ${cardId}: ${response.status}`);
+  return getSafePriceHistoryResponse(await response.json());
 }
 
-// ---------------------------------------------------------------------------
-// Hook
-// ---------------------------------------------------------------------------
-
-/**
- * Fetches price history for a TCG card over the last N days.
- * Legacy snapshots are withheld until a qualified series writer is available.
- */
-export function usePriceHistory(cardId: string, days: 7 | 30 | 90 = 30) {
-  const query = useQuery({
-    queryKey: ['tcg-price-history', 'qualified-v2', cardId, days],
-    queryFn: () => fetchPriceHistory(cardId, days),
-    staleTime: 30 * 60 * 1000, // 30 min
-    enabled: Boolean(cardId),
+/** Capture and register a localized card when its detail view is opened. */
+export function usePriceHistoryCapture(
+  cardId: string,
+  language: TCGCardLanguage,
+  enabled = true,
+) {
+  return useQuery({
+    queryKey: ['tcg-price-history-capture', 'tcgdex-cardmarket-v1', cardId, language],
+    queryFn: () => captureCardmarketPrice(cardId, language),
+    staleTime: 6 * 60 * 60 * 1000,
+    retry: false,
+    enabled: Boolean(cardId) && enabled,
   });
-  return { ...query, data: query.data?.history, historyStatus: query.data?.status };
 }
 
-// ---------------------------------------------------------------------------
-// Utility: compute 7-day trend from history data
-// ---------------------------------------------------------------------------
+/** Capture the current quote once per query window, then read one exact series. */
+export function usePriceHistory(
+  cardId: string,
+  language: TCGCardLanguage,
+  selectedVariant: TCGPriceVariant,
+  days: 7 | 30 | 90 = 30,
+) {
+  const capture = usePriceHistoryCapture(cardId, language);
+  const availableVariants = capture.data?.variants ?? [];
+  const variant = availableVariants.includes(selectedVariant) ? selectedVariant : availableVariants[0] ?? selectedVariant;
+  const historyQuery = useQuery({
+    queryKey: ['tcg-price-history', 'qualified-v3', cardId, language, variant, days],
+    queryFn: () => fetchPriceHistory(cardId, language, variant, days),
+    staleTime: 5 * 60 * 1000,
+    enabled: Boolean(cardId) && !capture.isPending && availableVariants.includes(variant),
+  });
+  const captureStatus: PriceHistoryStatus | undefined = capture.data?.status === 'unavailable'
+    ? 'unavailable'
+    : capture.data?.status === 'empty' || (capture.data && availableVariants.length === 0)
+      ? 'empty'
+      : undefined;
+  return {
+    data: historyQuery.data?.history,
+    historyStatus: historyQuery.data?.status ?? captureStatus,
+    availableVariants,
+    selectedVariant: variant,
+    isPending: capture.isPending || (availableVariants.includes(variant) && historyQuery.isPending),
+    isError: capture.isError || historyQuery.isError,
+  };
+}
 
 export function computePriceTrend(history: PriceHistoryEntry[]): PriceTrend {
-  if (history.length < 2) return { usdChange: null, eurChange: null };
-
-  const sorted = [...history].sort(
-    (a, b) => new Date(a.recorded_at).getTime() - new Date(b.recorded_at).getTime(),
-  );
-
+  if (history.length < 2) return { eurChange: null };
+  const sorted = [...history].sort((a, b) => Date.parse(a.source_observed_at) - Date.parse(b.source_observed_at));
   const oldest = sorted[0];
   const newest = sorted[sorted.length - 1];
-
-  function pct(prev: number | null, next: number | null): number | null {
-    if (prev == null || next == null || prev === 0) return null;
-    return ((next - prev) / Math.abs(prev)) * 100;
-  }
-
-  return {
-    usdChange: pct(oldest.tcgplayer_mid ?? oldest.tcgplayer_low, newest.tcgplayer_mid ?? newest.tcgplayer_low),
-    eurChange: pct(oldest.cardmarket_trend ?? oldest.cardmarket_avg, newest.cardmarket_trend ?? newest.cardmarket_avg),
-  };
+  return { eurChange: oldest.value > 0 ? ((newest.value - oldest.value) / oldest.value) * 100 : null };
 }

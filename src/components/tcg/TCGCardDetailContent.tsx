@@ -35,6 +35,7 @@ import { getTCGCard } from '@/lib/api/tcg';
 import { tcgKeys } from '@/lib/api/keys';
 import { getCardMarketValue } from '@/lib/tcg-collection';
 import { getTCGCardAccessibleName } from '@/lib/tcg-album-card-actions';
+import { usePriceHistoryCapture } from '@/hooks/usePriceHistory';
 import { DEFAULT_TCG_DISPLAY_CURRENCY } from '@/lib/tcg-currency';
 import { getCardmarketProductUrl } from '@/lib/tcg-marketplace';
 import { cn } from '@/lib/utils';
@@ -120,6 +121,7 @@ export function TCGCardDetailContent({
   // Card data follows the independent TCG language, never the interface
   // locale prefix. Collection albums pass their fixed language explicitly.
   const resolvedLang = mounted ? (tcgLanguage ?? browseLanguage) : (tcgLanguage ?? 'en');
+  usePriceHistoryCapture(card?.id ?? '', resolvedLang, Boolean(card && isOpen && mounted));
   useEffect(() => {
     if (mounted && isOpen && card && !demoOwnership) void trackProductEvent('tcg_first_card_interacted', undefined, undefined, { set_id: card.set?.id, tcg_language: resolvedLang, interaction: 'view' });
   }, [card, isOpen, mounted, resolvedLang, demoOwnership]);
@@ -651,7 +653,7 @@ export function TCGCardDetailContent({
 
                 {/* ── Price history chart ──────────────────────────── */}
                 <section className="space-y-3">
-                  <DeferredPriceChart cardId={displayCard.id} />
+                  <DeferredPriceChart cardId={displayCard.id} language={resolvedLang} />
                 </section>
 
                 {/* ── Footer ───────────────────────────────────────── */}
@@ -719,7 +721,7 @@ export function TCGCardDetailContent({
   );
 }
 
-function DeferredPriceChart({ cardId }: { cardId: string }) {
+function DeferredPriceChart({ cardId, language }: { cardId: string; language: TCGCardLanguage }) {
   const [shouldLoad, setShouldLoad] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -743,7 +745,7 @@ function DeferredPriceChart({ cardId }: { cardId: string }) {
   return (
     <div ref={containerRef} className="min-h-48">
       {shouldLoad ? (
-        <PriceChart cardId={cardId} />
+        <PriceChart cardId={cardId} language={language} />
       ) : (
         <div className="h-48 animate-pulse rounded-2xl border border-border/55 bg-background/20" aria-hidden="true" />
       )}

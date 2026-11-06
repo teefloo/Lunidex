@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getNeonClient } from '@/lib/neon/server';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
+import { refreshDuePriceHistoryCards, type PriceHistoryRefreshSummary } from '@/lib/tcg-price-history-refresh';
+import { reportSentryException } from '@/lib/sentry-observability';
 
 /**
  * Scheduled retention job (see the `crons` entry in vercel.json).
  *
  * Bounds append-only growth that no other code path cleans up:
  * - abandoned daily quiz attempts would otherwise stay `active` forever;
- * - tcg_price_history snapshots accumulate one row per card per interval.
+ * - TCG price history snapshots and refresh targets otherwise accumulate.
  * `analytics.daily_metrics` is also purged here so the ingestion path remains
  * a single write on the hot path.
  */
@@ -60,6 +62,22 @@ async function getMetricsRetention(request: NextRequest): Promise<NextResponse> 
       )
       select count(*)::int as count from deleted
     ` as CountRow[];
+    const deletedQualifiedSnapshots = await sql`
+      with deleted as (
+        delete from public.tcg_price_history_qualified
+        where collected_at < now() - (${PRICE_HISTORY_RETENTION_DAYS} * interval '1 day')
+        returning 1
+      )
+      select count(*)::int as count from deleted
+    ` as CountRow[];
+    const deletedPriceHistoryRefreshTargets = await sql`
+      with deleted as (
+        delete from public.tcg_price_history_refresh_targets
+        where last_seen_at < now() - (${PRICE_HISTORY_RETENTION_DAYS} * interval '1 day')
+        returning 1
+      )
+      select count(*)::int as count from deleted
+    ` as CountRow[];
     const deletedMetrics = await sql`
       with deleted as (
         delete from analytics.daily_metrics
@@ -93,11 +111,30 @@ async function getMetricsRetention(request: NextRequest): Promise<NextResponse> 
       select count(*)::int as count from deleted
     ` as CountRow[];
 
+    let priceHistoryRefresh: PriceHistoryRefreshSummary = { attempted: 0, captured: 0, failed: 0 };
+    let priceHistoryRefreshUnavailable = false;
+    try {
+      priceHistoryRefresh = await refreshDuePriceHistoryCards(sql);
+    } catch (error) {
+      priceHistoryRefreshUnavailable = true;
+      reportSentryException(error, {
+        feature: 'tcg',
+        route: '/api/cron/metrics-retention',
+        method: 'GET',
+        operation: 'price-history-daily-refresh-claim',
+        service: 'tcgdex-cardmarket',
+      });
+    }
+
     return NextResponse.json(
       {
         ok: true,
         expiredQuizAttempts: countFrom(expiredAttempts),
         deletedPriceHistoryRows: countFrom(deletedSnapshots),
+        deletedQualifiedPriceHistoryRows: countFrom(deletedQualifiedSnapshots),
+        deletedPriceHistoryRefreshTargets: countFrom(deletedPriceHistoryRefreshTargets),
+        priceHistoryRefresh,
+        priceHistoryRefreshUnavailable,
         deletedDailyMetricsDays: countFrom(deletedMetrics),
         deletedApiUsageRows: countFrom(deletedApiUsage),
         deletedApiQuotaBuckets: countFrom(deletedApiBuckets),
