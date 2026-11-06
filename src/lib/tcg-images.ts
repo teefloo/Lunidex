@@ -23,6 +23,15 @@ const OPTIMIZABLE_TCG_HOSTS = new Set([
   'tcgplayer-cdn.tcgplayer.com',
 ]);
 
+// TCGdex lists these MEP promos but has not published their card scans or
+// TCGplayer product IDs. Keep verified TCGplayer image IDs as a last resort,
+// including in binders that otherwise restrict images to the selected language.
+const TCGPLAYER_CARD_IMAGE_FALLBACKS: Readonly<Record<string, number>> = {
+  'mep-055': 709969,
+  'mep-056': 709970,
+  'mep-057': 709971,
+};
+
 export function hasTCGCardImage(card: Pick<TCGCard, 'image' | 'imageUrl'>): boolean {
   return Boolean(card.image || card.imageUrl);
 }
@@ -157,9 +166,12 @@ export function getTCGCardImageCandidates(
     .map((variant) => variant.thirdParty?.tcgplayer);
   const tcgPlayerProductIds = [card.thirdParty?.tcgplayer, ...unmarkedProductIds, ...markedProductIds]
     .filter((productId): productId is number => typeof productId === 'number' && Number.isSafeInteger(productId) && productId > 0);
-  const tcgPlayerFallbacks = allowLanguageFallback
-    ? [...new Set(tcgPlayerProductIds)].map((productId) => `https://tcgplayer-cdn.tcgplayer.com/product/${productId}_in_1000x1000.jpg`)
-    : [];
+  const knownTcgPlayerFallback = TCGPLAYER_CARD_IMAGE_FALLBACKS[card.id.toLowerCase()];
+  const tcgPlayerFallbacks = [...new Set([
+    ...tcgPlayerProductIds,
+    knownTcgPlayerFallback,
+  ].filter((productId): productId is number => typeof productId === 'number'))]
+    .map((productId) => `https://tcgplayer-cdn.tcgplayer.com/product/${productId}_in_1000x1000.jpg`);
   const anniversary30ClassicImage = getAnniversary30ClassicImage(card);
   const candidates = [
     ...cardBaseGroups.flatMap((group) => (

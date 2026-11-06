@@ -57,4 +57,33 @@ describe('getTCGCardImageCandidates', () => {
     expect(candidates).toContain('https://tcgplayer-cdn.tcgplayer.com/product/680480_in_1000x1000.jpg');
     expect(candidates).toContain('https://tcgplayer-cdn.tcgplayer.com/product/680481_in_1000x1000.jpg');
   });
+
+  it.each([
+    ['mep-055', 709969],
+    ['mep-056', 709970],
+    ['mep-057', 709971],
+  ])('uses the verified promo image for %s when language fallback is disabled', (id, productId) => {
+    const candidates = getTCGCardImageCandidates({
+      id,
+      image: `https://assets.tcgdex.net/fr/me/mep/${id.slice(-3)}`,
+    }, 'high', { allowLanguageFallback: false });
+
+    expect(candidates).toContain(`https://tcgplayer-cdn.tcgplayer.com/product/${productId}_in_1000x1000.jpg`);
+    expect(candidates).not.toContain(`https://assets.tcgdex.net/en/me/mep/${id.slice(-3)}/high.webp`);
+  });
+
+  it.each([
+    ['mep-049', 699873],
+    ['mep-050', 699874],
+    ['mep-051', 699875],
+  ])('uses the card-provided TCGplayer image for %s when language fallback is disabled', (id, productId) => {
+    const candidates = getTCGCardImageCandidates({
+      id,
+      image: `https://assets.tcgdex.net/fr/me/mep/${id.slice(-3)}`,
+      variants_detailed: [{ type: 'Holo', thirdParty: { tcgplayer: productId } }],
+    }, 'high', { allowLanguageFallback: false });
+
+    expect(candidates).toContain(`https://tcgplayer-cdn.tcgplayer.com/product/${productId}_in_1000x1000.jpg`);
+    expect(candidates).not.toContain(`https://assets.tcgdex.net/en/me/mep/${id.slice(-3)}/high.webp`);
+  });
 });
