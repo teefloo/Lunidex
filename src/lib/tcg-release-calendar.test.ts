@@ -1,7 +1,7 @@
 import { SEALED_RELEASES_V1 } from '@/content/tcg/sealed-releases.v1';
 import { describe, expect, it } from 'vitest';
 import * as releaseCalendar from './tcg-release-calendar';
-import { formatReleaseWindow, type ReleaseWindow, type SealedReleaseV1 } from './tcg-release-calendar';
+import { formatReleaseWindow, getReleaseDisplayStatus, type ReleaseWindow, type SealedReleaseV1 } from './tcg-release-calendar';
 
 const releases: readonly SealedReleaseV1[] = SEALED_RELEASES_V1;
 
@@ -16,6 +16,36 @@ describe('formatReleaseWindow', () => {
     const release: ReleaseWindow = { precision: 'quarter', year: 2026, quarter: 4 };
     expect(formatReleaseWindow(release, 'fr')).toBe('4e trimestre 2026');
     expect(formatReleaseWindow(release, 'en')).toBe('Q4 2026');
+  });
+});
+
+describe('dynamic sealed release status', () => {
+  it('uses the France calendar day and leaves a passed announcement uncertain', () => {
+    const release = { ...releases[0], status: 'announced' as const, window: { precision: 'day' as const, date: '2026-11-06' as const } };
+    expect(getReleaseDisplayStatus(release, new Date('2026-11-05T22:30:00.000Z'))).toBe('upcoming');
+    expect(getReleaseDisplayStatus(release, new Date('2026-11-06T22:59:59.000Z'))).toBe('availability-uncertain');
+  });
+
+  it('handles month and quarter boundaries without claiming a release', () => {
+    const base = { ...releases[0], status: 'announced' as const };
+    const month = { ...base, window: { precision: 'month' as const, year: 2026, month: 11 } };
+    expect(getReleaseDisplayStatus(month, new Date('2026-10-31T21:59:59.000Z'))).toBe('upcoming');
+    expect(getReleaseDisplayStatus(month, new Date('2026-10-31T22:00:00.000Z'))).toBe('upcoming');
+    expect(getReleaseDisplayStatus(month, new Date('2026-11-30T22:59:59.000Z'))).toBe('upcoming');
+    expect(getReleaseDisplayStatus(month, new Date('2026-11-30T23:00:00.000Z'))).toBe('availability-uncertain');
+
+    const quarter = { ...base, window: { precision: 'quarter' as const, year: 2026, quarter: 4 as const } };
+    expect(getReleaseDisplayStatus(quarter, new Date('2026-09-30T21:59:59.000Z'))).toBe('upcoming');
+    expect(getReleaseDisplayStatus(quarter, new Date('2026-09-30T22:00:00.000Z'))).toBe('upcoming');
+    expect(getReleaseDisplayStatus(quarter, new Date('2026-12-31T22:59:59.000Z'))).toBe('upcoming');
+    expect(getReleaseDisplayStatus(quarter, new Date('2026-12-31T23:00:00.000Z'))).toBe('availability-uncertain');
+  });
+
+  it('keeps explicit editorial outcomes regardless of the calendar', () => {
+    const base = { ...releases[0], window: { precision: 'day' as const, date: '2020-01-01' as const } };
+    expect(getReleaseDisplayStatus({ ...base, status: 'released' }, new Date('2026-11-06T12:00:00Z'))).toBe('released');
+    expect(getReleaseDisplayStatus({ ...base, status: 'postponed' }, new Date('2026-11-06T12:00:00Z'))).toBe('postponed');
+    expect(getReleaseDisplayStatus({ ...base, status: 'availability-uncertain' }, new Date('2026-11-06T12:00:00Z'))).toBe('availability-uncertain');
   });
 });
 
@@ -65,13 +95,49 @@ describe('versioned French sealed release data', () => {
     expect(new Set(matchIds).size).toBe(matchIds.length);
   });
 
-  it('keeps French 30th anniversary dates imprecise where no exact day is sourced', () => {
-    expect(releases.find((release) => release.id === 'blister-2-boosters-30e')?.window)
-      .toEqual({ precision: 'quarter', year: 2026, quarter: 3 });
-    expect(releases.find((release) => release.id === 'collection-ko-30e')?.window)
-      .toEqual({ precision: 'quarter', year: 2026, quarter: 3 });
-    expect(releases.find((release) => release.id === 'collection-premium-metamorph-30e')?.window)
-      .toEqual({ precision: 'day', date: '2026-11-06' });
+  it('uses only the precision supported by current official French product sources', () => {
+    const q3Ids = [
+      'blister-2-boosters-30e', 'collection-ko-30e', 'collection-poster-30e',
+      'coffrets-nymphali-amphinobi-30e', 'coffret-dresseur-elite-30e',
+    ];
+    const q4Ids = [
+      'collection-autocollant-30e', 'collection-premium-metamorph-30e',
+      'collection-ultra-premium-journee-soiree-30e', 'collection-figurine-mew-mewtwo-30e',
+    ];
+    for (const id of q3Ids) {
+      const release = releases.find((entry) => entry.id === id);
+      expect(release?.window).toEqual({ precision: 'quarter', year: 2026, quarter: 3 });
+      expect(release?.source.url).toBe('https://www.pokemon.com/fr/news/jcc-pokemon-produits-30-anniversaire');
+      expect(release?.source.verifiedAt).toBe('2026-11-06');
+    }
+    for (const id of q4Ids) {
+      const release = releases.find((entry) => entry.id === id);
+      expect(release?.window).toEqual({ precision: 'quarter', year: 2026, quarter: 4 });
+      expect(release?.source.url).toBe('https://www.pokemon.com/fr/news/jcc-pokemon-produits-30-anniversaire');
+      expect(release?.source.verifiedAt).toBe('2026-11-06');
+    }
+    const octoberIds = ['collection-classeur-30e', 'lot-boosters-30e', 'mini-boites-30e', 'decks-combat-mentali-noctali-30e', 'duopack-octobre-2026'];
+    for (const id of octoberIds) {
+      const release = releases.find((entry) => entry.id === id);
+      expect(release?.window).toEqual({ precision: 'month', year: 2026, month: 10 });
+      expect(release?.source.url).toBe('https://www.pokemon.com/fr/actualites/decouvrez-tous-les-produits-du-jcc-pokemon-qui-sortiront-en-octobre-2026');
+      expect(release?.source.verifiedAt).toBe('2026-11-06');
+    }
+    for (const id of [
+      'collection-poster-30e', 'coffrets-nymphali-amphinobi-30e', 'coffret-dresseur-elite-30e',
+      'collection-classeur-30e', 'decks-combat-mentali-noctali-30e', 'duopack-octobre-2026',
+      'prerelease-regne-delta', 'etb-regne-delta', 'bundle-regne-delta',
+    ]) {
+      const release = releases.find((entry) => entry.id === id);
+      expect(release?.priceSource).toMatchObject({
+        publisher: 'PokéCardex',
+        url: 'https://www.pokecardex.com/forums/viewtopic.php?t=49894',
+        verifiedAt: '2026-09-30',
+      });
+    }
+    expect(releases.find((release) => release.id === 'collection-poster-30e')?.status).toBe('released');
+    expect(releases.find((release) => release.id === 'coffrets-nymphali-amphinobi-30e')?.status).toBe('released');
+    expect(releases.find((release) => release.id === 'coffret-dresseur-elite-30e')?.status).toBe('released');
     expect(releases.find((release) => release.id === 'collection-premium-metamorph-30e')?.retailPriceCents)
       .toBeUndefined();
   });
@@ -83,9 +149,23 @@ describe('versioned French sealed release data', () => {
     expect(raikou?.source.publisher).toBe('PokéCardex');
 
     const upcoming = releases.find((release) => release.id === 'etb-regne-delta');
-    expect(upcoming?.window).toEqual({ precision: 'day', date: '2026-11-06' });
+    expect(upcoming?.window).toEqual({ precision: 'quarter', year: 2026, quarter: 4 });
     expect(upcoming?.retailPriceCents).toBe(5599);
     expect(upcoming?.status).toBe('announced');
+    expect(upcoming?.source.url).toBe('https://www.pokemon.com/fr/actualites/jcc-pokemon-apercu-des-produits-mega-evolution-regne-delta');
+    expect(upcoming?.source.verifiedAt).toBe('2026-11-06');
+    const bundle = releases.find((release) => release.id === 'bundle-regne-delta');
+    expect(bundle?.window).toEqual({ precision: 'quarter', year: 2026, quarter: 4 });
+    expect(bundle?.source.url).toBe('https://www.pokemon.com/fr/actualites/jcc-pokemon-apercu-des-produits-mega-evolution-regne-delta');
+    const prerelease = releases.find((release) => release.id === 'prerelease-regne-delta');
+    expect(prerelease?.window).toEqual({ precision: 'day', date: '2026-10-24' });
+    expect(prerelease?.source.url).toBe('https://www.pokemon.com/fr/actualites/participez-a-un-evenement-davant-premiere-pour-lextension-mega-evolution-regne-delta-du-jcc-pokemon');
+    expect(prerelease?.source.publisher).toBe('The Pokémon Company');
+    expect(prerelease?.source.verifiedAt).toBe('2026-11-06');
+    expect(releases.find((release) => release.id === 'tripack-regne-delta')?.source.publisher).toBe('PokéCardex');
+    const expansion = releases.find((release) => release.id === 'mega-evolution-regne-delta');
+    expect(expansion?.source.verifiedAt).toBe('2026-11-06');
+    expect(expansion?.source.url).toBe('https://www.pokemon.com/fr/actualites/jcc-pokemon-apercu-des-produits-mega-evolution-regne-delta');
   });
 
   it('covers every 2026 expansion with its official release day and source', () => {

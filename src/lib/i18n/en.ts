@@ -2455,8 +2455,10 @@ export default {
             source: "Official source",
             verified: "Source checked on {{date}}",
             announced: "Announced",
+            upcoming: 'Coming up',
             released: "Released",
             postponed: "Postponed",
+            availability_uncertain: 'Availability uncertain',
             expansion: "Expansion",
             sealed_product: "Sealed product",
             market_fr: "French market",
@@ -2477,6 +2479,7 @@ export default {
             external_note: "This opens a third-party site. Check the offer and seller before paying.",
             no_match: "An editor has not linked a Cardmarket product to this release.",
             suggested_price: "Suggested retail price: {{price}}",
+            price_source: "Price source",
           },
         },
         sealed: {

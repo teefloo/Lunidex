@@ -3,13 +3,15 @@ import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import { SealedWorkspaceNavigation } from '@/components/tcg/SealedWorkspaceNavigation';
 import { SEALED_RELEASES_V1 } from '@/content/tcg/sealed-releases.v1';
-import { formatReleaseWindow, sealedReleaseMarketHref } from '@/lib/tcg-release-calendar';
+import { formatReleaseVerificationDate, formatReleaseWindow, getReleaseDisplayStatus, sealedReleaseMarketHref } from '@/lib/tcg-release-calendar';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
 import type { ReleaseWindow, SealedReleaseV1 } from '@/lib/tcg-release-calendar';
 
 const path = '/tcg/sealed/releases';
+
+export const dynamic = 'force-dynamic';
 
 function releaseSortTime(window: ReleaseWindow): number {
   if (window.precision === 'day') return Date.parse(`${window.date}T12:00:00Z`);
@@ -67,15 +69,21 @@ export default async function SealedReleasesPage() {
       <ol className="grid gap-4 md:grid-cols-2">
         {releases.map((release) => {
           const marketHref = sealedReleaseMarketHref(release.cardmarketProductId, language);
+          const displayStatus = getReleaseDisplayStatus(release);
+          const statusLabel = displayStatus === 'availability-uncertain' ? 'availability_uncertain' : displayStatus;
           return <li key={release.id} className="rounded-xl border border-border/65 bg-card/65 p-5">
             <div className="flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-[0.1em]">
-              <span className="rounded-sm border border-primary/30 bg-primary/10 px-2 py-1 text-primary">{label(release.status)}</span>
+              <span className="rounded-sm border border-primary/30 bg-primary/10 px-2 py-1 text-primary">{label(statusLabel)}</span>
               <span className="text-foreground/50">{label(release.kind === 'expansion' ? 'expansion' : 'sealed_product')}</span>
             </div>
             <h2 className="mt-4 text-xl font-black">{release.titleFr}</h2>
             <p className="mt-2 text-lg font-bold">{formatReleaseWindow(release.window, language)}</p>
             {release.retailPriceCents !== undefined && <p className="mt-2 text-sm font-semibold text-foreground/75">{label('suggested_price').replace('{{price}}', price.format(release.retailPriceCents / 100))}</p>}
-            <p className="mt-4 text-xs text-foreground/55">{t('tcg.editorial_sealed.labels.verified', { date: release.source.verifiedAt })}</p>
+            {release.retailPriceCents !== undefined && release.priceSource && <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-foreground/55">
+              <a href={release.priceSource.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center font-bold text-primary underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">{label('price_source')} · {release.priceSource.publisher}</a>
+              <span>{t('tcg.editorial_sealed.labels.verified', { date: formatReleaseVerificationDate(release.priceSource.verifiedAt, language) })}</span>
+            </div>}
+            <p className="mt-4 text-xs text-foreground/55">{t('tcg.editorial_sealed.labels.verified', { date: formatReleaseVerificationDate(release.source.verifiedAt, language) })}</p>
             <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
               <a href={release.source.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center text-sm font-bold text-primary underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">{label('read_source')} · {release.source.publisher}</a>
               {marketHref
