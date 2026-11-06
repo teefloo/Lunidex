@@ -23,6 +23,28 @@ const OPTIMIZABLE_TCG_HOSTS = new Set([
   'tcgplayer-cdn.tcgplayer.com',
 ]);
 
+interface TCGSetLogoFallback {
+  default: string;
+  fr?: string;
+}
+
+// These exact assets were verified at their providers despite missing API
+// fields. TCGdex has `/fr|en/me/30th/logo.png`; the Classic Collection shares
+// that parent mark. The Pocket logos are official Press files from collections
+// 5316 (Crimson Blaze) and 5444 (Paldean Wonders).
+const TCG_SET_LOGO_FALLBACKS: Readonly<Record<string, TCGSetLogoFallback>> = {
+  '30th': {
+    default: '/images/tcg-set-logos/30th-celebration-en.webp',
+    fr: '/images/tcg-set-logos/30th-celebration-fr.webp',
+  },
+  '30th-c': {
+    default: '/images/tcg-set-logos/30th-celebration-en.webp',
+    fr: '/images/tcg-set-logos/30th-celebration-fr.webp',
+  },
+  B1a: { default: '/images/tcg-set-logos/crimson-blaze-en.webp' },
+  B2a: { default: '/images/tcg-set-logos/paldean-wonders-en.webp' },
+};
+
 // TCGdex lists these MEP promos but has not published their card scans or
 // TCGplayer product IDs. Keep verified TCGplayer image IDs as a last resort,
 // including in binders that otherwise restrict images to the selected language.
@@ -194,13 +216,21 @@ export function getTCGCardImageCandidates(
 export function getTCGSetImageCandidates(
   set: TCGSet,
   kind: 'logo' | 'symbol' = 'logo',
+  options: { language?: string } = {},
 ): string[] {
-  const bases = addTcgDexLanguageVariants(kind === 'logo' ? set.logo : set.symbol);
+  const source = kind === 'logo' ? set.logo : set.symbol;
+  const bases = addTcgDexLanguageVariants(source);
   const candidates = isTcgDexAsset(bases[0] ?? '')
     ? (['png', 'webp', 'jpg'] as const).flatMap((ext) =>
         bases.map((base) => replaceFormat(base, ext)),
       )
     : bases;
+  const logoFallback = kind === 'logo'
+    ? TCG_SET_LOGO_FALLBACKS[set.id]
+    : undefined;
+  const localizedFallback = options.language === 'fr'
+    ? logoFallback?.fr ?? logoFallback?.default
+    : logoFallback?.default;
 
-  return [...new Set(candidates)];
+  return [...new Set([...candidates, ...(localizedFallback ? [localizedFallback] : [])])];
 }

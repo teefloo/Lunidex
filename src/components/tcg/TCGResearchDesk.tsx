@@ -37,11 +37,18 @@ import {
 } from '@/lib/tcg-research';
 import { TCGCardItem } from './TCGCardItem';
 import { TCGDataLangBanner } from './TCGUnsupportedLangBanner';
+import { TCGSetOptionLabel } from './TCGSetOptionLabel';
 import { RecoverableError } from '@/components/ui/RecoverableError';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useShallow } from 'zustand/react/shallow';
 import { isTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
-import { buildTCGSetDisplayNames } from '@/lib/tcg-set-label';
 import { TCG_POKEMON_TYPE_TRANSLATION_KEYS } from '@/lib/tcg-type-labels';
 import '@/styles/pokemon-cards-css.css';
 import '@/styles/tcg-card-overrides.css';
@@ -166,8 +173,6 @@ export function TCGResearchDesk({
   const setOptions = useMemo(() => {
     return sortTCGSetsNewestFirst(filterOptions?.sets ?? []);
   }, [filterOptions?.sets]);
-
-  const setDisplayNames = useMemo(() => buildTCGSetDisplayNames(setOptions), [setOptions]);
 
   const latestSet = getLatestTCGSet(setOptions);
   const latestSetId = latestSet?.id ?? null;
@@ -441,8 +446,8 @@ export function TCGResearchDesk({
         title={t('tcg.page_title')}
         subtitle={t('tcg.discover_subtitle')}
         searchTerm={searchTermDraft}
+        tcgLang={resolvedLang}
         collections={setOptions}
-        collectionLabels={setDisplayNames}
         selectedCollectionId={effectiveFilters.selectedSet ?? null}
         sortValue={sortValue}
         isCollectionOptionsLoading={isTCGStateHydrating || isResolvingDefaultSet || !filterOptions}
@@ -625,8 +630,8 @@ function DiscoveryHero({
   title,
   subtitle,
   searchTerm,
+  tcgLang,
   collections,
-  collectionLabels,
   selectedCollectionId,
   sortValue,
   isCollectionOptionsLoading,
@@ -639,8 +644,8 @@ function DiscoveryHero({
   title: string;
   subtitle: string;
   searchTerm: string;
+  tcgLang: string;
   collections: TCGSet[];
-  collectionLabels: Map<string, string>;
   selectedCollectionId: string | null;
   sortValue: string;
   isCollectionOptionsLoading: boolean;
@@ -651,6 +656,7 @@ function DiscoveryHero({
   onOpenFilters: () => void;
 }) {
   const { t } = useTranslation();
+  const selectedCollection = collections.find((collection) => collection.id === selectedCollectionId);
 
   return (
     <section className="rounded-sm border border-border/35 bg-card/20 p-4 sm:p-5">
@@ -681,21 +687,54 @@ function DiscoveryHero({
                 {t('tcg.collection_loading')}
               </div>
             ) : (
-              <select
+              <Select
                 value={selectedCollectionId ?? ''}
-                onChange={(event) => onCollectionChange(event.target.value || null)}
-                className="glass-control min-h-11 w-full cursor-pointer appearance-none px-3 pl-9 pr-8 text-sm font-semibold transition-colors hover:border-primary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/25"
-                aria-label={t('tcg.filter_set')}
+                onValueChange={(value) => onCollectionChange(value || null)}
               >
-                <option value="">{t('tcg.all_collections')}</option>
-                {collections.map((collection) => (
-                  <option key={collection.id} value={collection.id}>
-                    {collectionLabels.get(collection.id) ?? collection.name}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger
+                  aria-label={t('tcg.filter_set')}
+                  className="glass-control h-auto min-h-11 w-full cursor-pointer justify-start whitespace-normal px-3 pl-10 text-left text-sm font-semibold transition-colors hover:border-primary focus:border-primary focus:ring-2 focus:ring-primary/25 sm:max-w-[20rem] [&>span]:min-w-0"
+                >
+                  <SelectValue>
+                    {selectedCollectionId ? (
+                      <TCGSetOptionLabel
+                        setId={selectedCollectionId}
+                        name={selectedCollection?.name ?? selectedCollectionId}
+                        logo={selectedCollection?.logo}
+                        symbol={selectedCollection?.symbol}
+                        language={tcgLang}
+                      />
+                    ) : (
+                      <span className="min-w-0 whitespace-normal text-sm font-semibold">{t('tcg.all_collections')}</span>
+                    )}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent
+                  align="start"
+                  alignItemWithTrigger={false}
+                  className="max-h-[min(32rem,var(--available-height))] min-w-[min(30rem,calc(100vw-2rem))] rounded-sm border border-border/70 bg-popover/95 shadow-lg"
+                >
+                  <SelectItem value="" className="min-h-11 rounded-sm py-2.5 focus:bg-primary/10">
+                    <span className="min-w-0 flex-1 whitespace-normal">{t('tcg.all_collections')}</span>
+                  </SelectItem>
+                  {collections.map((collection) => (
+                    <SelectItem
+                      key={collection.id}
+                      value={collection.id}
+                      className="min-h-12 rounded-sm py-2.5 pl-2.5 focus:bg-primary/10"
+                    >
+                      <TCGSetOptionLabel
+                        setId={collection.id}
+                        name={collection.name}
+                        logo={collection.logo}
+                        symbol={collection.symbol}
+                        language={tcgLang}
+                      />
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             )}
-            <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/55" aria-hidden="true" />
           </div>
           <div className="w-full sm:w-auto sm:min-w-48 sm:max-w-[20rem]">
             <div className="relative overflow-hidden rounded-sm">

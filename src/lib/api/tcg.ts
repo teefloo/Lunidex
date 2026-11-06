@@ -243,7 +243,7 @@ function createCollectionRequestSignal(signal: AbortSignal | undefined, timeoutM
 }
 
 function getCollectionSetCatalogCacheKey(language: string): string {
-  return `tcg-collection-set-catalog-v1-${resolveTcgLang(language)}`;
+  return `tcg-collection-set-catalog-v2-${resolveTcgLang(language)}`;
 }
 
 function throwIfAborted(signal?: AbortSignal) {
@@ -1753,12 +1753,35 @@ export const getCollectionSetCatalog = async (
       throw new Error('TCGdex returned no usable sets');
     }
 
+    let setsWithArtwork = listedSets;
+    if (tcgLang !== 'en' && listedSets.some((set) => !set.logo && !set.symbol)) {
+      try {
+        // Set artwork is shared between languages. Keep localized names and
+        // metadata, filling only absent image fields from one compact catalog.
+        const englishSets = await getCollectionSetCatalog('en', signal);
+        const englishSetsById = new Map(englishSets.map((set) => [set.id, set]));
+        setsWithArtwork = listedSets.map((set) => {
+          const englishSet = englishSetsById.get(set.id);
+          if (!englishSet) return set;
+
+          const logo = set.logo ?? englishSet.logo;
+          const symbol = set.symbol ?? englishSet.symbol;
+          if (logo === set.logo && symbol === set.symbol) return set;
+          return { ...set, logo, symbol };
+        });
+      } catch (error) {
+        if (signal?.aborted) throw error;
+        // Artwork is optional. Keep the localized list usable when TCGdex's
+        // English compact catalog is temporarily unavailable.
+      }
+    }
+
     // The ordered list is the compact collection manifest. Validate card data
     // only when an authenticated user opens a set; probing every Japanese or
     // Korean set here turns the landing page into an N+1 request waterfall.
-    tcgCollectionCatalogMemoryCache.set(cacheKey, listedSets);
-    await setCachedData(cacheKey, listedSets);
-    return listedSets;
+    tcgCollectionCatalogMemoryCache.set(cacheKey, setsWithArtwork);
+    await setCachedData(cacheKey, setsWithArtwork);
+    return setsWithArtwork;
   } catch (error) {
     if (signal?.aborted) throw error;
     if (cached?.length) {

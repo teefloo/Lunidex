@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getTCGCardImageCandidates, hasTCGCardImage } from './tcg-images';
+import { getTCGCardImageCandidates, getTCGSetImageCandidates, hasTCGCardImage } from './tcg-images';
 
 describe('hasTCGCardImage', () => {
   it('recognizes the imageUrl fallback returned by the TCG API', () => {
@@ -85,5 +85,26 @@ describe('getTCGCardImageCandidates', () => {
 
     expect(candidates).toContain(`https://tcgplayer-cdn.tcgplayer.com/product/${productId}_in_1000x1000.jpg`);
     expect(candidates).not.toContain(`https://assets.tcgdex.net/en/me/mep/${id.slice(-3)}/high.webp`);
+  });
+});
+
+describe('getTCGSetImageCandidates verified logo fallbacks', () => {
+  it('selects the locale-appropriate 30th Celebration logo for the main and classic subsets', () => {
+    expect(getTCGSetImageCandidates({ id: '30th', name: '30ᵉ Anniversaire' }, 'logo', { language: 'fr' }))
+      .toEqual(['/images/tcg-set-logos/30th-celebration-fr.webp']);
+    expect(getTCGSetImageCandidates({ id: '30th-c', name: 'Collection Classique 30ᵉ Anniversaire' }, 'logo', { language: 'en' }))
+      .toEqual(['/images/tcg-set-logos/30th-celebration-en.webp']);
+  });
+
+  it('uses the sourced English Pocket logos for French catalog IDs with missing TCGdex metadata', () => {
+    expect(getTCGSetImageCandidates({ id: 'B1a', name: 'Embrasement Écarlate' }, 'logo', { language: 'fr' }))
+      .toEqual(['/images/tcg-set-logos/crimson-blaze-en.webp']);
+    expect(getTCGSetImageCandidates({ id: 'B2a', name: 'Merveilles de Paldea' }, 'logo', { language: 'fr' }))
+      .toEqual(['/images/tcg-set-logos/paldean-wonders-en.webp']);
+  });
+
+  it('does not invent assets for IDs with no verified source logo', () => {
+    expect(getTCGSetImageCandidates({ id: 'base1', name: 'Set de Base' }, 'logo')).toEqual([]);
+    expect(getTCGSetImageCandidates({ id: 'unknown', name: 'Unknown' }, 'logo')).toEqual([]);
   });
 });

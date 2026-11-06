@@ -1,4 +1,31 @@
 import type { TCGSet } from '@/types/tcg';
+import { TCG_SET_PRINTED_CODES } from './tcg-set-printed-codes';
+
+export interface TCGSetIdentifiers {
+  /** A readable form of the stable TCGdex set ID (for example, `me05` -> `ME5`). */
+  extensionId: string;
+  /** A verified printed card code from Scarlet & Violet-era sets onward. */
+  printedCode?: string;
+}
+
+/**
+ * Resolve the identifiers shown alongside a set name. The extension ID comes
+ * directly from TCGdex's set ID. The optional printed code comes from the
+ * TCGdex `abbreviation.official` snapshot for physical releases from Scarlet
+ * & Violet onward; older catalog abbreviations and digital-only sets are
+ * intentionally omitted.
+ */
+export function getTCGSetIdentifiers(setId: string): TCGSetIdentifiers {
+  const extensionId = setId
+    .toUpperCase()
+    .replace(/^([A-Z]+)0+(?=\d)/, '$1');
+  const printedCode = TCG_SET_PRINTED_CODES[setId];
+
+  return {
+    extensionId,
+    ...(printedCode ? { printedCode } : {}),
+  };
+}
 
 /**
  * Build unambiguous labels for set selectors. Some localized TCGdex catalogs
