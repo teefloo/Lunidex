@@ -5,6 +5,7 @@ import { ipKey, rateLimit } from '@/lib/rate-limit';
 import { getSealedImageUrl } from '@/lib/tcg-sealed-server';
 import { positiveId, sealedErrorResponse, unavailableResponse } from '@/lib/tcg-sealed-route';
 import { sealedImageContentType } from '@/lib/tcg-sealed-image';
+import { reportSentryException } from '@/lib/sentry-observability';
 
 export const runtime = 'nodejs';
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
@@ -49,8 +50,22 @@ async function getImage(request: NextRequest, context: { params: Promise<{ id: s
     }
     return NextResponse.json({ error: 'Sealed product image unavailable.' }, { status: 404, headers: { 'Cache-Control': 'private, no-store' } });
   } catch (error) {
-    return sealedErrorResponse(error);
+    const response = sealedErrorResponse(error);
+    if (response.status >= 500) {
+      reportSentryException(error, {
+        feature: 'tcg-sealed',
+        route: '/api/tcg/sealed/products/:id/image',
+        method: 'GET',
+        operation: 'image-read',
+      });
+    }
+    return response;
   }
 }
 
-export const GET = withObservedRouteHandler('/api/tcg/sealed/products/:id/image', 'tcg-sealed', getImage);
+export const GET = withObservedRouteHandler(
+  '/api/tcg/sealed/products/:id/image',
+  'tcg-sealed',
+  getImage,
+  { skipSentryResponseFailureStatuses: [500] },
+);

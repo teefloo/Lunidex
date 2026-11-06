@@ -66,4 +66,21 @@ describe('observed route handlers', () => {
     expect(Sentry.captureException).not.toHaveBeenCalled();
     expect(Sentry.captureMessage).not.toHaveBeenCalled();
   });
+
+  it('can skip a synthetic Sentry issue for response statuses reported with the original exception', async () => {
+    const handler = withObservedRouteHandler(
+      '/api/tcg/sealed/products/:id/image',
+      'tcg-sealed',
+      async (request: Request) => {
+        void request;
+        return Response.json({ error: 'unavailable' }, { status: 500 });
+      },
+      { skipSentryResponseFailureStatuses: [500] },
+    );
+
+    const response = await handler(new Request('https://lunidex.app/api/tcg/sealed/products/42/image'));
+
+    expect(response.status).toBe(500);
+    expect(Sentry.captureException).not.toHaveBeenCalled();
+  });
 });
