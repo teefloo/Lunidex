@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { useEffect, useRef, useState, type ComponentType, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ComponentType, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -39,7 +39,9 @@ import { usePriceHistoryCapture } from '@/hooks/usePriceHistory';
 import { DEFAULT_TCG_DISPLAY_CURRENCY } from '@/lib/tcg-currency';
 import { getCardmarketProductUrl } from '@/lib/tcg-marketplace';
 import { cn } from '@/lib/utils';
+import { getTCGCardImageCandidates } from '@/lib/tcg-images';
 import { TCGHolographicCard } from './TCGHolographicCard';
+import { TCGImageWithFallback } from './TCGImageWithFallback';
 import {
   encodeTCGCollectionKey,
   getTCGCollectionCardOwnerships,
@@ -103,6 +105,8 @@ export function TCGCardDetailContent({
   const localeHref = useLocaleHref();
   const interfaceLanguage = useClientLanguage();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const imageViewerCloseButtonRef = useRef<HTMLButtonElement>(null);
+  const imageViewerTriggerRef = useRef<HTMLButtonElement | null>(null);
   const purchaseButtonRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLElement>(null);
   const store = usePrimeDexStore();
@@ -128,6 +132,7 @@ export function TCGCardDetailContent({
   const [isVariantSheetOpen, setIsVariantSheetOpen] = useState(false);
   const [isCustomCollectionsOpen, setIsCustomCollectionsOpen] = useState(false);
   const [isPurchaseFormOpen, setIsPurchaseFormOpen] = useState(false);
+  const [isCardImageViewerOpen, setIsCardImageViewerOpen] = useState(false);
   const [previousIsOpen, setPreviousIsOpen] = useState(isOpen);
   // Reset before committing a closed modal, including closure by its parent.
   // An effect would first commit the stale nested-dialog state and render again.
@@ -137,6 +142,7 @@ export function TCGCardDetailContent({
       setIsVariantSheetOpen(false);
       setIsCustomCollectionsOpen(false);
       setIsPurchaseFormOpen(false);
+      setIsCardImageViewerOpen(false);
     }
   }
 
@@ -155,7 +161,7 @@ export function TCGCardDetailContent({
   }, [isModal, isOpen, mounted]);
 
   useEffect(() => {
-    if (!isModal || !isOpen || isVariantSheetOpen || isCustomCollectionsOpen || isPurchaseFormOpen) return;
+    if (!isModal || !isOpen || isCardImageViewerOpen || isVariantSheetOpen || isCustomCollectionsOpen || isPurchaseFormOpen) return;
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         event.preventDefault();
@@ -188,7 +194,40 @@ export function TCGCardDetailContent({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isModal, isOpen, isVariantSheetOpen, isCustomCollectionsOpen, isPurchaseFormOpen, onClose]);
+  }, [isModal, isOpen, isCardImageViewerOpen, isVariantSheetOpen, isCustomCollectionsOpen, isPurchaseFormOpen, onClose]);
+
+  useEffect(() => {
+    if (!isCardImageViewerOpen) return;
+
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousDocumentOverflow = document.documentElement.style.overflow;
+    const returnFocusTarget = imageViewerTriggerRef.current;
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    imageViewerCloseButtonRef.current?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        event.stopPropagation();
+        setIsCardImageViewerOpen(false);
+        return;
+      }
+      if (event.key === 'Tab') {
+        event.preventDefault();
+        imageViewerCloseButtonRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousDocumentOverflow;
+      if (returnFocusTarget?.isConnected) returnFocusTarget.focus();
+      imageViewerTriggerRef.current = null;
+    };
+  }, [isCardImageViewerOpen]);
 
   const { data: hydratedCard, isFetching } = useQuery({
     queryKey: card ? tcgKeys.card(card.id, resolvedLang) : tcgKeys.card('missing', resolvedLang),
@@ -201,6 +240,13 @@ export function TCGCardDetailContent({
     staleTime: 30 * 60 * 1000,
     placeholderData: card ?? undefined,
   });
+
+  const cardImageCandidates = useMemo(() => {
+    const imageCard = hydratedCard ?? card;
+    return imageCard
+      ? getTCGCardImageCandidates(imageCard, 'high', { language: resolvedLang })
+      : [];
+  }, [card, hydratedCard, resolvedLang]);
 
   if (!card || !isOpen || (isModal && !mounted)) return null;
 
@@ -332,7 +378,7 @@ export function TCGCardDetailContent({
       <motion.section
         ref={dialogRef}
         role={isModal ? 'dialog' : undefined}
-        aria-modal={isModal ? true : undefined}
+        aria-modal={isModal && !isCardImageViewerOpen ? true : undefined}
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
         initial={isModal ? { opacity: 0, y: 18, scale: 0.98 } : false}
@@ -370,6 +416,11 @@ export function TCGCardDetailContent({
                 card={displayCard}
                 priority={priority}
                 noFrame
+                actionLabel={t('tcg.view_card_image', { name: displayCard.name })}
+                onClick={(_selectedCard, trigger) => {
+                  imageViewerTriggerRef.current = trigger;
+                  setIsCardImageViewerOpen(true);
+                }}
                 sizes="(min-width: 1024px) 360px, (min-width: 640px) 270px, 205px"
               />
 
@@ -673,6 +724,56 @@ export function TCGCardDetailContent({
           </div>
         </div>
       </motion.section>
+
+      {isCardImageViewerOpen && (
+        createPortal(
+          <div
+            data-testid="tcg-card-image-viewer"
+            role="dialog"
+            aria-modal="true"
+            aria-label={t('tcg.view_card_image', { name: displayCard.name })}
+            onClick={(event) => {
+              if (event.target === event.currentTarget) setIsCardImageViewerOpen(false);
+            }}
+            className="fixed inset-0 z-[400] flex items-center justify-center overflow-hidden overscroll-contain bg-black/95 p-4 backdrop-blur-sm"
+            style={{
+              paddingTop: 'calc(env(safe-area-inset-top, 0px) + 4rem)',
+              paddingRight: 'calc(env(safe-area-inset-right, 0px) + 1rem)',
+              paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)',
+              paddingLeft: 'calc(env(safe-area-inset-left, 0px) + 1rem)',
+            }}
+          >
+            <button
+              ref={imageViewerCloseButtonRef}
+              type="button"
+              onClick={() => setIsCardImageViewerOpen(false)}
+              aria-label={t('common.close')}
+              title={t('common.close')}
+              className="touch-target absolute z-10 inline-flex h-12 w-12 min-h-12 min-w-12 items-center justify-center rounded-full border border-white/60 bg-black/85 text-white shadow-lg transition-colors hover:bg-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              style={{
+                top: 'calc(env(safe-area-inset-top, 0px) + 1rem)',
+                right: 'calc(env(safe-area-inset-right, 0px) + 1rem)',
+              }}
+            >
+              <X aria-hidden="true" className="h-5 w-5" />
+            </button>
+            <TCGImageWithFallback
+              candidates={cardImageCandidates}
+              alt={displayCard.name}
+              width={660}
+              height={921}
+              sizes="100vw"
+              priority
+              className="h-auto w-auto max-h-[calc(100vh-5rem)] max-w-[calc(100vw-2rem)] object-contain"
+              style={{
+                maxWidth: 'calc(100vw - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px) - 2rem)',
+                maxHeight: 'calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 5rem)',
+              }}
+            />
+          </div>,
+          document.body,
+        )
+      )}
 
       {resolvedCollectionKey && (
         <TCGCollectionVariantSheet

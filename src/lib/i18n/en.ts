@@ -2836,6 +2836,7 @@ export default {
       detail_empty: 'No effect or flavor text available.',
       detail_description_empty: 'No additional description is available.',
       open_card_detail: 'Open {{name}} card',
+      view_card_image: 'Enlarge {{name}} card image',
       card_meta_title: '{{name}} — Pokémon TCG card from {{set}} | Lunidex',
       card_meta_description: '{{name}} ({{rarity}}) from {{set}}. HP {{hp}}. View card details, attacks, abilities, and pricing on Lunidex.',
       card_meta_description_no_rarity: '{{name}} from {{set}}. HP {{hp}}. View card details, attacks, abilities, and pricing on Lunidex.',

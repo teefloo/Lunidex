@@ -13,7 +13,8 @@ interface TCGHolographicCardProps {
   className?: string;
   imageClassName?: string;
   alt?: string;
-  onClick?: (card: TCGCard) => void;
+  onClick?: (card: TCGCard, trigger: HTMLButtonElement) => void;
+  actionLabel?: string;
   priority?: boolean;
   quality?: 'low' | 'high';
   sizes?: string;
@@ -28,6 +29,7 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
   imageClassName,
   alt,
   onClick,
+  actionLabel,
   priority = false,
   quality = 'high',
   sizes = '(min-width: 1280px) 260px, (min-width: 768px) 30vw, 45vw',
@@ -185,7 +187,7 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
         <button
           type="button"
           className="card__rotator"
-          onClick={() => onClick?.(card)}
+          onClick={(event) => onClick?.(card, event.currentTarget)}
           onPointerEnter={applyPointerPosition}
           onPointerMove={applyPointerPosition}
           onPointerDown={applyPointerPosition}
@@ -196,7 +198,7 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
           onPointerLeave={resetCard}
           onFocus={applyFocusPosition}
           onBlur={resetCard}
-          aria-label={t('tcg.open_card_detail', { name: card.name })}
+          aria-label={actionLabel ?? t('tcg.open_card_detail', { name: card.name })}
         >
           <div className="card__front">
             <TCGImageWithFallback
