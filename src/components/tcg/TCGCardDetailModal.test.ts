@@ -91,7 +91,7 @@ describe('TCG modal first client mount', () => {
     }
   });
 
-  it('closes the image viewer immediately through its visible close button', async () => {
+  it('closes the viewer without closing details, then lets the detail close button close them', async () => {
     vi.stubGlobal('IntersectionObserver', class {
       observe() {}
       disconnect() {}
@@ -109,6 +109,11 @@ describe('TCG modal first client mount', () => {
       });
       await act(async () => { await new Promise(resolve => setTimeout(resolve, 40)); });
 
+      const detailCloseButton = document.querySelector<HTMLButtonElement>(
+        'section[role="dialog"] > button[aria-label="common.close"]',
+      );
+      expect(detailCloseButton).not.toBeNull();
+
       await act(async () => {
         document.querySelector<HTMLButtonElement>('[aria-label="tcg.view_card_image"]')?.click();
       });
@@ -120,8 +125,12 @@ describe('TCG modal first client mount', () => {
       await act(async () => { closeButton?.click(); });
 
       expect(document.querySelector('[data-testid="tcg-card-image-viewer"]')).toBeNull();
+      expect(detailCloseButton?.isConnected).toBe(true);
       expect(document.body.style.overflow).toBe('hidden');
       expect(onClose).not.toHaveBeenCalled();
+
+      await act(async () => { detailCloseButton?.click(); });
+      expect(onClose).toHaveBeenCalledOnce();
     } finally {
       act(() => root.unmount()); container.remove(); vi.unstubAllGlobals();
     }

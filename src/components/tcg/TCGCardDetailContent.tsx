@@ -396,7 +396,7 @@ export function TCGCardDetailContent({
           ref={closeButtonRef}
           type="button"
           onClick={onClose}
-          className="touch-target absolute right-3 top-3 z-20 inline-flex items-center justify-center rounded-xl border border-border/60 bg-background/70 text-foreground/70 shadow-[var(--shadow-pixel-sm)] backdrop-blur-sm transition-all hover:-translate-y-px hover:bg-card hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 sm:right-4 sm:top-4"
+          className="touch-target absolute right-3 max-lg:top-[calc(max(env(safe-area-inset-top,0px),3.75rem)+0.5rem)] z-20 inline-flex items-center justify-center rounded-xl border border-border/60 bg-background/70 text-foreground/70 shadow-[var(--shadow-pixel-sm)] backdrop-blur-sm transition-all hover:-translate-y-px hover:bg-card hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 sm:right-4 lg:top-3"
           aria-label={t('common.close')}
           title={t('common.close')}
         >
@@ -735,9 +735,8 @@ export function TCGCardDetailContent({
             onClick={(event) => {
               if (event.target === event.currentTarget) setIsCardImageViewerOpen(false);
             }}
-            className="fixed inset-0 z-[400] flex items-center justify-center overflow-hidden overscroll-contain bg-black/95 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-[400] flex items-center justify-center overflow-hidden overscroll-contain bg-black/95 p-4 backdrop-blur-sm max-lg:pt-[calc(max(env(safe-area-inset-top,0px),3.75rem)+4rem)] lg:pt-[calc(env(safe-area-inset-top,0px)+4rem)]"
             style={{
-              paddingTop: 'calc(env(safe-area-inset-top, 0px) + 4rem)',
               paddingRight: 'calc(env(safe-area-inset-right, 0px) + 1rem)',
               paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)',
               paddingLeft: 'calc(env(safe-area-inset-left, 0px) + 1rem)',
@@ -749,9 +748,8 @@ export function TCGCardDetailContent({
               onClick={() => setIsCardImageViewerOpen(false)}
               aria-label={t('common.close')}
               title={t('common.close')}
-              className="touch-target absolute z-10 inline-flex h-12 w-12 min-h-12 min-w-12 items-center justify-center rounded-full border border-white/60 bg-black/85 text-white shadow-lg transition-colors hover:bg-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              className="touch-target absolute right-4 max-lg:top-[calc(max(env(safe-area-inset-top,0px),3.75rem)+0.5rem)] z-10 inline-flex h-12 w-12 min-h-12 min-w-12 items-center justify-center rounded-xl border border-border/60 bg-background/70 text-foreground/70 shadow-[var(--shadow-pixel-sm)] backdrop-blur-sm transition-all hover:-translate-y-px hover:bg-card hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 lg:top-3"
               style={{
-                top: 'calc(env(safe-area-inset-top, 0px) + 1rem)',
                 right: 'calc(env(safe-area-inset-right, 0px) + 1rem)',
               }}
             >
@@ -764,10 +762,9 @@ export function TCGCardDetailContent({
               height={921}
               sizes="100vw"
               priority
-              className="h-auto w-auto max-h-[calc(100vh-5rem)] max-w-[calc(100vw-2rem)] object-contain"
+              className="h-auto w-auto max-h-[calc(100vh-5rem)] max-w-[calc(100vw-2rem)] object-contain max-lg:max-h-[calc(100dvh-max(env(safe-area-inset-top,0px),3.75rem)-env(safe-area-inset-bottom,0px)-5rem)] lg:max-h-[calc(100dvh-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px)-5rem)]"
               style={{
                 maxWidth: 'calc(100vw - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px) - 2rem)',
-                maxHeight: 'calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 5rem)',
               }}
             />
           </div>,
