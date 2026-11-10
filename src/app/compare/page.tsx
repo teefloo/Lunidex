@@ -1,6 +1,6 @@
 'use client';
 
-import { parseSharedPokemonIds, shouldUseSharedPokemonCompare } from '@/lib/shared-pokemon-ids';
+import { hasInvalidSharedPokemonIds, parseSharedPokemonIds, shouldUseSharedPokemonCompare } from '@/lib/shared-pokemon-ids';
 import Header from '@/components/layout/Header';
 import PageHeader from '@/components/layout/PageHeader';
 import { usePrimeDexStore } from '@/store/primedex';
@@ -79,9 +79,10 @@ export default function ComparePage() {
     staleTime: 24 * 60 * 60 * 1000,
   });
 
+  const hasInvalidSharedIds = hasInvalidSharedPokemonIds(searchParams.get('ids'));
   const sharedCompareIds = useMemo(() => {
-    return parseSharedPokemonIds(searchParams.get('ids'), 3);
-  }, [searchParams]);
+    return hasInvalidSharedIds ? [] : parseSharedPokemonIds(searchParams.get('ids'), 3);
+  }, [hasInvalidSharedIds, searchParams]);
 
   const isSharedCompare = shouldUseSharedPokemonCompare(syncStatus === 'ready', searchParams.has('ids'));
   const activeCompareIds = isSharedCompare ? sharedCompareIds : compareList;
@@ -382,7 +383,7 @@ export default function ComparePage() {
             <Loader2 className="w-12 h-12 animate-spin text-primary" />
             <p className="text-foreground/40 font-semibold tracking-widest uppercase text-sm">{t('list.loading')}</p>
           </div>
-        ) : isSharedCompare && activeCompareIds.length === 0 ? (
+        ) : hasInvalidSharedIds ? (
           <div role="alert" className="flex flex-col items-center justify-center py-20 text-center rounded-sm border-2 border-dashed border-destructive/30 bg-card px-5">
             <AlertTriangle className="mb-5 h-12 w-12 text-destructive" />
             <h3 className="mb-2 text-2xl font-black text-foreground">{t('compare.unavailable_title')}</h3>

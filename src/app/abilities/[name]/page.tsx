@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
 import { ArrowLeft, Info, Sparkles, Users } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
+import { ValidatedBackLink } from '@/components/layout/ValidatedBackLink';
+import { DetailOriginLink } from '@/components/layout/DetailOriginLink';
 import { Badge } from '@/components/ui/badge';
 import { getServerT, getServerLanguage } from '@/lib/server-i18n';
 import { getAbilityDetailCached, getAbilityPokemonCached } from '@/lib/api/server-cache';
@@ -13,12 +14,14 @@ import { formatName } from '@/lib/utils';
 import { buildBreadcrumbJsonLd, buildDefinedTermJsonLd, buildSubpathLanguages, buildWebPageJsonLd, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { SITE_URL } from '@/lib/site';
+import { parsePokemonReturnTarget } from '@/lib/pokemon-filter-url';
 
 export const revalidate = 86400;
 export const dynamicParams = true;
 
 interface Props {
   params: Promise<{ name: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -56,8 +59,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function AbilityDetailPage({ params }: Props) {
-  const { name } = await params;
+export default async function AbilityDetailPage({ params, searchParams }: Props) {
+  const [{ name }, query] = await Promise.all([params, searchParams]);
   const t = await getServerT();
   const lang = await getServerLanguage();
   const langId = languageToPokemonLanguageId[lang];
@@ -70,6 +73,8 @@ export default async function AbilityDetailPage({ params }: Props) {
   }
 
   const displayName = formatName(name);
+  const returnTarget = parsePokemonReturnTarget(typeof query.from === 'string' ? query.from : null);
+  const backHref = returnTarget ?? `/${lang}/abilities`;
   const localizedName = ability.names.find((n) => n.language.name === lang)?.name
     || ability.names.find((n) => n.language.name === 'en')?.name
     || displayName;
@@ -84,6 +89,7 @@ export default async function AbilityDetailPage({ params }: Props) {
 
   const learners = await getAbilityPokemonCached(name, langId).catch(() => []);
   const routePath = `/${lang}/abilities/${name}`;
+  const detailReturnTarget = `${routePath}${returnTarget ? `?from=${encodeURIComponent(returnTarget)}` : ''}`;
   const abilityTermJsonLd = buildDefinedTermJsonLd({
     lang,
     path: routePath,
@@ -140,13 +146,13 @@ export default async function AbilityDetailPage({ params }: Props) {
 
       <main className="page-shell pb-20 pt-8">
         <div className="mb-6">
-          <Link
-            href={`/${lang}/abilities`}
-            className="inline-flex items-center gap-2 rounded-sm border border-border/70 bg-card/50 px-3 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/55 transition-all hover:border-border/90 hover:text-foreground"
+          <ValidatedBackLink
+            href={backHref}
+            className="inline-flex min-h-11 items-center gap-2 rounded-sm border border-border/70 bg-card/50 px-3 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/55 transition-all hover:border-border/90 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             {t('abilities_page.back_to_abilities', { defaultValue: 'Back to Abilities' })}
-          </Link>
+          </ValidatedBackLink>
         </div>
 
         <div className="relative mb-8 overflow-hidden rounded-sm border border-border/70 bg-card/50 p-6">
@@ -216,9 +222,11 @@ export default async function AbilityDetailPage({ params }: Props) {
                     const pokemonName = pokemon.pokemon_v2_pokemonspecy?.pokemon_v2_pokemonspeciesnames?.[0]?.name
                       || formatName(pokemon.name);
                     return (
-                      <Link
+                      <DetailOriginLink
                         key={pokemon.id}
-                        href={`/${lang}/pokemon/${pokemon.name}`}
+                        id={`ability-pokemon-${pokemon.id}`}
+                        href={`/${lang}/pokemon/${pokemon.name}?from=${encodeURIComponent(`${detailReturnTarget}#ability-pokemon-${pokemon.id}`)}`}
+                        returnTarget={`${detailReturnTarget}#ability-pokemon-${pokemon.id}`}
                         className="flex items-center gap-2 rounded-sm border border-border/60 bg-background/40 px-2.5 py-2 text-xs font-bold text-foreground/70 transition-all hover:border-primary/30 hover:bg-primary/5 hover:text-primary"
                       >
                         <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: color }} />
@@ -226,7 +234,7 @@ export default async function AbilityDetailPage({ params }: Props) {
                         {learner.is_hidden && (
                           <span className="ml-auto shrink-0 text-[11px] font-black uppercase tracking-wider text-foreground/30">H</span>
                         )}
-                      </Link>
+                      </DetailOriginLink>
                     );
                   })}
                 </div>

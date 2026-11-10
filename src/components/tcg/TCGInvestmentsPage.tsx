@@ -4,7 +4,6 @@ import { Suspense, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { Plus, TrendingUp } from 'lucide-react';
 import { summarizeTCGInvestments, valueTCGInvestment, type TCGInvestment } from '@primedex/core/lib/tcg-investments';
 import Header from '@/components/layout/Header';
@@ -157,21 +156,11 @@ function InvestmentWorkspace({ status }: { status: SyncAccessStatus }) {
 
 function TCGInvestmentsPageContent() {
   const { t } = useTranslation();
-  const localeHref = useLocaleHref();
   const { user, loading } = useAuth();
   const status = useSyncAccessStatus();
   const hydrated = usePrimeDexStore((state) => state._hasHydrated);
   return <div className="app-page"><Header /><main className="page-shell page-shell--header-offset pb-40" aria-labelledby="investments-title">
     <TCGPageTabs context="collection" />
-    <Breadcrumbs
-      items={[
-        { label: t('common.home'), href: localeHref('/') },
-        { label: t('tcg.collection_title'), href: localeHref('/tcg/collection') },
-        { label: t('investments.title') },
-      ]}
-      homeLabel={t('common.home')}
-      className="!px-0 !pt-0 mb-6"
-    />
     <div className="mb-6"><h1 id="investments-title" className="text-2xl font-black tracking-tight sm:text-3xl">{t('investments.title')}</h1><p className="mt-2 text-sm text-muted-foreground">{t('investments.subtitle')}</p></div>
     {loading || !hydrated ? <p role="status">{t('tcg.custom_collections.loading')}</p> : !user ? <SyncRequiredPanel headingLevel={2} /> : <InvestmentWorkspace key={user.id} status={status} />}
   </main></div>;

@@ -14,6 +14,7 @@ import { DEFAULT_OG_IMAGE, buildBreadcrumbJsonLd, buildSubpathLanguages, buildWe
 import { languageToOpenGraphLocale } from '@/lib/languages';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { FEATURED_POKEMON } from '@/lib/pokemon-featured';
+import { POKEDEX_DEFAULT_DISPLAY_COUNT, parseDetailReturnCount } from '@/lib/pokemon-filter-url';
 
 export const revalidate = 3600;
 
@@ -40,9 +41,17 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function PokedexPage() {
+export default async function PokedexPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const queryClient = new QueryClient();
-  const [t, lang] = await Promise.all([getServerT(), getServerLanguage()]);
+  const [t, lang, query] = await Promise.all([getServerT(), getServerLanguage(), searchParams]);
+  const initialDisplayCount = parseDetailReturnCount(
+    typeof query.returnCount === 'string' ? query.returnCount : null,
+    POKEDEX_DEFAULT_DISPLAY_COUNT,
+  );
   const baseUrl = SITE_URL;
   const pokedexTitle = t('pokedex.title');
 
@@ -112,7 +121,7 @@ export default async function PokedexPage() {
               {t('lunidex_home.guide_reference_label')} <span aria-hidden="true" className="ml-1">↗</span>
             </Link>
           </nav>
-          <PokemonList />
+          <PokemonList initialDisplayCount={initialDisplayCount} />
           <PokemonOfTheDay />
           <ClientRecentlyViewed />
         </main>

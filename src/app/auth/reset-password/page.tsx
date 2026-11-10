@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useSyncExternalStore, type FormEvent } from 'react';
+import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
 import { toast } from '@/lib/toast';
 import { Button } from '@/components/ui/button';
@@ -48,11 +49,12 @@ function createResetTokenStore() {
 
 export default function ResetPasswordPage() {
   const { t } = useTranslation();
-  const { loading, updatePassword } = useAuth();
+  const { loading, updatePassword, resetPassword } = useAuth();
   const router = useRouter();
   const localeHref = useLocaleHref();
   const [password, setPassword] = useState('');
   const [confirmation, setConfirmation] = useState('');
+  const [resetEmail, setResetEmail] = useState('');
   const [busy, setBusy] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const submitGuard = useRef(false);
@@ -118,6 +120,32 @@ export default function ResetPasswordPage() {
       router.replace(localeHref('/dashboard'));
     } catch (error) {
       capturePostHogEvent(POSTHOG_EVENTS.authPasswordUpdated, { result: 'error', error_type: error instanceof Error ? error.name : 'Error' });
+      setErrorMessage(safeErrorMessage(error));
+    } finally {
+      submitGuard.current = false;
+      setBusy(false);
+    }
+  };
+
+  const handleRequestReset = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (submitGuard.current) return;
+    const normalizedEmail = resetEmail.trim();
+    if (!normalizedEmail) {
+      setErrorMessage(tt('auth.enter_email', 'Enter your email first.'));
+      return;
+    }
+    submitGuard.current = true;
+    setBusy(true);
+    setErrorMessage(null);
+    try {
+      const { error } = await resetPassword(normalizedEmail);
+      if (error) {
+        setErrorMessage(safeErrorMessage(error));
+        return;
+      }
+      toast.success(tt('auth.reset_sent', 'Password reset email sent.'));
+    } catch (error) {
       setErrorMessage(safeErrorMessage(error));
     } finally {
       submitGuard.current = false;
@@ -191,9 +219,30 @@ export default function ResetPasswordPage() {
             <p className="text-sm leading-6 text-foreground/60">
               {tt('auth.reset_invalid', 'This reset link is invalid or has expired. Please request a new one.')}
             </p>
-            <Button type="button" variant="outline" onClick={() => router.replace(localeHref('/'))} className="w-full">
+            <form onSubmit={handleRequestReset} className="flex flex-col gap-3" data-ph-no-capture aria-busy={busy}>
+              <label className="flex flex-col gap-1.5">
+                <span className="text-xs font-bold uppercase tracking-[0.14em] text-foreground/60">
+                  {tt('auth.email', 'Email')}
+                </span>
+                <Input
+                  type="email"
+                  required
+                  autoComplete="email"
+                  value={resetEmail}
+                  onChange={(event) => { setResetEmail(event.target.value); setErrorMessage(null); }}
+                  disabled={busy}
+                  className="h-11"
+                />
+              </label>
+              {errorMessage ? <p role="alert" className="rounded-sm border border-destructive/30 bg-destructive/10 p-3 text-sm font-semibold text-destructive">{errorMessage}</p> : null}
+              <Button type="submit" disabled={busy} aria-busy={busy} className="w-full">
+                {busy && <Loader2 className="h-4 w-4 motion-safe:animate-spin" aria-hidden="true" />}
+                {tt('auth.request_new_reset_link', 'Request a new reset link')}
+              </Button>
+            </form>
+            <Link href={localeHref('/')} className="inline-flex min-h-11 w-full items-center justify-center text-sm font-semibold text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring">
               {tt('common.back_home', 'Back home')}
-            </Button>
+            </Link>
           </div>
         )}
       </section>

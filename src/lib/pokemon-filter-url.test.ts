@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { POKEMON_DETAIL_TABS, parseHomeFilters, serializeHomeFilters } from './pokemon-filter-url';
+import {
+  addDetailReturnCountToTarget,
+  parseDetailReturnCount,
+  POKEMON_DETAIL_TABS,
+  parseHomeFilters,
+  serializeHomeFilters,
+} from './pokemon-filter-url';
 
 describe('Pokédex URL filters', () => {
   it('round-trips advanced filters in deterministic URL order', () => {
@@ -48,6 +54,28 @@ describe('Pokédex URL filters', () => {
 });
 
 describe('Pokédex detail navigation URL contracts', () => {
+  it('adds a bounded non-filter display count to validated detail return targets', () => {
+    expect(addDetailReturnCountToTarget('/fr/pokedex?q=pikachu&gen=1#pokemon-25', 40, 20))
+      .toBe('/fr/pokedex?q=pikachu&gen=1&returnCount=40#pokemon-25');
+    expect(addDetailReturnCountToTarget('/fr/items?q=burn&sort=id#item-2', 96, 48))
+      .toBe('/fr/items?q=burn&sort=id&returnCount=96#item-2');
+    expect(addDetailReturnCountToTarget('/fr/moves?type=fire&returnCount=96#move-3', 48, 48))
+      .toBe('/fr/moves?type=fire#move-3');
+    expect(addDetailReturnCountToTarget('/fr/moves?type=fire#move-3', 9000, 48))
+      .toBe('/fr/moves?type=fire&returnCount=2048#move-3');
+    expect(addDetailReturnCountToTarget('/fr/dashboard#top', 96, 48)).toBe('/fr/dashboard#top');
+  });
+
+  it('parses only bounded integer return counts and falls back safely', () => {
+    expect(parseDetailReturnCount('40', 20)).toBe(40);
+    expect(parseDetailReturnCount('0', 20)).toBe(20);
+    expect(parseDetailReturnCount('-1', 20)).toBe(20);
+    expect(parseDetailReturnCount('2049', 20)).toBe(20);
+    expect(parseDetailReturnCount('2e2', 20)).toBe(20);
+    expect(parseDetailReturnCount(null, 48)).toBe(48);
+    expect(parseHomeFilters(new URLSearchParams('q=pikachu&returnCount=40'))).toEqual({ q: 'pikachu' });
+  });
+
   it('exposes a safe tab parser and return-target validator', async () => {
     const navigation = await import('./pokemon-filter-url') as typeof import('./pokemon-filter-url') & {
       parsePokemonDetailTab?: (value: string | null) => string;
@@ -70,10 +98,15 @@ describe('Pokédex detail navigation URL contracts', () => {
     expect(navigation.parsePokemonDetailTab?.(null)).toBe('about');
     expect(navigation.parsePokemonReturnTarget?.(encodeURIComponent('/fr/pokedex?gen=1#pokemon-25')))
       .toBe('/fr/pokedex?gen=1#pokemon-25');
+    expect(navigation.parsePokemonReturnTarget?.(encodeURIComponent('/fr/items?q=burn&category=held-items&sort=cost')))
+      .toBe('/fr/items?q=burn&category=held-items&sort=cost');
+    expect(navigation.parsePokemonReturnTarget?.(encodeURIComponent('/fr/abilities/water-absorb')))
+      .toBe('/fr/abilities/water-absorb');
     expect(navigation.parsePokemonReturnTarget?.('/fr/pokedex?q=pikachu&gen=1'))
       .toBe('/fr/pokedex?q=pikachu&gen=1');
     expect(navigation.parsePokemonReturnTarget?.(encodeURIComponent('https://evil.example/'))).toBeNull();
     expect(navigation.parsePokemonReturnTarget?.(encodeURIComponent('/fr/pokemon/mew'))).toBeNull();
+    expect(navigation.parsePokemonReturnTarget?.(encodeURIComponent('/fr/dashboard'))).toBeNull();
     expect(navigation.setPokemonDetailTab?.('from=%2Ffr%2Fpokedex%3Fgen%3D1', 'stats'))
       .toBe('from=%2Ffr%2Fpokedex%3Fgen%3D1&tab=stats');
   });

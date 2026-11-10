@@ -30,6 +30,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useShallow } from 'zustand/react/shallow';
 import { cn, formatId, formatName } from '@/lib/utils';
+import { DETAIL_RETURN_TARGET_KEY } from '@/lib/detail-return-navigation';
 import { getBaseSpeciesName, getFormDisplayName } from '@/lib/form-names';
 import { getCurrentEvolutionSpeciesName } from '@/lib/evolution-utils';
 import React, { useState, useMemo, useEffect, useRef, type CSSProperties } from 'react';
@@ -408,26 +409,24 @@ export function PokemonDetailClient({
       : searchParams;
     const returnTarget = parsePokemonReturnTarget(currentSearchParams.get('from'));
     if (!returnTarget) {
-      router.push(localeHref('/pokedex'));
+      router.replace(localeHref('/pokedex'));
       return;
     }
 
-    const canUseHistory = typeof window !== 'undefined' && typeof document !== 'undefined' && (() => {
-      if (!document.referrer) return false;
+    const previousEntryMatchesOrigin = typeof window !== 'undefined' && (() => {
       try {
-        const referrer = new URL(document.referrer);
-        const referrerTarget = `${referrer.pathname}${referrer.search}${referrer.hash}`;
-        return referrer.origin === window.location.origin
-          && parsePokemonReturnTarget(encodeURIComponent(referrerTarget)) !== null;
+        const rememberedOrigin = window.sessionStorage.getItem(DETAIL_RETURN_TARGET_KEY);
+        window.sessionStorage.removeItem(DETAIL_RETURN_TARGET_KEY);
+        return rememberedOrigin === returnTarget && window.history.length > 1;
       } catch {
         return false;
       }
     })();
 
-    if (canUseHistory) {
+    if (previousEntryMatchesOrigin) {
       router.back();
     } else {
-      router.push(returnTarget);
+      router.replace(returnTarget);
     }
   };
 
@@ -442,7 +441,7 @@ export function PokemonDetailClient({
   };
 
   return (
-    <main id="main-content" className="min-h-screen bg-background text-foreground pb-28 sm:pb-20 overflow-x-hidden relative">
+    <main className="min-h-screen bg-background text-foreground pb-28 sm:pb-20 overflow-x-hidden relative">
 
       {/* Hero Section */}
       <div className="relative min-h-[50vh] w-full flex flex-col items-center justify-end pb-16 pt-28">

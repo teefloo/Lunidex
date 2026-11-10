@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -13,7 +14,7 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { DetailOriginLink } from '@/components/layout/DetailOriginLink';
 import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
 import { useCatalogFilter } from '@/hooks/useCatalogFilter';
@@ -31,6 +32,14 @@ import type { GraphQLItemData, ItemListItem } from '@/types/pokemon';
 import { PokeballIcon } from '@/components/ui/PokeballIcon';
 import { getItemDescription } from '@/lib/item-description';
 import { STATIC_REMOTE_DATA_STALE_TIME } from '@/lib/query-options';
+import {
+  addDetailReturnCountToTarget,
+  buildPokemonReturnTarget,
+  clearDetailReturnCountFromCurrentUrl,
+  parseDetailReturnCount,
+  REFERENCE_DEFAULT_DISPLAY_COUNT,
+} from '@/lib/pokemon-filter-url';
+import { useHashTargetRestoration } from '@/hooks/useHashTargetRestoration';
 
 const itemSpriteUrl = (name: string) => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${name}.png`;
 
@@ -41,15 +50,24 @@ export default function ItemsPageClient({
 }: {
   initialItems?: GraphQLItemData[];
 }) {
+  useHashTargetRestoration();
   const { t } = useTranslation();
   const localeHref = useLocaleHref();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const returnTarget = buildPokemonReturnTarget(pathname, searchParams.toString() ? `?${searchParams}` : '');
+  const initialDisplayCount = parseDetailReturnCount(searchParams.get('returnCount'), REFERENCE_DEFAULT_DISPLAY_COUNT);
   const mounted = useMounted();
   const languageId = languageToPokemonLanguageId[useClientLanguage()];
 
   const [searchTerm, setSearchTerm] = useCatalogFilter<string>('q', '');
   const [selectedCategory, setSelectedCategory] = useCatalogFilter<string | null>('category', null);
   const [sortBy, setSortBy] = useCatalogFilter<SortKey>('sort', 'name', ['name', 'id', 'cost']);
-  const [visibleCount, setVisibleCount] = useState(48);
+  const [visibleCount, setVisibleCount] = useState(initialDisplayCount);
+  const resetVisibleCount = () => {
+    setVisibleCount(REFERENCE_DEFAULT_DISPLAY_COUNT);
+    clearDetailReturnCountFromCurrentUrl();
+  };
 
   const {
     data: queriedItems,
@@ -107,17 +125,12 @@ export default function ItemsPageClient({
     });
   }, [items, searchTerm, selectedCategory, sortBy]);
 
-  useEffect(() => {
-    // Reset pagination when a new filter result set is selected.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setVisibleCount(48);
-  }, [searchTerm, selectedCategory, sortBy]);
-
   const visibleItems = filteredItems.slice(0, visibleCount);
 
   const stats = { total: items.length, visible: filteredItems.length };
 
   const clearFilters = () => {
+    resetVisibleCount();
     setSearchTerm('');
     setSelectedCategory(null);
     setSortBy('name');
@@ -159,7 +172,7 @@ export default function ItemsPageClient({
                   <input
                     type="text"
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e) => { resetVisibleCount(); setSearchTerm(e.target.value); }}
                     placeholder={t('items_page.search_placeholder', { defaultValue: 'Search items...' })}
                     name="item-search"
                     autoComplete="off"
@@ -168,7 +181,7 @@ export default function ItemsPageClient({
                   {searchTerm && (
                     <button
                       type="button"
-                      onClick={() => setSearchTerm('')}
+                      onClick={() => { resetVisibleCount(); setSearchTerm(''); }}
                       className="touch-target absolute right-1 top-1/2 -translate-y-1/2 rounded-sm text-foreground/80 transition-colors hover:text-foreground"
                       aria-label={t('search.clear', { defaultValue: 'Clear search' })}
                     >
@@ -188,7 +201,7 @@ export default function ItemsPageClient({
                       <button
                         key={option.key}
                         type="button"
-                        onClick={() => setSortBy(option.key)}
+                        onClick={() => { resetVisibleCount(); setSortBy(option.key); }}
                         className={cn(
                           'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
                           active
@@ -216,7 +229,7 @@ export default function ItemsPageClient({
                         <button
                           key={category}
                           type="button"
-                          onClick={() => setSelectedCategory(active ? null : category)}
+                          onClick={() => { resetVisibleCount(); setSelectedCategory(active ? null : category); }}
                           className={cn(
                             'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
                             active
@@ -293,7 +306,15 @@ export default function ItemsPageClient({
                 <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                   <AnimatePresence mode="popLayout">
                     {visibleItems.map((item, index) => (
-                      <ItemCard key={item.id} item={item} index={index} t={t} localeHref={localeHref} />
+                      <ItemCard
+                        key={item.id}
+                        item={item}
+                        index={index}
+                        t={t}
+                        localeHref={localeHref}
+                        returnTarget={returnTarget}
+                        returnDisplayCount={visibleItems.length}
+                      />
                     ))}
                   </AnimatePresence>
                   {visibleCount < filteredItems.length && (
@@ -321,25 +342,34 @@ function ItemCard({
   index,
   t,
   localeHref,
+  returnTarget,
+  returnDisplayCount,
 }: {
   item: ItemListItem;
   index: number;
   t: (key: string, options?: Record<string, unknown>) => string;
   localeHref: (path: string) => string;
+  returnTarget: string;
+  returnDisplayCount: number;
 }) {
   const [imgError, setImgError] = useState(false);
   const locale = useClientLanguage();
+  const detailReturnTarget = `${addDetailReturnCountToTarget(returnTarget, returnDisplayCount, REFERENCE_DEFAULT_DISPLAY_COUNT)}#item-${item.id}`;
 
   return (
     <motion.div
+      id={`item-${item.id}`}
+      tabIndex={-1}
+      className="scroll-mt-28"
       layout
       initial={{ opacity: 0, y: 16, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, scale: 0.96 }}
       transition={{ duration: 0.25, delay: Math.min(index * 0.02, 0.25) }}
     >
-      <Link
-        href={localeHref(`/items/${item.name}`)}
+      <DetailOriginLink
+        href={localeHref(`/items/${item.name}?from=${encodeURIComponent(detailReturnTarget)}`)}
+        returnTarget={detailReturnTarget}
         className="group relative flex h-full flex-col overflow-hidden rounded-sm border border-border/70 bg-card/50 p-4 text-left transition-all duration-300 hover:border-primary/40 hover:bg-card/60"
       >
         <div className="flex items-start justify-between gap-3">
@@ -379,7 +409,7 @@ function ItemCard({
             <span className="text-[11px] font-black text-foreground/80">₽{item.cost.toLocaleString(locale)}</span>
           )}
         </div>
-      </Link>
+      </DetailOriginLink>
     </motion.div>
   );
 }

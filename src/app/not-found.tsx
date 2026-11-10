@@ -51,7 +51,7 @@ export default async function NotFound() {
             <Link href={`/${lang}/tcg`} className="glass-btn px-6 py-3 font-bold">
               {t('tcg.nav_catalog', { defaultValue: 'TCG catalog' })}
             </Link>
-            <Link href={`/${lang}`} className="glass-btn px-6 py-3 font-bold">
+            <Link href={`/${lang}/pokedex`} className="glass-btn px-6 py-3 font-bold">
               {t('not_found_page.pokedex_link')}
             </Link>
             <Link href={`/${lang}/team`} className="glass-btn px-6 py-3 font-bold">

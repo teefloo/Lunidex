@@ -17,8 +17,9 @@ export function HeaderDesktopNav() {
   const activePrimary = resolveActivePrimaryNavigation(pathname);
   const activeDestination = resolveNavigationDestination(pathname);
   const normalizedPath = normalizeNavigationPath(pathname);
-  const isTcgRoute = normalizedPath === '/tcg' || normalizedPath.startsWith('/tcg/');
-  const moreIsActive = activeDestination?.group === 'space' || activeDestination?.group === 'resources';
+  const moreIsActive = activeDestination?.group === 'space'
+    || activeDestination?.group === 'resources'
+    || (activeDestination?.group === 'play' && !activeDestination.primary);
 
   const closeMore = () => {
     if (!moreRef.current) return;
@@ -46,13 +47,14 @@ export function HeaderDesktopNav() {
         {PRIMARY_NAVIGATION.map((item) => {
           if (!item.path || !item.primary) return null;
           const isActive = item.primary === activePrimary;
-          const isExactPage = !isTcgRoute && normalizeNavigationPath(item.path) === normalizedPath;
+          const isExactPage = normalizeNavigationPath(item.path) === normalizedPath;
+          const isCurrentLocation = isActive && !isExactPage;
           return (
             <Link
               key={item.id}
               href={localeHref(item.path)}
               prefetch={false}
-              aria-current={isExactPage ? 'page' : undefined}
+              aria-current={isExactPage ? 'page' : isCurrentLocation ? 'location' : undefined}
               data-active={isActive ? 'true' : undefined}
               className="site-header-nav-link"
             >

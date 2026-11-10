@@ -49,7 +49,7 @@ export function HeaderActions({ placement = 'toolbar', onInteraction, onRequestA
       ) : null}
 
       <AccountMenu
-        className={cn(!isSheet && 'hidden', isSheet && 'site-header-sheet-action site-header-sheet-account')}
+        className={cn(isSheet && 'site-header-sheet-action site-header-sheet-account')}
         showLabel={isSheet}
         onInteraction={onInteraction}
         onRequestAuth={onRequestAuth}

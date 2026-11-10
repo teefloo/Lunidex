@@ -1,13 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { Suspense, useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { Breadcrumbs, type BreadcrumbItem } from '@/components/layout/Breadcrumbs';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
+import { getNavigationAriaCurrent, normalizeNavigationPath } from '@/lib/navigation-registry';
 import { SEALED_SUBVIEWS } from '@/lib/tcg-sealed-navigation';
-import { TCGLanguageSelector } from './TCGLanguageSelector';
+import { TCGPageTabs } from './TCGPageTabs';
 
 export type SealedWorkspaceView =
   | 'dashboard'
@@ -32,6 +34,7 @@ interface SealedWorkspaceNavigationProps {
 export function SealedWorkspaceNavigation({ view, currentLabel }: SealedWorkspaceNavigationProps) {
   const { t } = useTranslation();
   const localizedHref = useLocaleHref();
+  const pathname = normalizeNavigationPath(usePathname());
   const reportMenuRef = useRef<HTMLDetailsElement>(null);
   const toolsMenuRef = useRef<HTMLDetailsElement>(null);
   const activeView = view === 'portfolio-product' ? 'collection'
@@ -43,7 +46,6 @@ export function SealedWorkspaceNavigation({ view, currentLabel }: SealedWorkspac
   const activeReportItem = reportViews.find((item) => item.key === activeView);
   const activeToolItem = toolViews.find((item) => item.key === activeView);
   const isPublicMarketContext = view === 'market' || view === 'product' || view === 'releases' || view === 'buy-safely';
-  const collectionLabel = t('tcg.collection_title', { defaultValue: 'Collection' });
   const sealedLabel = t('tcg.sealed.title', { defaultValue: 'Sealed portfolio' });
   const marketLabel = t('tcg.sealed.public_market.title', { defaultValue: 'Sealed market' });
 
@@ -75,6 +77,7 @@ export function SealedWorkspaceNavigation({ view, currentLabel }: SealedWorkspac
       key={item.key}
       href={localizedHref(item.path)}
       data-active={activeView === item.key ? 'true' : undefined}
+      aria-current={getNavigationAriaCurrent(activeView === item.key, pathname, item.path)}
       className="sealed-subnav-link"
     >
       {t(`tcg.sealed.${item.labelKey}`)}
@@ -83,31 +86,22 @@ export function SealedWorkspaceNavigation({ view, currentLabel }: SealedWorkspac
 
   const breadcrumbItems: BreadcrumbItem[] = [
     { label: t('common.home', { defaultValue: 'Home' }), href: localizedHref('/') },
-    { label: collectionLabel, href: localizedHref('/tcg/collection') },
+    { label: t('tcg.nav_catalog', { defaultValue: 'TCG catalog' }), href: localizedHref('/tcg') },
   ];
-  if (isPublicMarketContext) {
-    breadcrumbItems.push({ label: sealedLabel, href: localizedHref('/tcg/sealed') });
-    if (view === 'market') {
-      breadcrumbItems.push({ label: currentLabel ?? marketLabel });
-    } else {
-      breadcrumbItems.push({ label: marketLabel, href: localizedHref('/tcg/sealed/market') });
-      breadcrumbItems.push({
-        label: currentLabel ?? t(view === 'product' ? 'tcg.sealed.product' : `tcg.editorial_sealed.${view === 'releases' ? 'releases' : 'safety'}.title`),
-      });
-    }
-  } else if (view === 'dashboard') {
-    breadcrumbItems.push({ label: sealedLabel });
-  } else {
-    breadcrumbItems.push({ label: sealedLabel, href: localizedHref('/tcg/sealed') });
+  if (isPublicMarketContext && view !== 'market') {
+    breadcrumbItems.push({ label: marketLabel, href: localizedHref('/tcg/sealed/market') });
     breadcrumbItems.push({
-      label: currentLabel ?? t(view === 'portfolio-product' ? 'tcg.sealed.product' : `tcg.sealed.${view}`),
+      label: currentLabel ?? t(view === 'product' ? 'tcg.sealed.product' : `tcg.editorial_sealed.${view === 'releases' ? 'releases' : 'safety'}.title`),
     });
   }
 
   return (
     <>
-      <Breadcrumbs items={breadcrumbItems} homeLabel={t('common.home', { defaultValue: 'Home' })} className="!px-0 !pt-0 mb-4" />
-      <nav className="sealed-subnav" aria-label={t('tcg.sealed.title', { defaultValue: 'Sealed portfolio navigation' })}>
+      <TCGPageTabs context={isPublicMarketContext ? 'catalog' : 'collection'} showLanguageSelector={false} />
+      {isPublicMarketContext && view !== 'market' ? (
+        <Breadcrumbs items={breadcrumbItems} homeLabel={t('common.home', { defaultValue: 'Home' })} className="!px-0 !pt-0 mb-4" />
+      ) : null}
+      {!isPublicMarketContext ? <nav className="sealed-subnav" aria-label={sealedLabel}>
         <div className="sealed-subnav-primary">{renderLinks(primaryViews)}</div>
         {activeReportItem ? (
           <Link href={localizedHref(activeReportItem.path)} data-active="true" className="sealed-subnav-link">
@@ -131,17 +125,7 @@ export function SealedWorkspaceNavigation({ view, currentLabel }: SealedWorkspac
           </summary>
           <div className="sealed-subnav-menu-panel">{renderLinks(toolViews.filter((item) => item.key !== activeToolItem?.key))}</div>
         </details>
-        <Link
-          href={localizedHref('/tcg/sealed/market')}
-          data-active={activeView === 'market' ? 'true' : undefined}
-          className="sealed-subnav-link sealed-subnav-market"
-        >
-          {t('tcg.nav_sealed_market', { defaultValue: 'Public sealed market' })}
-        </Link>
-        <Suspense fallback={<div className="h-11 w-36 rounded-sm border border-border/45 bg-card/55" aria-hidden="true" />}>
-          <TCGLanguageSelector className="ml-auto w-full justify-between sm:w-auto" />
-        </Suspense>
-      </nav>
+      </nav> : null}
     </>
   );
 }

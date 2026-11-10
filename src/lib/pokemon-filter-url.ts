@@ -239,14 +239,58 @@ export function buildPokemonReturnTarget(pathname: string, search: string): stri
   return `${pathname}${search}`;
 }
 
+export const DETAIL_RETURN_COUNT_PARAM = 'returnCount';
+export const MAX_DETAIL_RETURN_COUNT = 2048;
+export const POKEDEX_DEFAULT_DISPLAY_COUNT = 20;
+export const REFERENCE_DEFAULT_DISPLAY_COUNT = 48;
+export const MOVE_LEARNER_DEFAULT_DISPLAY_COUNT = 50;
+
+export function parseDetailReturnCount(value: string | null, defaultCount: number): number {
+  if (!value || !/^\d+$/.test(value)) return defaultCount;
+  const parsed = Number(value);
+  return Number.isSafeInteger(parsed) && parsed >= defaultCount && parsed <= MAX_DETAIL_RETURN_COUNT
+    ? parsed
+    : defaultCount;
+}
+
+export function addDetailReturnCountToTarget(
+  returnTarget: string,
+  renderedCount: number,
+  defaultCount: number,
+): string {
+  const validatedTarget = parsePokemonReturnTarget(returnTarget);
+  if (!validatedTarget) return returnTarget;
+
+  const target = new URL(validatedTarget, 'https://lunidex.local');
+  const safeCount = Number.isSafeInteger(renderedCount)
+    ? Math.min(MAX_DETAIL_RETURN_COUNT, Math.max(defaultCount, renderedCount))
+    : defaultCount;
+  if (safeCount > defaultCount) {
+    target.searchParams.set(DETAIL_RETURN_COUNT_PARAM, String(safeCount));
+  } else {
+    target.searchParams.delete(DETAIL_RETURN_COUNT_PARAM);
+  }
+  return `${target.pathname}${target.search}${target.hash}`;
+}
+
+export function clearDetailReturnCountFromCurrentUrl(): void {
+  if (typeof window === 'undefined') return;
+  const url = new URL(window.location.href);
+  if (!url.searchParams.has(DETAIL_RETURN_COUNT_PARAM)) return;
+  url.searchParams.delete(DETAIL_RETURN_COUNT_PARAM);
+  window.history.replaceState(window.history.state, '', `${url.pathname}${url.search}${url.hash}`);
+}
+
 export function parsePokemonReturnTarget(value: string | null): string | null {
   if (!value) return null;
 
-  let decoded: string;
-  try {
-    decoded = decodeURIComponent(value);
-  } catch {
-    return null;
+  let decoded = value;
+  if (!decoded.startsWith('/')) {
+    try {
+      decoded = decodeURIComponent(value);
+    } catch {
+      return null;
+    }
   }
 
   if (!decoded.startsWith('/')) return null;
@@ -254,8 +298,8 @@ export function parsePokemonReturnTarget(value: string | null): string | null {
   try {
     const target = new URL(decoded, 'https://lunidex.local');
     const localePattern = supportedLanguages.join('|');
-    const pokedexPath = new RegExp(`^/(?:${localePattern})/pokedex/?$`);
-    if (target.origin !== 'https://lunidex.local' || !pokedexPath.test(target.pathname)) return null;
+    const listPath = new RegExp(`^/(?:${localePattern})/(?:pokedex|moves|abilities|items)(?:/[a-z0-9-]+)?/?$|^/(?:${localePattern})/favorites/?$`);
+    if (target.origin !== 'https://lunidex.local' || !listPath.test(target.pathname)) return null;
     return `${target.pathname}${target.search}${target.hash}`;
   } catch {
     return null;

@@ -45,15 +45,14 @@ export default async function SealedReleasesPage() {
   const releases = sortReleases(SEALED_RELEASES_V1);
   const breadcrumb = buildBreadcrumbJsonLd([
     { name: t('common.home'), path: '/' },
-    { name: t('tcg.nav_collection'), path: '/tcg/collection' },
-    { name: t('tcg.sealed.title'), path: '/tcg/sealed' },
+    { name: t('tcg.nav_catalog'), path: '/tcg' },
     { name: t('tcg.sealed.public_market.title'), path: '/tcg/sealed/market' },
     { name: t('tcg.editorial_sealed.releases.title'), path },
   ], language);
 
   return <div className="app-page">
     <Header />
-    <main id="main-content" tabIndex={-1} className="page-shell page-shell--header-offset relative pb-32 outline-none">
+    <main className="page-shell page-shell--header-offset relative pb-32 outline-none">
       <SealedWorkspaceNavigation view="releases" currentLabel={t('tcg.editorial_sealed.releases.title')} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumb) }} />
       <section className="page-header-surface mb-6 p-5 sm:p-7">

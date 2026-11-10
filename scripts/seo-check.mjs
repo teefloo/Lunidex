@@ -63,7 +63,10 @@ check(!pokemonLayoutSource.includes('export async function generateMetadata'), '
 check(!pokemonLayoutSource.includes('bulbapedia'), 'Pokémon JSON-LD must not invent a Bulbapedia sameAs link');
 check(!pokemonLayoutSource.includes('speakable'), 'Pokémon JSON-LD must not use the broad speakable hint');
 check(!pokemonPageSource.includes('citation_title') && !pokemonPageSource.includes('DC.'), 'Pokémon metadata must not contain artificial citation fields');
-check(pokemonClientSource.includes('<main id="main-content"'), 'Pokémon detail page must expose a single main landmark');
+check(layoutSource.includes('<div id="main-content" tabIndex={-1}>'), 'Shared layout must expose the focusable skip-link target');
+check((layoutSource.match(/\bid=["']main-content["']/g) ?? []).length === 1, 'Shared layout must define exactly one main-content target');
+check(!(pokemonClientSource.match(/\bid=["']main-content["']/g)?.length), 'Pokémon detail main landmark must not duplicate the shared main-content target');
+check(pokemonClientSource.includes('<main className='), 'Pokémon detail page must retain its main landmark');
 check(pokemonPageSource.includes('alternates:') && pokemonPageSource.includes('supportedLanguages.map'), 'Pokémon metadata must expose the localized canonical/hreflang map');
 check(editorialSource.includes('buildEditorialLanguages'), 'Editorial routes must expose the limited translated hreflang map');
 check(editorialSource.includes("'wishlist'") && editorialSource.includes("'pokedex'") && editorialSource.includes("'teamBuilder'") && editorialSource.includes("'openSource'") && editorialSource.includes("'limits'"), 'Editorial comparison matrix keys are incomplete');

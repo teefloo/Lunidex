@@ -15,9 +15,10 @@ import { usePrimeDexStore } from '@/store/primedex';
 interface TCGPageTabsProps {
   context: 'catalog' | 'collection';
   initialLabels?: Readonly<Record<string, string>>;
+  showLanguageSelector?: boolean;
 }
 
-export function TCGPageTabs({ context, initialLabels = {} }: TCGPageTabsProps) {
+export function TCGPageTabs({ context, initialLabels = {}, showLanguageSelector = true }: TCGPageTabsProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { t } = useTranslation();
@@ -39,7 +40,6 @@ export function TCGPageTabs({ context, initialLabels = {} }: TCGPageTabsProps) {
     : NAVIGATION_DESTINATIONS.filter((item) => (item.id === 'catalog' || item.id === 'sealed-market') && item.path !== null);
   const toolItems = NAVIGATION_DESTINATIONS.filter((item) => item.group === 'catalog' && !['catalog', 'sealed-market'].includes(item.id) && item.path !== null);
   const selectedTool = toolItems.find((item) => item.id === destination?.id);
-  const showLanguageSelector = true;
   const label = (key: string, fallback: string) => {
     const translated = t(key, { defaultValue: initialLabels[key] ?? fallback });
     return translated === key ? (initialLabels[key] ?? fallback) : translated;
@@ -83,14 +83,15 @@ export function TCGPageTabs({ context, initialLabels = {} }: TCGPageTabsProps) {
             if (!item.path) return null;
             const Icon = item.icon;
             const isActive = destination?.id === item.id || (destination?.id === 'collection-start' && item.id === 'collection');
-            const isCurrentWorkspaceRoot = (context === 'catalog' && item.id === 'catalog' && normalizedPathname === '/tcg')
-              || (context === 'collection' && item.id === 'collection' && normalizedPathname === '/tcg/collection');
-            const itemLabel = label(item.labelKey, item.fallback);
+            const isExactPage = normalizedPathname === normalizeNavigationPath(item.path);
+            const itemLabel = item.id === 'collection'
+              ? label('tcg.collection_cards_nav', 'Cards')
+              : label(item.labelKey, item.fallback);
             return (
               <Link
                 key={item.id}
                 href={buildHref(item.path)}
-                aria-current={isCurrentWorkspaceRoot ? 'page' : undefined}
+                aria-current={isExactPage ? 'page' : isActive ? 'location' : undefined}
                 data-active={isActive ? 'true' : undefined}
                 className="tcg-local-navigation-link"
               >
@@ -106,6 +107,7 @@ export function TCGPageTabs({ context, initialLabels = {} }: TCGPageTabsProps) {
             {selectedTool?.path ? (
               <Link
                 href={buildHref(selectedTool.path)}
+                aria-current={normalizedPathname === normalizeNavigationPath(selectedTool.path) ? 'page' : 'location'}
                 data-active="true"
                 className="tcg-local-navigation-link"
               >
@@ -130,6 +132,9 @@ export function TCGPageTabs({ context, initialLabels = {} }: TCGPageTabsProps) {
                   <Link
                     key={item.id}
                     href={buildHref(item.path)}
+                    aria-current={isActive
+                      ? normalizedPathname === normalizeNavigationPath(item.path) ? 'page' : 'location'
+                      : undefined}
                     data-active={isActive ? 'true' : undefined}
                     className="tcg-local-tool-link"
                   >

@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -12,7 +13,7 @@ import {
   X,
   ExternalLink,
 } from 'lucide-react';
-import Link from 'next/link';
+import { DetailOriginLink } from '@/components/layout/DetailOriginLink';
 import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
 import { useCatalogFilter } from '@/hooks/useCatalogFilter';
@@ -28,6 +29,14 @@ import { RecoverableError } from '@/components/ui/RecoverableError';
 import { getAllAbilities } from '@/lib/api/graphql';
 import type { AbilityListItem, GraphQLAbilityData } from '@/types/pokemon';
 import { STATIC_REMOTE_DATA_STALE_TIME } from '@/lib/query-options';
+import {
+  addDetailReturnCountToTarget,
+  buildPokemonReturnTarget,
+  clearDetailReturnCountFromCurrentUrl,
+  parseDetailReturnCount,
+  REFERENCE_DEFAULT_DISPLAY_COUNT,
+} from '@/lib/pokemon-filter-url';
+import { useHashTargetRestoration } from '@/hooks/useHashTargetRestoration';
 
 type SortKey = 'name' | 'id';
 
@@ -36,14 +45,23 @@ export default function AbilitiesPageClient({
 }: {
   initialAbilities?: GraphQLAbilityData[];
 }) {
+  useHashTargetRestoration();
   const { t } = useTranslation();
   const localeHref = useLocaleHref();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const returnTarget = buildPokemonReturnTarget(pathname, searchParams.toString() ? `?${searchParams}` : '');
+  const initialDisplayCount = parseDetailReturnCount(searchParams.get('returnCount'), REFERENCE_DEFAULT_DISPLAY_COUNT);
   const mounted = useMounted();
   const languageId = languageToPokemonLanguageId[useClientLanguage()];
 
   const [searchTerm, setSearchTerm] = useCatalogFilter<string>('q', '');
   const [sortBy, setSortBy] = useCatalogFilter<SortKey>('sort', 'name', ['name', 'id']);
-  const [visibleCount, setVisibleCount] = useState(48);
+  const [visibleCount, setVisibleCount] = useState(initialDisplayCount);
+  const resetVisibleCount = () => {
+    setVisibleCount(REFERENCE_DEFAULT_DISPLAY_COUNT);
+    clearDetailReturnCountFromCurrentUrl();
+  };
 
   const {
     data: queriedAbilities,
@@ -95,12 +113,6 @@ export default function AbilitiesPageClient({
     });
   }, [abilities, searchTerm, sortBy]);
 
-  useEffect(() => {
-    // Reset pagination when a new filter result set is selected.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setVisibleCount(48);
-  }, [searchTerm, sortBy]);
-
   const visibleAbilities = filteredAbilities.slice(0, visibleCount);
 
   const stats = {
@@ -109,6 +121,7 @@ export default function AbilitiesPageClient({
   };
 
   const clearFilters = () => {
+    resetVisibleCount();
     setSearchTerm('');
     setSortBy('name');
   };
@@ -149,7 +162,7 @@ export default function AbilitiesPageClient({
                   <input
                     type="text"
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e) => { resetVisibleCount(); setSearchTerm(e.target.value); }}
                     placeholder={t('abilities_page.search_placeholder', { defaultValue: 'Search abilities...' })}
                     name="ability-search"
                     autoComplete="off"
@@ -158,7 +171,7 @@ export default function AbilitiesPageClient({
                   {searchTerm && (
                     <button
                       type="button"
-                      onClick={() => setSearchTerm('')}
+                      onClick={() => { resetVisibleCount(); setSearchTerm(''); }}
                       className="touch-target absolute right-1 top-1/2 -translate-y-1/2 rounded-sm text-foreground/55 transition-colors hover:text-foreground"
                       aria-label={t('search.clear', { defaultValue: 'Clear search' })}
                     >
@@ -177,7 +190,7 @@ export default function AbilitiesPageClient({
                       <button
                         key={option.key}
                         type="button"
-                        onClick={() => setSortBy(option.key)}
+                        onClick={() => { resetVisibleCount(); setSortBy(option.key); }}
                         className={cn(
                           'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
                           active
@@ -253,7 +266,15 @@ export default function AbilitiesPageClient({
                 <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                   <AnimatePresence mode="popLayout">
                     {visibleAbilities.map((ability, index) => (
-                      <AbilityCard key={ability.id} ability={ability} index={index} t={t} localeHref={localeHref} />
+                      <AbilityCard
+                        key={ability.id}
+                        ability={ability}
+                        index={index}
+                        t={t}
+                        localeHref={localeHref}
+                        returnTarget={returnTarget}
+                        returnDisplayCount={visibleAbilities.length}
+                      />
                     ))}
                   </AnimatePresence>
                   {visibleCount < filteredAbilities.length && (
@@ -281,22 +302,31 @@ function AbilityCard({
   index,
   t,
   localeHref,
+  returnTarget,
+  returnDisplayCount,
 }: {
   ability: AbilityListItem;
   index: number;
   t: (key: string, options?: Record<string, unknown>) => string;
   localeHref: (path: string) => string;
+  returnTarget: string;
+  returnDisplayCount: number;
 }) {
+  const detailReturnTarget = `${addDetailReturnCountToTarget(returnTarget, returnDisplayCount, REFERENCE_DEFAULT_DISPLAY_COUNT)}#ability-${ability.id}`;
   return (
     <motion.div
+      id={`ability-${ability.id}`}
+      tabIndex={-1}
+      className="scroll-mt-28"
       layout
       initial={{ opacity: 0, y: 16, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, scale: 0.96 }}
       transition={{ duration: 0.25, delay: Math.min(index * 0.02, 0.25) }}
     >
-      <Link
-        href={localeHref(`/abilities/${ability.name}`)}
+      <DetailOriginLink
+        href={localeHref(`/abilities/${ability.name}?from=${encodeURIComponent(detailReturnTarget)}`)}
+        returnTarget={detailReturnTarget}
         className="group relative block overflow-hidden rounded-sm border border-border/70 bg-card/50 p-4 text-left transition-all duration-300 hover:border-primary/40 hover:bg-card/60"
       >
         <div className="flex items-start justify-between gap-3">
@@ -322,7 +352,7 @@ function AbilityCard({
             </Badge>
           </div>
         )}
-      </Link>
+      </DetailOriginLink>
     </motion.div>
   );
 }

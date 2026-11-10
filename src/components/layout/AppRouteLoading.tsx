@@ -10,7 +10,7 @@ export function AppRouteLoading({ variant = 'detail' }: { variant?: 'detail' | '
   return (
     <div className="app-page">
       <Header />
-      <main id="main-content" tabIndex={-1} className="page-shell page-shell--header-offset relative pb-32 outline-none">
+      <main className="page-shell page-shell--header-offset relative pb-32 outline-none">
         <div aria-busy="true" role="status" className="mx-auto w-full max-w-6xl space-y-6">
           <span className="sr-only">{t('common.loading')}</span>
           <div className="space-y-3">

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { dateParam, positiveId } from './tcg-sealed-route';
-import { getSealedSubnavPath } from './tcg-sealed-navigation';
+import { getSealedSubnavPath, isValidSealedRouteSegments } from './tcg-sealed-navigation';
 import { isSealedUuid, normalizeSealedDraft, sealedExportCsv } from './tcg-sealed-server';
 
 describe('sealed route boundaries', () => {
@@ -40,6 +40,15 @@ describe('sealed navigation', () => {
     expect(getSealedSubnavPath('collection')).toBe('/tcg/sealed/collection');
     expect(getSealedSubnavPath('analytics')).toBe('/tcg/sealed/analytics');
     expect(getSealedSubnavPath('not-a-view')).toBe('/tcg/sealed');
+  });
+
+  it('accepts only known portfolio views and numeric product routes', () => {
+    expect(isValidSealedRouteSegments([])).toBe(true);
+    expect(isValidSealedRouteSegments(['dashboard'])).toBe(true);
+    expect(isValidSealedRouteSegments(['products', '611877'])).toBe(true);
+    expect(isValidSealedRouteSegments(['audit-invalid'])).toBe(false);
+    expect(isValidSealedRouteSegments(['market', 'product'])).toBe(false);
+    expect(isValidSealedRouteSegments(['products', '../dashboard'])).toBe(false);
   });
 });
 

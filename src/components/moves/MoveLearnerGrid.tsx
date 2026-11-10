@@ -2,13 +2,15 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { Cpu, Disc, Egg, GraduationCap, TrendingUp, Users } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { DetailOriginLink } from '@/components/layout/DetailOriginLink';
 import { TYPE_COLORS } from '@/types/pokemon';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
+import { useHashTargetRestoration } from '@/hooks/useHashTargetRestoration';
+import { addDetailReturnCountToTarget, MOVE_LEARNER_DEFAULT_DISPLAY_COUNT } from '@/lib/pokemon-filter-url';
 
 export interface LearnerEntry {
   id: number;
@@ -24,6 +26,8 @@ type LearnMethodFilter = 'all' | 'level-up' | 'machine' | 'technical-record' | '
 interface MoveLearnerGridProps {
   learners: LearnerEntry[];
   moveName: string;
+  returnTarget: string;
+  initialDisplayCount?: number;
   labels: {
     title: string;
     byLevel: string;
@@ -35,11 +39,18 @@ interface MoveLearnerGridProps {
   };
 }
 
-export default function MoveLearnerGrid({ learners, moveName, labels }: MoveLearnerGridProps) {
+export default function MoveLearnerGrid({
+  learners,
+  moveName,
+  returnTarget,
+  initialDisplayCount = MOVE_LEARNER_DEFAULT_DISPLAY_COUNT,
+  labels,
+}: MoveLearnerGridProps) {
+  useHashTargetRestoration();
   const [filter, setFilter] = useState<LearnMethodFilter>('all');
-  const [showAll, setShowAll] = useState(false);
+  const [showAll, setShowAll] = useState(initialDisplayCount > MOVE_LEARNER_DEFAULT_DISPLAY_COUNT);
 
-  const DISPLAY_LIMIT = 50;
+  const DISPLAY_LIMIT = MOVE_LEARNER_DEFAULT_DISPLAY_COUNT;
 
   // Deduplicate by pokemon id, keeping most significant method
   const dedupedMap = new Map<number, LearnerEntry>();
@@ -122,7 +133,12 @@ export default function MoveLearnerGrid({ learners, moveName, labels }: MoveLear
         <>
           <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8">
             {displayed.map((pokemon) => (
-              <PokemonLearnerCard key={`${pokemon.id}-${pokemon.learnMethod}`} pokemon={pokemon} />
+              <PokemonLearnerCard
+                key={`${pokemon.id}-${pokemon.learnMethod}`}
+                pokemon={pokemon}
+                returnTarget={returnTarget}
+                displayCount={showAll ? allByMethod.length : DISPLAY_LIMIT}
+              />
             ))}
           </div>
 
@@ -144,48 +160,60 @@ export default function MoveLearnerGrid({ learners, moveName, labels }: MoveLear
   );
 }
 
-function PokemonLearnerCard({ pokemon }: { pokemon: LearnerEntry }) {
+function PokemonLearnerCard({
+  pokemon,
+  returnTarget,
+  displayCount,
+}: {
+  pokemon: LearnerEntry;
+  returnTarget: string;
+  displayCount: number;
+}) {
   const localeHref = useLocaleHref();
+  const detailReturnTarget = `${addDetailReturnCountToTarget(returnTarget, displayCount, MOVE_LEARNER_DEFAULT_DISPLAY_COUNT)}#move-pokemon-${pokemon.id}`;
   const [imgSrc, setImgSrc] = useState(
     `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
   );
 
   return (
-    <Link
-      href={localeHref(`/pokemon/${pokemon.name}`)}
-      className="group flex flex-col items-center rounded-sm border border-border/70 bg-card/50 p-2 text-center transition-all duration-200 hover:border-border/90 hover:bg-card/65"
-    >
-      <div className="relative h-14 w-14">
-        <Image
-          src={imgSrc}
-          alt={pokemon.localizedName}
-          fill
-          className="object-contain drop-shadow-lg"
-          sizes="56px"
-          loading="lazy"
-          unoptimized
-          onError={() =>
-            setImgSrc(
-              `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`,
-            )
-          }
-        />
-      </div>
-      <span className="mt-1 w-full truncate text-[11px] font-bold text-foreground/60 group-hover:text-foreground">
-        {pokemon.localizedName}
-      </span>
-      {pokemon.learnMethod === 'level-up' && pokemon.level != null && pokemon.level > 0 && (
-        <span className="mt-0.5 text-[11px] font-bold text-primary/70">Lv. {pokemon.level}</span>
-      )}
-      <div className="mt-1 flex gap-1">
-        {pokemon.types.map((type) => (
-          <span
-            key={type}
-            className="h-2 w-2 rounded-full"
-            style={{ backgroundColor: TYPE_COLORS[type] || '#6B7280' }}
+    <div id={`move-pokemon-${pokemon.id}`} tabIndex={-1} className="scroll-mt-28">
+      <DetailOriginLink
+        href={localeHref(`/pokemon/${pokemon.name}?from=${encodeURIComponent(detailReturnTarget)}`)}
+        returnTarget={detailReturnTarget}
+        className="group flex flex-col items-center rounded-sm border border-border/70 bg-card/50 p-2 text-center transition-all duration-200 hover:border-border/90 hover:bg-card/65"
+      >
+        <div className="relative h-14 w-14">
+          <Image
+            src={imgSrc}
+            alt={pokemon.localizedName}
+            fill
+            className="object-contain drop-shadow-lg"
+            sizes="56px"
+            loading="lazy"
+            unoptimized
+            onError={() =>
+              setImgSrc(
+                `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`,
+              )
+            }
           />
-        ))}
-      </div>
-    </Link>
+        </div>
+        <span className="mt-1 w-full truncate text-[11px] font-bold text-foreground/60 group-hover:text-foreground">
+          {pokemon.localizedName}
+        </span>
+        {pokemon.learnMethod === 'level-up' && pokemon.level != null && pokemon.level > 0 && (
+          <span className="mt-0.5 text-[11px] font-bold text-primary/70">Lv. {pokemon.level}</span>
+        )}
+        <div className="mt-1 flex gap-1">
+          {pokemon.types.map((type) => (
+            <span
+              key={type}
+              className="h-2 w-2 rounded-full"
+              style={{ backgroundColor: TYPE_COLORS[type] || '#6B7280' }}
+            />
+          ))}
+        </div>
+      </DetailOriginLink>
+    </div>
   );
 }

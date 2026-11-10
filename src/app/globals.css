@@ -8232,9 +8232,9 @@ body:has(.header-mobile-sheet) .site-header-bar > .site-header-brand {
 }
 
 .header-mobile-sheet-actions {
-  margin-top: 1.5rem;
-  border-top: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent);
-  padding-top: 1.25rem;
+  margin: 0 0 1rem;
+  border-bottom: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent);
+  padding: 0 0 1rem;
 }
 
 .site-header-sheet-actions-grid {

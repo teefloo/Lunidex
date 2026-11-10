@@ -53,7 +53,7 @@ export function MarketFrame({
   return (
     <div className="app-page">
       <Header />
-      <main id="main-content" tabIndex={-1} className="page-shell page-shell--header-offset relative pb-32 outline-none">
+      <main className="page-shell page-shell--header-offset relative pb-32 outline-none">
         <SealedWorkspaceNavigation view={view} currentLabel={currentLabel} />
         {children}
       </main>
@@ -76,8 +76,7 @@ export function SealedMarketPage({ data, filters, lang, t }: { data: PublicMarke
   const copy = (key: string, options?: Record<string, unknown>) => t(`tcg.sealed.public_market.${key}`, options);
   const breadcrumb = buildBreadcrumbJsonLd([
     { name: t('common.home', { defaultValue: 'Home' }), path: '/' },
-    { name: t('tcg.nav_collection', { defaultValue: 'Collection' }), path: '/tcg/collection' },
-    { name: t('tcg.sealed.title', { defaultValue: 'Sealed portfolio' }), path: '/tcg/sealed' },
+    { name: t('tcg.nav_catalog', { defaultValue: 'TCG catalog' }), path: '/tcg' },
     { name: copy('title'), path: '/tcg/sealed/market' },
   ], lang);
   const pricesById = new Map<number, SealedPriceSnapshot[]>();

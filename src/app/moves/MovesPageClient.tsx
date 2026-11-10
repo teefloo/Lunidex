@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -20,7 +21,7 @@ import {
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
-import Link from 'next/link';
+import { DetailOriginLink } from '@/components/layout/DetailOriginLink';
 import { useTranslation } from '@/lib/i18n';
 import { useMounted } from '@/hooks/useMounted';
 import { useCatalogFilter } from '@/hooks/useCatalogFilter';
@@ -38,6 +39,14 @@ import { TYPE_COLORS, type GraphQLMoveData, type MoveListItem } from '@/types/po
 import MoveDetailModal from './MoveDetailModal';
 import { STATIC_REMOTE_DATA_STALE_TIME } from '@/lib/query-options';
 import { RecoverableError } from '@/components/ui/RecoverableError';
+import {
+  addDetailReturnCountToTarget,
+  buildPokemonReturnTarget,
+  clearDetailReturnCountFromCurrentUrl,
+  parseDetailReturnCount,
+  REFERENCE_DEFAULT_DISPLAY_COUNT,
+} from '@/lib/pokemon-filter-url';
+import { useHashTargetRestoration } from '@/hooks/useHashTargetRestoration';
 
 const ALL_TYPES = [
   'normal',
@@ -69,8 +78,13 @@ export default function MovesPageClient({
 }: {
   initialMoves?: GraphQLMoveData[];
 }) {
+  useHashTargetRestoration();
   const { t } = useTranslation();
   const localeHref = useLocaleHref();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const returnTarget = buildPokemonReturnTarget(pathname, searchParams.toString() ? `?${searchParams}` : '');
+  const initialDisplayCount = parseDetailReturnCount(searchParams.get('returnCount'), REFERENCE_DEFAULT_DISPLAY_COUNT);
   const mounted = useMounted();
   const languageId = languageToPokemonLanguageId[useClientLanguage()];
 
@@ -79,7 +93,11 @@ export default function MovesPageClient({
   const [selectedClass, setSelectedClass] = useCatalogFilter<string | null>('category', null, DAMAGE_CLASSES);
   const [sortBy, setSortBy] = useCatalogFilter<SortKey>('sort', 'name', ['name', 'id', 'power']);
   const [selectedMove, setSelectedMove] = useState<MoveListItem | null>(null);
-  const [visibleCount, setVisibleCount] = useState(48);
+  const [visibleCount, setVisibleCount] = useState(initialDisplayCount);
+  const resetVisibleCount = () => {
+    setVisibleCount(REFERENCE_DEFAULT_DISPLAY_COUNT);
+    clearDetailReturnCountFromCurrentUrl();
+  };
 
   const {
     data: queriedMoves,
@@ -149,12 +167,6 @@ export default function MovesPageClient({
     });
   }, [moves, searchTerm, selectedType, selectedClass, sortBy]);
 
-  useEffect(() => {
-    // Reset pagination when a new filter result set is selected.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setVisibleCount(48);
-  }, [searchTerm, selectedType, selectedClass, sortBy]);
-
   const visibleMoves = filteredMoves.slice(0, visibleCount);
 
   const stats = useMemo(() => ({
@@ -172,6 +184,7 @@ export default function MovesPageClient({
     Number(sortBy !== 'name');
 
   const clearFilters = () => {
+    resetVisibleCount();
     setSearchTerm('');
     setSelectedType(null);
     setSelectedClass(null);
@@ -220,8 +233,8 @@ export default function MovesPageClient({
               <div className="space-y-4 overflow-y-auto pr-1 scrollbar-premium xl:max-h-[calc(100vh-13rem)]">
                 <SearchInput
                   value={searchTerm}
-                  onChange={setSearchTerm}
-                  onClear={() => setSearchTerm('')}
+                  onChange={(value) => { resetVisibleCount(); setSearchTerm(value); }}
+                  onClear={() => { resetVisibleCount(); setSearchTerm(''); }}
                   placeholder={t('moves_page.search_placeholder')}
                   clearLabel={t('search.clear')}
                 />
@@ -242,7 +255,7 @@ export default function MovesPageClient({
                         <button
                           key={option.key}
                           type="button"
-                          onClick={() => setSortBy(option.key)}
+                          onClick={() => { resetVisibleCount(); setSortBy(option.key); }}
                           className={cn(
                             'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
                             active
@@ -271,7 +284,7 @@ export default function MovesPageClient({
                         <button
                           key={type}
                           type="button"
-                          onClick={() => setSelectedType(active ? null : type)}
+                          onClick={() => { resetVisibleCount(); setSelectedType(active ? null : type); }}
                           className={cn(
                             'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
                             active
@@ -301,7 +314,7 @@ export default function MovesPageClient({
                         <button
                           key={damageClass}
                           type="button"
-                          onClick={() => setSelectedClass(active ? null : damageClass)}
+                          onClick={() => { resetVisibleCount(); setSelectedClass(active ? null : damageClass); }}
                           className={cn(
                             'touch-target inline-flex min-h-11 items-center justify-center rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.16em] transition-[color,background-color,border-color]',
                             active
@@ -394,6 +407,8 @@ export default function MovesPageClient({
                         onClick={() => setSelectedMove(move)}
                         t={t}
                         localeHref={localeHref}
+                        returnTarget={returnTarget}
+                        returnDisplayCount={visibleMoves.length}
                       />
                     ))}
                   </AnimatePresence>
@@ -425,17 +440,25 @@ export function MoveCard({
   onClick,
   t,
   localeHref,
+  returnTarget,
+  returnDisplayCount,
 }: {
   move: MoveListItem;
   index: number;
   onClick: () => void;
   t: (key: string, options?: { count?: number; defaultValue?: string }) => string;
   localeHref: (path: string) => string;
+  returnTarget: string;
+  returnDisplayCount: number;
 }) {
   const typeColor = TYPE_COLORS[move.type] || '#6B7280';
+  const detailReturnTarget = `${addDetailReturnCountToTarget(returnTarget, returnDisplayCount, REFERENCE_DEFAULT_DISPLAY_COUNT)}#move-${move.id}`;
 
   return (
     <motion.article
+      id={`move-${move.id}`}
+      tabIndex={-1}
+      className="scroll-mt-28 group relative overflow-hidden rounded-sm border border-border/70 bg-card/50 p-4 text-left transition-[border-color,background-color,transform,opacity] duration-300 hover:border-border/90 hover:bg-card/60"
       layout
       initial={{ opacity: 0, y: 16, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -443,7 +466,6 @@ export function MoveCard({
       transition={{ duration: 0.25, delay: Math.min(index * 0.02, 0.25) }}
       whileHover={{ y: -3 }}
       whileTap={{ scale: 0.98 }}
-      className="group relative overflow-hidden rounded-sm border border-border/70 bg-card/50 p-4 text-left transition-[border-color,background-color,transform,opacity] duration-300 hover:border-border/90 hover:bg-card/60"
     >
       <div
         className="absolute inset-x-0 top-0 h-1.5 rounded-t-[1.5rem]"
@@ -496,14 +518,15 @@ export function MoveCard({
         >
           {t('moves_page.preview', { defaultValue: 'Preview' })}
         </Button>
-        <Link
-          href={localeHref(`/moves/${move.name}`)}
+        <DetailOriginLink
+          href={localeHref(`/moves/${move.name}?from=${encodeURIComponent(detailReturnTarget)}`)}
+          returnTarget={detailReturnTarget}
           className="touch-target inline-flex items-center gap-1 rounded-sm border border-border/60 bg-background/50 px-3 text-[11px] font-black uppercase tracking-[0.16em] text-foreground/65 transition-[border-color,background-color,color] hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
           aria-label={`${t('moves_page.detail_title')}: ${move.localizedName}`}
         >
           <ExternalLink className="h-2.5 w-2.5" />
           {t('moves_page.detail_title')}
-        </Link>
+        </DetailOriginLink>
       </div>
     </motion.article>
   );

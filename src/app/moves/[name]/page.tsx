@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
 import {
   ArrowLeft,
   BookOpen,
@@ -11,6 +10,7 @@ import {
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
+import { ValidatedBackLink } from '@/components/layout/ValidatedBackLink';
 import { Badge } from '@/components/ui/badge';
 import { getServerT, getServerLanguage, getServerPokemonLanguage } from '@/lib/server-i18n';
 import { TYPE_COLORS } from '@/types/pokemon';
@@ -23,6 +23,12 @@ import { REST_API_BASE } from '@/lib/api/client';
 import { buildBreadcrumbJsonLd, buildDefinedTermJsonLd, buildSubpathLanguages, buildWebPageJsonLd, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { SITE_URL } from '@/lib/site';
+import {
+  addDetailReturnCountToTarget,
+  MOVE_LEARNER_DEFAULT_DISPLAY_COUNT,
+  parseDetailReturnCount,
+  parsePokemonReturnTarget,
+} from '@/lib/pokemon-filter-url';
 import {
   getLocalizedMoveEffectEntry,
   getLocalizedMoveFlavorText,
@@ -90,6 +96,7 @@ export async function generateStaticParams() {
 
 interface Props {
   params: Promise<{ name: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -130,8 +137,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function MoveDetailPage({ params }: Props) {
-  const { name } = await params;
+export default async function MoveDetailPage({ params, searchParams }: Props) {
+  const [{ name }, query] = await Promise.all([params, searchParams]);
   const t = await getServerT();
   const lang = await getServerLanguage();
   const pokeApiLanguage = await getServerPokemonLanguage();
@@ -143,6 +150,19 @@ export default async function MoveDetailPage({ params }: Props) {
   const damageClass = move.damage_class.name;
 
   const displayName = getLocalizedMoveName(move, pokeApiLanguage);
+  const returnTarget = parsePokemonReturnTarget(typeof query.from === 'string' ? query.from : null);
+  const backHref = returnTarget ?? `/${lang}/moves`;
+  const routePath = `/${lang}/moves/${name}`;
+  const initialLearnerDisplayCount = parseDetailReturnCount(
+    typeof query.returnCount === 'string' ? query.returnCount : null,
+    MOVE_LEARNER_DEFAULT_DISPLAY_COUNT,
+  );
+  const baseLearnerReturnTarget = `${routePath}${returnTarget ? `?from=${encodeURIComponent(returnTarget)}` : ''}`;
+  const learnerReturnTarget = addDetailReturnCountToTarget(
+    baseLearnerReturnTarget,
+    initialLearnerDisplayCount,
+    MOVE_LEARNER_DEFAULT_DISPLAY_COUNT,
+  );
 
   const effectEntry = getLocalizedMoveEffectEntry(move, pokeApiLanguage);
 
@@ -156,7 +176,6 @@ export default async function MoveDetailPage({ params }: Props) {
     .replace(/\n|\f/g, ' ')
     .trim();
 
-  const routePath = `/${lang}/moves/${name}`;
   const moveTermJsonLd = buildDefinedTermJsonLd({
     lang,
     path: routePath,
@@ -314,13 +333,13 @@ export default async function MoveDetailPage({ params }: Props) {
       <main className="page-shell pb-20 pt-8">
         {/* Back link */}
         <div className="mb-6">
-          <Link
-            href={`/${lang}/moves`}
-            className="inline-flex items-center gap-2 rounded-sm border border-border/70 bg-card/50 px-3 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/55 transition-all hover:border-border/90 hover:text-foreground"
+          <ValidatedBackLink
+            href={backHref}
+            className="inline-flex min-h-11 items-center gap-2 rounded-sm border border-border/70 bg-card/50 px-3 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/55 transition-all hover:border-border/90 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             {t('moves_page.back_to_moves')}
-          </Link>
+          </ValidatedBackLink>
         </div>
 
         {/* Header */}
@@ -415,6 +434,8 @@ export default async function MoveDetailPage({ params }: Props) {
                 <MoveLearnerGrid
                   learners={learnerEntries}
                   moveName={displayName}
+                  returnTarget={learnerReturnTarget}
+                  initialDisplayCount={initialLearnerDisplayCount}
                   labels={learnerLabels}
                 />
               </section>
@@ -425,6 +446,7 @@ export default async function MoveDetailPage({ params }: Props) {
               <MoveBestUsers
                 users={bestUsers}
                 damageClass={damageClass}
+                returnTarget={learnerReturnTarget}
                 labels={bestUsersLabels}
               />
             )}

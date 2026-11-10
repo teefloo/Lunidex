@@ -59,8 +59,7 @@ export default async function PublicSealedProductPage({ params }: ProductPagePro
   };
   const breadcrumb = buildBreadcrumbJsonLd([
     { name: t('common.home', { defaultValue: 'Lunidex' }), path: '/' },
-    { name: t('tcg.nav_collection', { defaultValue: 'Collection' }), path: '/tcg/collection' },
-    { name: t('tcg.sealed.title', { defaultValue: 'Sealed portfolio' }), path: '/tcg/sealed' },
+    { name: t('tcg.nav_catalog', { defaultValue: 'TCG catalog' }), path: '/tcg' },
     { name: copy('title'), path: '/tcg/sealed/market' },
     { name: product.name, path: `/tcg/sealed/market/${id}` },
   ], lang);

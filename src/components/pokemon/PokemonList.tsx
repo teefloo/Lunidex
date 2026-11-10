@@ -1,6 +1,7 @@
 'use client';
 
 import { keepPreviousData, useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useSearchParams } from 'next/navigation';
 import { usePrimeDexStore } from '@/store/primedex';
 import { getPokemonList, getAllPokemonDetailed, getAllPokemonSummary } from '@/lib/api';
 import { getPokemonSummarySlice } from '@/lib/api/graphql';
@@ -13,7 +14,14 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
+import { useHashTargetRestoration } from '@/hooks/useHashTargetRestoration';
 import { RecoverableError } from '@/components/ui/RecoverableError';
+import {
+  clearDetailReturnCountFromCurrentUrl,
+  DETAIL_RETURN_COUNT_PARAM,
+  parseDetailReturnCount,
+  POKEDEX_DEFAULT_DISPLAY_COUNT,
+} from '@/lib/pokemon-filter-url';
 import {
   comparePokemonMeasurements,
   getExactNumericPokemonId,
@@ -54,7 +62,16 @@ interface PokemonResultItem {
   species?: Partial<PokemonSpecies>;
 }
 
-export default function PokemonList() {
+export default function PokemonList({
+  initialDisplayCount = POKEDEX_DEFAULT_DISPLAY_COUNT,
+}: {
+  initialDisplayCount?: number;
+}) {
+  useHashTargetRestoration();
+  const searchParams = useSearchParams();
+  const activeDisplayCount = searchParams
+    ? parseDetailReturnCount(searchParams.get(DETAIL_RETURN_COUNT_PARAM), POKEDEX_DEFAULT_DISPLAY_COUNT)
+    : initialDisplayCount;
   const { t } = useTranslation();
   
   // Atomic selectors
@@ -246,17 +263,34 @@ export default function PokemonList() {
       }));
   }, [allDetailed]);
 
-  const filterKey = `${searchTerm}-${selectedTypes.join(',')}-${selectedGeneration}-${showFavoritesOnly}-${isLegendary}-${isMythical}-${selectedEggGroups.join(',')}-${selectedColors.join(',')}-${selectedShapes.join(',')}-${minBaseStats}-${minAttack}-${minDefense}-${minSpeed}-${minHp}-${heightRange[0]}-${heightRange[1]}-${weightRange[0]}-${weightRange[1]}-${isBasicMode}-${showCaughtOnly}`;
+  const filterKey = `${searchTerm}-${selectedTypes.join(',')}-${selectedGeneration}-${showFavoritesOnly}-${isLegendary}-${isMythical}-${selectedEggGroups.join(',')}-${selectedColors.join(',')}-${selectedShapes.join(',')}-${minBaseStats}-${minAttack}-${minDefense}-${minSpeed}-${minHp}-${heightRange[0]}-${heightRange[1]}-${weightRange[0]}-${weightRange[1]}-${sortBy}-${showCaughtOnly}`;
 
-  const [displayLimit, setDisplayLimit] = useState(20);
+  const [displayLimit, setDisplayLimit] = useState(activeDisplayCount);
   const prevFilterKeyRef = useRef(filterKey);
+  const wasHydratedRef = useRef(_hasHydrated);
+  const restoreDisplayCountRef = useRef(activeDisplayCount > POKEDEX_DEFAULT_DISPLAY_COUNT ? activeDisplayCount : 0);
+  const previousActiveDisplayCountRef = useRef(activeDisplayCount);
 
   useEffect(() => {
+    if (!wasHydratedRef.current && _hasHydrated) {
+      wasHydratedRef.current = true;
+      prevFilterKeyRef.current = filterKey;
+      return;
+    }
     if (prevFilterKeyRef.current !== filterKey) {
       prevFilterKeyRef.current = filterKey;
-      setDisplayLimit(20);
+      restoreDisplayCountRef.current = 0;
+      setDisplayLimit(POKEDEX_DEFAULT_DISPLAY_COUNT);
+      clearDetailReturnCountFromCurrentUrl();
     }
-  }, [filterKey]);
+  }, [filterKey, _hasHydrated]);
+
+  useEffect(() => {
+    if (previousActiveDisplayCountRef.current === activeDisplayCount) return;
+    previousActiveDisplayCountRef.current = activeDisplayCount;
+    restoreDisplayCountRef.current = activeDisplayCount > POKEDEX_DEFAULT_DISPLAY_COUNT ? activeDisplayCount : 0;
+    setDisplayLimit(activeDisplayCount);
+  }, [activeDisplayCount]);
 
   const filteredAndSortedResults = useMemo(() => {
     let results: PokemonResultItem[] = [];
@@ -403,6 +437,21 @@ export default function PokemonList() {
     if (!filteredAndSortedResults) return [];
     return filteredAndSortedResults.slice(0, displayLimit);
   }, [filteredAndSortedResults, displayLimit]);
+
+  const loadedPokemonCount = infiniteData?.pages.reduce((total, page) => total + page.results.length, 0) ?? 0;
+  useEffect(() => {
+    const targetCount = restoreDisplayCountRef.current;
+    if (targetCount <= POKEDEX_DEFAULT_DISPLAY_COUNT || isLoadingInfinite) return;
+    // A return-count context can arrive before the list query is enabled or
+    // hydrated. Keep it pending until the basic list data is available so an
+    // early disabled/empty query state does not strand the user at 20 cards.
+    if (!isBasicMode || !infiniteData) return;
+    if (loadedPokemonCount >= targetCount || !hasNextPage) {
+      restoreDisplayCountRef.current = 0;
+      return;
+    }
+    if (!isFetchingNextPage) void fetchNextPage();
+  }, [fetchNextPage, hasNextPage, infiniteData, isBasicMode, isFetchingNextPage, isLoadingInfinite, loadedPokemonCount]);
 
   const hasMoreFiltered = !isBasicMode && filteredAndSortedResults !== null && displayLimit < filteredAndSortedResults.length;
 
@@ -596,7 +645,13 @@ export default function PokemonList() {
         <div className="pokedex-grid grid grid-cols-1 min-[360px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-2 gap-x-2">
           {displayedPokemon.map((p, idx) => (
             <div key={p.id} className="pokemon-grid-item">
-              <PokemonCard name={p.name} url={p.url} index={idx} initialData={buildInitialData(p)} />
+              <PokemonCard
+                name={p.name}
+                url={p.url}
+                index={idx}
+                initialData={buildInitialData(p)}
+                returnDisplayCount={displayedPokemon.length}
+              />
             </div>
           ))}
         </div>

@@ -31,7 +31,9 @@ export function HeaderMobileNav() {
   const navigationLabel = label('header.navigation', 'Primary navigation');
   const closeLabel = label('common.close', 'Close');
   const activeDestination = resolveNavigationDestination(pathname);
-  const moreIsActive = activeDestination?.group === 'space' || activeDestination?.group === 'resources';
+  const moreIsActive = activeDestination?.group === 'space'
+    || activeDestination?.group === 'resources'
+    || (activeDestination?.group === 'play' && !activeDestination.primary);
 
   const closeMenu = () => {
     setIsOpen(false);
@@ -135,9 +137,6 @@ export function HeaderMobileNav() {
             </div>
 
             <div className="header-mobile-sheet-body">
-              <nav aria-label={navigationLabel} className="header-mobile-sheet-nav">
-                <SecondaryNavigationLinks onNavigate={closeMenu} />
-              </nav>
               <section className="header-mobile-sheet-actions" aria-labelledby="header-mobile-actions-title">
                 <h2 id="header-mobile-actions-title" className="header-mobile-sheet-section-label">
                   {label('nav.account', 'Account')}
@@ -151,6 +150,9 @@ export function HeaderMobileNav() {
                   }}
                 />
               </section>
+              <nav aria-label={navigationLabel} className="header-mobile-sheet-nav">
+                <SecondaryNavigationLinks onNavigate={closeMenu} />
+              </nav>
             </div>
           </div>
         </>,

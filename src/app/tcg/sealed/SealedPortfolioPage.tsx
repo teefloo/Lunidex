@@ -692,13 +692,17 @@ export function SealedPortfolioPage({ view: rawView, productId }: { view: string
   </PageFrame>;
 
   const navigationView = view === 'product' ? 'portfolio-product' : view;
+  const privateTitleKey = view === 'product' ? 'tcg.sealed.product'
+    : view === 'collection' ? 'tcg.sealed.my_products'
+      : view === 'catalogue' ? 'tcg.sealed.reference_catalogue'
+        : `tcg.sealed.${view}`;
   const privatePageContext = (
     <>
       <SealedWorkspaceNavigation view={navigationView} currentLabel={view === 'product' ? t('tcg.sealed.product') : undefined} />
       <section className="mb-6 max-w-3xl" aria-labelledby="sealed-page-title">
         <p className="page-eyebrow">{t('tcg.sealed.eyebrow')}</p>
         <h1 id="sealed-page-title" className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">
-          {t(view === 'product' ? 'tcg.sealed.product' : `tcg.sealed.${view}`)}
+          {t(privateTitleKey)}
         </h1>
         <p className="mt-2 text-sm leading-6 text-foreground/60">{t('tcg.sealed.subtitle')}</p>
       </section>
@@ -722,7 +726,7 @@ export function SealedPortfolioPage({ view: rawView, productId }: { view: string
             <p className="page-eyebrow">{t('tcg.sealed.eyebrow')}</p>
             <span aria-hidden="true" className="inline-flex min-h-8 items-center gap-1.5 rounded-sm border border-border/60 bg-background/25 px-2.5 text-[10px] font-black uppercase tracking-[0.12em] text-foreground/55"><LockKeyhole className="h-3.5 w-3.5 text-primary" />{t('tcg.sealed.private_badge')}</span>
           </div>
-          <h1 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">{view === 'product' ? t('tcg.sealed.product') : t(`tcg.sealed.${view}`)}</h1>
+          <h1 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">{t(privateTitleKey)}</h1>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-foreground/60">{t('tcg.sealed.subtitle')}</p>
         </div>
         <div className="flex w-full flex-col gap-2 sm:flex-row sm:flex-wrap xl:w-auto xl:justify-end">
@@ -752,7 +756,7 @@ export function SealedPortfolioPage({ view: rawView, productId }: { view: string
   </PageFrame>;
 }
 
-function PageFrame({ children }: { children: React.ReactNode }) { return <div className="app-page"><Header /><main id="main-content" tabIndex={-1} className="page-shell page-shell--header-offset relative pb-32 outline-none">{children}</main></div>; }
+function PageFrame({ children }: { children: React.ReactNode }) { return <div className="app-page"><Header /><main className="page-shell page-shell--header-offset relative pb-32 outline-none">{children}</main></div>; }
 function LoadingState({ label }: { label: string }) {
   return <div className="space-y-4" aria-busy="true" role="status">
     <span className="sr-only">{label}</span>

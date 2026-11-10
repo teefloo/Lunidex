@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { SealedPortfolioPage } from '../SealedPortfolioPage';
 import { SealedMarketPage } from '../SealedMarketPage';
 import { getNeonClient } from '@/lib/neon/server';
@@ -7,6 +8,7 @@ import { parsePublicMarketFilters } from '@/lib/tcg-sealed-public-market';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
 import { buildBreadcrumbJsonLd, buildSubpathLanguages, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import { serializeJsonLd } from '@/lib/json-ld';
+import { isValidSealedRouteSegments } from '@/lib/tcg-sealed-navigation';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,12 +19,15 @@ interface SealedPageProps {
 
 function routeTitle(view: string | undefined, t: (key: string, options?: Record<string, unknown>) => string): string {
   if (view === 'market') return t('tcg.sealed.public_market.title');
-  if (view === 'collection' || view === 'journal' || view === 'sales' || view === 'cashflow' || view === 'analytics' || view === 'catalogue' || view === 'sources') return t(`tcg.sealed.${view}`);
+  if (view === 'collection') return t('tcg.sealed.my_products');
+  if (view === 'catalogue') return t('tcg.sealed.reference_catalogue');
+  if (view === 'journal' || view === 'sales' || view === 'cashflow' || view === 'analytics' || view === 'sources') return t(`tcg.sealed.${view}`);
   return t('tcg.sealed.title');
 }
 
 export async function generateMetadata({ params }: SealedPageProps): Promise<Metadata> {
   const [lang, t, route] = await Promise.all([getServerLanguage(), getServerT(), params]);
+  if (!isValidSealedRouteSegments(route.view ?? [])) notFound();
   const publicMarket = route.view?.length === 1 && route.view[0] === 'market';
   const path = publicMarket ? '/tcg/sealed/market' : '/tcg/sealed';
   const title = routeTitle(publicMarket ? 'market' : undefined, t);
@@ -40,6 +45,7 @@ export async function generateMetadata({ params }: SealedPageProps): Promise<Met
 export default async function SealedPage({ params, searchParams }: SealedPageProps) {
   const [lang, t, route] = await Promise.all([getServerLanguage(), getServerT(), params]);
   const segments = route.view ?? [];
+  if (!isValidSealedRouteSegments(segments)) notFound();
   const first = segments[0] ?? 'dashboard';
   if (first === 'market' && segments.length === 1) {
     const filters = parsePublicMarketFilters(await searchParams);

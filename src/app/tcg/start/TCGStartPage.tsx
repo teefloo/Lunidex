@@ -115,11 +115,13 @@ export function TCGStartPage() {
   const isDemo = mounted && !user;
   const startTitle = t(isDemo ? 'tcg.demo.start_title' : 'tcg.activation.start_title', { defaultValue: 'Add a collection' });
   const startDescription = t(isDemo ? 'tcg.demo.start_description' : 'auth.signup_subtitle');
+  const startParentHref = isDemo ? attributedCatalogHref : attributedCollectionHref;
+  const startParentLabel = t(isDemo ? 'tcg.nav_catalog' : 'tcg.collection_title');
   const startBreadcrumbs = (
     <Breadcrumbs
       items={[
         { label: t('common.home'), href: localeHref('/') },
-        { label: t('tcg.collection_title'), href: attributedCollectionHref },
+        { label: startParentLabel, href: startParentHref },
         { label: startTitle },
       ]}
       homeLabel={t('common.home')}

@@ -60,10 +60,10 @@ export const NAVIGATION_DESTINATIONS: readonly NavigationDestination[] = [
 
   { id: 'wishlist', path: '/tcg/wishlist', labelKey: 'tcg.nav_wishlist', fallback: 'Wishlist', icon: Heart, group: 'collection' },
   { id: 'investments', path: '/tcg/investments', labelKey: 'investments.title', fallback: 'Investments', icon: TrendingUp, group: 'collection', aliases: { fr: ['investissements', 'achats', 'portefeuille'], en: ['purchases', 'portfolio', 'investments'] } },
-  { id: 'sealed-portfolio', path: '/tcg/sealed', labelKey: 'tcg.nav_sealed', fallback: 'Sealed portfolio', icon: Package, group: 'collection' },
+  { id: 'sealed-portfolio', path: '/tcg/sealed', labelKey: 'tcg.sealed.title', fallback: 'Sealed portfolio', icon: Package, group: 'collection' },
   { id: 'collection-start', path: '/tcg/start', labelKey: 'tcg.demo.start_title', fallback: 'Try a set checklist', icon: Package, group: 'collection' },
 
-  { id: 'sealed-market', path: '/tcg/sealed/market', labelKey: 'tcg.nav_sealed_market', fallback: 'Sealed market', icon: Package, group: 'collection', routeMatches: ['/tcg/sealed/buy-safely', '/tcg/sealed/releases'], aliases: { fr: ['marché des produits scellés', 'produits scellés'], en: ['sealed products', 'sealed prices'] } },
+  { id: 'sealed-market', path: '/tcg/sealed/market', labelKey: 'tcg.nav_sealed_market', fallback: 'Sealed market', icon: Package, group: 'catalog', routeMatches: ['/tcg/sealed/buy-safely', '/tcg/sealed/releases'], aliases: { fr: ['marché des produits scellés', 'produits scellés'], en: ['sealed products', 'sealed prices'] } },
   { id: 'deck-builder', path: '/tcg/deck-builder', labelKey: 'tcg.nav_deck_builder', fallback: 'Deck builder', icon: LayoutGrid, group: 'catalog', aliases: { fr: ['deck', 'construction de deck'], en: ['deck'] } },
   { id: 'pull-rates', path: '/tcg/pull-rates', labelKey: 'booster_guides.links.pull', fallback: 'Pull rates', icon: Sparkles, group: 'catalog', aliases: { fr: ['fréquences de tirage', 'taux de tirage'], en: ['card odds', 'pack odds'] } },
   { id: 'booster-value', path: '/tcg/booster-value', labelKey: 'booster_guides.links.value', fallback: 'Booster value', icon: Calculator, group: 'catalog', aliases: { fr: ['valeur des boosters'], en: ['booster calculator'] } },
@@ -86,7 +86,7 @@ export const NAVIGATION_DESTINATIONS: readonly NavigationDestination[] = [
   { id: 'settings', path: null, labelKey: 'nav.settings', fallback: 'Settings', icon: Settings, group: 'space', action: 'settings', aliases: { fr: ['paramètres', 'preferences', 'préférences'] } },
 
   { id: 'blog', path: '/blog', labelKey: 'nav.blog', fallback: 'Blog', icon: Newspaper, group: 'resources' },
-  { id: 'guides', path: '/guides/pokemon-card-collection-tracker', labelKey: 'nav.guides', fallback: 'Guides', icon: BookOpen, group: 'resources', aliases: { fr: ['guide collection de cartes', 'guide du pokédex'] } },
+  { id: 'guides', path: '/guides/pokemon-card-collection-tracker', labelKey: 'nav.guide_collection', fallback: 'Collection guide', icon: BookOpen, group: 'resources', aliases: { fr: ['guide de collection', 'guide collection de cartes'] } },
   { id: 'pokemon-reference-guide', path: '/guides/pokemon-reference-guide', labelKey: 'nav.guide_pokedex', fallback: 'Pokédex reference guide', icon: BookOpen, group: 'resources', paletteOnly: true, aliases: { en: ['pokedex guide', 'pokemon reference'], fr: ['guide du pokédex', 'références pokémon'], es: ['guía de la pokédex'], de: ['pokédex guide'], it: ['guida pokédex'], ja: ['ポケモン図鑑ガイド'], ko: ['도감 가이드'], zh: ['图鉴指南'] } },
   { id: 'team-builder-guide', path: '/guides/team-builder-guide', labelKey: 'nav.guide_team', fallback: 'Team building guide', icon: BookOpen, group: 'resources', paletteOnly: true, aliases: { en: ['team guide', 'team builder guide'], fr: ['guide équipe', 'guide de composition'], es: ['guía de equipo'], de: ['team guide'], it: ['guida squadra'], ja: ['チーム構築ガイド'], ko: ['팀 구성 가이드'], zh: ['队伍构筑指南'] } },
   { id: 'quiz-guide', path: '/guides/quiz-guide', labelKey: 'nav.guide_quiz', fallback: 'Quiz guide', icon: BookOpen, group: 'resources', paletteOnly: true, aliases: { en: ['quiz guide'], fr: ['guide du quiz'], es: ['guía del quiz'], de: ['quiz guide'], it: ['guida quiz'], ja: ['クイズガイド'], ko: ['퀴즈 가이드'], zh: ['问答指南'] } },
@@ -112,6 +112,15 @@ export function normalizeNavigationPath(pathname: string): string {
   return segments.length > 0 ? `/${segments.join('/')}` : '/';
 }
 
+export function getNavigationAriaCurrent(
+  isActive: boolean,
+  currentPath: string,
+  destinationPath: string,
+): 'page' | 'location' | undefined {
+  if (!isActive) return undefined;
+  return normalizeNavigationPath(currentPath) === normalizeNavigationPath(destinationPath) ? 'page' : 'location';
+}
+
 export function resolveNavigationDestination(pathname: string): NavigationDestination | null {
   const path = normalizeNavigationPath(pathname);
   const candidates = NAVIGATION_DESTINATIONS
@@ -131,7 +140,7 @@ export function resolveActivePrimaryNavigation(pathname: string): PrimaryNavigat
   if (!destination) return null;
   if (destination.primary) return destination.primary;
   if (destination.group === 'collection' || destination.group === 'catalog'
-    || destination.group === 'pokedex' || destination.group === 'play') {
+    || destination.group === 'pokedex') {
     return destination.group;
   }
   return null;

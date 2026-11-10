@@ -4,9 +4,9 @@ import { act, createElement } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-const mocks = vi.hoisted(() => ({ events: [] as string[] }));
+const mocks = vi.hoisted(() => ({ events: [] as string[], pathname: '/fr/team' }));
 
-vi.mock('next/navigation', () => ({ usePathname: () => '/fr/team' }));
+vi.mock('next/navigation', () => ({ usePathname: () => mocks.pathname }));
 vi.mock('next/link', async () => {
   const { createElement } = await import('react');
   return {
@@ -74,5 +74,26 @@ describe('SecondaryNavigationLinks', () => {
     act(() => quizLink?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true })));
 
     expect(mocks.events).toEqual(['navigation-accepted:/fr/quiz', 'close-menu']);
+  });
+
+  it('marks nested destinations as the current location rather than the current page', async () => {
+    mocks.pathname = '/fr/items/antidote';
+    await act(async () => root.render(createElement(SecondaryNavigationLinks)));
+    expect(container.querySelector('a[href="/fr/items"]')?.getAttribute('aria-current')).toBe('location');
+
+    mocks.pathname = '/fr/pokemon/pikachu';
+    await act(async () => root.render(createElement(SecondaryNavigationLinks)));
+    expect(container.querySelector('a[href="/fr/pokedex"]')?.getAttribute('aria-current')).toBe('location');
+
+    mocks.pathname = '/fr/tcg/sealed/releases';
+    await act(async () => root.render(createElement(SecondaryNavigationLinks)));
+    expect(container.querySelector('a[href="/fr/tcg/sealed/market"]')?.getAttribute('aria-current')).toBe('location');
+  });
+
+  it('marks an active primary group heading as a location, including on its root page', async () => {
+    mocks.pathname = '/fr/pokedex';
+    await act(async () => root.render(createElement(SecondaryNavigationLinks)));
+
+    expect(container.querySelector('a[href="/fr/pokedex"]')?.getAttribute('aria-current')).toBe('location');
   });
 });

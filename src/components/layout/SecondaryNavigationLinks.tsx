@@ -10,6 +10,7 @@ import {
   NAVIGATION_DESTINATIONS,
   NAVIGATION_GROUPS,
   PRIMARY_NAVIGATION,
+  getNavigationAriaCurrent,
   resolveNavigationDestination,
   type NavigationGroup,
 } from '@/lib/navigation-registry';
@@ -66,6 +67,7 @@ export function SecondaryNavigationLinks({ onNavigate }: SecondaryNavigationLink
                   prefetch={false}
                   onNavigate={onNavigate}
                   data-active={activeDestination?.primary === rootDestination.primary ? 'true' : undefined}
+                  aria-current={activeDestination?.primary === rootDestination.primary ? 'location' : undefined}
                   className="secondary-navigation-heading-link"
                 >
                   {label(rootDestination.labelKey, rootDestination.fallback)}
@@ -103,6 +105,7 @@ export function SecondaryNavigationLinks({ onNavigate }: SecondaryNavigationLink
                     prefetch={false}
                     onNavigate={onNavigate}
                     data-active={isActive ? 'true' : undefined}
+                    aria-current={getNavigationAriaCurrent(isActive, pathname, item.path)}
                     className="secondary-navigation-link"
                   >
                     <Icon aria-hidden="true" className="h-4 w-4 shrink-0" />

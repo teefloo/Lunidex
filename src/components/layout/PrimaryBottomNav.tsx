@@ -20,6 +20,7 @@ export function PrimaryBottomNav() {
         const Icon = item.icon;
         const label = t(item.labelKey, { defaultValue: item.fallback });
         const isActive = item.primary === activePrimary;
+        const isExactPage = pathname.replace(/^\/(en|fr|es|de|it|ja|ko|zh)(?=\/|$)/, '') === item.path;
 
         return (
           <Link
@@ -27,6 +28,7 @@ export function PrimaryBottomNav() {
             href={localeHref(item.path)}
             prefetch={false}
             data-active={isActive ? 'true' : undefined}
+            aria-current={isExactPage ? 'page' : isActive ? 'location' : undefined}
             className="primary-bottom-nav-link"
           >
             <Icon aria-hidden="true" className="h-5 w-5 shrink-0" />
