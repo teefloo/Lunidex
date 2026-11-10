@@ -25,6 +25,13 @@ export default function robots(): MetadataRoute.Robots {
     ],
   };
 
+  const claudeSearchBot = {
+    userAgent: 'Claude-SearchBot',
+    allow: ['/', '/api/og/'],
+    disallow: ['/api/'],
+    crawlDelay: 5,
+  };
+
   const explicitAiBots = [
     'GPTBot',
     'ChatGPT-User',
@@ -33,7 +40,6 @@ export default function robots(): MetadataRoute.Robots {
     'Perplexity-User',
     'Claude-User',
     'anthropic-ai',
-    'Claude-SearchBot',
     'Google-Extended',
     'Applebot-Extended',
     'Amazonbot',
@@ -73,7 +79,7 @@ export default function robots(): MetadataRoute.Robots {
   }));
 
   return {
-    rules: [allowAll, claudeBot, ...explicitAiBots],
+    rules: [allowAll, claudeBot, claudeSearchBot, ...explicitAiBots],
     sitemap: `${baseUrl}/sitemap.xml`,
     host: baseUrl,
   };

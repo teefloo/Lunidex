@@ -23,5 +23,10 @@ describe('crawler access policy', () => {
         disallow: ['/api/'],
       });
     }
+
+    expect(rules.find((rule) => rule.userAgent === 'Claude-SearchBot')).toMatchObject({
+      crawlDelay: 5,
+    });
+    expect(rules.filter((rule) => rule.crawlDelay).map((rule) => rule.userAgent)).toEqual(['Claude-SearchBot']);
   });
 });
