@@ -197,7 +197,7 @@ export function TCGCollectionVariantSheet({
         id={`tcg-collection-variants-${card.id}`}
         side="right"
         overlayClassName="z-[400]"
-        className="z-[401] w-[92vw] max-w-[480px] p-0"
+        className="z-[401] data-[side=right]:w-[92vw] max-w-[480px] p-0"
       >
         <SheetHeader className="border-b border-border/40 px-5 py-4 pr-16">
           <SheetTitle className="flex min-w-0 flex-col gap-1 text-base font-black uppercase tracking-[0.08em]">

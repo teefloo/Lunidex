@@ -55,6 +55,7 @@ export function publicMarketHref(filters: PublicMarketFilters): string {
 /** Cardmarket's public sealed catalogue snapshot (2026-09-29), cross-checked against the FR release register. */
 const CURATED_EXPANSIONS: Record<number, { en: string; fr: string }> = {
   5335: { en: 'Black Bolt + White Flare', fr: 'Foudre Noire + Flamme Blanche' },
+  5402: { en: 'Scarlet & Violet—151', fr: 'Écarlate et Violet – 151' },
   5546: { en: 'Paldean Fates', fr: 'Destinées de Paldea' },
   5589: { en: 'Temporal Forces', fr: 'Forces Temporelles' },
   5691: { en: 'Twilight Masquerade', fr: 'Mascarade Crépusculaire' },

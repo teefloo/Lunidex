@@ -592,7 +592,7 @@ export function TCGResearchDesk({
       </div>
 
       <Sheet open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
-        <SheetContent side="right" className="w-[92vw] max-w-[480px] p-0">
+        <SheetContent side="right" className="data-[side=right]:w-[92vw] max-w-[480px] p-0">
           <SheetHeader className="border-b border-border/50 px-5 py-4">
             <SheetTitle className="flex items-center gap-2 text-base font-black uppercase tracking-[0.2em]">
               <Filter className="h-4 w-4 text-primary" />
@@ -900,7 +900,7 @@ function ViewModeSelector({
               )}
             >
               <Icon className="h-4 w-4" aria-hidden="true" />
-              <span className="truncate max-w-full">{label}</span>
+              <span className="max-w-full whitespace-normal break-words">{label}</span>
             </button>
           );
         })}

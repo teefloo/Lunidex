@@ -1564,6 +1564,30 @@ h1 { letter-spacing: 0; }
     background: color-mix(in oklab, var(--primary) 70%, var(--foreground));
   }
 
+  .tcg-local-navigation:not(.tcg-local-navigation--collection) .tcg-local-navigation-main {
+    flex-wrap: wrap;
+  }
+
+  .tcg-local-navigation:not(.tcg-local-navigation--collection) .tcg-local-navigation-links {
+    flex: 1 1 100%;
+    flex-wrap: wrap;
+    overflow: visible;
+    padding-bottom: 0;
+    scrollbar-width: none;
+  }
+
+  .tcg-local-navigation:not(.tcg-local-navigation--collection) .tcg-local-navigation-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tcg-local-navigation:not(.tcg-local-navigation--collection) .tcg-local-navigation-main > .tcg-local-navigation-link {
+    min-width: 0;
+    flex: 1 1 auto;
+    justify-content: flex-start;
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+
   .tcg-local-navigation {
     align-items: flex-start;
     flex-direction: column;

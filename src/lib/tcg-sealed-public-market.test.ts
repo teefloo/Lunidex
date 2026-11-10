@@ -23,6 +23,9 @@ describe('public sealed market filters', () => {
   });
 
   it('uses reviewed Cardmarket expansion labels in French and English and preserves unknown source IDs', () => {
+    expect(publicExpansionName(5402, 'en')).toBe('Scarlet & Violet—151');
+    expect(publicExpansionName(5402, 'fr')).toBe('Écarlate et Violet – 151');
+    expect(hasPublicExpansionName(5402)).toBe(true);
     expect(publicExpansionName(5546, 'fr')).toBe('Destinées de Paldea');
     expect(publicExpansionName(5546, 'en')).toBe('Paldean Fates');
     expect(publicExpansionName(5691, 'fr')).toBe('Mascarade Crépusculaire');
