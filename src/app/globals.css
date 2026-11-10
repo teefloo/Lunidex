@@ -1414,8 +1414,8 @@ h1 { letter-spacing: 0; }
 
 @media (max-width: 63.999rem) {
   body:has(.primary-bottom-nav) {
-    --app-bottom-nav-height: calc(4rem + env(safe-area-inset-bottom, 0px));
-    padding-bottom: calc(4.15rem + env(safe-area-inset-bottom, 0px));
+    --app-bottom-nav-height: calc(3.1rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(var(--app-bottom-nav-height) + 0.15rem);
   }
 
   .cookie-consent-banner {
@@ -1451,11 +1451,11 @@ h1 { letter-spacing: 0; }
     bottom: 0;
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    min-height: calc(4rem + env(safe-area-inset-bottom, 0px));
+    min-height: calc(3.1rem + env(safe-area-inset-bottom, 0px));
     gap: 0.25rem;
     border-top: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent);
     background: color-mix(in oklab, var(--background) 91%, transparent);
-    padding: 0.3rem max(0.45rem, env(safe-area-inset-left, 0px)) calc(0.3rem + env(safe-area-inset-bottom, 0px));
+    padding: 0.2rem max(0.45rem, env(safe-area-inset-right, 0px)) env(safe-area-inset-bottom, 0px) max(0.45rem, env(safe-area-inset-left, 0px));
     -webkit-backdrop-filter: blur(18px);
     backdrop-filter: blur(18px);
   }
@@ -7107,7 +7107,7 @@ html.dark .lunidex-home::before {
   .home-landing-hero {
     display: block;
     min-height: 0;
-    padding-top: clamp(7.2rem, 20vw, 8.5rem);
+    padding-top: calc(5rem + env(safe-area-inset-top, 0px));
     padding-bottom: 3rem;
   }
 
@@ -9024,7 +9024,7 @@ body:has(.header-mobile-sheet) .site-header-bar > .site-header-brand {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 1.8rem;
-    padding-top: clamp(6.5rem, 21vw, 8rem);
+    padding-top: calc(5rem + env(safe-area-inset-top, 0px));
     padding-bottom: 3rem;
   }
 
