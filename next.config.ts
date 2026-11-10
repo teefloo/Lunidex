@@ -184,7 +184,7 @@ const csp = [
   "img-src 'self' https://raw.githubusercontent.com https://pokeapi.co https://images.scrydex.com https://www.cardtrader.com https://images.pokemontcg.io https://assets.tcgdex.net https://images.tcgdex.net https://tcgplayer-cdn.tcgplayer.com https://tcg.pokemon.com https://mcdn.pokemon.com https://dz3we2x72f7ol.cloudfront.net https://*.googleusercontent.com https://avatars.githubusercontent.com data: blob: https://api.tcgdex.net",
   "font-src 'self' data:",
   "media-src 'self' https://raw.githubusercontent.com",
-  `connect-src 'self'${devConnectSrc} https://va.vercel-scripts.com https://vitals.vercel-insights.com https://*.ingest.sentry.io https://*.ingest.de.sentry.io https://*.posthog.com https://pokeapi.co https://beta.pokeapi.co https://api.tcgdex.net https://raw.githubusercontent.com`,
+  `connect-src 'self'${devConnectSrc} https://va.vercel-scripts.com https://vitals.vercel-insights.com https://*.ingest.sentry.io https://*.ingest.de.sentry.io https://*.posthog.com https://pokeapi.co https://graphql.pokeapi.co https://api.tcgdex.net https://raw.githubusercontent.com`,
   "worker-src 'self' blob: data:",
   "frame-ancestors 'none'",
 ].join('; ');

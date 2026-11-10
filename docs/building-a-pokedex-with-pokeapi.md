@@ -10,10 +10,13 @@ Lunidex keeps both PokéAPI interfaces available:
 
 ```ts
 export const REST_API_BASE = 'https://pokeapi.co/api/v2';
-export const GRAPHQL_API_BASE = 'https://beta.pokeapi.co/graphql/v1beta';
+export const GRAPHQL_API_BASE = 'https://graphql.pokeapi.co';
+export const GRAPHQL_API_PATH = '/v1beta2';
 ```
 
 REST is convenient for canonical resource endpoints and individual entities. GraphQL is useful when a screen needs a more targeted shape or when reducing several related lookups matters.
+
+PokéAPI removed its previous `v1beta` endpoint in November 2026. Use `v1beta2`; its schema drops the `pokemon_v2_` prefix from field names. Lunidex translates those query names at the API boundary and aliases selected fields to keep the app's existing data shapes.
 
 Do not force every feature through one interface simply for architectural purity.
 
@@ -30,9 +33,11 @@ const apiClient = axios.create({
 });
 
 const graphqlClient = axios.create({
-  baseURL: 'https://beta.pokeapi.co',
+  baseURL: GRAPHQL_API_BASE,
   timeout: 60_000,
 });
+
+const { data } = await graphqlClient.post(GRAPHQL_API_PATH, { query, variables });
 ```
 
 The GraphQL timeout is intentionally more permissive because query complexity can be higher.

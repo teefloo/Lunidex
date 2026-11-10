@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios, { type AxiosRequestConfig } from 'axios';
 import apiClient, { graphqlClient } from './client';
-import { getCachedData, setCachedData } from './cache';
+import { getCachedData as readCachedData, setCachedData as writeCachedData } from './cache';
 import { PokemonBasicData, GraphQLPokemonSummary, GraphQLPokemonSearchIndex, GraphQLPokemonMoveData, LocalizedPokemonData, GraphQLMoveData, GraphQLMovePokemonData, GraphQLAbilityData, GraphQLAbilityPokemonData, GraphQLItemData } from '@/types/pokemon';
 import { getPokemonApiLanguageCode, languageToPokemonLanguageId, supportedLanguages } from '@/lib/languages';
 import { reportFallback } from '@/lib/sentry-observability';
@@ -8,6 +8,115 @@ import { reportFallback } from '@/lib/sentry-observability';
 const BATCH_SIZE = 200;
 const SEARCH_BATCH_SIZE = 250;
 const MOVE_BATCH_SIZE = 250;
+const GRAPHQL_API_PATH = '/v1beta2';
+const GRAPHQL_CACHE_NAMESPACE = 'graphql-v1beta2';
+
+function getGraphQLCacheKey(key: string): string {
+  return `${GRAPHQL_CACHE_NAMESPACE}:${key}`;
+}
+
+function getCachedData<T>(key: string, allowExpired = false): Promise<T | null> {
+  return readCachedData<T>(getGraphQLCacheKey(key), allowExpired);
+}
+
+function setCachedData<T>(key: string, data: T): Promise<void> {
+  return writeCachedData(getGraphQLCacheKey(key), data);
+}
+
+/**
+ * PokéAPI's v1beta2 schema removes the `pokemon_v2_` prefix. Translate legacy
+ * query documents at this boundary and alias selected fields back to their
+ * v1beta names so existing consumers keep their established data shapes.
+ */
+function toV1Beta2Query(query: string): string {
+  const prefix = 'pokemon_v2_';
+  let result = '';
+  let index = 0;
+
+  while (index < query.length) {
+    if (query[index] === '#') {
+      const newline = query.indexOf('\n', index);
+      const end = newline === -1 ? query.length : newline;
+      result += query.slice(index, end);
+      index = end;
+      continue;
+    }
+
+    if (query[index] === '"') {
+      const isBlockString = query.startsWith('"""', index);
+      const delimiter = isBlockString ? '"""' : '"';
+      let end = index + delimiter.length;
+
+      while (end < query.length) {
+        if (!isBlockString && query[end] === '\\') {
+          end += 2;
+          continue;
+        }
+        if (isBlockString && query.startsWith('\\"""', end)) {
+          end += 4;
+          continue;
+        }
+        if (query.startsWith(delimiter, end)) {
+          end += delimiter.length;
+          break;
+        }
+        end += 1;
+      }
+
+      result += query.slice(index, end);
+      index = end;
+      continue;
+    }
+
+    const isNameStart = /[A-Za-z_]/.test(query[index]);
+    if (!isNameStart) {
+      result += query[index];
+      index += 1;
+      continue;
+    }
+
+    const nameStart = index;
+    index += 1;
+    while (index < query.length && /[A-Za-z0-9_]/.test(query[index])) index += 1;
+    const name = query.slice(nameStart, index);
+
+    if (!name.startsWith(prefix)) {
+      result += name;
+      continue;
+    }
+
+    let nextToken = index;
+    while (nextToken < query.length) {
+      if (/[\s,]/.test(query[nextToken])) {
+        nextToken += 1;
+        continue;
+      }
+      if (query[nextToken] === '#') {
+        const newline = query.indexOf('\n', nextToken);
+        nextToken = newline === -1 ? query.length : newline + 1;
+        continue;
+      }
+      break;
+    }
+
+    const unprefixedName = name.slice(prefix.length);
+    result += query[nextToken] === ':' ? unprefixedName : `${name}: ${unprefixedName}`;
+  }
+
+  return result;
+}
+
+function postPokemonGraphQL<TData>(
+  query: string,
+  variables?: Record<string, unknown>,
+  config?: AxiosRequestConfig,
+) {
+  return graphqlClient.post<{ data?: TData }>(
+    GRAPHQL_API_PATH,
+    { query: toV1Beta2Query(query), variables },
+    config,
+  );
+}
 
 const getBatchCacheKey = (base: string, batchIndex: number) => `${base}-batch-${batchIndex}`;
 
@@ -26,13 +135,11 @@ const fetchBatch = async <T>(
   const cached = await getCachedData<T[]>(cacheKey);
   if (cached) return cached;
 
-  const { data } = signal
-    ? await graphqlClient.post<{ data?: { pokemon_v2_pokemon?: T[] } }>(
-      '/graphql/v1beta',
-      { query, variables },
-      { signal },
-    )
-    : await graphqlClient.post<{ data?: { pokemon_v2_pokemon?: T[] } }>('/graphql/v1beta', { query, variables });
+  const { data } = await postPokemonGraphQL<{ pokemon_v2_pokemon?: T[] }>(
+    query,
+    variables,
+    signal ? { signal } : undefined,
+  );
 
   if (signal?.aborted) throw signal.reason ?? new Error('GraphQL batch request aborted');
   
@@ -74,16 +181,13 @@ export const getPokemonSummarySlice = async (
   const cached = await getCachedData<GraphQLPokemonSummary[]>(cacheKey);
   if (cached) return cached;
 
-  const { data } = await graphqlClient.post<{ data?: { pokemon_v2_pokemon?: GraphQLPokemonSummary[] } }>('/graphql/v1beta', {
-    query: `
+  const { data } = await postPokemonGraphQL<{ pokemon_v2_pokemon?: GraphQLPokemonSummary[] }>(`
       query GetPokemonSummarySlice($limit: Int!, $offset: Int!) {
         pokemon_v2_pokemon(limit: $limit, offset: $offset, order_by: {id: asc}) {
           ${buildPokemonSummarySelection()}
         }
       }
-    `,
-    variables: { limit, offset },
-  });
+    `, { limit, offset });
 
   if (!data?.data?.pokemon_v2_pokemon) {
     throwInvalidGraphQLResponse('pokemon-summary-slice');
@@ -218,7 +322,7 @@ const fetchMoveBatches = async <T>(
     }
 
     const { query, variables } = buildQuery(offset, requestLimit);
-    const { data } = await graphqlClient.post<{ data?: { pokemon_v2_move?: T[] } }>('/graphql/v1beta', { query, variables });
+    const { data } = await postPokemonGraphQL<{ pokemon_v2_move?: T[] }>(query, variables);
 
     if (!data?.data?.pokemon_v2_move) {
       throwInvalidGraphQLResponse('move-batches');
@@ -322,8 +426,7 @@ export const getPokemonDetailedByType = async (type: string): Promise<PokemonBas
   const cached = await getCachedData<PokemonBasicData[]>(cacheKey);
   if (cached) return cached;
 
-  const { data } = await graphqlClient.post<{ data?: { pokemon_v2_pokemon?: PokemonBasicData[] } }>('/graphql/v1beta', {
-    query: `
+  const { data } = await postPokemonGraphQL<{ pokemon_v2_pokemon?: PokemonBasicData[] }>(`
       query GetPokemonDetailedByType($type: String!) {
         pokemon_v2_pokemon(
           where: {pokemon_v2_pokemontypes: {pokemon_v2_type: {name: {_eq: $type}}}}
@@ -332,9 +435,7 @@ export const getPokemonDetailedByType = async (type: string): Promise<PokemonBas
           ${buildPokemonDetailedSelection()}
         }
       }
-    `,
-    variables: { type },
-  });
+    `, { type });
 
   if (!data?.data?.pokemon_v2_pokemon) {
     throwInvalidGraphQLResponse('pokemon-detailed-by-type');
@@ -410,10 +511,10 @@ export const getLocalizedPokemonData = async (name: string, languageId: number):
       }
     `;
 
-    const { data } = await graphqlClient.post<{ data?: { pokemon_v2_pokemonspecies?: LocalizedPokemonData[] } }>('/graphql/v1beta', { 
-      query, 
-      variables: { name, languageId } 
-    });
+    const { data } = await postPokemonGraphQL<{ pokemon_v2_pokemonspecies?: LocalizedPokemonData[] }>(
+      query,
+      { name, languageId },
+    );
     
     if (!data?.data?.pokemon_v2_pokemonspecies?.[0]) {
       throwInvalidGraphQLResponse('localized-pokemon');
@@ -458,10 +559,9 @@ export const getPokemonMovesLocalized = async (name: string, languageId: number)
       }
     `;
 
-    const { data } = await graphqlClient.post<{ data: { pokemon_v2_pokemon: Array<{ pokemon_v2_pokemonmoves: GraphQLPokemonMoveData[] }> } }>('/graphql/v1beta', { 
-      query, 
-      variables: { name, languageId } 
-    });
+    const { data } = await postPokemonGraphQL<{
+      pokemon_v2_pokemon: Array<{ pokemon_v2_pokemonmoves: GraphQLPokemonMoveData[] }>;
+    }>(query, { name, languageId });
     
     const pokemon = data?.data?.pokemon_v2_pokemon;
     if (!pokemon) {
@@ -572,10 +672,10 @@ export const getMovePokemonLearners = async (moveName: string, languageId: numbe
       }
     `;
 
-    const { data } = await graphqlClient.post<{ data?: { pokemon_v2_pokemonmove?: GraphQLMovePokemonData[] } }>('/graphql/v1beta', {
+    const { data } = await postPokemonGraphQL<{ pokemon_v2_pokemonmove?: GraphQLMovePokemonData[] }>(
       query,
-      variables: { moveName, languageId },
-    });
+      { moveName, languageId },
+    );
 
     if (!data?.data?.pokemon_v2_pokemonmove) {
       throwInvalidGraphQLResponse('move-pokemon-learners');
@@ -626,10 +726,10 @@ export const getAllAbilities = async (languageId: number, maxResults = 1000): Pr
       }
     `;
 
-    const { data } = await graphqlClient.post<{ data?: { pokemon_v2_ability?: GraphQLAbilityData[] } }>('/graphql/v1beta', {
+    const { data } = await postPokemonGraphQL<{ pokemon_v2_ability?: GraphQLAbilityData[] }>(
       query,
-      variables: { languageId, limit: resultLimit },
-    });
+      { languageId, limit: resultLimit },
+    );
 
     if (!data?.data?.pokemon_v2_ability) {
       throwInvalidGraphQLResponse('abilities');
@@ -677,10 +777,10 @@ export const getAbilityPokemon = async (abilityName: string, languageId: number)
       }
     `;
 
-    const { data } = await graphqlClient.post<{ data?: { pokemon_v2_pokemonability?: GraphQLAbilityPokemonData[] } }>('/graphql/v1beta', {
+    const { data } = await postPokemonGraphQL<{ pokemon_v2_pokemonability?: GraphQLAbilityPokemonData[] }>(
       query,
-      variables: { abilityName, languageId },
-    });
+      { abilityName, languageId },
+    );
 
     if (!data?.data?.pokemon_v2_pokemonability) {
       throwInvalidGraphQLResponse('ability-pokemon');
@@ -785,10 +885,10 @@ export const getAllItems = async (languageId: number, maxResults = 2000): Promis
       }
     `;
 
-    const { data } = await graphqlClient.post<{ data?: { pokemon_v2_item?: GraphQLItemData[] } }>('/graphql/v1beta', {
+    const { data } = await postPokemonGraphQL<{ pokemon_v2_item?: GraphQLItemData[] }>(
       query,
-      variables: { languageId, limit: resultLimit, excludedCategories: EXCLUDED_ITEM_CATEGORIES },
-    });
+      { languageId, limit: resultLimit, excludedCategories: EXCLUDED_ITEM_CATEGORIES },
+    );
 
     if (!data?.data?.pokemon_v2_item) {
       throwInvalidGraphQLResponse('items');
@@ -833,9 +933,9 @@ export const getItemDetail = async (name: string, languageId: number): Promise<G
       }
     `;
 
-    const { data } = await graphqlClient.post<{ data?: { pokemon_v2_item?: GraphQLItemData[] } }>('/graphql/v1beta', {
-      query,
-      variables: { name, languageId },
+    const { data } = await postPokemonGraphQL<{ pokemon_v2_item?: GraphQLItemData[] }>(query, {
+      name,
+      languageId,
     }, {
       timeout: 10000,
       'axios-retry': { retries: 0 },

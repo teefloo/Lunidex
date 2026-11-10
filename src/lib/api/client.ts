@@ -3,7 +3,7 @@ import axiosRetry from 'axios-retry';
 import { attachAxiosSentryInstrumentation } from '@/lib/sentry-observability';
 
 export const REST_API_BASE = 'https://pokeapi.co/api/v2';
-export const GRAPHQL_API_BASE = 'https://beta.pokeapi.co/graphql/v1beta';
+export const GRAPHQL_API_BASE = 'https://graphql.pokeapi.co';
 
 const apiClient = axios.create({
   baseURL: REST_API_BASE,
@@ -11,7 +11,7 @@ const apiClient = axios.create({
 });
 
 const graphqlClient = axios.create({
-  baseURL: 'https://beta.pokeapi.co',
+  baseURL: GRAPHQL_API_BASE,
   timeout: 60000,
 });
 

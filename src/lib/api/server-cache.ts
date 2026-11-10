@@ -71,7 +71,7 @@ const getTypeRelationsPersistent = unstable_cache(
 
 const getLocalizedPokemonDataPersistent = unstable_cache(
   (name: string, languageId: number) => getLocalizedPokemonData(name, languageId),
-  ['lunidex:pokemon-localized:v1'],
+  ['lunidex:pokemon-localized:v2'],
   { revalidate: 86400 },
 );
 
@@ -83,7 +83,7 @@ const getPokemonListPersistent = unstable_cache(
 
 const getPokemonSummarySlicePersistent = unstable_cache(
   (limit: number, offset: number) => getPokemonSummarySlice(limit, offset),
-  ['lunidex:pokemon-summary-slice:v1'],
+  ['lunidex:pokemon-summary-slice:v2'],
   { revalidate: 3600 },
 );
 
@@ -113,19 +113,19 @@ const getAllItemNamesPersistent = unstable_cache(
 
 const getInitialMovesPersistent = unstable_cache(
   (languageId: number) => getAllMoves(languageId, INITIAL_CATALOG_LIMIT),
-  ['lunidex:catalog-moves-preview:v1'],
+  ['lunidex:catalog-moves-preview:v2'],
   { revalidate: 3600 },
 );
 
 const getInitialAbilitiesPersistent = unstable_cache(
   (languageId: number) => getAllAbilities(languageId, INITIAL_CATALOG_LIMIT),
-  ['lunidex:catalog-abilities-preview:v1'],
+  ['lunidex:catalog-abilities-preview:v2'],
   { revalidate: 3600 },
 );
 
 const getInitialItemsPersistent = unstable_cache(
   (languageId: number) => getAllItems(languageId, INITIAL_CATALOG_LIMIT),
-  ['lunidex:catalog-items-preview:v1'],
+  ['lunidex:catalog-items-preview:v2'],
   { revalidate: 3600 },
 );
 
@@ -234,7 +234,7 @@ const getLimitedCollectionSetCatalogPersistent = unstable_cache(
 // calls (axios traffic is invisible to Next's fetch dedupe).
 const getItemDetailPersistent = unstable_cache(
   (name: string, languageId: number) => getItemDetail(name, languageId),
-  ['lunidex:item-detail:v1'],
+  ['lunidex:item-detail:v2'],
   { revalidate: 86400 },
 );
 
@@ -246,7 +246,7 @@ const getAbilityDetailPersistent = unstable_cache(
 
 const getAbilityPokemonPersistent = unstable_cache(
   (name: string, languageId: number) => getAbilityPokemon(name, languageId),
-  ['lunidex:ability-pokemon:v1'],
+  ['lunidex:ability-pokemon:v2'],
   { revalidate: 86400 },
 );
 

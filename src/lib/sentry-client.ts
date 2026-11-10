@@ -70,7 +70,7 @@ export function initializeSentryClient(): void {
         failedRequestTargets: [
           /\/api\//,
           /^https:\/\/pokeapi\.co\//,
-          /^https:\/\/beta\.pokeapi\.co\//,
+          /^https:\/\/graphql\.pokeapi\.co\//,
           /^https:\/\/api\.tcgdex\.net\//,
         ],
       }),

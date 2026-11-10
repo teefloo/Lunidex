@@ -67,7 +67,7 @@ describe('getItemDetail', () => {
     });
 
     expect(mocks.graphqlPost).toHaveBeenCalledWith(
-      '/graphql/v1beta',
+      '/v1beta2',
       expect.objectContaining({ variables: { name: 'master-ball', languageId: 5 } }),
       expect.objectContaining({ timeout: 10000, 'axios-retry': { retries: 0 } }),
     );
