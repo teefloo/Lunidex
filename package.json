@@ -24,7 +24,15 @@
     "db:neon:import": "bash scripts/neon/import-to-neon.sh",
     "db:neon:verify": "bash scripts/neon/verify-migration.sh",
     "test:e2e": "playwright test",
-    "test:e2e:tcg-custom": "E2E_CUSTOM_COLLECTIONS=1 playwright test e2e/tcg-custom-collections.spec.ts"
+    "test:e2e:tcg-custom": "E2E_CUSTOM_COLLECTIONS=1 playwright test e2e/tcg-custom-collections.spec.ts",
+    "test:mobile:setup": "node scripts/mobile/setup.mjs",
+    "test:mobile:preflight": "node scripts/mobile/preflight.mjs",
+    "test:mobile:helpers": "node --test scripts/mobile/constants.test.mjs",
+    "test:mobile:install-webkit": "node scripts/mobile/install-webkit.mjs",
+    "test:mobile:webkit": "node scripts/mobile/run-playwright.mjs",
+    "test:mobile:pwa": "node scripts/mobile/run-playwright.mjs --pwa",
+    "test:mobile:ios": "node scripts/mobile/run-ios-safari.mjs",
+    "test:mobile": "node scripts/mobile/run-all.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.2.0",
@@ -61,7 +69,7 @@
     "zustand": "^5.0.11"
   },
   "devDependencies": {
-    "@playwright/test": "1.63.0",
+    "@playwright/test": "1.65.0",
     "@tailwindcss/postcss": "^4",
     "@testing-library/dom": "^10.4.1",
     "@types/node": "^20",
@@ -69,6 +77,7 @@
     "@types/react-dom": "^19",
     "@types/web-push": "^3.6.4",
     "agentation": "^3.0.2",
+    "appium": "3.9.0",
     "eslint": "^9",
     "eslint-config-next": "^16.4.5",
     "jsdom": "^28.1.0",

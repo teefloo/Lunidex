@@ -3,6 +3,7 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import withPWAInit from "@ducanh2912/next-pwa";
 import { withSentryConfig } from "@sentry/nextjs/config";
+import { NEXT_MODAL_ROUTE_CHUNK_EXCLUDE_PATTERN } from "./scripts/pwa/workbox-config";
 
 const projectRoot = dirname(fileURLToPath(import.meta.url));
 
@@ -18,6 +19,15 @@ const withPWA = withPWAInit({
   },
   workboxOptions: {
     skipWaiting: true,
+    // Next's static server serves parallel-route modal chunks only with literal
+    // bracket paths, while next-pwa re-encodes them in the precache manifest.
+    // These modal chunks stay available to the runtime JS cache when fetched.
+    exclude: [
+      /\/_next\/static\/.*(?<!\.p)\.woff2/,
+      /\.map$/,
+      /^manifest.*\.js$/,
+      NEXT_MODAL_ROUTE_CHUNK_EXCLUDE_PATTERN,
+    ],
     importScripts: ["/push-worker.js"],
     runtimeCaching: [
       {

@@ -79,12 +79,14 @@ function CatalogCardImage({ card, onLoad, onError }: CatalogCardImageProps) {
     />
   );
 
-  return responsiveSrcSet ? (
-    <picture>
-      <source srcSet={responsiveSrcSet} sizes={CATALOG_IMAGE_SIZES} type="image/webp" />
+  return (
+    <picture className="absolute inset-0">
+      {responsiveSrcSet ? (
+        <source srcSet={responsiveSrcSet} sizes={CATALOG_IMAGE_SIZES} type="image/webp" />
+      ) : null}
       {image}
     </picture>
-  ) : image;
+  );
 }
 
 function getCardSlots(cards: readonly HomeCatalogPreviewCard[]): (HomeCatalogPreviewCard | null)[] {
