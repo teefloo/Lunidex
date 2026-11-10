@@ -298,6 +298,14 @@ h1 { letter-spacing: 0; }
   padding-block-start: calc(var(--app-site-header-height, 4.5rem) + env(safe-area-inset-top, 0px) + 1.5rem);
 }
 
+.page-shell--hero-header-offset {
+  padding-block-start: calc(var(--app-site-header-height, 4.5rem) + env(safe-area-inset-top, 0px) + 2.5rem);
+}
+
+.page-shell--page-header-safe-area {
+  padding-block-start: calc(2rem + env(safe-area-inset-top, 0px));
+}
+
 @media (min-width: 640px) {
   .page-shell {
     padding-left: 1.5rem;

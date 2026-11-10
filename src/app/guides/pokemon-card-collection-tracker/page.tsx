@@ -162,7 +162,7 @@ export default async function PokemonCardCollectionTrackerGuide() {
       />
       <div className="app-page">
         <Header />
-        <main className="page-shell pt-28 pb-24 relative">
+        <main className="page-shell page-shell--hero-header-offset pb-24 relative">
           <article className="mx-auto w-full max-w-5xl px-5 md:px-8">
             <header className="mx-auto max-w-4xl text-center">
               <p className="page-eyebrow justify-center">{t('collection_guide.eyebrow')}</p>

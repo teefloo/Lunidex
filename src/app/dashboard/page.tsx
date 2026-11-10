@@ -27,7 +27,7 @@ export default function DashboardPage() {
   const toggleSettings = usePrimeDexStore((state) => state.toggleSettings);
   const { enabled } = useAuth();
   const [accountExpanded, setAccountExpanded] = useState(false);
-  const { data, isLoading, isError } = useDashboardData();
+  const { data, isLoading, isFetching, isError, refetch } = useDashboardData();
 
   useEffect(() => {
     incrementVisit();
@@ -57,7 +57,7 @@ export default function DashboardPage() {
           </Button>
         </div>
 
-        {isLoading ? (
+        {isLoading || isFetching ? (
           <DashboardSkeleton />
         ) : isError || !data ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
@@ -65,6 +65,9 @@ export default function DashboardPage() {
               <AlertCircle className="w-10 h-10 text-destructive" />
             </div>
             <p className="text-sm font-semibold text-foreground/60">{t('dashboard.errors.load_failed')}</p>
+            <Button type="button" variant="outline" onClick={() => void refetch()} className="mt-5 min-h-11">
+              {t('common.retry')}
+            </Button>
           </div>
         ) : (
           <>

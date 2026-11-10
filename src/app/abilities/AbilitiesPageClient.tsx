@@ -131,7 +131,7 @@ export default function AbilitiesPageClient({
       <BackgroundGlow />
       <Header />
 
-      <main className="page-shell pb-20 pt-8">
+      <main className="page-shell pb-20 page-shell--page-header-safe-area">
         <PageHeader
           title={t('abilities_page.title', { defaultValue: 'Abilities' })}
           subtitle={t('abilities_page.subtitle', { defaultValue: 'Browse every Pokémon ability, its effect, and which Pokémon can have it' })}

@@ -168,7 +168,7 @@ export default async function DocumentationPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumb) }}
       />
-      <main className="relative z-10 pb-24 pt-8">
+      <main className="relative z-10 pb-24 page-shell--page-header-safe-area">
         <PageHeader
           icon={BookOpen}
           eyebrow={t('docs.nav_label')}

@@ -565,7 +565,12 @@ function QuizPageContent() {
     <div className="app-page relative overflow-x-hidden pb-20">
       <Header />
       
-      <main className="page-shell pt-20 md:pt-24 pb-8 relative z-10 max-w-4xl">
+      <main className={cn(
+        'page-shell pb-8 relative z-10 max-w-4xl',
+        gameState === 'idle' || gameState === 'finished'
+          ? 'pt-20 md:pt-24'
+          : 'page-shell--header-offset',
+      )}>
         {gameState === 'idle' || gameState === 'finished' ? (
           <PageHeader
             icon={Gamepad2}

@@ -141,7 +141,7 @@ export default function ItemsPageClient({
       <BackgroundGlow />
       <Header />
 
-      <main className="page-shell pb-20 pt-8">
+      <main className="page-shell pb-20 page-shell--page-header-safe-area">
         <PageHeader
           title={t('items_page.title', { defaultValue: 'Items' })}
           subtitle={t('items_page.subtitle', { defaultValue: 'Browse held items, berries, evolution stones, and more' })}

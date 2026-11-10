@@ -188,7 +188,7 @@ export default async function PublicApiGuidePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumb) }}
       />
-      <main className="page-shell relative min-h-screen pb-24 pt-28">
+      <main className="page-shell page-shell--hero-header-offset relative min-h-screen pb-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Link
             href={docsHref}

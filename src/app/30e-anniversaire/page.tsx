@@ -283,7 +283,7 @@ export default async function Anniversary30Page() {
       />
       <div className="app-page">
         <Header />
-        <main className="page-shell relative pb-24 pt-28">
+        <main className="page-shell page-shell--hero-header-offset relative pb-24">
           <article className="mx-auto w-full max-w-6xl px-5 md:px-8" aria-labelledby="anniversary-30-title">
             <header className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
               <div className="text-center lg:text-left">

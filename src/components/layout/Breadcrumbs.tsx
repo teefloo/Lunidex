@@ -19,7 +19,7 @@ export function Breadcrumbs({ items, homeLabel = 'Home', className }: Breadcrumb
   if (items.length === 0) return null;
 
   return (
-    <nav aria-label="Breadcrumb" className={cn('page-shell px-5 pt-24 md:px-8', className)}>
+    <nav aria-label="Breadcrumb" className={cn('page-shell page-shell--header-offset px-5 md:px-8', className)}>
       <ol className="flex flex-wrap items-center gap-y-2 text-xs font-medium text-foreground/80">
         {items.map((item, index) => {
           const isCurrent = index === items.length - 1 || !item.href;

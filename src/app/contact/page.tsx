@@ -75,7 +75,7 @@ export default async function ContactPage({ searchParams }: { searchParams: Prom
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumb) }} />
       <div className="app-page">
         <Header />
-        <nav aria-label="Breadcrumb" className="page-shell px-5 pt-24 md:px-8">
+        <nav aria-label="Breadcrumb" className="page-shell page-shell--header-offset px-5 md:px-8">
           <ol className="flex flex-wrap items-center gap-y-2 text-xs font-medium text-foreground/50">
             <li className="flex min-w-0 items-center">
               <Link
@@ -92,8 +92,8 @@ export default async function ContactPage({ searchParams }: { searchParams: Prom
             </li>
           </ol>
         </nav>
-        <main className="page-shell pb-24 pt-28">
-          <PageHeader icon={Mail} eyebrow={t('contact.eyebrow')} title={title} description={description} />
+        <main className="page-shell pb-24">
+          <PageHeader icon={Mail} eyebrow={t('contact.eyebrow')} title={title} description={description} className="mt-4 !pt-0" />
           <article className="mx-auto grid w-full max-w-5xl gap-8 px-5 md:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] md:px-8">
             <section className="section-frame h-fit p-6 md:p-8" aria-labelledby="contact-direct-title">
               <h2 id="contact-direct-title" className="text-xl font-extrabold tracking-tight">{t('contact.direct_email')}</h2>

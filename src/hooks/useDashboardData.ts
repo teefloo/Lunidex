@@ -40,7 +40,9 @@ function computeCategoryStats(
 export function useDashboardData(): {
   data: DashboardData | null;
   isLoading: boolean;
+  isFetching: boolean;
   isError: boolean;
+  refetch: () => Promise<unknown>;
 } {
   const {
     caughtPokemon,
@@ -84,15 +86,15 @@ export function useDashboardData(): {
     hasHydrated: state._hasHydrated,
   })));
 
-  const { data: allPokemon, isLoading, isError } = useQuery({
+  const { data: allPokemon, isLoading, isFetching, isError, refetch } = useQuery({
     queryKey: pokemonKeys.allSummary(),
     queryFn: getAllPokemonSummary,
     staleTime: 30 * 60 * 1000,
   });
 
   return useMemo(() => {
-    if (!hasHydrated) return { data: null, isLoading: true, isError: false };
-    if (!allPokemon) return { data: null, isLoading, isError };
+    if (!hasHydrated) return { data: null, isLoading: true, isFetching, isError: false, refetch };
+    if (!allPokemon) return { data: null, isLoading, isFetching, isError, refetch };
 
     const totalPokemon = allPokemon.length;
     const tcgPhysicalCount = countPhysicalTCGCards(tcgCollectionCards, tcgLegacyOwnedCards);
@@ -287,7 +289,9 @@ export function useDashboardData(): {
         extensible,
       },
       isLoading: false,
+      isFetching,
       isError: false,
+      refetch,
     };
-  }, [allPokemon, caughtPokemon, favorites, team, quizHighScores, quizHistory, currentStreak, bestStreak, totalQuizCorrect, visitCount, lastVisitDate, viewCount, history, recentActions, tcgCollectionCards, tcgLegacyOwnedCards, tcgWishlistCards, tcgSavedSearches, unlockedBadgeIds, hasHydrated, isLoading, isError]);
+  }, [allPokemon, caughtPokemon, favorites, team, quizHighScores, quizHistory, currentStreak, bestStreak, totalQuizCorrect, visitCount, lastVisitDate, viewCount, history, recentActions, tcgCollectionCards, tcgLegacyOwnedCards, tcgWishlistCards, tcgSavedSearches, unlockedBadgeIds, hasHydrated, isLoading, isFetching, isError, refetch]);
 }

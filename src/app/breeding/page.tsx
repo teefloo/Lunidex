@@ -43,7 +43,7 @@ export default async function BreedingPage({ searchParams }: Props) {
   return (
     <>
       <Header />
-      <main className="min-h-dvh pt-24 pb-16 px-4 md:px-6">
+      <main className="min-h-dvh page-shell--header-offset pb-16 px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
           <BreedingPageClient initialPokemon={initialPokemon} initialTab={initialTab} />
         </div>

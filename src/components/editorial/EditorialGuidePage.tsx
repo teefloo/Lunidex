@@ -135,7 +135,7 @@ export default function EditorialGuidePage({
       />
       <div className="app-page">
         <Header />
-        <main className="page-shell relative pb-24 pt-28">
+        <main className="page-shell page-shell--hero-header-offset relative pb-24">
           <article className="mx-auto w-full max-w-5xl px-5 md:px-8">
             <header className="mx-auto max-w-4xl text-center">
               <p className="page-eyebrow justify-center">{t('editorial.guide.eyebrow')}</p>

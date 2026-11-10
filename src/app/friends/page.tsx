@@ -36,7 +36,7 @@ export default async function FriendsPage() {
   return (
     <div className="app-page relative overflow-hidden">
       <Header />
-      <main className="page-shell relative z-10 pb-24 pt-8">
+      <main className="page-shell relative z-10 pb-24 page-shell--page-header-safe-area">
         <PageHeader
           icon={Users}
           title={t('friends.title', { defaultValue: 'Friends' })}

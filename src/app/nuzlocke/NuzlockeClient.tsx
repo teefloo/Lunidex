@@ -105,7 +105,7 @@ export default function NuzlockeClient() {
     <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
       <Header />
 
-      <main className="page-shell pb-20 pt-8">
+      <main className="page-shell pb-20 page-shell--page-header-safe-area">
         <PageHeader
           title={t('nuzlocke.title', { defaultValue: 'Nuzlocke Tracker' })}
           subtitle={t('nuzlocke_guide.intro', { defaultValue: 'Track runs, encounters, one catch per route, and Pokémon statuses.' })}

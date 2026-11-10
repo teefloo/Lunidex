@@ -207,7 +207,7 @@ export default function MovesPageClient({
       <BackgroundGlow />
       <Header />
 
-      <main className="page-shell pb-20 pt-8">
+      <main className="page-shell pb-20 page-shell--page-header-safe-area">
         <PageHeader
           title={t('moves_page.title')}
           subtitle={t('moves_page.subtitle')}
@@ -676,7 +676,7 @@ function MovesPageShell({
       <BackgroundGlow />
       <Header />
 
-      <main className="page-shell pb-20 pt-8">
+      <main className="page-shell pb-20 page-shell--page-header-safe-area">
         <PageHeader
           title={title}
           subtitle={subtitle}
