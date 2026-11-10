@@ -106,6 +106,13 @@ export function getPublicClientTranslations(lang: SupportedLanguage): ResourceLa
     delete selected[namespace];
   }
 
+  for (const namespace of ['docs', 'api_docs']) {
+    const translations = selected[namespace];
+    if (isTranslationRecord(translations) && translations.nav_label !== undefined) {
+      selected[namespace] = { nav_label: translations.nav_label };
+    }
+  }
+
   return selected as ResourceLanguage;
 }
 

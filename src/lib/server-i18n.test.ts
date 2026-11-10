@@ -21,8 +21,18 @@ describe('getPublicClientTranslations', () => {
       }
 
       expect(Object.keys(publicTranslations)).toEqual(
-        Object.keys(serverTranslations).filter((namespace) => !serverOnlyNamespaces.includes(namespace as typeof serverOnlyNamespaces[number])),
+        Object.keys(serverTranslations).filter((namespace) =>
+          !serverOnlyNamespaces.includes(namespace as typeof serverOnlyNamespaces[number])
+        ),
       );
+      expect(publicTranslations.docs).toEqual({
+        nav_label: (serverTranslations.docs as Record<string, unknown>).nav_label,
+      });
+      expect(publicTranslations.api_docs).toEqual({
+        nav_label: (serverTranslations.api_docs as Record<string, unknown>).nav_label,
+      });
+      expect(publicTranslations.docs).not.toHaveProperty('page_intro');
+      expect(publicTranslations.api_docs).not.toHaveProperty('page_title');
       expect(publicTranslations.common).toEqual(serverTranslations.common);
       expect(publicTranslations.pwa).toEqual(serverTranslations.pwa);
       expect(publicTranslations.tcg).toEqual(serverTranslations.tcg);

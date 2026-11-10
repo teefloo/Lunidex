@@ -110,10 +110,6 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
   const mounted = useMounted();
   const [failedArtworkSources, setFailedArtworkSources] = useState<string[]>([]);
 
-  const favorites = usePrimeDexStore(s => s.favorites);
-  const compareList = usePrimeDexStore(s => s.compareList);
-  const team = usePrimeDexStore(s => s.team);
-  const caughtPokemon = usePrimeDexStore(s => s.caughtPokemon);
   const animatedSprites = usePrimeDexStore(s => s.animatedSprites);
 
   const addFavorite = usePrimeDexStore(s => s.addFavorite);
@@ -155,6 +151,14 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
   const pokemonData = displayData?.pokemon;
   const speciesData = displayData?.species;
   const pokemonGqlData = pokemonData as GqlPokemonData | undefined;
+  const pokemonId = pokemonData?.id || initialData?.pokemon.id || 0;
+
+  const isFav = usePrimeDexStore(s => mounted && s.favorites.includes(pokemonId));
+  const isComp = usePrimeDexStore(s => mounted && s.compareList.includes(pokemonId));
+  const isTeam = usePrimeDexStore(s => mounted && s.team.includes(pokemonId));
+  const caught = usePrimeDexStore(s => mounted && s.caughtPokemon.includes(pokemonId));
+  const teamFull = usePrimeDexStore(s => mounted && s.team.length >= 6);
+  const compareFull = usePrimeDexStore(s => mounted && s.compareList.length >= 3);
 
   const pokemonName = pokemonData?.name || name;
   const artworkPokemonId = pokemonData?.id || initialData?.pokemon.id || 0;
@@ -229,7 +233,6 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
 
   if (!displayData || !displayData.pokemon) return null;
   const pokemon = displayData.pokemon as Partial<PokemonDetail> & GqlPokemonData;
-  const pokemonId = pokemon.id || 0;
 
   if (!pokemonId) return null;
 
@@ -241,14 +244,6 @@ export const PokemonCard = memo(function PokemonCard({ name, index = 0, initialD
     ? listReturnTarget
     : addDetailReturnCountToTarget(listReturnTarget, returnDisplayCount, POKEDEX_DEFAULT_DISPLAY_COUNT);
   const detailReturnTarget = `${returnTarget}#pokemon-${pokemonId}`;
-
-  const isFav = mounted && favorites.includes(pokemonId);
-  const isComp = mounted && compareList.includes(pokemonId);
-  const isTeam = mounted && team.includes(pokemonId);
-  const caught = mounted && caughtPokemon.includes(pokemonId);
-
-  const teamFull = mounted && team.length >= 6;
-  const compareFull = mounted && compareList.length >= 3;
 
   const toggleFavorite = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();

@@ -228,6 +228,11 @@ export default function PokemonList({
     }));
   }, [allSummary, basicSummary, isBasicMode]);
 
+  const summaryById = useMemo(
+    () => new Map(transformedSummary.map((pokemon) => [pokemon.id, pokemon])),
+    [transformedSummary],
+  );
+
   const buildInitialData = useMemo(() => {
     return (p: PokemonResultItem) => _getCachedInitialData(p);
   }, []);
@@ -294,12 +299,13 @@ export default function PokemonList({
 
   const filteredAndSortedResults = useMemo(() => {
     let results: PokemonResultItem[] = [];
+    const favoritesSet = showFavoritesOnly ? new Set(favorites) : undefined;
+    const caughtPokemonSet = showCaughtOnly !== 'all' ? new Set(caughtPokemon) : undefined;
 
     if (isBasicMode) {
-      const summaryMap = new Map(transformedSummary.map(d => [d.id, d]));
       const basicResults = infiniteData?.pages.flatMap((page) => page.results).map(p => {
         const id = parseInt(p.url.split('/').filter(Boolean).pop() || '0');
-        return summaryMap.get(id) || { ...p, id };
+        return summaryById.get(id) || { ...p, id };
       }) || [];
 
       results = basicResults;
@@ -334,32 +340,12 @@ export default function PokemonList({
         );
       }
 
-      if (showFavoritesOnly) results = results.filter(p => favorites.includes(p.id));
+      if (showFavoritesOnly) results = results.filter(p => favoritesSet?.has(p.id) ?? false);
       
       if (showCaughtOnly === 'caught') {
-        results = results.filter(p => caughtPokemon.includes(p.id));
+        results = results.filter(p => caughtPokemonSet?.has(p.id) ?? false);
       } else if (showCaughtOnly === 'uncaught') {
-        results = results.filter(p => !caughtPokemon.includes(p.id));
-      }
-
-      if (needsDetailedData && transformedDetailed.length > 0) {
-        const detailedMap = new Map(transformedDetailed.map(d => [d.id, d]));
-        results = results.map(p => {
-          const detailed = detailedMap.get(p.id);
-          if (detailed) {
-            return {
-              ...p,
-              is_legendary: detailed.is_legendary,
-              is_mythical: detailed.is_mythical,
-              egg_groups: detailed.egg_groups,
-              color: detailed.color,
-              shape: detailed.shape,
-              stats: detailed.stats,
-              base_stat_total: detailed.base_stat_total,
-            };
-          }
-          return p;
-        });
+        results = results.filter(p => !caughtPokemonSet?.has(p.id));
       }
 
       if (isLegendary === true) results = results.filter(p => p.is_legendary);
@@ -431,7 +417,7 @@ export default function PokemonList({
     }
 
     return sortedResults;
-  }, [infiniteData, transformedSummary, transformedDetailed, searchTerm, selectedTypes, selectedGeneration, showFavoritesOnly, favorites, sortBy, isLegendary, isMythical, selectedEggGroups, selectedColors, selectedShapes, minBaseStats, minAttack, minDefense, minSpeed, minHp, heightRange, weightRange, isBasicMode, resolvedLang, showCaughtOnly, caughtPokemon, isLoadingDetailed, needsDetailedData]);
+  }, [infiniteData, transformedSummary, summaryById, transformedDetailed, searchTerm, selectedTypes, selectedGeneration, showFavoritesOnly, favorites, sortBy, isLegendary, isMythical, selectedEggGroups, selectedColors, selectedShapes, minBaseStats, minAttack, minDefense, minSpeed, minHp, heightRange, weightRange, isBasicMode, resolvedLang, showCaughtOnly, caughtPokemon, isLoadingDetailed, needsDetailedData]);
 
   const displayedPokemon = useMemo(() => {
     if (!filteredAndSortedResults) return [];
