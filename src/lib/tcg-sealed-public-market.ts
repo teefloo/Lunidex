@@ -7,7 +7,13 @@ export interface PublicMarketFilters {
   page: number;
   category?: number;
   expansion?: number;
+  sort?: PublicMarketSort;
+  minPriceCents?: number;
+  maxPriceCents?: number;
+  pricedOnly?: boolean;
 }
+
+export type PublicMarketSort = 'name-asc' | 'name-desc' | 'price-asc' | 'price-desc' | 'release-newest' | 'release-oldest';
 
 const categoryIds = new Set<number>(SEALED_PRODUCT_CATEGORY_IDS);
 
@@ -21,17 +27,41 @@ function boundedId(value: string, allowZero = false): number | undefined {
   return Number.isSafeInteger(id) && id <= 2_147_483_647 ? id : undefined;
 }
 
+function boundedPriceCents(value: string): number | undefined {
+  if (!/^\d{1,7}(?:[.,]\d{1,2})?$/.test(value)) return undefined;
+  const cents = Math.round(Number(value.replace(',', '.')) * 100);
+  return Number.isSafeInteger(cents) && cents <= 1_000_000_000 ? cents : undefined;
+}
+
+function firstPrice(input: Record<string, string | string[] | undefined> | URLSearchParams, key: string): string {
+  const value = input instanceof URLSearchParams ? input.get(key) : input[key];
+  return first(value);
+}
+
 export function parsePublicMarketFilters(input: Record<string, string | string[] | undefined> | URLSearchParams): PublicMarketFilters {
   const get = (key: string) => input instanceof URLSearchParams ? input.get(key) : input[key];
   const rawPage = first(get('page'));
   const page = /^\d{1,5}$/.test(rawPage) ? Math.min(10_000, Number(rawPage)) : 0;
   const category = boundedId(first(get('category')));
   const expansion = boundedId(first(get('expansion')), true);
+  const rawSort = first(get('sort'));
+  const sort: PublicMarketSort = rawSort === 'name-asc' || rawSort === 'name-desc' || rawSort === 'price-asc' || rawSort === 'price-desc' || rawSort === 'release-oldest'
+    ? rawSort
+    : 'release-newest';
+  let minPriceCents = boundedPriceCents(firstPrice(input, 'minPrice'));
+  let maxPriceCents = boundedPriceCents(firstPrice(input, 'maxPrice'));
+  if (minPriceCents !== undefined && maxPriceCents !== undefined && minPriceCents > maxPriceCents) {
+    [minPriceCents, maxPriceCents] = [maxPriceCents, minPriceCents];
+  }
   return {
     q: Array.from(first(get('q')).trim()).slice(0, 150).join(''),
     page,
+    sort,
     ...(category !== undefined && categoryIds.has(category) ? { category } : {}),
     ...(expansion !== undefined ? { expansion } : {}),
+    ...(minPriceCents !== undefined ? { minPriceCents } : {}),
+    ...(maxPriceCents !== undefined ? { maxPriceCents } : {}),
+    ...(first(get('priced')) === '1' ? { pricedOnly: true } : {}),
   };
 }
 
@@ -49,7 +79,15 @@ export function publicMarketHref(filters: PublicMarketFilters): string {
   if (filters.page) params.set('page', String(filters.page));
   if (filters.category) params.set('category', String(filters.category));
   if (filters.expansion !== undefined) params.set('expansion', String(filters.expansion));
+  if (filters.sort && filters.sort !== 'release-newest') params.set('sort', filters.sort);
+  if (filters.minPriceCents !== undefined) params.set('minPrice', formatMarketPrice(filters.minPriceCents));
+  if (filters.maxPriceCents !== undefined) params.set('maxPrice', formatMarketPrice(filters.maxPriceCents));
+  if (filters.pricedOnly) params.set('priced', '1');
   return `/tcg/sealed/market${params.size ? `?${params}` : ''}`;
+}
+
+function formatMarketPrice(cents: number): string {
+  return (cents / 100).toFixed(2).replace(/\.?0+$/, '');
 }
 
 /** Cardmarket's public sealed catalogue snapshot (2026-09-29), cross-checked against the FR release register. */
@@ -85,6 +123,23 @@ export function hasPublicExpansionName(id: number): boolean {
   return Object.prototype.hasOwnProperty.call(CURATED_EXPANSIONS, id);
 }
 
+function normalizeExpansionSearchText(value: string): string {
+  return value.normalize('NFKD')
+    .replace(/\p{M}+/gu, '')
+    .toLocaleLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, '');
+}
+
+/** Resolve only reviewed expansion names, in either supported catalogue language. */
+export function findCuratedPublicExpansionId(value: string): number | undefined {
+  const normalized = normalizeExpansionSearchText(value);
+  if (!normalized) return undefined;
+  const matches = Object.entries(CURATED_EXPANSIONS).filter(([, names]) => (
+    [names.en, names.fr].some((name) => normalizeExpansionSearchText(name) === normalized)
+  ));
+  return matches.length === 1 ? Number(matches[0][0]) : undefined;
+}
+
 export interface PublicExpansionOption {
   id: number;
   label: string;
@@ -92,16 +147,16 @@ export interface PublicExpansionOption {
 
 /** Match a full option label, or a unique expansion name, without guessing IDs from free text. */
 export function findPublicExpansionId(value: string, options: readonly PublicExpansionOption[]): number | undefined {
-  const normalized = value.trim().normalize('NFKC').toLocaleLowerCase();
+  const normalized = normalizeExpansionSearchText(value);
   if (!normalized) return undefined;
   const exactLabelMatches = options.filter((option) => (
-    option.label.trim().normalize('NFKC').toLocaleLowerCase() === normalized
+    normalizeExpansionSearchText(option.label) === normalized
   ));
   if (exactLabelMatches.length === 1) return exactLabelMatches[0].id;
   if (exactLabelMatches.length > 1) return undefined;
 
   const exactNameMatches = options.filter((option) => {
-    const name = option.label.replace(/\s+·\s+#\d+$/, '').trim().normalize('NFKC').toLocaleLowerCase();
+    const name = normalizeExpansionSearchText(option.label.replace(/\s+·\s+#\d+$/, ''));
     return name === normalized;
   });
   return exactNameMatches.length === 1 ? exactNameMatches[0].id : undefined;

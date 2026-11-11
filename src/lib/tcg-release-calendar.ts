@@ -50,7 +50,7 @@ function dateInMarketTimezone(now: Date): string {
   return `${values.year}-${values.month}-${values.day}`;
 }
 
-function releaseWindowBounds(window: ReleaseWindow): { start: string; end: string } {
+export function getReleaseWindowBounds(window: ReleaseWindow): { start: string; end: string } {
   if (window.precision === 'day') return { start: window.date, end: window.date };
   if (window.precision === 'month') {
     const month = String(window.month).padStart(2, '0');
@@ -78,7 +78,7 @@ export function getReleaseDisplayStatus(release: Pick<SealedReleaseV1, 'window' 
   if (release.window.precision === 'day') {
     return release.window.date > today ? 'upcoming' : 'availability-uncertain';
   }
-  const { end } = releaseWindowBounds(release.window);
+  const { end } = getReleaseWindowBounds(release.window);
   return end >= today ? 'upcoming' : 'availability-uncertain';
 }
 

@@ -25,7 +25,8 @@ import type {
   SealedTransactionDraft,
 } from '@primedex/core/types/sealed';
 import type { NeonSql } from '@/lib/neon/server';
-import type { PublicMarketFilters } from '@/lib/tcg-sealed-public-market';
+import { findCuratedPublicExpansionId, type PublicMarketFilters, type PublicMarketSort } from '@/lib/tcg-sealed-public-market';
+import { publicMarketReleaseDateValuesSql } from '@/lib/tcg-sealed-market-releases';
 import {
   downloadAndParseSealedCardmarketData,
   SEALED_CARDMARKET_SOURCES,
@@ -41,6 +42,14 @@ const SEALED_CATEGORY_SQL = [...SEALED_PRODUCT_CATEGORY_IDS];
 const MAX_CATALOGUE_PAGE_SIZE = 48;
 const MAX_CATALOGUE_PAGE = 10_000;
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const PUBLIC_MARKET_ORDER_BY: Record<PublicMarketSort, string> = {
+  'name-asc': 'p.name asc, p.cardmarket_product_id asc',
+  'name-desc': 'p.name desc, p.cardmarket_product_id desc',
+  'price-asc': 'latest.trend_cents asc nulls last, p.name asc, p.cardmarket_product_id asc',
+  'price-desc': 'latest.trend_cents desc nulls last, p.name asc, p.cardmarket_product_id asc',
+  'release-newest': 'coalesce(product_release.release_end, expansion_release.release_end) desc nulls last, coalesce(product_release.release_start, expansion_release.release_start) desc nulls last, p.name asc, p.cardmarket_product_id asc',
+  'release-oldest': 'coalesce(product_release.release_start, expansion_release.release_start) asc nulls last, coalesce(product_release.release_end, expansion_release.release_end) asc nulls last, p.name asc, p.cardmarket_product_id asc',
+};
 
 export const SEALED_NO_STORE_HEADERS = { 'Cache-Control': 'private, no-store' };
 
@@ -608,9 +617,13 @@ export async function searchPublicSealedCatalogue(
   queryText: string,
   page: number,
   pageSize = 24,
-  filters: Pick<PublicMarketFilters, 'category' | 'expansion'> = {},
+  filters: Pick<PublicMarketFilters, 'category' | 'expansion' | 'sort' | 'minPriceCents' | 'maxPriceCents' | 'pricedOnly'> = { sort: 'release-newest' },
 ) {
-  const search = parseSealedCatalogueSearch(Array.from(queryText).slice(0, 150).join(''));
+  const boundedQuery = Array.from(queryText).slice(0, 150).join('');
+  const curatedExpansionId = findCuratedPublicExpansionId(boundedQuery);
+  const search = curatedExpansionId === undefined
+    ? parseSealedCatalogueSearch(boundedQuery)
+    : { terms: [], expansionId: curatedExpansionId };
   const boundedPage = Number.isSafeInteger(page) && page >= 0 ? Math.min(page, MAX_CATALOGUE_PAGE) : 0;
   const boundedSize = Math.min(MAX_CATALOGUE_PAGE_SIZE, Math.max(1, Math.floor(pageSize)));
   const params: unknown[] = [filters.category ? [filters.category] : SEALED_CATEGORY_SQL];
@@ -633,29 +646,59 @@ export async function searchPublicSealedCatalogue(
     params.push(filters.expansion);
     clauses.push(`p.expansion_id = $${params.length}`);
   }
+  if (filters.pricedOnly) clauses.push('latest.trend_cents is not null');
+  if (filters.minPriceCents !== undefined) {
+    params.push(filters.minPriceCents);
+    clauses.push(`latest.trend_cents >= $${params.length}`);
+  }
+  if (filters.maxPriceCents !== undefined) {
+    params.push(filters.maxPriceCents);
+    clauses.push(`latest.trend_cents <= $${params.length}`);
+  }
   const where = clauses.join(' and ');
   const limitParameter = params.length + 1;
   const offsetParameter = params.length + 2;
+  const sort: PublicMarketSort = filters.sort ?? 'release-newest';
+  const orderBy = PUBLIC_MARKET_ORDER_BY[sort];
+  const releaseDatesCte = sort === 'release-newest' || sort === 'release-oldest'
+    ? `, release_dates(kind, catalogue_id, release_start, release_end) as (
+      values ${publicMarketReleaseDateValuesSql()}
+    )`
+    : '';
+  const releaseDateJoins = sort === 'release-newest' || sort === 'release-oldest'
+    ? `left join release_dates product_release
+      on product_release.kind = 'product' and product_release.catalogue_id = p.cardmarket_product_id
+    left join release_dates expansion_release
+      on expansion_release.kind = 'expansion' and expansion_release.catalogue_id = p.expansion_id`
+    : '';
   const rows = await sql.query(`
+    with latest as (
+      select distinct on (cardmarket_product_id) cardmarket_product_id, trend_cents
+      from public.tcg_sealed_price_snapshots
+      where source_at >= now() - interval '3 days' and source_at <= now() and trend_cents > 0
+      order by cardmarket_product_id, source_at desc
+    )${releaseDatesCte}
     select p.cardmarket_product_id, p.name, p.category_id, p.category_name,
       p.expansion_id, p.cardmarket_url, p.image_available, p.source_at::text,
       p.updated_at::text, p.active, null::text as alias
     from public.tcg_sealed_products p
+    left join latest on latest.cardmarket_product_id = p.cardmarket_product_id
+    ${releaseDateJoins}
     where ${where}
-    order by p.name asc, p.cardmarket_product_id asc
+    order by ${orderBy}
     limit $${limitParameter} offset $${offsetParameter}
   `, [...params, boundedSize, boundedPage * boundedSize]) as unknown as SealedProductRow[];
   const countRows = await sql.query(`
     with latest as (
       select distinct on (cardmarket_product_id) cardmarket_product_id, trend_cents
       from public.tcg_sealed_price_snapshots
-      where source_at >= now() - interval '3 days' and source_at <= now()
+      where source_at >= now() - interval '3 days' and source_at <= now() and trend_cents > 0
       order by cardmarket_product_id, source_at desc
     )
     select count(*)::int as count, count(latest.trend_cents)::int as priced_count,
       percentile_cont(0.5) within group (order by latest.trend_cents)::bigint as median_cents
     from public.tcg_sealed_products p
-    left join latest on latest.cardmarket_product_id = p.cardmarket_product_id and latest.trend_cents > 0
+    left join latest on latest.cardmarket_product_id = p.cardmarket_product_id
     where ${where}
   `, params) as unknown as Array<{ count: number | string; priced_count: number | string; median_cents: number | string | null }>;
   const products = rows.map(mapProduct);
@@ -664,14 +707,14 @@ export async function searchPublicSealedCatalogue(
     with latest as (
       select distinct on (cardmarket_product_id) cardmarket_product_id, trend_cents
       from public.tcg_sealed_price_snapshots
-      where source_at >= now() - interval '3 days' and source_at <= now()
+      where source_at >= now() - interval '3 days' and source_at <= now() and trend_cents > 0
       order by cardmarket_product_id, source_at desc
     )
     select p.category_id, p.category_name, count(*)::int as product_count,
       count(latest.trend_cents)::int as priced_count,
       percentile_cont(0.5) within group (order by latest.trend_cents)::bigint as median_cents
     from public.tcg_sealed_products p
-    left join latest on latest.cardmarket_product_id = p.cardmarket_product_id and latest.trend_cents > 0
+    left join latest on latest.cardmarket_product_id = p.cardmarket_product_id
     where p.active = true and p.category_id = any($1::int[])
     group by p.category_id, p.category_name
     order by product_count desc, p.category_name asc

@@ -95,6 +95,20 @@ describe('versioned French sealed release data', () => {
     expect(new Set(matchIds).size).toBe(matchIds.length);
   });
 
+  it('tracks the verified 151 expansion release date and official source', () => {
+    const release = releases.find((entry) => entry.id === 'ecarlate-et-violet-151');
+    expect(release).toMatchObject({
+      kind: 'expansion',
+      market: 'FR',
+      window: { precision: 'day', date: '2023-09-22' },
+      source: {
+        publisher: 'The Pokémon Company',
+        url: 'https://www.pokemon.com/fr/actualites/retrouvez-ectoplasme-tetarte-et-dautres-pokemon-dans-lextension-ecarlate-et-violet-151',
+        verifiedAt: '2026-11-11',
+      },
+    });
+  });
+
   it('uses only the precision supported by current official French product sources', () => {
     const q3Ids = [
       'blister-2-boosters-30e', 'collection-ko-30e', 'collection-poster-30e',

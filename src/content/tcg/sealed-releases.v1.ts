@@ -34,6 +34,19 @@ const TPC_DELTA_PRERELEASE_SOURCE = {
  */
 export const SEALED_RELEASES_V1 = [
   {
+    id: 'ecarlate-et-violet-151',
+    titleFr: 'Écarlate et Violet – 151',
+    kind: 'expansion',
+    market: 'FR',
+    window: { precision: 'day', date: '2023-09-22' },
+    status: 'released',
+    source: {
+      publisher: 'The Pokémon Company',
+      url: 'https://www.pokemon.com/fr/actualites/retrouvez-ectoplasme-tetarte-et-dautres-pokemon-dans-lextension-ecarlate-et-violet-151',
+      verifiedAt: '2026-11-11',
+    },
+  },
+  {
     id: 'destinees-de-paldea',
     titleFr: 'Écarlate et Violet – Destinées de Paldea',
     kind: 'expansion',

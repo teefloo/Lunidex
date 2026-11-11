@@ -175,6 +175,19 @@ describe('sealed portfolio daily overview', () => {
 });
 
 describe('public sealed catalogue search', () => {
+  it('defaults to newest-first release dates when no sort is provided', async () => {
+    const statements: string[] = [];
+    const sql = { query: async (query: string) => {
+      statements.push(query);
+      return [];
+    } } as unknown as NeonSql;
+
+    await searchPublicSealedCatalogue(sql, '', 0, 24, {});
+
+    expect(statements[0]).toContain('coalesce(product_release.release_end, expansion_release.release_end) desc nulls last');
+    expect(statements[0]).toContain("('expansion', 5402, '2023-09-22'::date, '2023-09-22'::date)");
+  });
+
   it('preserves all 150 Unicode characters when bounding a query', async () => {
     const statements: Array<{ query: string; params: unknown[] }> = [];
     const sql = {
@@ -199,11 +212,74 @@ describe('public sealed catalogue search', () => {
     const result = await searchPublicSealedCatalogue(sql, 'box', 1, 24, { category: 53, expansion: 6569 });
     expect(statements[0]?.params).toEqual([[53], 'box', 6569, 24, 24]);
     expect(statements[1]?.query).toContain('percentile_cont(0.5)');
-    const latestPriceQueries = statements.filter((statement) => statement.query.includes('distinct on (cardmarket_product_id)'));
-    expect(latestPriceQueries).toHaveLength(2);
-    expect(latestPriceQueries.every((statement) => statement.query.includes('order by cardmarket_product_id, source_at desc'))).toBe(true);
+    const latestPriceQueries = statements.filter((statement) => statement.query.includes('order by cardmarket_product_id, source_at desc'));
+    expect(latestPriceQueries).toHaveLength(3);
+    expect(latestPriceQueries.every((statement) => {
+      const wherePosition = statement.query.indexOf('where source_at >= now()');
+      const positivePricePosition = statement.query.indexOf('and trend_cents > 0', wherePosition);
+      const orderingPosition = statement.query.indexOf('order by cardmarket_product_id, source_at desc', wherePosition);
+      return wherePosition >= 0 && positivePricePosition > wherePosition && positivePricePosition < orderingPosition;
+    })).toBe(true);
     expect(statements.map((statement) => statement.query).join(' ')).not.toMatch(/tcg_sealed_(aliases|transactions|portfolio)/);
     expect(result).toMatchObject({ total: 3, pricedCount: 2, medianCents: 1250 });
+  });
+
+  it('filters and sorts by fresh Cardmarket trend prices before applying the page window', async () => {
+    const statements: Array<{ query: string; params: unknown[] }> = [];
+    const sql = { query: async (query: string, params: unknown[]) => {
+      statements.push({ query, params });
+      return [];
+    } } as unknown as NeonSql;
+
+    await searchPublicSealedCatalogue(sql, '', 2, 24, {
+      sort: 'price-desc', minPriceCents: 1000, maxPriceCents: 9000, pricedOnly: true,
+    });
+
+    expect(statements[0]?.query).toContain('latest.trend_cents desc nulls last, p.name asc, p.cardmarket_product_id asc');
+    expect(statements[0]?.query).toContain("source_at >= now() - interval '3 days'");
+    expect(statements[0]?.query).toContain('latest.trend_cents is not null');
+    expect(statements[0]?.query).toContain('latest.trend_cents >= $2');
+    expect(statements[0]?.query).toContain('latest.trend_cents <= $3');
+    expect(statements[0]?.params).toEqual([[52, 53, 54, 1013, 1014, 1015, 1016, 1083, 1654], 1000, 9000, 24, 48]);
+    expect(statements[1]?.params).toEqual([[52, 53, 54, 1013, 1014, 1015, 1016, 1083, 1654], 1000, 9000]);
+  });
+
+  it.each([
+    ['release-newest', 'coalesce(product_release.release_end, expansion_release.release_end) desc nulls last, coalesce(product_release.release_start, expansion_release.release_start) desc nulls last'],
+    ['release-oldest', 'coalesce(product_release.release_start, expansion_release.release_start) asc nulls last, coalesce(product_release.release_end, expansion_release.release_end) asc nulls last'],
+  ] as const)('sorts %s by verified dates before applying pagination', async (sort, orderBy) => {
+    const statements: Array<{ query: string; params: unknown[] }> = [];
+    const sql = { query: async (query: string, params: unknown[]) => {
+      statements.push({ query, params });
+      return [];
+    } } as unknown as NeonSql;
+
+    await searchPublicSealedCatalogue(sql, '', 3, 24, { sort });
+
+    const listingQuery = statements[0]?.query ?? '';
+    expect(listingQuery).toContain('release_dates(kind, catalogue_id, release_start, release_end)');
+    expect(listingQuery).toContain("('expansion', 5402, '2023-09-22'::date, '2023-09-22'::date)");
+    expect(listingQuery).toContain(orderBy);
+    const outerOrderStart = listingQuery.lastIndexOf('\n    order by');
+    const limitStart = listingQuery.indexOf('\n    limit');
+    expect(outerOrderStart).toBeGreaterThan(0);
+    expect(outerOrderStart).toBeLessThan(limitStart);
+    expect(listingQuery.slice(outerOrderStart, limitStart)).toContain(orderBy);
+    expect(listingQuery.slice(outerOrderStart, limitStart)).not.toMatch(/source_at|updated_at/);
+    expect(statements[0]?.params).toEqual([[52, 53, 54, 1013, 1014, 1015, 1016, 1083, 1654], 24, 72]);
+  });
+
+  it('searches reviewed expansion names through their source IDs', async () => {
+    const statements: Array<{ query: string; params: unknown[] }> = [];
+    const sql = { query: async (query: string, params: unknown[]) => {
+      statements.push({ query, params });
+      return [];
+    } } as unknown as NeonSql;
+
+    await searchPublicSealedCatalogue(sql, 'Écarlate et Violet – 151', 0);
+
+    expect(statements[0]?.params).toEqual([[52, 53, 54, 1013, 1014, 1015, 1016, 1083, 1654], 5402, 24, 0]);
+    expect(statements[0]?.query).toContain('p.expansion_id = $2');
   });
 
   it('returns only active catalogue expansion IDs for the searchable filter', async () => {

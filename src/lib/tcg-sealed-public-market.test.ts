@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { SealedPriceSnapshot } from '@primedex/core/types/sealed';
-import { buildPublicPriceChartPoints, findPublicExpansionId, hasPublicExpansionName, parsePublicMarketFilters, publicExpansionName, publicMarketContactHref, publicMarketHref, summarizePublicPrice } from './tcg-sealed-public-market';
+import { buildPublicPriceChartPoints, findCuratedPublicExpansionId, findPublicExpansionId, hasPublicExpansionName, parsePublicMarketFilters, publicExpansionName, publicMarketContactHref, publicMarketHref, summarizePublicPrice } from './tcg-sealed-public-market';
 
 function price(day: string, trendCents: number | null): SealedPriceSnapshot {
   return { cardmarketProductId: 1, day, sourceAt: day, fetchedAt: day, metrics: { trendCents, avgCents: null, lowCents: null, avg1Cents: null, avg7Cents: null, avg30Cents: null } };
@@ -8,12 +8,34 @@ function price(day: string, trendCents: number | null): SealedPriceSnapshot {
 
 describe('public sealed market filters', () => {
   it('bounds and validates URL input', () => {
+    expect(parsePublicMarketFilters(new URLSearchParams())).toEqual({ q: '', page: 0, sort: 'release-newest' });
     const filters = parsePublicMarketFilters(new URLSearchParams({ q: '  Booster  ', page: '99999', category: '53', expansion: '6569' }));
-    expect(filters).toEqual({ q: 'Booster', page: 10_000, category: 53, expansion: 6569 });
+    expect(filters).toEqual({ q: 'Booster', page: 10_000, sort: 'release-newest', category: 53, expansion: 6569 });
     expect(publicMarketHref(filters)).toBe('/tcg/sealed/market?q=Booster&page=10000&category=53&expansion=6569');
-    expect(parsePublicMarketFilters(new URLSearchParams({ page: '-1', category: '999', expansion: '1 OR 1' }))).toEqual({ q: '', page: 0 });
-    expect(parsePublicMarketFilters(new URLSearchParams({ expansion: '0' }))).toEqual({ q: '', page: 0, expansion: 0 });
+    expect(parsePublicMarketFilters(new URLSearchParams({ page: '-1', category: '999', expansion: '1 OR 1' }))).toEqual({ q: '', page: 0, sort: 'release-newest' });
+    expect(parsePublicMarketFilters(new URLSearchParams({ expansion: '0' }))).toEqual({ q: '', page: 0, sort: 'release-newest', expansion: 0 });
     expect(publicMarketHref({ q: '', page: 0, expansion: 0 })).toBe('/tcg/sealed/market?expansion=0');
+  });
+
+  it('validates and serializes sort, current-price bounds, and the priced-only filter', () => {
+    const filters = parsePublicMarketFilters(new URLSearchParams({
+      sort: 'price-asc', minPrice: '19,5', maxPrice: '5.25', priced: '1', q: '151',
+    }));
+    expect(filters).toEqual({ q: '151', page: 0, sort: 'price-asc', minPriceCents: 525, maxPriceCents: 1950, pricedOnly: true });
+    expect(publicMarketHref(filters)).toBe('/tcg/sealed/market?q=151&sort=price-asc&minPrice=5.25&maxPrice=19.5&priced=1');
+    expect(parsePublicMarketFilters(new URLSearchParams({ sort: 'price-asc; drop table', minPrice: '1.999', maxPrice: '-5', priced: 'true' })))
+      .toEqual({ q: '', page: 0, sort: 'release-newest' });
+  });
+
+  it('validates and preserves release date sorting in shareable URLs', () => {
+    const newest = parsePublicMarketFilters(new URLSearchParams({ sort: 'release-newest', q: '151', page: '2' }));
+    expect(newest).toEqual({ q: '151', page: 2, sort: 'release-newest' });
+    expect(publicMarketHref(newest)).toBe('/tcg/sealed/market?q=151&page=2');
+    expect(parsePublicMarketFilters(new URLSearchParams({ sort: 'release-oldest' })).sort).toBe('release-oldest');
+    expect(parsePublicMarketFilters(new URLSearchParams({ sort: 'release-oldest;drop' })).sort).toBe('release-newest');
+    const alphabetical = parsePublicMarketFilters(new URLSearchParams({ sort: 'name-asc' }));
+    expect(alphabetical.sort).toBe('name-asc');
+    expect(publicMarketHref(alphabetical)).toBe('/tcg/sealed/market?sort=name-asc');
   });
 
   it('bounds a contextual contact link to a locale and numeric Cardmarket ID', () => {
@@ -51,6 +73,17 @@ describe('public sealed market filters', () => {
     expect(findPublicExpansionId('Promo', options)).toBeUndefined();
     expect(findPublicExpansionId('Promo · #9002', options)).toBe(9002);
     expect(findPublicExpansionId('invented set', options)).toBeUndefined();
+    expect(findPublicExpansionId('Ecarlate et Violet 151', [{ id: 5402, label: 'Écarlate et Violet – 151 · #5402' }])).toBe(5402);
+    expect(findPublicExpansionId('ecarlate et violet 151 5402', [{ id: 5402, label: 'Écarlate et Violet – 151 · #5402' }])).toBe(5402);
+  });
+
+  it('recognizes only reviewed French or English expansion names in the main search', () => {
+    expect(findCuratedPublicExpansionId('Destinées de Paldea')).toBe(5546);
+    expect(findCuratedPublicExpansionId(' Scarlet & Violet—151 ')).toBe(5402);
+    expect(findCuratedPublicExpansionId('Ecarlate et Violet 151')).toBe(5402);
+    expect(findCuratedPublicExpansionId('mega evolution')).toBe(6209);
+    expect(findCuratedPublicExpansionId('30e Anniversaire')).toBe(6601);
+    expect(findCuratedPublicExpansionId('unverified expansion')).toBeUndefined();
   });
 });
 
