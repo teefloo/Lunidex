@@ -11,8 +11,10 @@ import { DEFAULT_TCG_DISPLAY_CURRENCY, normalizeTCGDisplayCurrency } from '@/lib
 import {
   getTCGCustomCollectionCardIdentity,
   normalizeTCGCustomCollectionCards,
+  normalizeTCGCustomCollectionLayouts,
   normalizeTCGCustomCollections,
 } from '@primedex/core/lib/tcg-custom-collections';
+import type { TCGCustomCollectionLayout } from '@primedex/core/lib/tcg-custom-collections';
 import { normalizeTCGInvestments } from '@primedex/core/lib/tcg-investments';
 import type { TCGCardLanguage } from '@primedex/core/lib/tcg-language';
 import {
@@ -33,7 +35,7 @@ const COLLECTION_KEYS = [
   'tcgWishlistCards', 'tcgActiveSets', 'tcgCollections', 'tcgCollectionCards',
   'tcgActiveCollections', 'tcgLegacyOwnedCards', 'selectedTypes', 'selectedEggGroups',
   'selectedColors', 'selectedShapes', 'viewedTypes', 'tcgCustomCollections',
-  'tcgCustomCollectionCards', 'tcgInvestments',
+  'tcgCustomCollectionCards', 'tcgCustomCollectionLayouts', 'tcgInvestments',
 ] as const satisfies readonly SyncedKey[];
 type CollectionKey = (typeof COLLECTION_KEYS)[number];
 
@@ -47,9 +49,16 @@ export interface SyncMetadata {
 }
 export interface SyncReconciliation { state: PersistedState; metadata: SyncMetadata }
 export interface SyncReconciliationOptions { deviceId: string; preferLocalLegacyValues?: boolean }
+export interface CachedTCGCustomCollectionLayouts {
+  layouts: TCGCustomCollectionLayout[];
+  clock: number;
+  entries: Record<string, SyncEntry>;
+}
 
 const LEGACY_DEVICE_ID = 'legacy';
 const isCollectionKey = (key: SyncedKey): key is CollectionKey => COLLECTION_KEYS.includes(key as CollectionKey);
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
 const toClock = (value: unknown): number => typeof value === 'number' && Number.isFinite(value) && value >= 0 ? Math.floor(value) : 0;
 const sameValue = (left: unknown, right: unknown): boolean => JSON.stringify(left) === JSON.stringify(right);
 const collectionValues = (state: Partial<PersistedState>, key: CollectionKey): unknown[] => Array.isArray(state[key]) ? state[key] as unknown[] : [];
@@ -65,6 +74,14 @@ const collectionEntryId = (key: CollectionKey, value: unknown): string => {
       if (typeof card.collectionId === 'string' && typeof card.cardId === 'string' && typeof card.language === 'string') {
         return getTCGCustomCollectionCardIdentity(card.collectionId, card.cardId, card.language as TCGCardLanguage);
       }
+    }
+    return String(value);
+  }
+  if (key === 'tcgCustomCollectionLayouts') {
+    if (typeof value === 'string') return value.toLowerCase();
+    if (value && typeof value === 'object') {
+      const layout = value as { collectionId?: unknown };
+      if (typeof layout.collectionId === 'string') return layout.collectionId.toLowerCase();
     }
     return String(value);
   }
@@ -137,10 +154,29 @@ function normalizeTcgSnapshot<T extends Partial<PersistedState>>(snapshot: T): T
   // A concurrent merge may temporarily exceed the write limit. Keep all lots
   // so the server can reject/roll back the write, rather than emptying the ledger.
   next.tcgInvestments = normalizeTCGInvestments(next.tcgInvestments ?? [], Infinity) ?? [];
+  const rawCustomCollectionCards = Array.isArray(next.tcgCustomCollectionCards)
+    ? next.tcgCustomCollectionCards.filter((entry) => {
+      if (!isRecord(entry) || typeof entry.collectionId !== 'string') return true;
+      return customCollectionIds.has(entry.collectionId.toLowerCase());
+    })
+    : [];
   next.tcgCustomCollectionCards = (normalizeTCGCustomCollectionCards(
-    next.tcgCustomCollectionCards ?? [],
+    rawCustomCollectionCards,
     customCollectionIds,
   ) ?? []).filter((card) => customCollectionIds.has(card.collectionId));
+  if (Object.prototype.hasOwnProperty.call(next, 'tcgCustomCollectionLayouts')) {
+    const rawCustomCollectionLayouts = Array.isArray(next.tcgCustomCollectionLayouts)
+      ? next.tcgCustomCollectionLayouts.filter((entry) => {
+        if (!isRecord(entry) || typeof entry.collectionId !== 'string') return true;
+        return customCollectionIds.has(entry.collectionId.toLowerCase());
+      })
+      : next.tcgCustomCollectionLayouts;
+    next.tcgCustomCollectionLayouts = normalizeTCGCustomCollectionLayouts(
+      rawCustomCollectionLayouts,
+      customCollectionIds,
+      next.tcgCustomCollectionCards,
+    ) ?? [];
+  }
   return next;
 }
 
@@ -339,6 +375,85 @@ export function reconcileSyncState(
 
 export function reconcileRemoteState(remote: Partial<PersistedState>, remoteMetadata: unknown, deviceId: string): SyncReconciliation {
   return reconcileSyncState(getInitialSyncState(), remote, undefined, remoteMetadata, { deviceId });
+}
+
+/**
+ * Reconcile the account-scoped layout-only cache after remote binder membership
+ * has been accepted. A cache tombstone cannot stand in for a whole-binder
+ * deletion, so ignore it while the remote parent binder still exists.
+ */
+export function reconcileCachedTCGCustomCollectionLayouts(
+  remoteAccepted: SyncReconciliation,
+  cache: CachedTCGCustomCollectionLayouts,
+  deviceId: string,
+): SyncReconciliation {
+  const remoteCollectionIds = remoteAccepted.state.tcgCustomCollections.map((collection) => collection.id);
+  const remoteCollectionIdSet = new Set(remoteCollectionIds);
+  const cacheLayoutsWithRemoteBinders = cache.layouts.filter((layout) => remoteCollectionIdSet.has(layout.collectionId));
+  const validatedCachedLayouts = normalizeTCGCustomCollectionLayouts(
+    cacheLayoutsWithRemoteBinders,
+    remoteCollectionIds,
+    remoteAccepted.state.tcgCustomCollectionCards,
+  ) ?? [];
+  const remoteLayoutEntries = remoteAccepted.metadata.collections.tcgCustomCollectionLayouts ?? {};
+  const cachedLayoutsById = new Map(validatedCachedLayouts.map((layout) => [layout.collectionId, layout]));
+  const selectedLayoutsById = new Map(remoteAccepted.state.tcgCustomCollectionLayouts.map((layout) => [layout.collectionId, layout]));
+  const acceptedCacheEntries = { ...remoteLayoutEntries };
+
+  for (const [collectionId, entry] of Object.entries(cache.entries)) {
+    const remoteEntry = remoteLayoutEntries[collectionId];
+    const cacheEntryWins = !remoteEntry
+      || compareStamps(entry, remoteEntry) > 0;
+    if (!cacheEntryWins) continue;
+    if (!entry.present) {
+      if (remoteCollectionIdSet.has(collectionId)) continue;
+      selectedLayoutsById.delete(collectionId);
+    } else {
+      const cachedLayout = cachedLayoutsById.get(collectionId);
+      if (!cachedLayout) continue;
+      selectedLayoutsById.set(collectionId, cachedLayout);
+    }
+    acceptedCacheEntries[collectionId] = entry;
+  }
+
+  for (const [collectionId, layout] of cachedLayoutsById) {
+    if (!cache.entries[collectionId] && !remoteLayoutEntries[collectionId]) {
+      selectedLayoutsById.set(collectionId, layout);
+    }
+  }
+
+  const reconciledCacheLayouts = normalizeTCGCustomCollectionLayouts(
+    [...selectedLayoutsById.values()],
+    remoteCollectionIds,
+    remoteAccepted.state.tcgCustomCollectionCards,
+  ) ?? remoteAccepted.state.tcgCustomCollectionLayouts;
+  const cacheState: PersistedState = {
+    ...remoteAccepted.state,
+    tcgCustomCollectionLayouts: reconciledCacheLayouts,
+  };
+  const cacheLocalMetadata: SyncMetadata = {
+    ...remoteAccepted.metadata,
+    clock: Math.max(remoteAccepted.metadata.clock, cache.clock),
+    collections: {
+      ...remoteAccepted.metadata.collections,
+      tcgCustomCollectionLayouts: acceptedCacheEntries,
+    },
+  };
+  return reconcileSyncState(
+    cacheState,
+    remoteAccepted.state,
+    cacheLocalMetadata,
+    remoteAccepted.metadata,
+    { deviceId },
+  );
+}
+
+/** Merge a partial import onto current state, then normalize dependent TCG records. */
+export function mergeAndNormalizeSyncState(
+  current: PersistedState,
+  partial: Partial<PersistedState>,
+): PersistedState {
+  return normalizeTcgSnapshot({ ...current, ...partial } as PersistedState) as PersistedState;
 }
 
 export function mergeSyncState(local: PersistedState, remote: Partial<PersistedState>, options: { preserveLocalAdditions?: boolean } = {}): PersistedState {

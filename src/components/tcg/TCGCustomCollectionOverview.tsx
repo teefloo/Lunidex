@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { FolderPlus, Pencil, Search, Trash2 } from 'lucide-react';
+import { ArrowRight, FolderPlus, Pencil, Search, Trash2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
@@ -110,26 +110,28 @@ export function TCGCustomCollectionOverview() {
           {visibleCollections.map((collection) => {
             const cardCount = cardCountByCollection.get(collection.id) ?? 0;
             return (
-              <li key={collection.id} className="group relative flex min-h-40 flex-col rounded-sm border border-border/50 bg-card/50 p-4 shadow-[var(--shadow-pixel-sm)] transition hover:border-primary/45 hover:bg-card/80">
-                <Link href={localeHref(`/tcg/collection/custom/${encodeURIComponent(collection.id)}`)} className="absolute inset-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label={collection.name}>
-                  <span className="sr-only">{collection.name}</span>
-                </Link>
-                <div className="pointer-events-none relative z-10 flex min-h-0 flex-1 flex-col">
+              <li key={collection.id} className="group flex min-h-36 flex-col rounded-sm border border-border/50 bg-card/50 p-3 shadow-[var(--shadow-pixel-sm)] transition hover:border-primary/45 hover:bg-card/80">
+                <div className="flex min-h-0 flex-1 flex-col">
                   <div className="flex items-start justify-between gap-3">
-                    <h3 className="min-w-0 break-words text-lg font-black leading-tight group-hover:text-primary">{collection.name}</h3>
+                    <h3 className="min-w-0 break-words text-base font-black leading-tight">{collection.name}</h3>
                     <span className="shrink-0 rounded-sm border border-primary/30 bg-primary/10 px-2 py-1 text-xs font-black text-primary">
                       {t('tcg.custom_collections.cards_count', { count: cardCount })}
                     </span>
                   </div>
-                  {collection.description && <p className="mt-3 line-clamp-3 break-words text-sm leading-6 text-foreground/65">{collection.description}</p>}
+                  {collection.description && <p className="mt-2 line-clamp-2 break-words text-sm leading-5 text-foreground/65">{collection.description}</p>}
                 </div>
-                <div className="relative z-20 mt-4 flex gap-2 self-end">
+                <div className="mt-3 flex items-center justify-between gap-2 border-t border-border/40 pt-2">
+                  <Link href={localeHref(`/tcg/collection/custom/${encodeURIComponent(collection.id)}`)} className="inline-flex min-h-10 items-center gap-1.5 rounded-sm pr-2 text-xs font-black text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                    {t('tcg.collection_open_in_language')}<ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                  </Link>
+                  <div className="flex gap-2">
                   <button type="button" onClick={() => openEdit(collection)} aria-label={`${t('tcg.custom_collections.edit_title')}: ${collection.name}`} className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm border border-border bg-background/80 text-foreground/75 hover:border-primary/50 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                     <Pencil className="h-4 w-4" aria-hidden="true" />
                   </button>
                   <button type="button" onClick={() => { setDeleting(collection); setError(''); }} aria-label={`${t('tcg.custom_collections.delete')}: ${collection.name}`} className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm border border-border bg-background/80 text-foreground/75 hover:border-destructive/50 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive">
                     <Trash2 className="h-4 w-4" aria-hidden="true" />
                   </button>
+                  </div>
                 </div>
               </li>
             );

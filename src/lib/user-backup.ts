@@ -167,6 +167,14 @@ export function validateImportPayload(
 
   const normalized = normalizeUserStateData(data);
   if (!normalized) return { valid: false, error: 'Invalid TCG collection data' };
+  const hasCustomCollections = Object.prototype.hasOwnProperty.call(data, 'tcgCustomCollections');
+  const hasCustomCollectionCards = Object.prototype.hasOwnProperty.call(data, 'tcgCustomCollectionCards');
+  const replacesCustomCollectionState = hasCustomCollections && hasCustomCollectionCards;
+  if (!hasCustomCollections) delete normalized.tcgCustomCollections;
+  if (!hasCustomCollectionCards) delete normalized.tcgCustomCollectionCards;
+  if (replacesCustomCollectionState && !Object.prototype.hasOwnProperty.call(data, 'tcgCustomCollectionLayouts')) {
+    normalized.tcgCustomCollectionLayouts = [];
+  }
   if (isRecord(normalized.quizHighScores)) normalized.quizHighScores = { ...defaults.quizHighScores, ...normalized.quizHighScores };
 
   const syncedData: Record<string, unknown> = {};

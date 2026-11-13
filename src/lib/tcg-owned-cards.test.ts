@@ -7,6 +7,7 @@ describe('user state TCG v1/v2/v3 normalization', () => {
     const normalized = normalizeUserStateData({ tcgOwnedCards: ['base1-001'] });
     expect(normalized?.tcgCustomCollections).toEqual([]);
     expect(normalized?.tcgCustomCollectionCards).toEqual([]);
+    expect(normalized).not.toHaveProperty('tcgCustomCollectionLayouts');
     expect(normalized?.tcgOwnedCards).toEqual(['base1-001']);
   });
 
@@ -17,6 +18,46 @@ describe('user state TCG v1/v2/v3 normalization', () => {
     expect(normalizeUserStateData({ tcgCustomCollections: [binder], tcgCustomCollectionCards: [card] })?.tcgCustomCollectionCards).toEqual([{ ...card, quantity: 1 }]);
     expect(normalizeUserStateData({ tcgCustomCollections: [binder], tcgCustomCollectionCards: [{ ...card, collectionId: '36e431a6-c3c1-46d4-804d-f5fa08f1af9d' }] })).toBeNull();
     expect(normalizeUserStateData({ tcgCustomCollections: [binder], tcgCustomCollectionCards: [{ ...card, language: 'zz' }] })).toBeNull();
+  });
+
+  it('normalizes explicit layouts against binder memberships and leaves absent layouts lazy', () => {
+    const collectionId = '126e8648-39da-4fc9-88b2-fd194d28cc5a';
+    const binder = { id: collectionId, name: 'Artwork', createdAt: '2026-10-19T10:00:00.000Z', updatedAt: '2026-10-19T10:00:00.000Z' };
+    const first = { collectionId, cardId: 'base1-001', language: 'en', cardName: 'Alakazam', addedAt: '2026-10-19T10:00:00.000Z' };
+    const second = { collectionId, cardId: 'base1-002', language: 'fr', cardName: 'Dracaufeu', addedAt: '2026-10-19T10:01:00.000Z' };
+    const normalized = normalizeUserStateData({
+      tcgCustomCollections: [binder],
+      tcgCustomCollectionCards: [first, second],
+      tcgCustomCollectionLayouts: [{ collectionId, gridPreset: '4x3', cardOrder: [{ cardId: second.cardId, language: second.language }] }],
+    });
+
+    expect(normalized?.tcgCustomCollectionLayouts).toEqual([{
+      collectionId,
+      gridPreset: '4x3',
+      cardOrder: [
+        { cardId: second.cardId, language: second.language, copyIndex: 0 },
+        { cardId: first.cardId, language: first.language, copyIndex: 0 },
+      ],
+    }]);
+    expect(normalizeUserStateData({
+      tcgCustomCollections: [binder],
+      tcgCustomCollectionCards: [first],
+      tcgCustomCollectionLayouts: [{
+        collectionId,
+        gridPreset: '3x3',
+        cardOrder: [{ cardId: first.cardId, language: first.language }, { cardId: first.cardId, language: first.language }],
+      }],
+    })).toBeNull();
+    expect(normalizeUserStateData({
+      tcgCustomCollections: [binder],
+      tcgCustomCollectionCards: [first],
+      tcgCustomCollectionLayouts: [{ collectionId, gridPreset: '5x5', cardOrder: [{ cardId: first.cardId, language: first.language }] }],
+    })).toBeNull();
+    expect(normalizeUserStateData({
+      tcgCustomCollections: [binder],
+      tcgCustomCollectionCards: [first],
+      tcgCustomCollectionLayouts: [{ collectionId: '36e431a6-c3c1-46d4-804d-f5fa08f1af9d', gridPreset: '3x3', cardOrder: [] }],
+    })).toBeNull();
   });
 
   it('migrates an old payload to legacy ownership without inferring a language', () => {

@@ -246,8 +246,8 @@ describe('TCG cancellation and shared requests', () => {
       addedAt: '2026-10-19T10:00:00.000Z',
     };
 
-    await expect(getTCGCustomCollectionCardDetails([ref])).resolves.toEqual([{
-      ref,
+    await expect(getTCGCustomCollectionCardDetails([ref, { ...ref, quantity: 2 }])).resolves.toEqual([{
+      ref: { ...ref, quantity: 2 },
       card: { id: 'base1-4', localId: '4', name: 'Charizard' },
       unavailable: true,
     }]);

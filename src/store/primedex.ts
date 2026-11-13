@@ -24,6 +24,10 @@ import {
   addTCGCustomCollectionCard as addCustomCollectionCard,
   createTCGCustomCollection as createCustomCollection,
   editTCGCustomCollection as editCustomCollection,
+  compressTCGCustomCollectionLayoutCardRefs,
+  getTCGCustomCollectionLayout,
+  isTCGCustomCollectionLayoutWithinSyncBudget,
+  normalizeTCGCustomCollectionLayouts,
   removeTCGCustomCollectionCard as removeCustomCollectionCard,
 } from '@primedex/core/lib/tcg-custom-collections';
 import {
@@ -37,7 +41,13 @@ import {
   type TCGDisplayCurrency,
 } from '@/lib/tcg-currency';
 import type { TCGSavedSearch, TCGUserCardEntry, TCGDeck } from '@/types/tcg';
-import type { TCGCustomCollection, TCGCustomCollectionCard } from '@primedex/core/lib/tcg-custom-collections';
+import type {
+  TCGCustomCollection,
+  TCGCustomCollectionCard,
+  TCGCustomCollectionGridPreset,
+  TCGCustomCollectionLayout,
+  TCGCustomCollectionLayoutCardRef,
+} from '@primedex/core/lib/tcg-custom-collections';
 import type { NuzlockeRun, NuzlockeEncounter, NuzlockeEncounterStatus } from '@/types/nuzlocke';
 import type { QuizSession, ActivityAction } from '@/types/dashboard';
 import { hasSyncAccess, requestSyncAccess, type SyncAccessRequest } from './sync-access';
@@ -68,6 +78,10 @@ const storage = createResilientStorage({
     if (typeof window !== 'undefined') window.dispatchEvent(new Event(PERSISTENCE_ERROR_EVENT));
   },
 });
+
+function sortTCGCustomCollectionLayouts(layouts: readonly TCGCustomCollectionLayout[]): TCGCustomCollectionLayout[] {
+  return [...layouts].sort((left, right) => left.collectionId.localeCompare(right.collectionId));
+}
 
 export type Theme = 'light' | 'dark' | 'system';
 
@@ -167,6 +181,7 @@ export interface PrimeDexStore {
   tcgCollectionModelVersion: 1 | 2 | typeof TCG_COLLECTION_MODEL_VERSION;
   tcgCustomCollections: TCGCustomCollection[];
   tcgCustomCollectionCards: TCGCustomCollectionCard[];
+  tcgCustomCollectionLayouts: TCGCustomCollectionLayout[];
   tcgInvestments: TCGInvestment[];
   saveTCGInvestment: (input: Omit<TCGInvestment, 'id' | 'createdAt' | 'updatedAt'>, id?: string, creationId?: string) => string | null;
   deleteTCGInvestment: (id: string) => boolean;
@@ -174,8 +189,11 @@ export interface PrimeDexStore {
   editTCGCustomCollection: (collectionId: string, name: string, description?: string) => boolean;
   deleteTCGCustomCollection: (collectionId: string) => boolean;
   addTCGCustomCollectionCard: (collectionId: string, card: Pick<TCGCustomCollectionCard, 'cardId' | 'language' | 'cardName'>) => boolean;
+  addTCGCustomCollectionCards: (collectionId: string, cards: Array<Pick<TCGCustomCollectionCard, 'cardId' | 'language' | 'cardName'> & { quantity?: number }>) => number;
   setTCGCustomCollectionCardQuantity: (collectionId: string, cardId: string, language: TCGCustomCollectionCard['language'], quantity: number) => boolean;
   removeTCGCustomCollectionCard: (collectionId: string, cardId: string, language: TCGCustomCollectionCard['language']) => boolean;
+  setTCGCustomCollectionGridPreset: (collectionId: string, gridPreset: TCGCustomCollectionGridPreset) => boolean;
+  reorderTCGCustomCollectionCards: (collectionId: string, cardOrder: readonly TCGCustomCollectionLayoutCardRef[]) => boolean;
   setTCGBrowseLanguage: (language: TCGCardLanguage) => void;
   createTCGCollection: (setId: string, language?: TCGCardLanguage) => string;
   addTCGCollectionCard: (collectionKey: string, cardId: string) => void;
@@ -334,6 +352,7 @@ export const SYNCED_KEYS = [
   'tcgCollectionModelVersion',
   'tcgCustomCollections',
   'tcgCustomCollectionCards',
+  'tcgCustomCollectionLayouts',
   'tcgInvestments',
   'tcgWishlistCards',
   'tcgActiveSets',
@@ -557,6 +576,7 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
       tcgCollectionModelVersion: TCG_COLLECTION_MODEL_VERSION,
       tcgCustomCollections: [],
       tcgCustomCollectionCards: [],
+      tcgCustomCollectionLayouts: [],
       tcgInvestments: [],
       saveTCGInvestment: (input, id, creationId) => {
         if (!hasSyncAccess()) { requestSyncAccess(); return null; }
@@ -611,6 +631,9 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
         set((state) => ({
           tcgCustomCollections: state.tcgCustomCollections.filter((collection) => collection.id !== collectionId),
           tcgCustomCollectionCards: state.tcgCustomCollectionCards.filter((card) => card.collectionId !== collectionId),
+          tcgCustomCollectionLayouts: sortTCGCustomCollectionLayouts(
+            state.tcgCustomCollectionLayouts.filter((layout) => layout.collectionId !== collectionId),
+          ),
         }));
         return true;
       },
@@ -620,14 +643,84 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
           return false;
         }
         const state = get();
+        const layoutCollectionId = collectionId.toLowerCase();
+        const hasExplicitLayout = state.tcgCustomCollectionLayouts.some((layout) => layout.collectionId === layoutCollectionId);
         const cards = addCustomCollectionCard(state.tcgCustomCollections, state.tcgCustomCollectionCards, {
           ...card,
           collectionId,
           addedAt: new Date().toISOString(),
         });
         if (cards.length === state.tcgCustomCollectionCards.length) return false;
-        set({ tcgCustomCollectionCards: cards });
+        const existingCardRefs = hasExplicitLayout ? new Set(state.tcgCustomCollectionCards) : null;
+        const addedCard = existingCardRefs ? cards.find((entry) => !existingCardRefs.has(entry)) : undefined;
+        const nextLayouts = addedCard
+          ? sortTCGCustomCollectionLayouts(state.tcgCustomCollectionLayouts.map((layout) => layout.collectionId === layoutCollectionId
+            ? { ...layout, cardOrder: compressTCGCustomCollectionLayoutCardRefs([
+              ...layout.cardOrder,
+              { cardId: addedCard.cardId, language: addedCard.language, copyIndex: 0, ...(addedCard.quantity && addedCard.quantity > 1 ? { copyCount: addedCard.quantity } : {}) },
+            ]) }
+            : layout))
+          : state.tcgCustomCollectionLayouts;
+        if (addedCard && !isTCGCustomCollectionLayoutWithinSyncBudget(nextLayouts)) return false;
+        set({
+          tcgCustomCollectionCards: cards,
+          ...(addedCard ? { tcgCustomCollectionLayouts: nextLayouts } : {}),
+        });
         return true;
+      },
+      addTCGCustomCollectionCards: (collectionId, cardsToAdd) => {
+        if (!hasSyncAccess()) {
+          requestSyncAccess();
+          return 0;
+        }
+        if (cardsToAdd.length === 0) return 0;
+        const state = get();
+        const addedAt = new Date().toISOString();
+        const layoutCollectionId = collectionId.toLowerCase();
+        const hasExplicitLayout = state.tcgCustomCollectionLayouts.some((layout) => layout.collectionId === layoutCollectionId);
+        let cards = state.tcgCustomCollectionCards;
+        let addedCount = 0;
+        const addedMembers: TCGCustomCollectionLayoutCardRef[] = [];
+        for (const card of cardsToAdd) {
+          const next = addCustomCollectionCard(state.tcgCustomCollections, cards, {
+            ...card,
+            collectionId,
+            addedAt,
+          });
+          if (next.length > cards.length) {
+            if (hasExplicitLayout) {
+              const existingCardRefs = new Set(cards);
+              const addedCard = next.find((entry) => !existingCardRefs.has(entry));
+              if (addedCard) addedMembers.push({
+                cardId: addedCard.cardId,
+                language: addedCard.language,
+                copyIndex: 0,
+                ...(addedCard.quantity && addedCard.quantity > 1 ? { copyCount: addedCard.quantity } : {}),
+              });
+            }
+            cards = next;
+            addedCount += 1;
+          }
+        }
+        if (addedCount > 0) {
+          const nextLayouts = hasExplicitLayout
+            ? sortTCGCustomCollectionLayouts(state.tcgCustomCollectionLayouts.map((layout) => layout.collectionId === layoutCollectionId
+              ? {
+                ...layout,
+                cardOrder: compressTCGCustomCollectionLayoutCardRefs([
+                  ...layout.cardOrder,
+                  ...addedMembers,
+                ]),
+              }
+              : layout))
+            : state.tcgCustomCollectionLayouts;
+          if (hasExplicitLayout && !isTCGCustomCollectionLayoutWithinSyncBudget(nextLayouts)) return 0;
+          set({
+            tcgCustomCollectionCards: cards,
+            ...(hasExplicitLayout ? { tcgCustomCollectionLayouts: nextLayouts } : {}),
+          });
+        }
+        return addedCount;
       },
       setTCGCustomCollectionCardQuantity: (collectionId, cardId, language, quantity) => {
         if (!hasSyncAccess()) {
@@ -635,10 +728,26 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
           return false;
         }
         if (!Number.isSafeInteger(quantity) || quantity < 0 || quantity > 9_999) return false;
-        const cards = get().tcgCustomCollectionCards;
+        const state = get();
+        const cards = state.tcgCustomCollectionCards;
         const current = cards.find((entry) => entry.collectionId === collectionId && entry.cardId === cardId && entry.language === language);
         if (!current) return false;
-        set({ tcgCustomCollectionCards: cards.map((entry) => entry === current ? { ...entry, quantity } : entry) });
+        const nextCards = cards.map((entry) => entry === current ? { ...entry, quantity } : entry);
+        const hasExplicitLayout = state.tcgCustomCollectionLayouts.some((layout) => layout.collectionId === collectionId);
+        const normalizedLayouts = hasExplicitLayout
+          ? normalizeTCGCustomCollectionLayouts(
+            state.tcgCustomCollectionLayouts,
+            state.tcgCustomCollections.map((collection) => collection.id),
+            nextCards,
+          )
+          : null;
+        if (hasExplicitLayout && !normalizedLayouts) return false;
+        const nextLayouts = normalizedLayouts ? sortTCGCustomCollectionLayouts(normalizedLayouts) : state.tcgCustomCollectionLayouts;
+        if (normalizedLayouts && !isTCGCustomCollectionLayoutWithinSyncBudget(nextLayouts)) return false;
+        set({
+          tcgCustomCollectionCards: nextCards,
+          ...(normalizedLayouts ? { tcgCustomCollectionLayouts: nextLayouts } : {}),
+        });
         return true;
       },
       removeTCGCustomCollectionCard: (collectionId, cardId, language) => {
@@ -649,7 +758,70 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
         const state = get();
         const cards = removeCustomCollectionCard(collectionId, cardId, language, state.tcgCustomCollectionCards);
         if (cards.length === state.tcgCustomCollectionCards.length) return false;
-        set({ tcgCustomCollectionCards: cards });
+        set({
+          tcgCustomCollectionCards: cards,
+          tcgCustomCollectionLayouts: sortTCGCustomCollectionLayouts(state.tcgCustomCollectionLayouts.map((layout) => layout.collectionId === collectionId
+            ? { ...layout, cardOrder: layout.cardOrder.filter((entry) => entry.cardId !== cardId || entry.language !== language) }
+            : layout)),
+        });
+        return true;
+      },
+      setTCGCustomCollectionGridPreset: (collectionId, gridPreset) => {
+        if (!hasSyncAccess()) {
+          requestSyncAccess();
+          return false;
+        }
+        const state = get();
+        const normalizedCollectionId = collectionId.toLowerCase();
+        if (!state.tcgCustomCollections.some((collection) => collection.id === normalizedCollectionId)) return false;
+        const currentLayout = getTCGCustomCollectionLayout(normalizedCollectionId, state.tcgCustomCollectionLayouts, state.tcgCustomCollectionCards);
+        const layouts = normalizeTCGCustomCollectionLayouts(
+          [{ ...currentLayout, collectionId: normalizedCollectionId, gridPreset }],
+          state.tcgCustomCollections.map((collection) => collection.id),
+          state.tcgCustomCollectionCards,
+        );
+        if (!layouts) return false;
+        const nextLayouts = sortTCGCustomCollectionLayouts([
+          ...state.tcgCustomCollectionLayouts.filter((layout) => layout.collectionId !== normalizedCollectionId),
+          layouts[0],
+        ]);
+        if (!isTCGCustomCollectionLayoutWithinSyncBudget(nextLayouts)) return false;
+        set({
+          tcgCustomCollectionLayouts: nextLayouts,
+        });
+        return true;
+      },
+      reorderTCGCustomCollectionCards: (collectionId, cardOrder) => {
+        if (!hasSyncAccess()) {
+          requestSyncAccess();
+          return false;
+        }
+        const state = get();
+        const normalizedCollectionId = collectionId.toLowerCase();
+        if (!Array.isArray(cardOrder) || !state.tcgCustomCollections.some((collection) => collection.id === normalizedCollectionId)) return false;
+        const currentLayout = getTCGCustomCollectionLayout(normalizedCollectionId, state.tcgCustomCollectionLayouts, state.tcgCustomCollectionCards);
+        const layouts = normalizeTCGCustomCollectionLayouts(
+          [{ ...currentLayout, collectionId: normalizedCollectionId, cardOrder: [...cardOrder] }],
+          state.tcgCustomCollections.map((collection) => collection.id),
+          state.tcgCustomCollectionCards,
+        );
+        const normalizedLayout = layouts?.[0];
+        if (!normalizedLayout) return false;
+        const canonicalOrder = compressTCGCustomCollectionLayoutCardRefs(cardOrder);
+        if (canonicalOrder.length !== normalizedLayout.cardOrder.length
+          || !canonicalOrder.every((card, index) => card && typeof card === 'object'
+            && card.cardId === normalizedLayout.cardOrder[index]?.cardId
+            && card.language === normalizedLayout.cardOrder[index]?.language
+            && (card.copyIndex ?? 0) === (normalizedLayout.cardOrder[index]?.copyIndex ?? 0)
+            && (card.copyCount ?? 1) === (normalizedLayout.cardOrder[index]?.copyCount ?? 1))) return false;
+        const nextLayouts = sortTCGCustomCollectionLayouts([
+          ...state.tcgCustomCollectionLayouts.filter((layout) => layout.collectionId !== normalizedCollectionId),
+          normalizedLayout,
+        ]);
+        if (!isTCGCustomCollectionLayoutWithinSyncBudget(nextLayouts)) return false;
+        set({
+          tcgCustomCollectionLayouts: nextLayouts,
+        });
         return true;
       },
       setTCGBrowseLanguage: (language) => {

@@ -15,6 +15,7 @@ import {
 } from '@primedex/core/lib/tcg-currency';
 import {
   normalizeTCGCustomCollectionCards,
+  normalizeTCGCustomCollectionLayouts,
   normalizeTCGCustomCollections,
 } from '@primedex/core/lib/tcg-custom-collections';
 import { normalizeTCGInvestments } from '@primedex/core/lib/tcg-investments';
@@ -69,6 +70,7 @@ export function normalizeUserStateData(data: Record<string, unknown>): Record<st
     'tcgCollectionModelVersion',
     'tcgCustomCollections',
     'tcgCustomCollectionCards',
+    'tcgCustomCollectionLayouts',
     'tcgInvestments',
   ];
   const hasTcgField = tcgKeys.some((key) => Object.prototype.hasOwnProperty.call(data, key));
@@ -132,6 +134,15 @@ export function normalizeUserStateData(data: Record<string, unknown>): Record<st
     ? normalizeTCGCustomCollectionCards(data.tcgCustomCollectionCards, customCollections.map((entry) => entry.id))
     : [];
   if (!customCollectionCards) return null;
+  const hasCustomCollectionLayouts = Object.prototype.hasOwnProperty.call(data, 'tcgCustomCollectionLayouts');
+  const customCollectionLayouts = hasCustomCollectionLayouts
+    ? normalizeTCGCustomCollectionLayouts(
+      data.tcgCustomCollectionLayouts,
+      customCollections.map((entry) => entry.id),
+      customCollectionCards,
+    )
+    : undefined;
+  if (hasCustomCollectionLayouts && !customCollectionLayouts) return null;
   const investments = normalizeTCGInvestments(Object.prototype.hasOwnProperty.call(data, 'tcgInvestments') ? data.tcgInvestments : []);
   if (!investments) return null;
 
@@ -167,6 +178,7 @@ export function normalizeUserStateData(data: Record<string, unknown>): Record<st
     tcgCollectionModelVersion: 3,
     tcgCustomCollections: customCollections,
     tcgCustomCollectionCards: customCollectionCards,
+    ...(customCollectionLayouts ? { tcgCustomCollectionLayouts: customCollectionLayouts } : {}),
     tcgInvestments: investments,
   };
 }

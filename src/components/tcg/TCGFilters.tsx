@@ -50,6 +50,7 @@ interface TCGFiltersProps {
   onSimpleRarityChange?: (rarity: string) => void;
   autoApplyInitialSet?: boolean;
   language?: TCGCardLanguage;
+  showSearchInput?: boolean;
 }
 
 const FILTER_CONTROL_FOCUS_CLASS =
@@ -63,6 +64,7 @@ export function TCGFilters({
   onSimpleRarityChange,
   autoApplyInitialSet = true,
   language,
+  showSearchInput = true,
 }: TCGFiltersProps) {
   const { t } = useTranslation();
   const mounted = useMounted();
@@ -499,13 +501,15 @@ export function TCGFilters({
       className="w-full space-y-4"
     >
       <div className="glass-surface rounded-sm p-4">
-        <CatalogSearchInput
-          searchTerm={filters.searchTerm || ''}
-          onChange={scheduleSearchTerm}
-          onClear={clearSearchTerm}
-          placeholder={t('tcg.search_placeholder')}
-          clearLabel={t('search.clear')}
-        />
+        {showSearchInput && (
+          <CatalogSearchInput
+            searchTerm={filters.searchTerm || ''}
+            onChange={scheduleSearchTerm}
+            onClear={clearSearchTerm}
+            placeholder={t('tcg.search_placeholder')}
+            clearLabel={t('search.clear')}
+          />
+        )}
 
         <div className="mt-4 flex items-center justify-between gap-2.5">
           <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/35">

@@ -4,7 +4,13 @@ import { act, createElement } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-const mocks = vi.hoisted(() => ({ fetchAppApi: vi.fn(), i18n: { t: (key: string) => key } }));
+const mocks = vi.hoisted(() => ({
+  fetchAppApi: vi.fn(),
+  readLayoutCache: vi.fn(),
+  writeLayoutCache: vi.fn(),
+  pruneLayoutCache: vi.fn(),
+  i18n: { t: (key: string) => key },
+}));
 
 vi.mock('@/lib/app-api', () => ({ fetchAppApi: mocks.fetchAppApi }));
 vi.mock('@/lib/i18n', () => ({ useTranslation: () => ({ i18n: mocks.i18n }) }));
@@ -29,6 +35,11 @@ vi.mock('@/lib/sentry-observability', () => ({
   reportFallback: vi.fn(),
 }));
 vi.mock('@/lib/toast', () => ({ toast: { error: vi.fn() } }));
+vi.mock('./tcg-custom-collection-layout-cache', () => ({
+  readTCGCustomCollectionLayoutCache: mocks.readLayoutCache,
+  writeTCGCustomCollectionLayoutCache: mocks.writeLayoutCache,
+  pruneTCGCustomCollectionLayoutTombstones: mocks.pruneLayoutCache,
+}));
 
 import { AuthContext } from '@/lib/neon/AuthProvider';
 import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
@@ -66,6 +77,9 @@ describe('account sync initialization', () => {
     vi.useFakeTimers();
     vi.clearAllMocks();
     resetSyncWriteStatus();
+    mocks.readLayoutCache.mockResolvedValue(null);
+    mocks.writeLayoutCache.mockResolvedValue(true);
+    mocks.pruneLayoutCache.mockResolvedValue(true);
     mocks.fetchAppApi.mockImplementation(() => new Promise<Response>(() => undefined));
     (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
     usePrimeDexStore.setState({ _hasHydrated: true });
@@ -83,6 +97,7 @@ describe('account sync initialization', () => {
       tcgWishlistCards: [],
       tcgCustomCollections: [],
       tcgCustomCollectionCards: [],
+      tcgCustomCollectionLayouts: [],
       tcgInvestments: [],
     });
     setSyncAccessStatus('checking');
@@ -90,11 +105,11 @@ describe('account sync initialization', () => {
     vi.useRealTimers();
   });
 
-  async function renderSync() {
+  async function renderSync(userId = 'account-a') {
     await act(async () => {
       root.render(createElement(
         AuthContext.Provider,
-        { value: { enabled: true, loading: false, user: { id: 'account-a' } } as never },
+        { value: { enabled: true, loading: false, user: { id: userId } } as never },
         createElement(SyncProbe),
       ));
       await Promise.resolve();
@@ -142,6 +157,180 @@ describe('account sync initialization', () => {
     expect(container.querySelector('output')?.textContent).toBe('ready');
   });
 
+  it('reconciles this account cached layout after remote membership loads and writes the accepted cache', async () => {
+    const collection = {
+      id: '126e8648-39da-4fc9-88b2-fd194d28cc5a',
+      name: 'Artwork',
+      createdAt: '2026-10-19T10:00:00.000Z',
+      updatedAt: '2026-10-19T10:00:00.000Z',
+    };
+    const first = { collectionId: collection.id, cardId: 'base1-001', language: 'en', cardName: 'Alakazam', addedAt: collection.createdAt };
+    const second = { collectionId: collection.id, cardId: 'base1-002', language: 'fr', cardName: 'Dracaufeu', addedAt: '2026-10-19T10:01:00.000Z' };
+    const remoteLayout = {
+      collectionId: collection.id,
+      gridPreset: '2x2',
+      cardOrder: [{ cardId: first.cardId, language: first.language, copyIndex: 0 }, { cardId: second.cardId, language: second.language, copyIndex: 0 }],
+    };
+    const cachedLayout = {
+      collectionId: collection.id,
+      gridPreset: '4x4',
+      cardOrder: [{ cardId: second.cardId, language: second.language, copyIndex: 0 }, { cardId: first.cardId, language: first.language, copyIndex: 0 }],
+    };
+    mocks.readLayoutCache.mockResolvedValueOnce({
+      version: 1,
+      layouts: [cachedLayout],
+      clock: 9,
+      entries: { [collection.id]: { clock: 9, deviceId: 'cached-device', present: true } },
+    });
+    mocks.fetchAppApi
+      .mockResolvedValueOnce(response(200, {
+        data: {
+          tcgCustomCollections: [collection],
+          tcgCustomCollectionCards: [first, second],
+          tcgCustomCollectionLayouts: [remoteLayout],
+          __sync: {
+            version: 3,
+            clock: 2,
+            collections: {
+              tcgCustomCollectionLayouts: { [collection.id]: { clock: 2, deviceId: 'remote-device', present: true } },
+            },
+          },
+        },
+        updatedAt: '2026-10-19T10:02:00.000Z',
+      }))
+      .mockImplementationOnce((_path: string, init?: RequestInit) => {
+        const request = JSON.parse(String(init?.body)) as { data: unknown };
+        return Promise.resolve(response(200, { data: request.data, updatedAt: '2026-10-19T10:03:00.000Z' }));
+      });
+
+    await renderSync('account-a');
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+
+    expect(container.querySelector('output')?.textContent).toBe('ready');
+    expect(usePrimeDexStore.getState().tcgCustomCollectionLayouts).toEqual([cachedLayout]);
+    expect(mocks.readLayoutCache).toHaveBeenCalledWith('account-a');
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(100);
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(mocks.fetchAppApi).toHaveBeenCalledTimes(2);
+    expect(mocks.writeLayoutCache).toHaveBeenLastCalledWith('account-a', expect.objectContaining({
+      layouts: [cachedLayout],
+      entries: { [collection.id]: expect.objectContaining({ present: true }) },
+    }));
+  });
+
+  it('keeps a newer remote layout authoritative over an older account cache', async () => {
+    const collection = {
+      id: '126e8648-39da-4fc9-88b2-fd194d28cc5a',
+      name: 'Artwork',
+      createdAt: '2026-10-19T10:00:00.000Z',
+      updatedAt: '2026-10-19T10:00:00.000Z',
+    };
+    const card = { collectionId: collection.id, cardId: 'base1-001', language: 'en', cardName: 'Alakazam', addedAt: collection.createdAt };
+    const remoteLayout = { collectionId: collection.id, gridPreset: '4x4', cardOrder: [{ cardId: card.cardId, language: card.language, copyIndex: 0 }] };
+    const cachedLayout = { collectionId: collection.id, gridPreset: '2x2', cardOrder: [{ cardId: card.cardId, language: card.language, copyIndex: 0 }] };
+    mocks.readLayoutCache.mockResolvedValueOnce({
+      version: 1,
+      layouts: [cachedLayout],
+      clock: 3,
+      entries: { [collection.id]: { clock: 3, deviceId: 'cached-device', present: true } },
+    });
+    mocks.fetchAppApi.mockResolvedValueOnce(response(200, {
+      data: {
+        tcgCustomCollections: [collection],
+        tcgCustomCollectionCards: [card],
+        tcgCustomCollectionLayouts: [remoteLayout],
+        __sync: {
+          version: 3,
+          clock: 9,
+          collections: {
+            tcgCustomCollectionLayouts: { [collection.id]: { clock: 9, deviceId: 'remote-device', present: true } },
+          },
+        },
+      },
+      updatedAt: '2026-10-19T10:02:00.000Z',
+    }));
+
+    await renderSync('account-a');
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+
+    expect(usePrimeDexStore.getState().tcgCustomCollectionLayouts).toEqual([remoteLayout]);
+    expect(mocks.fetchAppApi).toHaveBeenCalledOnce();
+    expect(mocks.writeLayoutCache).toHaveBeenLastCalledWith('account-a', expect.objectContaining({ layouts: [remoteLayout] }));
+  });
+
+  it('does not replay a cached layout tombstone while the remote binder still exists', async () => {
+    const collection = {
+      id: '126e8648-39da-4fc9-88b2-fd194d28cc5a',
+      name: 'Artwork',
+      createdAt: '2026-10-19T10:00:00.000Z',
+      updatedAt: '2026-10-19T10:00:00.000Z',
+    };
+    const card = { collectionId: collection.id, cardId: 'base1-001', language: 'en', cardName: 'Alakazam', addedAt: collection.createdAt };
+    const remoteLayout = {
+      collectionId: collection.id,
+      gridPreset: '4x3',
+      cardOrder: [{ cardId: card.cardId, language: card.language, copyIndex: 0 }],
+    };
+    mocks.readLayoutCache.mockResolvedValueOnce({
+      version: 1,
+      layouts: [],
+      clock: 9,
+      entries: { [collection.id]: { clock: 9, deviceId: 'cached-device', present: false } },
+    });
+    mocks.fetchAppApi.mockResolvedValueOnce(response(200, {
+      data: {
+        tcgCustomCollections: [collection],
+        tcgCustomCollectionCards: [card],
+        tcgCustomCollectionLayouts: [remoteLayout],
+        __sync: {
+          version: 3,
+          clock: 2,
+          collections: {
+            tcgCustomCollectionLayouts: { [collection.id]: { clock: 2, deviceId: 'remote-device', present: true } },
+          },
+        },
+      },
+      updatedAt: '2026-10-19T10:02:00.000Z',
+    }));
+
+    await renderSync('account-a');
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+
+    expect(usePrimeDexStore.getState().tcgCustomCollections).toEqual([collection]);
+    expect(usePrimeDexStore.getState().tcgCustomCollectionCards).toEqual([{ ...card, quantity: 1 }]);
+    expect(usePrimeDexStore.getState().tcgCustomCollectionLayouts).toEqual([remoteLayout]);
+    expect(mocks.pruneLayoutCache).toHaveBeenCalledWith('account-a', [collection.id]);
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(100);
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(mocks.fetchAppApi).toHaveBeenCalledOnce();
+    expect(mocks.writeLayoutCache).toHaveBeenLastCalledWith('account-a', expect.objectContaining({ layouts: [remoteLayout] }));
+  });
+
   it('keeps a custom collection locally when the cloud rejects its size and retries that saved state', async () => {
     const collection = {
       id: '126e8648-39da-4fc9-88b2-fd194d28cc5a',
@@ -149,11 +338,17 @@ describe('account sync initialization', () => {
       createdAt: '2026-10-19T10:00:00.000Z',
       updatedAt: '2026-10-19T10:00:00.000Z',
     };
+    const card = { collectionId: collection.id, cardId: 'base1-001', language: 'en' as const, cardName: 'Alakazam', addedAt: collection.createdAt };
+    const layout = { collectionId: collection.id, gridPreset: '4x3' as const, cardOrder: [{ cardId: card.cardId, language: card.language, copyIndex: 0 }] };
     mocks.fetchAppApi
       .mockResolvedValueOnce(response(200, { data: {}, updatedAt: '2026-10-19T10:00:00.000Z' }))
       .mockResolvedValueOnce(response(413, { error: 'State payload is too large' }))
       .mockResolvedValueOnce(response(200, {
-        data: { tcgCustomCollections: [collection] },
+        data: {
+          tcgCustomCollections: [collection],
+          tcgCustomCollectionCards: [card],
+          tcgCustomCollectionLayouts: [layout],
+        },
         updatedAt: '2026-10-19T10:01:00.000Z',
       }));
 
@@ -168,6 +363,8 @@ describe('account sync initialization', () => {
     await act(async () => {
       usePrimeDexStore.setState({
         tcgCustomCollections: [collection],
+        tcgCustomCollectionCards: [card],
+        tcgCustomCollectionLayouts: [layout],
       });
       await vi.advanceTimersByTimeAsync(100);
       await Promise.resolve();
@@ -175,8 +372,10 @@ describe('account sync initialization', () => {
     });
 
     expect(usePrimeDexStore.getState().tcgCustomCollections).toEqual([collection]);
+    expect(usePrimeDexStore.getState().tcgCustomCollectionLayouts).toEqual([layout]);
     expect(container.querySelector('output')?.textContent).toBe('ready');
     expect(getSyncWriteStatus()).toEqual({ state: 'error', reason: 'too-large' });
+    expect(mocks.writeLayoutCache).toHaveBeenCalledWith('account-a', expect.objectContaining({ layouts: [layout] }));
     const { toast } = await import('@/lib/toast');
     expect(toast.error).toHaveBeenCalledWith('tcg.custom_collections.document_too_large');
 

@@ -4,6 +4,7 @@ import {
   getTCGCollectionCardOwnerships,
   getTCGCollectionCardQuantity,
 } from '@/lib/tcg-collections';
+import { getTCGCustomCollectionLayout, moveTCGCustomCollectionLayoutCard } from '@primedex/core/lib/tcg-custom-collections';
 import { setSyncAccessStatus } from './sync-access';
 import { usePrimeDexStore } from './primedex';
 
@@ -17,6 +18,7 @@ function resetCollectionState(legacyCards: string[] = []): void {
     tcgCollectionModelVersion: 3,
     tcgCustomCollections: [],
     tcgCustomCollectionCards: [],
+    tcgCustomCollectionLayouts: [],
   });
 }
 
@@ -71,6 +73,162 @@ describe('web TCG collection store', () => {
     store.removeTCGCustomCollectionCard(binder, 'base1-4', 'fr');
     expect(store.getTCGPhysicalCardCount()).toBe(2);
     expect(usePrimeDexStore.getState().tcgCustomCollectionCards).toHaveLength(2);
+    setSyncAccessStatus('checking');
+  });
+
+  it('adds a selection once, ignores duplicate printings, and publishes one store update', () => {
+    setSyncAccessStatus('ready');
+    resetCollectionState();
+    const collectionId = usePrimeDexStore.getState().createTCGCustomCollection('Favorites');
+    const store = usePrimeDexStore.getState();
+    const card = { cardId: 'base1-4', language: 'en' as const, cardName: 'Charizard' };
+    let updates = 0;
+    const unsubscribe = usePrimeDexStore.subscribe(() => { updates += 1; });
+
+    const added = store.addTCGCustomCollectionCards(collectionId, [
+      { ...card, quantity: 3 },
+      { cardId: 'base1-1', language: 'en', cardName: 'Alakazam' },
+      card,
+    ]);
+
+    unsubscribe();
+    expect(added).toBe(2);
+    expect(updates).toBe(1);
+    expect(usePrimeDexStore.getState().tcgCustomCollectionCards.map(({ cardId }) => cardId)).toEqual(['base1-1', 'base1-4']);
+    expect(usePrimeDexStore.getState().tcgCustomCollectionCards.find(({ cardId }) => cardId === 'base1-4')?.quantity).toBe(3);
+    setSyncAccessStatus('checking');
+  });
+
+  it('keeps legacy layouts lazy and updates explicit order with binder membership edits', () => {
+    setSyncAccessStatus('ready');
+    resetCollectionState();
+    const store = usePrimeDexStore.getState();
+    const collectionId = store.createTCGCustomCollection('Binder');
+    const first = { cardId: 'base1-001', language: 'en' as const, cardName: 'Alakazam' };
+    const second = { cardId: 'base1-002', language: 'fr' as const, cardName: 'Dracaufeu' };
+    const third = { cardId: 'base1-003', language: 'ja' as const, cardName: 'フシギダネ' };
+
+    expect(store.addTCGCustomCollectionCard(collectionId, first)).toBe(true);
+    expect(usePrimeDexStore.getState().tcgCustomCollectionLayouts).toEqual([]);
+    expect(usePrimeDexStore.getState().setTCGCustomCollectionGridPreset(collectionId, '2x2')).toBe(true);
+    expect(usePrimeDexStore.getState().tcgCustomCollectionLayouts[0]).toEqual({
+      collectionId,
+      gridPreset: '2x2',
+      cardOrder: [{ cardId: first.cardId, language: first.language, copyIndex: 0 }],
+    });
+
+    expect(usePrimeDexStore.getState().addTCGCustomCollectionCard(collectionId.toUpperCase(), second)).toBe(true);
+    expect(usePrimeDexStore.getState().addTCGCustomCollectionCards(collectionId, [third, first])).toBe(1);
+    expect(usePrimeDexStore.getState().tcgCustomCollectionLayouts[0].cardOrder).toEqual([
+      { cardId: first.cardId, language: first.language, copyIndex: 0 },
+      { cardId: second.cardId, language: second.language, copyIndex: 0 },
+      { cardId: third.cardId, language: third.language, copyIndex: 0 },
+    ]);
+
+    expect(usePrimeDexStore.getState().removeTCGCustomCollectionCard(collectionId, second.cardId, second.language)).toBe(true);
+    expect(usePrimeDexStore.getState().tcgCustomCollectionLayouts[0].cardOrder).toEqual([
+      { cardId: first.cardId, language: first.language, copyIndex: 0 },
+      { cardId: third.cardId, language: third.language, copyIndex: 0 },
+    ]);
+    expect(usePrimeDexStore.getState().deleteTCGCustomCollection(collectionId)).toBe(true);
+    expect(usePrimeDexStore.getState().tcgCustomCollectionLayouts).toEqual([]);
+    expect(usePrimeDexStore.getState().tcgCustomCollectionCards).toEqual([]);
+    setSyncAccessStatus('checking');
+  });
+
+  it('validates preset and whole-binder reorder without changing card ownership data', () => {
+    setSyncAccessStatus('ready');
+    resetCollectionState();
+    const store = usePrimeDexStore.getState();
+    const collectionId = store.createTCGCustomCollection('Mixed language binder');
+    const first = { cardId: 'base1-001', language: 'en' as const, cardName: 'Alakazam' };
+    const second = { cardId: 'base1-001', language: 'fr' as const, cardName: 'Alakazam' };
+    const third = { cardId: 'base1-002', language: 'ja' as const, cardName: 'フシギダネ' };
+    store.addTCGCustomCollectionCards(collectionId, [first, second, { ...third, quantity: 4 }]);
+    store.setTCGCustomCollectionCardQuantity(collectionId, third.cardId, third.language, 7);
+    usePrimeDexStore.setState({ tcgOwnedCards: ['base1-099'] });
+    const cardsBefore = usePrimeDexStore.getState().tcgCustomCollectionCards.map((card) => ({ ...card }));
+    const ownedBefore = [...usePrimeDexStore.getState().tcgOwnedCards];
+    const order = [
+      { cardId: third.cardId, language: third.language, copyIndex: 0, copyCount: 7 },
+      { cardId: second.cardId, language: second.language, copyIndex: 0 },
+      { cardId: first.cardId, language: first.language, copyIndex: 0 },
+    ];
+
+    expect(store.setTCGCustomCollectionGridPreset(collectionId, '4x4')).toBe(true);
+    expect(usePrimeDexStore.getState().reorderTCGCustomCollectionCards(collectionId, order)).toBe(true);
+    expect(usePrimeDexStore.getState().tcgCustomCollectionLayouts[0]).toEqual({ collectionId, gridPreset: '4x4', cardOrder: order });
+    expect(usePrimeDexStore.getState().tcgCustomCollectionCards).toEqual(cardsBefore);
+    expect(usePrimeDexStore.getState().tcgOwnedCards).toEqual(ownedBefore);
+
+    const invalidPreset = '5x5' as Parameters<typeof store.setTCGCustomCollectionGridPreset>[1];
+    expect(store.setTCGCustomCollectionGridPreset(collectionId, invalidPreset)).toBe(false);
+    expect(store.setTCGCustomCollectionGridPreset('36e431a6-c3c1-46d4-804d-f5fa08f1af9d', '3x3')).toBe(false);
+    expect(store.reorderTCGCustomCollectionCards(collectionId, order.slice(1))).toBe(false);
+    expect(store.reorderTCGCustomCollectionCards(collectionId, [order[0], order[0], order[2]])).toBe(false);
+    expect(store.reorderTCGCustomCollectionCards(collectionId, [order[0], order[1], { cardId: 'base1-999', language: 'en' }])).toBe(false);
+
+    setSyncAccessStatus('checking');
+    expect(usePrimeDexStore.getState().setTCGCustomCollectionGridPreset(collectionId, '3x3')).toBe(false);
+    expect(usePrimeDexStore.getState().reorderTCGCustomCollectionCards(collectionId, order)).toBe(false);
+    expect(usePrimeDexStore.getState().tcgCustomCollectionLayouts[0]).toEqual({ collectionId, gridPreset: '4x4', cardOrder: order });
+    setSyncAccessStatus('checking');
+  });
+
+  it('reconciles physical pocket runs when quantity changes and preserves a moved copy', () => {
+    setSyncAccessStatus('ready');
+    resetCollectionState();
+    const store = usePrimeDexStore.getState();
+    const collectionId = store.createTCGCustomCollection('Physical binder');
+    const repeated = { cardId: 'base1-004', language: 'en' as const, cardName: 'Card Four' };
+    const wanted = { cardId: 'base1-005', language: 'fr' as const, cardName: 'Card Five' };
+    store.addTCGCustomCollectionCards(collectionId, [
+      { ...repeated, quantity: 3 },
+      { ...wanted, quantity: 0 },
+    ]);
+    expect(store.setTCGCustomCollectionGridPreset(collectionId, '2x2')).toBe(true);
+    expect(usePrimeDexStore.getState().tcgCustomCollectionLayouts[0]?.cardOrder).toEqual([
+      { cardId: repeated.cardId, language: repeated.language, copyIndex: 0, copyCount: 3 },
+      { cardId: wanted.cardId, language: wanted.language, copyIndex: 0 },
+    ]);
+
+    const layoutOrder = usePrimeDexStore.getState().tcgCustomCollectionLayouts[0]!.cardOrder;
+    const moved = moveTCGCustomCollectionLayoutCard(layoutOrder, { ...repeated, copyIndex: 2 }, 0)!;
+    expect(store.reorderTCGCustomCollectionCards(collectionId, moved.cardOrder)).toBe(true);
+    expect(store.setTCGCustomCollectionCardQuantity(collectionId, repeated.cardId, repeated.language, 4)).toBe(true);
+    expect(usePrimeDexStore.getState().tcgCustomCollectionLayouts[0]?.cardOrder).toEqual([
+      { cardId: repeated.cardId, language: repeated.language, copyIndex: 2 },
+      { cardId: repeated.cardId, language: repeated.language, copyIndex: 0, copyCount: 2 },
+      { cardId: repeated.cardId, language: repeated.language, copyIndex: 3 },
+      { cardId: wanted.cardId, language: wanted.language, copyIndex: 0 },
+    ]);
+    expect(store.setTCGCustomCollectionCardQuantity(collectionId, repeated.cardId, repeated.language, 0)).toBe(true);
+    expect(usePrimeDexStore.getState().tcgCustomCollectionLayouts[0]?.cardOrder).toEqual([
+      { cardId: repeated.cardId, language: repeated.language, copyIndex: 0 },
+      { cardId: wanted.cardId, language: wanted.language, copyIndex: 0 },
+    ]);
+    expect(store.removeTCGCustomCollectionCard(collectionId, repeated.cardId, repeated.language)).toBe(true);
+    expect(usePrimeDexStore.getState().tcgCustomCollectionLayouts[0]?.cardOrder).toEqual([
+      { cardId: wanted.cardId, language: wanted.language, copyIndex: 0 },
+    ]);
+    setSyncAccessStatus('checking');
+  });
+
+  it('derives a lazy default order from card membership without persisting a layout', () => {
+    setSyncAccessStatus('ready');
+    resetCollectionState();
+    const collectionId = usePrimeDexStore.getState().createTCGCustomCollection('Legacy');
+    usePrimeDexStore.getState().addTCGCustomCollectionCards(collectionId, [
+      { cardId: 'base1-002', language: 'en', cardName: 'Dracaufeu' },
+      { cardId: 'base1-001', language: 'en', cardName: 'Alakazam' },
+    ]);
+
+    expect(usePrimeDexStore.getState().tcgCustomCollectionLayouts).toEqual([]);
+    expect(getTCGCustomCollectionLayout(collectionId, [], usePrimeDexStore.getState().tcgCustomCollectionCards)).toEqual({
+      collectionId,
+      gridPreset: '3x3',
+      cardOrder: usePrimeDexStore.getState().tcgCustomCollectionCards.map(({ cardId, language }) => ({ cardId, language, copyIndex: 0 })),
+    });
     setSyncAccessStatus('checking');
   });
 

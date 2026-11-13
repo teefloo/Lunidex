@@ -22,6 +22,9 @@ export type {
   TCGCustomCollection,
   TCGCustomCollectionCard,
   TCGCustomCollectionCardPage,
+  TCGCustomCollectionGridPreset,
+  TCGCustomCollectionLayout,
+  TCGCustomCollectionLayoutCardRef,
 } from '@primedex/core/lib/tcg-custom-collections';
 export type { TCGDisplayCurrency } from '@primedex/core/lib/tcg-currency';
 

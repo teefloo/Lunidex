@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { decodeTCGCollectionCardKey, encodeTCGCollectionCardKey, encodeTCGCollectionKey, getTCGCollectionCardIdentity } from '@/lib/tcg-collections';
-import { advanceSyncMetadata, extractSyncMetadata, getInitialSyncState, normalizeSyncMetadata, preserveLocalPreferences, reconcileSyncState } from './sync-state';
+import {
+  advanceSyncMetadata,
+  extractSyncMetadata,
+  getInitialSyncState,
+  normalizeSyncMetadata,
+  preserveLocalPreferences,
+  reconcileCachedTCGCustomCollectionLayouts,
+  reconcileSyncState,
+} from './sync-state';
 import type { PersistedState } from '@/store/primedex';
 import { advanceTcgApiSyncMetadata, attachTcgApiSyncMetadata } from '@/lib/tcg-api-sync';
 
@@ -35,6 +43,135 @@ describe('language-aware sync merge', () => {
     expect(merged.state.tcgCustomCollections).toHaveLength(2);
     expect(merged.state.tcgCustomCollectionCards).toHaveLength(2);
     expect(new Set(merged.state.tcgCustomCollectionCards.map((entry) => entry.collectionId)).size).toBe(2);
+  });
+
+  it('resolves a binder layout as one last-writer entity while merging card memberships', () => {
+    const initial = getInitialSyncState();
+    const collection = { id: '126e8648-39da-4fc9-88b2-fd194d28cc5a', name: 'Artwork', createdAt: '2026-10-19T10:00:00.000Z', updatedAt: '2026-10-19T10:00:00.000Z' };
+    const first = { collectionId: collection.id, cardId: 'base1-001', language: 'en' as const, cardName: 'Alakazam', addedAt: '2026-10-19T10:00:00.000Z' };
+    const localAddition = { ...first, cardId: 'base1-002', cardName: 'Dracaufeu', addedAt: '2026-10-19T10:01:00.000Z' };
+    const remoteAddition = { ...first, cardId: 'base1-003', cardName: 'Florizarre', addedAt: '2026-10-19T10:02:00.000Z' };
+    const base = withTcg(initial, { tcgCustomCollections: [collection], tcgCustomCollectionCards: [first] });
+    const local = withTcg(base, {
+      tcgCustomCollectionCards: [first, localAddition],
+      tcgCustomCollectionLayouts: [{
+        collectionId: collection.id,
+        gridPreset: '2x2',
+        cardOrder: [
+          { cardId: first.cardId, language: first.language },
+          { cardId: localAddition.cardId, language: localAddition.language },
+        ],
+      }],
+    });
+    const remote = withTcg(base, {
+      tcgCustomCollectionCards: [first, remoteAddition],
+      tcgCustomCollectionLayouts: [{
+        collectionId: collection.id,
+        gridPreset: '4x4',
+        cardOrder: [
+          { cardId: remoteAddition.cardId, language: remoteAddition.language },
+          { cardId: first.cardId, language: first.language },
+        ],
+      }],
+    });
+    const baseMetadata = normalizeSyncMetadata(undefined, base);
+    const localMetadata = advanceSyncMetadata(baseMetadata, base, local, 'device-a');
+    const remoteMetadata = advanceSyncMetadata(baseMetadata, base, remote, 'device-b');
+    const merged = reconcileSyncState(local, remote, localMetadata, remoteMetadata, { deviceId: 'device-a' });
+
+    expect(merged.state.tcgCustomCollectionLayouts).toEqual([{
+      collectionId: collection.id,
+      gridPreset: '4x4',
+      cardOrder: [
+        { cardId: remoteAddition.cardId, language: remoteAddition.language, copyIndex: 0 },
+        { cardId: first.cardId, language: first.language, copyIndex: 0 },
+        { cardId: localAddition.cardId, language: localAddition.language, copyIndex: 0 },
+      ],
+    }]);
+    expect(merged.state.tcgCustomCollectionCards.map((card) => card.cardId)).toEqual(['base1-001', 'base1-002', 'base1-003']);
+    expect(Object.keys(merged.metadata.collections.tcgCustomCollectionLayouts ?? {})).toEqual([collection.id]);
+
+    const parsedMetadata = normalizeSyncMetadata({
+      version: 3,
+      clock: 8,
+      collections: {
+        tcgCustomCollectionLayouts: {
+          [collection.id.toUpperCase()]: { clock: 8, deviceId: 'device-c', present: true },
+        },
+      },
+    }, initial);
+    expect(Object.keys(parsedMetadata.collections.tcgCustomCollectionLayouts ?? {})).toEqual([collection.id]);
+  });
+
+  it('keeps binder B cards and layout when stale A card and layout edits race with A deletion', () => {
+    const initial = getInitialSyncState();
+    const binderA = { id: '126e8648-39da-4fc9-88b2-fd194d28cc5a', name: 'A', createdAt: '2026-10-19T10:00:00.000Z', updatedAt: '2026-10-19T10:00:00.000Z' };
+    const binderB = { id: '36e431a6-c3c1-46d4-804d-f5fa08f1af9d', name: 'B', createdAt: '2026-10-19T10:01:00.000Z', updatedAt: '2026-10-19T10:01:00.000Z' };
+    const cardA = { collectionId: binderA.id, cardId: 'base1-001', language: 'en' as const, cardName: 'Alakazam', addedAt: binderA.createdAt };
+    const staleCardA = { ...cardA, cardId: 'base1-002', cardName: 'Dracaufeu', addedAt: '2026-10-19T10:02:00.000Z' };
+    const cardB = { collectionId: binderB.id, cardId: 'base1-003', language: 'fr' as const, cardName: 'Florizarre', addedAt: binderB.createdAt };
+    const layoutA = { collectionId: binderA.id, gridPreset: '2x2' as const, cardOrder: [{ cardId: cardA.cardId, language: cardA.language, copyIndex: 0 }] };
+    const layoutB = { collectionId: binderB.id, gridPreset: '4x4' as const, cardOrder: [{ cardId: cardB.cardId, language: cardB.language, copyIndex: 0 }] };
+    const base = withTcg(initial, {
+      tcgCustomCollections: [binderA, binderB],
+      tcgCustomCollectionCards: [cardA, cardB],
+      tcgCustomCollectionLayouts: [layoutA, layoutB],
+    });
+    const deletedA = withTcg(base, {
+      tcgCustomCollections: [binderB],
+      tcgCustomCollectionCards: [cardB],
+      tcgCustomCollectionLayouts: [layoutB],
+    });
+    const staleAEdit = withTcg(base, {
+      tcgCustomCollectionCards: [cardA, staleCardA, cardB],
+      tcgCustomCollectionLayouts: [
+        { ...layoutA, cardOrder: [{ cardId: staleCardA.cardId, language: staleCardA.language }, { cardId: cardA.cardId, language: cardA.language }] },
+        layoutB,
+      ],
+    });
+    const baseMetadata = normalizeSyncMetadata(undefined, base);
+    const deletedMetadata = advanceSyncMetadata(baseMetadata, base, deletedA, 'device-a');
+    const staleMetadata = advanceSyncMetadata(baseMetadata, base, staleAEdit, 'device-b');
+    const merged = reconcileSyncState(deletedA, staleAEdit, deletedMetadata, staleMetadata, { deviceId: 'device-a' });
+
+    expect(merged.state.tcgCustomCollections).toEqual([binderB]);
+    expect(merged.state.tcgCustomCollectionCards).toEqual([{ ...cardB, quantity: 1 }]);
+    expect(merged.state.tcgCustomCollectionLayouts).toEqual([layoutB]);
+  });
+
+  it('ignores a cached layout tombstone on reload while its remote binder still exists', () => {
+    const initial = getInitialSyncState();
+    const binder = { id: '126e8648-39da-4fc9-88b2-fd194d28cc5a', name: 'A', createdAt: '2026-10-19T10:00:00.000Z', updatedAt: '2026-10-19T10:00:00.000Z' };
+    const card = { collectionId: binder.id, cardId: 'base1-001', language: 'en' as const, cardName: 'Alakazam', addedAt: binder.createdAt };
+    const layout = { collectionId: binder.id, gridPreset: '4x3' as const, cardOrder: [{ cardId: card.cardId, language: card.language, copyIndex: 0 }] };
+    const remoteState = withTcg(initial, {
+      tcgCustomCollections: [binder],
+      tcgCustomCollectionCards: [card],
+      tcgCustomCollectionLayouts: [layout],
+    });
+    const remoteMetadata = normalizeSyncMetadata({
+      version: 3,
+      clock: 2,
+      collections: {
+        tcgCustomCollectionLayouts: { [binder.id]: { clock: 2, deviceId: 'remote-device', present: true } },
+      },
+    }, remoteState);
+    const remoteAccepted = { state: remoteState, metadata: remoteMetadata };
+
+    const reloaded = reconcileCachedTCGCustomCollectionLayouts(remoteAccepted, {
+      layouts: [],
+      clock: 9,
+      entries: { [binder.id]: { clock: 9, deviceId: 'cached-device', present: false } },
+    }, 'current-device');
+
+    expect(reloaded.state.tcgCustomCollections).toEqual([binder]);
+    expect(reloaded.state.tcgCustomCollectionCards).toEqual([{ ...card, quantity: 1 }]);
+    expect(reloaded.state.tcgCustomCollectionLayouts).toEqual([layout]);
+    expect(reloaded.metadata.collections.tcgCustomCollectionLayouts?.[binder.id]).toEqual({
+      clock: 2,
+      deviceId: 'remote-device',
+      present: true,
+    });
   });
 
   it('keeps a deleted binder deleted when another device edits its stale copy', () => {

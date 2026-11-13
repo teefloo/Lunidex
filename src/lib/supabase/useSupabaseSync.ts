@@ -36,10 +36,16 @@ import {
   normalizeSyncMetadata,
   pickSyncState,
   preserveLocalPreferences,
+  reconcileCachedTCGCustomCollectionLayouts,
   reconcileRemoteState,
   reconcileSyncState,
   type SyncMetadata,
 } from './sync-state';
+import {
+  pruneTCGCustomCollectionLayoutTombstones,
+  readTCGCustomCollectionLayoutCache,
+  writeTCGCustomCollectionLayoutCache,
+} from './tcg-custom-collection-layout-cache';
 
 // Give a card click a short coalescing window, then send one write. The
 // remote version is cached between writes so the normal path is one PUT.
@@ -224,6 +230,7 @@ export function useNeonSync(): void {
   const hasPendingLocalChangesRef = useRef(false);
   const applyingRemoteRef = useRef(false);
   const syncWriteVersionRef = useRef(0);
+  const layoutCacheWriteQueueRef = useRef<Promise<void>>(Promise.resolve());
 
   useEffect(() => {
     if (!hasHydrated) return;
@@ -241,6 +248,24 @@ export function useNeonSync(): void {
       acceptedSnapshotRef.current = state;
       acceptedMetadataRef.current = metadata;
       previousSnapshotRef.current = pickSyncState();
+    };
+
+    const persistLayoutCache = (state: Snapshot, metadata: SyncMetadata): void => {
+      const cache = {
+        version: 1 as const,
+        layouts: state.tcgCustomCollectionLayouts.map((layout) => ({
+          ...layout,
+          cardOrder: layout.cardOrder.map((card) => ({ ...card })),
+        })),
+        clock: metadata.clock,
+        entries: { ...(metadata.collections.tcgCustomCollectionLayouts ?? {}) },
+      };
+      layoutCacheWriteQueueRef.current = layoutCacheWriteQueueRef.current
+        .then(async () => {
+          if (!userId) return;
+          await writeTCGCustomCollectionLayoutCache(userId, cache);
+        })
+        .catch(() => undefined);
     };
 
     const resetSession = (status: 'checking' | 'unauthenticated' | 'unavailable'): void => {
@@ -392,6 +417,7 @@ export function useNeonSync(): void {
           confirmPendingSyncChanges(confirmed);
           if (JSON.stringify(current) === JSON.stringify(local)) {
             applyAcceptedState(confirmed, accepted.metadata);
+            persistLayoutCache(confirmed, accepted.metadata);
             reportSyncWriteSaved(writeVersion);
             hasPendingLocalChangesRef.current = false;
           } else {
@@ -455,6 +481,8 @@ export function useNeonSync(): void {
     const schedulePush = (): void => {
       rejectSupersededSyncChanges();
       hasPendingLocalChangesRef.current = true;
+      const current = pickSyncState();
+      persistLayoutCache(current, metadataRef.current ?? normalizeSyncMetadata(undefined, current));
       syncWriteVersionRef.current = queueSyncWrite();
       pushRequestedRef.current = true;
       if (pushInFlightRef.current) return;
@@ -478,13 +506,24 @@ export function useNeonSync(): void {
         const remoteSnapshot = remoteRow.data;
         remoteSnapshotRef.current = remoteSnapshot;
         remoteUpdatedAtRef.current = remoteRow.updatedAt;
-        const reconciled = reconcileRemoteState(
+        const remoteAccepted = reconcileRemoteState(
           remoteSnapshot as Partial<Snapshot>,
           extractSyncMetadata(remoteSnapshot),
           deviceId,
         );
+        const layoutCache = await readTCGCustomCollectionLayoutCache(userId);
+        if (cancelled) return;
+        let reconciled = remoteAccepted;
+        if (layoutCache) {
+          const remoteCollectionIds = remoteAccepted.state.tcgCustomCollections.map((collection) => collection.id);
+          await pruneTCGCustomCollectionLayoutTombstones(userId, remoteCollectionIds);
+          if (cancelled) return;
+          reconciled = reconcileCachedTCGCustomCollectionLayouts(remoteAccepted, layoutCache, deviceId);
+        }
         applyAcceptedState(reconciled.state, reconciled.metadata);
-        hasPendingLocalChangesRef.current = false;
+        persistLayoutCache(reconciled.state, reconciled.metadata);
+        hasPendingLocalChangesRef.current = JSON.stringify(reconciled.state.tcgCustomCollectionLayouts)
+          !== JSON.stringify(remoteAccepted.state.tcgCustomCollectionLayouts);
         setSyncAccessStatus('ready');
 
         unsubscribe = usePrimeDexStore.subscribe(() => {
@@ -505,6 +544,8 @@ export function useNeonSync(): void {
           previousSnapshotRef.current = next;
           schedulePush();
         });
+
+        if (hasPendingLocalChangesRef.current) schedulePush();
 
         // Remove preferences from the retired generation-theme feature without
         // touching any collection or account data. A conflict simply defers the

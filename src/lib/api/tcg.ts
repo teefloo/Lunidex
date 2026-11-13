@@ -902,7 +902,8 @@ export async function getTCGCustomCollectionCardDetails(
   signal?: AbortSignal,
 ): Promise<TCGCustomCollectionCardDetail[]> {
   // Leave half of the shared request budget available for whole-binder pricing.
-  return mapWithConcurrency(refs, 3, async (ref) => {
+  const uniqueRefs = [...new Map(refs.map((ref) => [`${ref.language}:${ref.cardId.toLocaleLowerCase()}`, ref])).values()];
+  return mapWithConcurrency(uniqueRefs, 3, async (ref) => {
     throwIfAborted(signal);
     const card = await getTCGCard(ref.cardId, ref.language, signal, { allowEnglishFallback: false });
     throwIfAborted(signal);

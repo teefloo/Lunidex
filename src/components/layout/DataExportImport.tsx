@@ -1,8 +1,8 @@
 'use client';
 
-import { hasSyncAccess, requestSyncAccess } from '@/store/sync-access';
+import { hasSyncAccess, requestSyncAccess, retrySyncAccess } from '@/store/sync-access';
 import { type PersistedState } from '@/store/primedex';
-import { pickSyncState, applySyncState } from '@/lib/supabase/sync-state';
+import { pickSyncState, applySyncState, mergeAndNormalizeSyncState } from '@/lib/supabase/sync-state';
 import { useTranslation } from '@/lib/i18n';
 import { toast } from '@/lib/toast';
 import { useRef, useState, useCallback, useEffect } from 'react';
@@ -176,12 +176,17 @@ export function DataExportImport() {
       toast.info(t('settings.import_requires_sync'));
       return;
     }
+    const retryingFailedImport = importError.length > 0;
     importGuardRef.current = true;
     setIsImporting(true);
     setImportPhase('saving');
     setImportError('');
     try {
-      applySyncState(importData);
+      const current = pickSyncState();
+      const mergedImport = mergeAndNormalizeSyncState(current, importData);
+      const unchanged = JSON.stringify(current) === JSON.stringify(mergedImport);
+      applySyncState(mergedImport);
+      if (retryingFailedImport && unchanged) retrySyncAccess();
       const expected = pickSyncState();
       const result = await waitForSyncChange(expected, pickSyncState);
       if (!result.ok) {
@@ -208,7 +213,7 @@ export function DataExportImport() {
       setIsImporting(false);
       setImportPhase((phase) => phase === 'saving' ? 'idle' : phase);
     }
-  }, [importData, t]);
+  }, [importData, importError, t]);
 
   const handleImportCancel = useCallback(() => {
     if (isImporting) return;
