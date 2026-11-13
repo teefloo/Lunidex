@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useCallback, useMemo, useRef, useState, type MouseEvent } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, ChevronLeft, ChevronRight, Filter, Pencil, Plus, RotateCcw, Trash2 } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Copy, Filter, Pencil, Plus, RotateCcw, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -29,6 +29,7 @@ import {
 } from '@/lib/tcg-custom-collection-view';
 import { getTCGCardLanguageName, isTCGCardLanguage, type TCGCardLanguage } from '@/lib/tcg-language';
 import { getTCGCustomCollectionDragEndAnnouncement } from '@/lib/tcg-custom-collection-dnd';
+import { formatTCGCustomCollectionCopyText } from '@/lib/tcg-custom-collection-copy';
 import {
   compressTCGCustomCollectionLayoutCardRefs,
   getTCGCustomCollectionGridDimensions,
@@ -91,7 +92,10 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
   }, []);
   const [formOpen, setFormOpen] = useState(false);
   const [addPanelOpen, setAddPanelOpen] = useState(false);
+  const [copyAllOpen, setCopyAllOpen] = useState(false);
+  const [copyAllStatus, setCopyAllStatus] = useState<'copied' | 'error' | null>(null);
   const addPanelTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const copyAllTriggerRef = useRef<HTMLButtonElement | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [error, setError] = useState('');
   const [moveAnnouncement, setMoveAnnouncement] = useState('');
@@ -124,6 +128,13 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
     queryKey: [...tcgKeys.all(), 'custom-collection-index', collectionId, referenceKey],
     queryFn: ({ signal }) => getTCGCustomCollectionCardDetails(references, signal),
     enabled: mounted && syncStatus === 'ready' && Boolean(collection) && references.length > 0 && metadataRequired,
+    staleTime: 30 * 60 * 1000,
+    retry: false,
+  });
+  const copyAllDetailsQuery = useQuery({
+    queryKey: [...tcgKeys.all(), 'custom-collection-copy-all', collectionId, referenceKey],
+    queryFn: ({ signal }) => getTCGCustomCollectionCardDetails(references, signal),
+    enabled: mounted && syncStatus === 'ready' && Boolean(collection) && copyAllOpen && references.length > 0,
     staleTime: 30 * 60 * 1000,
     retry: false,
   });
@@ -192,6 +203,22 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
     staleTime: 30 * 60 * 1000,
     retry: false,
   });
+  const copyAllText = useMemo(
+    () => formatTCGCustomCollectionCopyText(manualLayout.cardOrder, copyAllDetailsQuery.data ?? []),
+    [manualLayout.cardOrder, copyAllDetailsQuery.data],
+  );
+
+  const copyAllCards = async () => {
+    setCopyAllStatus(null);
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(copyAllText);
+      setCopyAllStatus('copied');
+    } catch {
+      setCopyAllStatus('error');
+    }
+  };
+
   const remove = (reference: (typeof references)[number]) => {
     setError('');
     if (!removeCard(collectionId, reference.cardId, reference.language)) setError(t('tcg.custom_collections.remove_error'));
@@ -367,6 +394,15 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
               <div className="flex shrink-0 flex-wrap gap-2">
                 <button ref={addPanelTriggerRef} type="button" onClick={openAddPanel} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-sm bg-primary px-4 text-sm font-black text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
                   <Plus className="h-4 w-4" aria-hidden="true" />{t('tcg.custom_collections.add_cards')}
+                </button>
+                <button
+                  ref={copyAllTriggerRef}
+                  id="custom-collection-copy-all-trigger"
+                  type="button"
+                  onClick={() => { setCopyAllStatus(null); setCopyAllOpen(true); }}
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-sm border border-border px-4 text-sm font-bold hover:border-primary/50 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                >
+                  <Copy className="h-4 w-4" aria-hidden="true" />{t('tcg.custom_collections.copy_all_cards')}
                 </button>
                 <button type="button" onClick={() => setFormOpen(true)} aria-label={`${t('tcg.custom_collections.edit_title')}: ${collection.name}`} className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm border border-border px-3 hover:border-primary/50 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                   <Pencil className="h-4 w-4" aria-hidden="true" />
@@ -616,6 +652,60 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
           <>
             {formOpen && <TCGCustomCollectionFormDialog open={formOpen} onOpenChange={setFormOpen} collection={collection} />}
             <TCGCustomCollectionAddPanel open={addPanelOpen} onOpenChange={setAddPanelOpen} returnFocusRef={addPanelTriggerRef} collectionId={collection.id} initialLanguage={browseLanguage} />
+            <Dialog
+              open={copyAllOpen}
+              triggerId="custom-collection-copy-all-trigger"
+              onOpenChange={(open) => {
+                setCopyAllOpen(open);
+                if (!open) window.requestAnimationFrame(() => copyAllTriggerRef.current?.focus());
+              }}
+            >
+              {copyAllOpen && (
+                <DialogContent className="max-h-[85dvh] sm:max-w-2xl">
+                  <DialogHeader className="pr-8">
+                    <DialogTitle>{t('tcg.custom_collections.copy_all_title')}</DialogTitle>
+                    <DialogDescription>{t('tcg.custom_collections.copy_all_description')}</DialogDescription>
+                  </DialogHeader>
+                  {copyAllDetailsQuery.isPending && references.length > 0 ? (
+                    <p role="status" aria-busy="true" className="text-sm text-muted-foreground">{t('tcg.custom_collections.copy_all_loading')}</p>
+                  ) : copyAllDetailsQuery.isError ? (
+                    <div role="alert" className="flex flex-wrap items-center justify-between gap-3 text-sm">
+                      <p>{t('tcg.custom_collections.load_error')}</p>
+                      <button type="button" onClick={() => void copyAllDetailsQuery.refetch()} className="inline-flex min-h-11 items-center rounded-sm border border-primary/40 px-3 font-bold text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">{t('tcg.custom_collections.retry')}</button>
+                    </div>
+                  ) : references.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">{t('tcg.custom_collections.copy_all_no_cards')}</p>
+                  ) : (
+                    <label className="block min-w-0 space-y-2">
+                      <span className="sr-only">{t('tcg.custom_collections.copy_all_preview')}</span>
+                      <textarea
+                        readOnly
+                        rows={7}
+                        aria-label={t('tcg.custom_collections.copy_all_preview')}
+                        value={copyAllText}
+                        className="block w-full min-w-0 resize-y rounded-sm border border-border bg-background p-3 text-sm leading-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                      />
+                    </label>
+                  )}
+                  {copyAllStatus && (
+                    <p role="status" aria-live="polite" className={`text-sm font-bold ${copyAllStatus === 'copied' ? 'text-emerald-700 dark:text-emerald-300' : 'text-destructive'}`}>
+                      {copyAllStatus === 'copied' ? t('tcg.custom_collections.copy_all_copied') : t('tcg.custom_collections.copy_all_error')}
+                    </p>
+                  )}
+                  <DialogFooter>
+                    <button type="button" onClick={() => setCopyAllOpen(false)} className="inline-flex min-h-11 items-center justify-center rounded-sm border border-border px-4 font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">{t('common.close')}</button>
+                    <button
+                      type="button"
+                      onClick={() => void copyAllCards()}
+                      disabled={references.length === 0 || copyAllDetailsQuery.isPending || copyAllDetailsQuery.isError || !copyAllText}
+                      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-sm bg-primary px-4 font-black text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <Copy className="h-4 w-4" aria-hidden="true" />{t('tcg.custom_collections.copy_all_button')}
+                    </button>
+                  </DialogFooter>
+                </DialogContent>
+              )}
+            </Dialog>
             <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
               <DialogContent>
                 <DialogHeader>
