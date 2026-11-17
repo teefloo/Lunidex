@@ -15,30 +15,26 @@
 
 Le premier rollback applicatif sur OVH est donc défini, mais il n'a pas encore été exercé et dépend de la publication préalable de l'image baseline. Revenir aux DNS Vercel ne constitue pas un rollback fonctionnel tant que le déploiement Vercel reste désactivé.
 
-## Configuration GitHub requise
+## Configuration GitHub et état actuel
 
-L'environnement ovh-production doit contenir les éléments suivants avant tout lancement. Ne recopier que les valeurs de production vérifiées; aucune valeur de préproduction ne doit y être placée.
+Les réglages suivants sont déjà présents dans l'environnement GitHub ovh-production. Aucune valeur de préproduction n'est utilisée.
 
 Variables d'environnement GitHub :
 
 - NEXT_PUBLIC_NEON_AUTH_URL
-- NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN, NEXT_PUBLIC_POSTHOG_HOST, NEXT_PUBLIC_POSTHOG_ENABLED, NEXT_PUBLIC_POSTHOG_REPLAY_SAMPLE_RATE (selon les services activés)
-- NEXT_PUBLIC_SENTRY_DSN, NEXT_PUBLIC_GOOGLE_VERIFICATION, NEXT_PUBLIC_VAPID_PUBLIC_KEY (facultatifs)
 - OVH_PRODUCTION_DEPLOY_HOST, OVH_PRODUCTION_DEPLOY_USER, OVH_PRODUCTION_DEPLOY_KNOWN_HOSTS
-- OVH_PRODUCTION_DEPLOY_PUBLIC_KEY dans ovh-preproduction pour le bootstrap; conserver également la valeur publique dans ovh-production
-- LUNIDEX_VAPID_SUBJECT, CONTACT_TO_EMAIL, CONTACT_FROM_EMAIL (facultatifs)
 
-Secrets de l'environnement GitHub :
+Secrets de l'environnement GitHub déjà configurés :
 
-- NEON_DATABASE_URL — connexion de production Neon main, jamais une URL de préproduction.
 - NEON_AUTH_BASE_URL, NEON_AUTH_JWKS_URL, NEON_AUTH_COOKIE_SECRET.
 - LUNIDEX_CRON_SECRET.
-- OVH_PRODUCTION_DEPLOY_SSH_KEY — clé privée distincte, correspondant à la variable publique et autorisée sur le VPS.
-- SENTRY_AUTH_TOKEN, LUNIDEX_VAPID_PRIVATE_KEY, RESEND_API_KEY (facultatifs).
+- OVH_PRODUCTION_DEPLOY_SSH_KEY — clé dédiée configurée dans ovh-production; sa clé publique est installée dans /home/lunidex-deploy/.ssh/authorized_keys.
 
-Le dépôt n'a pas de clé privée SSH de production configurée. Le workflow de production ne réutilise pas le secret OVH_DEPLOY_SSH_KEY de l'environnement ovh-preproduction. Un job manuel séparé dans le workflow de préproduction peut ajouter la variable publique à /home/lunidex-deploy/.ssh/authorized_keys sur le VPS attendu, sans redémarrer l'application. Il ne s'exécute que sur la branche de migration avec son entrée booléenne dédiée et vérifie l'hôte, le compte, le type Ed25519 et le chemin avant l'ajout idempotent. Il faudra ensuite ajouter la clé privée correspondante dans le secret OVH_PRODUCTION_DEPLOY_SSH_KEY.
+NEON_DATABASE_URL est toujours manquant. Il reste à le configurer avec la connexion Neon main après résolution du grant de privilège de fonction qui a été rejeté. Tant qu'il manque, le workflow s'arrêtera avant le transfert de configuration au VPS.
 
-Les noms runtime suivent .env.example : l'application utilise NEON_DATABASE_URL, même si la console Vercel peut afficher une variable gérée DATABASE_URL. Vérifier la valeur de connexion de main avant de la saisir dans le secret portant le nom runtime attendu.
+Les valeurs Sentry côté serveur, Resend et VAPID privées restent facultatives et ne sont pas disponibles dans le stockage des secrets Vercel. Les fonctionnalités correspondantes resteront non configurées tant que ces secrets ne seront pas fournis.
+
+Les noms runtime suivent .env.example : l'application utilise NEON_DATABASE_URL, même si la console Vercel peut afficher une variable gérée DATABASE_URL. Utiliser la connexion Neon main, jamais une URL de préproduction.
 
 NEON_AUTH_JWT_ISSUER et NEON_AUTH_JWT_AUDIENCE restent facultatifs et ne sont pas requis ni inventés dans ce workflow. Sans valeurs exactes vérifiées par Neon, l'authentification par Bearer token demeure désactivée; les sessions cookie sont revalidées auprès de NEON_AUTH_BASE_URL.
 
@@ -50,7 +46,7 @@ Le préflight valide :
 - la connectivité Neon avec uniquement SELECT 1 (lecture sans écriture de test);
 - les routes de contenu, SEO et PWA, dont robots.txt, sitemap.xml, manifest.webmanifest et sw.js;
 - les réponses non authentifiées des routes de profil et des deux API cron;
-- /api/auth/get-session sans cookie fourni, qui doit répondre avec session: null et user: null;
+- /api/auth/get-session sans cookie fourni, qui doit répondre HTTP 200, avec le type application/json et le corps JSON null;
 - les en-têtes de sécurité.
 
 Ce test Auth vérifie uniquement l'état anonyme et le proxy de session. Il ne simule pas une connexion utilisateur ni un cookie de production, car cela créerait ou modifierait une session sur Neon main. Le test utilise une connexion TLS interne avec curl --insecure; il valide le routage HTTPS et le handshake, pas encore la chaîne de confiance publique. Le certificat public Let's Encrypt ne peut être validé qu'après que le DNS du domaine pointe vers OVH et que Caddy l'a obtenu.
