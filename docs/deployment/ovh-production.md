@@ -59,13 +59,13 @@ Avant le mode deploy, lancer le workflow .github/workflows/deploy-ovh.yml depuis
 
 Le VPS n'a que 4 Gio. Le mode préflight vérifie qu'il reste au moins 1,5 Gio de RAM disponible et 2 Gio de disque, puis arrête son conteneur. L'application de préproduction doit être arrêtée avant tout déploiement durable de production; le script bloque le mode deploy si lunidex-app fonctionne encore. La branche Neon ovh-preproduction reste intacte. Après le remplacement du Caddyfile par le routage production, vps-test.lunidex.app ne sera plus desservi par la préproduction. Il pourra être rétabli plus tard en redémarrant séparément l'application préproduction et en restaurant son routage, uniquement pendant une fenêtre où les ressources permettent cette instance supplémentaire.
 
-Les timers ne peuvent être activés que séparément, après coupure vérifiée des tâches Vercel et désactivation des timers préproduction :
+Les timers ne peuvent être activés que séparément, par l'administrateur OVH connecté comme ubuntu avec sudo, après coupure vérifiée des tâches Vercel et désactivation des timers préproduction. Le compte lunidex-deploy n'a pas de privilège sudo. Depuis une session administrateur :
 
-1. vérifier que les deux planifications Vercel sont désactivées et créer /opt/lunidex-production/VERCEL_CRONS_DISABLED;
-2. lancer bash /opt/lunidex-production/scripts/deployment/enable-production-crons.sh ENABLE_PRODUCTION_CRONS;
-3. vérifier l'état des timers avec systemctl list-timers --all.
+1. vérifier que les deux planifications Vercel sont désactivées, puis créer le marqueur avec sudo touch /opt/lunidex-production/VERCEL_CRONS_DISABLED;
+2. lancer sudo bash /opt/lunidex-production/scripts/deployment/enable-production-crons.sh ENABLE_PRODUCTION_CRONS;
+3. vérifier l'état des timers avec sudo systemctl list-timers --all.
 
-Le workflow ne crée pas le marqueur et n'appelle jamais ce script. Pour arrêter les timers : bash /opt/lunidex-production/scripts/deployment/disable-production-crons.sh.
+Le script crée ENABLE_PRODUCTION_CRONS avec le propriétaire lunidex-deploy et le mode 0600, afin que les unités systemd puissent le lire. Le workflow ne crée aucun marqueur et n'appelle jamais ces scripts. Pour arrêter les timers et retirer le marqueur : sudo bash /opt/lunidex-production/scripts/deployment/disable-production-crons.sh.
 
 ## Bascule Caddy et rollback DNS
 
