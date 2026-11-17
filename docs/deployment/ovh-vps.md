@@ -1,6 +1,6 @@
 # Héberger Lunidex sur un VPS OVHcloud
 
-Ce guide décrit le déploiement préproduction sur le VPS OVHcloud et la procédure prévue pour la suite. **Vercel reste l'hébergement de production jusqu'à une validation séparée de la bascule DNS.** Aucun changement DNS, déploiement Lunidex sur le VPS, changement Neon ou modification de cron Vercel n'est effectué par ce dépôt.
+Ce guide décrit la préproduction Lunidex actuellement servie sur le VPS OVHcloud et son exploitation. **Vercel reste l'hébergement de production : `lunidex.app` et `www.lunidex.app` n'ont pas été basculés.** Le sous-domaine `vps-test.lunidex.app` sert uniquement aux essais.
 
 ## État du VPS au 17 novembre 2026
 
@@ -8,11 +8,12 @@ Ce guide décrit le déploiement préproduction sur le VPS OVHcloud et la procé
 - Ubuntu 24.04 LTS est confirmé. Les mises à jour système ont été appliquées et le VPS a été redémarré.
 - Docker Engine et Docker Compose sont installés. UFW est actif et autorise SSH (22), HTTP (80) et HTTPS (443); aucun port Next.js n'est publié.
 - La rotation journald est configurée avec un plafond de 250 Mio.
-- Le compte `lunidex-deploy` est créé et verrouillé, appartient au groupe `docker`, et `/opt/lunidex` est prêt. La clé dédiée de GitHub Actions est installée et stockée dans l'environnement GitHub `ovh-preproduction`; ses variables d'hôte, d'utilisateur et de `known_hosts` sont configurées.
-- Les unités systemd cron sont copiées et installées, mais les deux timers restent désactivés. Aucun conteneur Lunidex/Caddy, fichier d'environnement secret ou déploiement applicatif n'a été créé.
-- La branche Neon `ovh-preproduction`, enfant de `main`, est créée sans endpoint ni compute. Aucune donnée n'y a été écrite. Ne pas la publier ni l'utiliser avant d'avoir configuré et testé Neon Auth et l'accès à la base.
+- Le compte `lunidex-deploy` est créé et verrouillé, appartient au groupe `docker`, et `/opt/lunidex` héberge le déploiement. La clé dédiée de GitHub Actions est installée et stockée dans l'environnement GitHub `ovh-preproduction`; ses variables d'hôte, d'utilisateur et de `known_hosts` sont configurées.
+- L'image immuable `7efeb008b5b6f4c54db9d0887c8e64753ba15fa0` est déployée. Les conteneurs Lunidex et Caddy sont actifs; Caddy sert HTTPS sur le sous-domaine de préproduction et le healthcheck `/api/healthz` est validé. Le fichier d'environnement d'exécution existe sur le VPS; aucune valeur secrète n'est enregistrée dans ce guide ou dans Git.
+- Les unités systemd cron sont copiées et installées, mais les deux timers restent désactivés pendant que Vercel exécute encore les tâches planifiées de production.
+- La branche Neon `ovh-preproduction`, enfant de `main`, est active avec Neon Auth. L'application utilise un rôle runtime dédié à cette branche isolée; les secrets et données de production Neon ne sont pas utilisés en préproduction.
 - Le DNS est géré par Namecheap (`dns1.registrar-servers.com` et `dns2.registrar-servers.com`). L'enregistrement A `vps-test.lunidex.app → 51.255.40.19` a été créé et sa résolution a été confirmée via Namecheap, `8.8.8.8` et `1.1.1.1`. Les enregistrements de production `lunidex.app` et `www.lunidex.app` restent inchangés; Vercel reste en production.
-- Les vérifications ciblées ont réussi (32 tests Vitest, TypeScript, ESLint, SEO, YAML et scripts shell). La suite complète `npm test` n'a pas lancé ses cas : elle a été bloquée par `ENOSPC` sur le volume temporaire, avec environ 105 Mio libres. Le build Next.js est également bloqué par le manque d'espace disque et n'a pas été lancé.
+- Le workflow GitHub Actions de déploiement par push sur `codex/ovh-vps-migration` a réussi (run `44129652554`), y compris `npm ci`, ESLint, TypeScript, 970 tests Vitest, SEO, build Next.js, contrôle du package core, publication de l'image, HTTPS et healthcheck.
 
 ## Architecture
 
@@ -33,20 +34,20 @@ La mesure Vercel et ses endpoints CSP restent actifs uniquement dans les builds 
 
 Le SHA transmis comme `NEXT_DEPLOYMENT_ID` permet à Next.js de détecter les onglets et clients PWA qui naviguent encore avec un ancien build et de demander un rechargement. Le volume `lunidex-next-cache` conserve le cache Next.js local d'une instance unique; il ne contient pas de données utilisateur.
 
-## Préconditions avant un premier démarrage
+## Contrôles avant un prochain déploiement
 
-L'accès SSH par clé fonctionne pour `ubuntu`; ne pas réactiver le login root. L'OS, les mises à jour/reboot, Docker/Compose, UFW, la limite journald, le compte de déploiement et son répertoire sont déjà en place. La clé GitHub Actions et les variables SSH sont configurées. Avant le premier déploiement :
+L'accès SSH par clé fonctionne pour `ubuntu`; ne pas réactiver le login root. L'OS, les mises à jour/reboot, Docker/Compose, UFW, la limite journald, le compte de déploiement et son répertoire sont déjà en place. La clé GitHub Actions et les variables SSH sont configurées. Avant un nouveau déploiement :
 
 1. Vérifier l'architecture, la mémoire et le disque (`uname -m`, `free -h`, `df -h`). Confirmer `amd64` avant d'utiliser l'image GHCR `linux/amd64`.
 2. Vérifier une deuxième connexion SSH avec `lunidex-deploy`, sans fermer la session `ubuntu` actuelle. Ce compte appartient déjà au groupe `docker`, qui équivaut pratiquement à un accès root.
-3. Préparer les fichiers d'environnement décrits ci-dessous avec des permissions `0600`. Générer la liste Cloudflare puis valider Caddy avant l'exposition publique.
+3. Vérifier que les fichiers d'environnement décrits ci-dessous existent et ont des permissions `0600`. Le workflow actualise la liste Cloudflare avant le déploiement.
 4. UFW autorise déjà 22/80/443. Vérifier les règles actives sans les remplacer; le conteneur app n'a aucun port publié. Docker peut contourner UFW pour des ports publiés, donc ne jamais publier le port 3000.
 
-Le déploiement initial nécessite un nom de préproduction qui résout déjà vers le VPS, par exemple `vps-test.lunidex.app`, et une configuration Cloudflare en mode TLS **Full (strict)**. Aucune modification DNS n'est incluse ici; la préproduction ne doit jamais utiliser `lunidex.app` ou `www.lunidex.app`.
+Le sous-domaine `vps-test.lunidex.app` pointe déjà vers le VPS et Caddy y sert HTTPS. La configuration Cloudflare, si le proxy est activé, doit rester en mode TLS **Full (strict)**. La préproduction ne doit jamais utiliser `lunidex.app` ou `www.lunidex.app`.
 
 ## Variables et secrets
 
-Les valeurs sensibles restent sur le VPS dans `/opt/lunidex/app.env`, propriété de `lunidex-deploy`, permissions `0600`. Ne pas copier `.env.local`, `.env.production` ou une valeur Vercel complète.
+Les valeurs sensibles sont stockées sur le VPS dans `/opt/lunidex/app.env`, propriété de `lunidex-deploy`, permissions `0600`. Ne pas copier `.env.local`, `.env.production` ou une valeur Vercel complète.
 
 | Emplacement | Variables | Notes |
 | --- | --- | --- |
@@ -58,19 +59,19 @@ Les valeurs sensibles restent sur le VPS dans `/opt/lunidex/app.env`, propriét�
 
 `NEXT_PUBLIC_*` est incorporé au bundle client pendant `next build`; modifier une telle valeur impose de reconstruire l'image. Les valeurs serveur non préfixées ci-dessus sont lues à l'exécution. Utiliser pour l'application l'URL Neon existante prévue pour le runtime; l'URL non poolée destinée à `pg_dump`/`pg_restore` n'est pas un paramètre de runtime. `SUPABASE_DB_URL` reste réservé aux scripts de migration historiques.
 
-Créer `/opt/lunidex/.env` avec les deux lignes suivantes avant le premier démarrage (le SHA nul est seulement un marqueur avant le premier déploiement) :
+Le fichier `/opt/lunidex/.env` de Compose est déjà configuré pour la préproduction avec l'image déployée :
 
 ```dotenv
-APP_IMAGE_TAG=0000000000000000000000000000000000000000
+APP_IMAGE_TAG=7efeb008b5b6f4c54db9d0887c8e64753ba15fa0
 LUNIDEX_DOMAIN=vps-test.lunidex.app
 LUNIDEX_HOSTNAMES=vps-test.lunidex.app
 ```
 
-Créer `/opt/lunidex/app.env` avec les variables serveur requises, une par ligne, sans valeurs dans Git. Puis exécuter `chmod 0600 /opt/lunidex/.env /opt/lunidex/app.env`.
+Le fichier `/opt/lunidex/app.env` contient la configuration serveur runtime, sans être copié dans Git. Conserver les permissions `0600` sur les deux fichiers; ne jamais ajouter leurs valeurs secrètes à la documentation.
 
 ## Cloudflare et Caddy
 
-Le script `scripts/deployment/update-cloudflare-ranges.sh` lit les plages IPv4/IPv6 depuis les points de distribution officiels Cloudflare, vérifie chaque CIDR, puis écrit `cloudflare-ips.env`. Ce fichier ne contient pas de secret. Le workflow de déploiement l'exécute à distance après le transfert des scripts et avant `docker compose config`/le premier déploiement. Pour une actualisation manuelle, l'exécuter depuis `/opt/lunidex`, puis redémarrer Caddy :
+Le script `scripts/deployment/update-cloudflare-ranges.sh` lit les plages IPv4/IPv6 depuis les points de distribution officiels Cloudflare, vérifie chaque CIDR, puis écrit `cloudflare-ips.env`. Ce fichier ne contient pas de secret. Le workflow de déploiement l'exécute à distance après le transfert des scripts et avant `docker compose config` et chaque déploiement. Pour une actualisation manuelle, l'exécuter depuis `/opt/lunidex`, puis redémarrer Caddy :
 
 ```bash
 bash scripts/deployment/update-cloudflare-ranges.sh
@@ -86,7 +87,7 @@ Aucun cache Cloudflare global n'est configuré. Les directives `Vercel-CDN-Cache
 
 `.github/workflows/ci.yml` exécute `npm ci`, ESLint, TypeScript, Vitest, le contrôle SEO, le build et le contrôle du package core sur les PR/pushes configurés. `.github/workflows/deploy-ovh.yml` démarre automatiquement sur les pushes de `codex/ovh-vps-migration`; il peut aussi être lancé manuellement avec une case de confirmation. Le job vérifie que la référence est exactement cette branche, relance les contrôles, construit l'image Linux amd64, la publie dans `ghcr.io/teefloo/lunidex:<SHA>` et la déploie sur la cible préproduction. Le script distant refuse tout domaine autre que `vps-test.lunidex.app` dans `LUNIDEX_DOMAIN` et `LUNIDEX_HOSTNAMES`; ce workflow ne déploie jamais `lunidex.app` ni `www.lunidex.app`.
 
-L'environnement GitHub `ovh-preproduction` existe déjà. Il contient la clé SSH dédiée et les variables d'hôte, d'utilisateur et de `known_hosts`. Les variables publiques de build listées ci-dessus restent à configurer après validation de la branche Neon de test.
+L'environnement GitHub `ovh-preproduction` existe déjà. Il contient la clé SSH dédiée, les variables d'hôte, d'utilisateur et de `known_hosts`, ainsi que les variables publiques de build nécessaires à l'authentification Neon de préproduction. Aucune valeur privée n'est documentée ici.
 
 Pour référence, les paramètres requis sont :
 
@@ -97,7 +98,7 @@ Pour référence, les paramètres requis sont :
 
 Le `GITHUB_TOKEN` GHCR est envoyé sur l'entrée standard de la session SSH, utilisé avec un `DOCKER_CONFIG` temporaire sous `/tmp`, puis supprimé par un trap de sortie. Il n'est ni écrit dans le dépôt ni conservé dans le `~/.docker/config.json` du VPS. Le script `deploy-ovh.sh` n'accepte que des tags SHA de 40 caractères et exige `vps-test.lunidex.app` dans `LUNIDEX_DOMAIN` et `LUNIDEX_HOSTNAMES`. Il teste le healthcheck local, puis HTTPS via Caddy. En cas d'échec après un déploiement existant, il restaure automatiquement l'image précédente. `rollback-ovh.sh` permet de revenir manuellement au SHA enregistré dans `.previous-image-tag`.
 
-Après le premier déploiement :
+Après chaque déploiement préproduction :
 
 ```bash
 bash /opt/lunidex/scripts/deployment/healthcheck.sh
@@ -158,7 +159,7 @@ Tester la restauration périodiquement sur un volume distinct et un nom préprod
 
 ## Bascule DNS et retour arrière
 
-Avant toute modification de `lunidex.app`, inventorier les enregistrements actuels A/AAAA, `www`, MX et TXT, noter leurs valeurs et TTL, tester Vercel et le VPS sur un sous-domaine isolé, et présenter les résultats réels de chaque parcours. Ne modifier ensuite que les A/AAAA nécessaires; préserver les enregistrements email et les sous-domaines tiers. Activer Cloudflare Full (strict), vérifier HTTPS, sessions Neon, langues, SEO, PWA, emails, notifications et les permissions avec la Neon production seulement après validation. Comparer TTFB, latence API, CPU, mémoire et espace disque sous trafic mesuré; aucun benchmark n'a encore été exécuté.
+Avant toute modification de `lunidex.app`, inventorier les enregistrements actuels A/AAAA, `www`, MX et TXT, noter leurs valeurs et TTL, puis présenter les résultats de Vercel et de la préproduction déjà vérifiée sur `vps-test.lunidex.app`. Ne modifier ensuite que les A/AAAA nécessaires; préserver les enregistrements email et les sous-domaines tiers. Activer Cloudflare Full (strict), vérifier HTTPS, sessions Neon, langues, SEO, PWA, emails, notifications et les permissions avec la Neon production seulement après validation. Comparer TTFB, latence API, CPU, mémoire et espace disque sous trafic mesuré; aucun benchmark n'a encore été exécuté.
 
 La procédure de retour consiste à restaurer les valeurs DNS Vercel enregistrées avant la bascule, vérifier le site Vercel et les connexions, puis laisser le VPS et Neon intacts pendant l'analyse. Le projet Vercel, son abonnement et ses secrets restent en place comme solution de secours. La bascule production ne doit pas être effectuée avant une approbation explicite accompagnée du rapport de tests et de l'état DNS exact.
 
