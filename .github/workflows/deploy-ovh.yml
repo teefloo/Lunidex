@@ -1,0 +1,145 @@
+name: Deploy OVH preproduction
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_deployment:
+        description: Deploy the selected commit to the OVH preproduction server
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    if: inputs.confirm_deployment
+    runs-on: ubuntu-latest
+    environment: ovh-preproduction
+    permissions:
+      contents: read
+      packages: write
+    env:
+      NEXT_PUBLIC_NEON_AUTH_URL: ${{ vars.NEXT_PUBLIC_NEON_AUTH_URL }}
+      NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN: ${{ vars.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN }}
+      NEXT_PUBLIC_POSTHOG_HOST: ${{ vars.NEXT_PUBLIC_POSTHOG_HOST }}
+      NEXT_PUBLIC_POSTHOG_ENABLED: ${{ vars.NEXT_PUBLIC_POSTHOG_ENABLED }}
+      NEXT_PUBLIC_POSTHOG_ENVIRONMENT: ${{ vars.NEXT_PUBLIC_POSTHOG_ENVIRONMENT }}
+      NEXT_PUBLIC_POSTHOG_REPLAY_SAMPLE_RATE: ${{ vars.NEXT_PUBLIC_POSTHOG_REPLAY_SAMPLE_RATE }}
+      NEXT_PUBLIC_SENTRY_DSN: ${{ vars.NEXT_PUBLIC_SENTRY_DSN }}
+      NEXT_PUBLIC_SENTRY_ENVIRONMENT: ${{ vars.NEXT_PUBLIC_SENTRY_ENVIRONMENT }}
+      NEXT_PUBLIC_SENTRY_RELEASE: ${{ vars.NEXT_PUBLIC_SENTRY_RELEASE }}
+      NEXT_PUBLIC_GOOGLE_VERIFICATION: ${{ vars.NEXT_PUBLIC_GOOGLE_VERIFICATION }}
+      NEXT_PUBLIC_VAPID_PUBLIC_KEY: ${{ vars.NEXT_PUBLIC_VAPID_PUBLIC_KEY }}
+      OVH_DEPLOY_HOST: ${{ vars.OVH_DEPLOY_HOST }}
+      OVH_DEPLOY_USER: ${{ vars.OVH_DEPLOY_USER }}
+      OVH_DEPLOY_KNOWN_HOSTS: ${{ vars.OVH_DEPLOY_KNOWN_HOSTS }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Require a test Neon environment
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          : "${NEXT_PUBLIC_NEON_AUTH_URL:?Set this public URL to the isolated preproduction Neon Auth branch}"
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - run: npm run typecheck
+
+      - run: npm test
+
+      - run: npm run seo:check
+
+      - run: npm run build
+
+      - run: npx tsc --project packages/core/tsconfig.json --noEmit
+
+      - name: Build and publish the immutable SHA image
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: |
+          set -Eeuo pipefail
+          image=ghcr.io/teefloo/lunidex
+          docker buildx version
+          docker buildx create --name lunidex-builder --driver docker-container --use
+          docker buildx inspect --bootstrap
+          printf '%s' "$GITHUB_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+
+          build_args=(
+            --build-arg "NEXT_DEPLOYMENT_ID=${GITHUB_SHA}"
+            --build-arg "NEXT_PUBLIC_NEON_AUTH_URL=${NEXT_PUBLIC_NEON_AUTH_URL:-}"
+            --build-arg "NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN=${NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN:-}"
+            --build-arg "NEXT_PUBLIC_POSTHOG_HOST=${NEXT_PUBLIC_POSTHOG_HOST:-}"
+            --build-arg "NEXT_PUBLIC_POSTHOG_ENABLED=${NEXT_PUBLIC_POSTHOG_ENABLED:-false}"
+            --build-arg "NEXT_PUBLIC_POSTHOG_ENVIRONMENT=${NEXT_PUBLIC_POSTHOG_ENVIRONMENT:-}"
+            --build-arg "NEXT_PUBLIC_APP_RELEASE=${GITHUB_SHA}"
+            --build-arg "NEXT_PUBLIC_POSTHOG_REPLAY_SAMPLE_RATE=${NEXT_PUBLIC_POSTHOG_REPLAY_SAMPLE_RATE:-}"
+            --build-arg "NEXT_PUBLIC_SENTRY_DSN=${NEXT_PUBLIC_SENTRY_DSN:-}"
+            --build-arg "NEXT_PUBLIC_SENTRY_ENVIRONMENT=${NEXT_PUBLIC_SENTRY_ENVIRONMENT:-}"
+            --build-arg "NEXT_PUBLIC_SENTRY_RELEASE=${NEXT_PUBLIC_SENTRY_RELEASE:-${GITHUB_SHA}}"
+            --build-arg "NEXT_PUBLIC_GOOGLE_VERIFICATION=${NEXT_PUBLIC_GOOGLE_VERIFICATION:-}"
+            --build-arg "NEXT_PUBLIC_VAPID_PUBLIC_KEY=${NEXT_PUBLIC_VAPID_PUBLIC_KEY:-}"
+          )
+          secret_args=()
+          if [[ -n "${SENTRY_AUTH_TOKEN:-}" ]]; then
+            secret_args+=(--secret id=sentry_auth_token,env=SENTRY_AUTH_TOKEN)
+          fi
+
+          docker buildx build \
+            --platform linux/amd64 \
+            --tag "$image:$GITHUB_SHA" \
+            --label "org.opencontainers.image.revision=$GITHUB_SHA" \
+            "${build_args[@]}" \
+            "${secret_args[@]}" \
+            --push .
+          docker logout ghcr.io >/dev/null
+
+      - name: Configure the pinned SSH connection
+        shell: bash
+        env:
+          OVH_DEPLOY_SSH_KEY: ${{ secrets.OVH_DEPLOY_SSH_KEY }}
+        run: |
+          set -Eeuo pipefail
+          : "${OVH_DEPLOY_HOST:?Configure OVH_DEPLOY_HOST in the ovh-preproduction environment}"
+          : "${OVH_DEPLOY_USER:?Configure OVH_DEPLOY_USER in the ovh-preproduction environment}"
+          : "${OVH_DEPLOY_KNOWN_HOSTS:?Configure OVH_DEPLOY_KNOWN_HOSTS after verifying the OVH host key}"
+          : "${OVH_DEPLOY_SSH_KEY:?Configure OVH_DEPLOY_SSH_KEY in the ovh-preproduction environment}"
+          [[ "$OVH_DEPLOY_HOST" =~ ^[A-Za-z0-9.-]+$ ]]
+          [[ "$OVH_DEPLOY_USER" =~ ^[a-z_][a-z0-9_-]*$ ]]
+          install -d -m 0700 "$HOME/.ssh"
+          printf '%s\n' "$OVH_DEPLOY_SSH_KEY" > "$HOME/.ssh/ovh_deploy"
+          printf '%s\n' "$OVH_DEPLOY_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 0600 "$HOME/.ssh/ovh_deploy" "$HOME/.ssh/known_hosts"
+
+      - name: Deploy and verify the preproduction image
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -Eeuo pipefail
+          : "${GITHUB_TOKEN:?GITHUB_TOKEN is required for GHCR access}"
+          target="$OVH_DEPLOY_USER@$OVH_DEPLOY_HOST"
+          ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
+          ssh "${ssh_args[@]}" "$target" 'install -d -m 0755 /opt/lunidex/scripts/deployment /opt/lunidex/deploy/systemd'
+          scp "${ssh_args[@]}" compose.yaml Caddyfile "$target:/opt/lunidex/"
+          scp "${ssh_args[@]}" scripts/deployment/*.sh "$target:/opt/lunidex/scripts/deployment/"
+          scp "${ssh_args[@]}" deploy/systemd/* "$target:/opt/lunidex/deploy/systemd/"
+          ssh "${ssh_args[@]}" "$target" 'bash /opt/lunidex/scripts/deployment/update-cloudflare-ranges.sh /opt/lunidex/cloudflare-ips.env'
+          remote_command="set -euo pipefail; export DOCKER_CONFIG=\$(mktemp -d /tmp/lunidex-docker.XXXXXX); trap 'rm -rf \"\$DOCKER_CONFIG\"' EXIT; if ! docker login ghcr.io --username teefloo --password-stdin; then echo 'GHCR login failed.' >&2; exit 1; fi; bash /opt/lunidex/scripts/deployment/deploy-ovh.sh $GITHUB_SHA; if ! bash /opt/lunidex/scripts/deployment/healthcheck.sh; then echo 'Healthcheck failed; attempting rollback.' >&2; bash /opt/lunidex/scripts/deployment/rollback-ovh.sh || true; exit 1; fi"
+          printf '%s' "$GITHUB_TOKEN" | ssh "${ssh_args[@]}" "$target" "$remote_command"
+
+      - name: Remove temporary SSH key
+        if: always()
+        shell: bash
+        run: rm -f "$HOME/.ssh/ovh_deploy"

@@ -10,6 +10,7 @@ vi.mock('@/lib/api/observed-route', () => ({ withObservedRouteHandler: (_route: 
 import { GET } from './route';
 
 const previousSecret = process.env.CRON_SECRET;
+const previousLunidexSecret = process.env.LUNIDEX_CRON_SECRET;
 
 function request(authorization?: string) {
   return new NextRequest('https://lunidex.app/api/cron/metrics-retention', {
@@ -20,6 +21,7 @@ function request(authorization?: string) {
 describe('metrics retention cron price history refresh', () => {
   beforeEach(() => {
     process.env.CRON_SECRET = 'test-cron-secret';
+    delete process.env.LUNIDEX_CRON_SECRET;
     mocks.sql.mockResolvedValue([{ count: 0 }]);
     mocks.getNeonClient.mockReturnValue(mocks.sql);
     mocks.refreshDuePriceHistoryCards.mockResolvedValue({ attempted: 2, captured: 1, failed: 1 });
@@ -28,6 +30,8 @@ describe('metrics retention cron price history refresh', () => {
   afterEach(() => {
     if (previousSecret === undefined) delete process.env.CRON_SECRET;
     else process.env.CRON_SECRET = previousSecret;
+    if (previousLunidexSecret === undefined) delete process.env.LUNIDEX_CRON_SECRET;
+    else process.env.LUNIDEX_CRON_SECRET = previousLunidexSecret;
   });
 
   it('requires the existing cron bearer secret', async () => {
@@ -47,6 +51,15 @@ describe('metrics retention cron price history refresh', () => {
       ok: true,
       priceHistoryRefresh: { attempted: 2, captured: 1, failed: 1 },
     });
+  });
+
+  it('accepts the self-hosted cron secret independently of the Edge Function secret name', async () => {
+    delete process.env.CRON_SECRET;
+    process.env.LUNIDEX_CRON_SECRET = 'test-lunidex-cron-secret';
+
+    const response = await GET(request('Bearer test-lunidex-cron-secret'));
+
+    expect(response.status).toBe(200);
   });
 
   it('keeps retention successful when the refresh claim fails', async () => {

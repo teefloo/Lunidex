@@ -75,6 +75,9 @@ screenshots/
 .env.test
 .env.production
 .env.staging
+app.env
+cloudflare-ips.env
+.previous-image-tag
 
 # Secret keys, certs, PEM, p12
 *.key

@@ -65,9 +65,9 @@ export function getRateLimitEntryCount(): number {
 }
 
 /**
- * Vercel appends the address observed at its edge to the right side of
- * `x-forwarded-for`. The left side and `x-real-ip` can be supplied by callers,
- * so they must not be used as an identity for rate limiting.
+ * The trusted edge proxy must overwrite or append its observed client address
+ * at the right side of `x-forwarded-for`. The left side and `x-real-ip` can be
+ * supplied by callers, so they must not be used as an identity for rate limits.
  */
 export function trustedClientIp(request: NextRequest): string {
   const forwarded = request.headers.get('x-forwarded-for');

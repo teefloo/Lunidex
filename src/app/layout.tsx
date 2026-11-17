@@ -237,6 +237,7 @@ export default async function RootLayout({
           {t('common.skip_to_content')}
         </SkipLink>
          <Providers
+           enableVercelInsights={process.env.VERCEL === '1'}
            initialLanguage={lang}
            initialTranslations={initialTranslations}
            initialTranslationsPartial={isEditorialRoute}

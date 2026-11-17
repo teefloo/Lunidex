@@ -20,8 +20,8 @@ const WEB_PUSH_TIMEOUT_MS = 5_000;
 function ensureVapidConfigured() {
   if (vapidConfigured) return true;
   const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
-  const privateKey = process.env.VAPID_PRIVATE_KEY;
-  const subject = process.env.VAPID_SUBJECT;
+  const privateKey = process.env.LUNIDEX_VAPID_PRIVATE_KEY ?? process.env.VAPID_PRIVATE_KEY;
+  const subject = process.env.LUNIDEX_VAPID_SUBJECT ?? process.env.VAPID_SUBJECT;
   if (!publicKey || !privateKey || !subject) return false;
 
   webpush.setVapidDetails(subject, publicKey, privateKey);

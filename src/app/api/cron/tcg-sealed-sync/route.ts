@@ -7,7 +7,7 @@ export const runtime = 'nodejs';
 const NO_STORE_HEADERS = { 'Cache-Control': 'private, no-store' };
 
 async function runSync(request: NextRequest): Promise<NextResponse> {
-  const secret = process.env.CRON_SECRET;
+  const secret = process.env.LUNIDEX_CRON_SECRET ?? process.env.CRON_SECRET;
   if (!secret) return NextResponse.json({ error: 'Sealed sync unavailable.' }, { status: 503, headers: NO_STORE_HEADERS });
   if (request.headers.get('authorization') !== `Bearer ${secret}`) return NextResponse.json({ error: 'Unauthorized.' }, { status: 401, headers: NO_STORE_HEADERS });
   const sql = getNeonClient();

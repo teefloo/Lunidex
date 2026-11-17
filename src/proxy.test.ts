@@ -1,13 +1,33 @@
 import { NextRequest } from 'next/server';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { proxy } from './proxy';
 
+const originalVercel = process.env.VERCEL;
+
+beforeEach(() => {
+  process.env.VERCEL = '1';
+});
+
 afterEach(() => {
+  if (originalVercel === undefined) delete process.env.VERCEL;
+  else process.env.VERCEL = originalVercel;
   vi.restoreAllMocks();
 });
 
 describe('public localized proxy responses', () => {
+  it('does not emit Vercel CDN cache directives in a self-hosted deployment', async () => {
+    delete process.env.VERCEL;
+
+    const response = await proxy(new NextRequest('https://lunidex.test/fr/tcg', {
+      headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
+    }));
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('Vercel-CDN-Cache-Control')).toBeNull();
+    expect(response.headers.get('CDN-Cache-Control')).toBeNull();
+  });
+
   it('caches confirmed public 404s at the CDN', async () => {
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 404 }));
 

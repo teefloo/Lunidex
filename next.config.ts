@@ -6,6 +6,7 @@ import { withSentryConfig } from "@sentry/nextjs/config";
 import { NEXT_MODAL_ROUTE_CHUNK_EXCLUDE_PATTERN } from "./scripts/pwa/workbox-config";
 
 const projectRoot = dirname(fileURLToPath(import.meta.url));
+const isVercelBuild = process.env.VERCEL === '1';
 
 const withPWA = withPWAInit({
   dest: "public",
@@ -174,8 +175,8 @@ const devConnectSrc =
 // unsafe-eval is required by Webpack HMR in dev; strip it in production.
 const scriptSrc =
   process.env.NODE_ENV === 'development'
-    ? "'self' 'unsafe-inline' 'unsafe-eval' blob: https://va.vercel-scripts.com https://*.posthog.com"
-    : "'self' 'unsafe-inline' https://va.vercel-scripts.com https://*.posthog.com";
+    ? `'self' 'unsafe-inline' 'unsafe-eval' blob:${isVercelBuild ? ' https://va.vercel-scripts.com' : ''} https://*.posthog.com`
+    : `'self' 'unsafe-inline'${isVercelBuild ? ' https://va.vercel-scripts.com' : ''} https://*.posthog.com`;
 
 const csp = [
   "default-src 'self'",
@@ -184,7 +185,7 @@ const csp = [
   "img-src 'self' https://raw.githubusercontent.com https://pokeapi.co https://images.scrydex.com https://www.cardtrader.com https://images.pokemontcg.io https://assets.tcgdex.net https://images.tcgdex.net https://tcgplayer-cdn.tcgplayer.com https://tcg.pokemon.com https://mcdn.pokemon.com https://dz3we2x72f7ol.cloudfront.net https://*.googleusercontent.com https://avatars.githubusercontent.com data: blob: https://api.tcgdex.net",
   "font-src 'self' data:",
   "media-src 'self' https://raw.githubusercontent.com",
-  `connect-src 'self'${devConnectSrc} https://va.vercel-scripts.com https://vitals.vercel-insights.com https://*.ingest.sentry.io https://*.ingest.de.sentry.io https://*.posthog.com https://pokeapi.co https://graphql.pokeapi.co https://api.tcgdex.net https://raw.githubusercontent.com`,
+  `connect-src 'self'${devConnectSrc}${isVercelBuild ? ' https://va.vercel-scripts.com https://vitals.vercel-insights.com' : ''} https://*.ingest.sentry.io https://*.ingest.de.sentry.io https://*.posthog.com https://pokeapi.co https://graphql.pokeapi.co https://api.tcgdex.net https://raw.githubusercontent.com`,
   "worker-src 'self' blob: data:",
   "frame-ancestors 'none'",
 ].join('; ');
@@ -260,6 +261,14 @@ const stablePublicPageCacheRoutes = [
 const nextConfig: NextConfig = {
   // Keep fixture authentication and build output separate from an open dev session.
   distDir: process.env.E2E_INVESTMENTS === '1' ? '.next/investments-e2e' : '.next',
+  // The workflow supplies the immutable image SHA so open tabs and installed
+  // PWAs can recover from version skew after deployment.
+  deploymentId: process.env.NEXT_DEPLOYMENT_ID || undefined,
+  // Keep Vercel's current build behavior intact. Self-hosted builds use the
+  // monorepo root so standalone tracing includes @primedex/core.
+  ...(!isVercelBuild
+    ? { output: 'standalone' as const, outputFileTracingRoot: projectRoot }
+    : {}),
   devIndicators: process.env.E2E_INVESTMENTS === '1' ? false : undefined,
   compress: true,
   // Shared domain logic lives in the @primedex/core workspace package.
@@ -498,14 +507,18 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-      ...publicPageCacheRoutes.map((source) => ({
-        source,
-        headers: [publicPageCacheHeader],
-      })),
-      ...stablePublicPageCacheRoutes.map((source) => ({
-        source,
-        headers: [stablePublicPageCacheHeader],
-      })),
+      ...(isVercelBuild
+        ? [
+            ...publicPageCacheRoutes.map((source) => ({
+              source,
+              headers: [publicPageCacheHeader],
+            })),
+            ...stablePublicPageCacheRoutes.map((source) => ({
+              source,
+              headers: [stablePublicPageCacheHeader],
+            })),
+          ]
+        : []),
     ];
   },
 };
@@ -529,7 +542,7 @@ export default withSentryConfig(withPWA(nextConfig), {
     // page/server-function traces without tracing every middleware request.
     autoInstrumentMiddleware: false,
     autoInstrumentAppDirectory: true,
-    automaticVercelMonitors: true,
+    automaticVercelMonitors: isVercelBuild,
   },
   errorHandler: (error) => {
     if (process.env.SENTRY_AUTH_TOKEN) throw error;

@@ -73,7 +73,7 @@ describe('getItemDetail', () => {
     );
     expect(mocks.restGet).toHaveBeenCalledWith('/item/master-ball');
     expect(mocks.cacheSet).toHaveBeenCalledWith(
-      'item-detail-v1-master-ball-5',
+      'graphql-v1beta2:item-detail-v1-master-ball-5',
       expect.objectContaining({ pokemon_v2_itemnames: [{ name: 'Master Ball FR' }] }),
     );
   });
@@ -92,6 +92,6 @@ describe('getItemDetail', () => {
 
     await expect(getItemDetail('master-ball', 9)).resolves.toEqual(item);
     expect(mocks.restGet).not.toHaveBeenCalled();
-    expect(mocks.cacheSet).toHaveBeenCalledWith('item-detail-v1-master-ball-9', item);
+    expect(mocks.cacheSet).toHaveBeenCalledWith('graphql-v1beta2:item-detail-v1-master-ball-9', item);
   });
 });

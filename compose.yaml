@@ -1,0 +1,103 @@
+name: lunidex
+
+services:
+  app:
+    image: ghcr.io/teefloo/lunidex:${APP_IMAGE_TAG:?Set APP_IMAGE_TAG to an immutable Git SHA}
+    container_name: lunidex-app
+    restart: unless-stopped
+    init: true
+    env_file:
+      - ./app.env
+    environment:
+      NODE_ENV: production
+      HOSTNAME: 0.0.0.0
+      PORT: "3000"
+      NODE_OPTIONS: --max-old-space-size=1024
+    expose:
+      - "3000"
+    networks:
+      - egress
+      - backend
+    volumes:
+      - next-cache:/app/.next/cache
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 256
+    mem_limit: 2048m
+    cpus: 1.5
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/api/healthz').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      start_period: 45s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+  caddy:
+    image: caddy:2.11.9-alpine
+    container_name: lunidex-caddy
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      LUNIDEX_DOMAIN: ${LUNIDEX_DOMAIN:?Set LUNIDEX_DOMAIN to the preproduction hostname}
+      LUNIDEX_HOSTNAMES: ${LUNIDEX_HOSTNAMES:?Set LUNIDEX_HOSTNAMES to the Caddy site addresses}
+    env_file:
+      - ./cloudflare-ips.env
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - edge
+      - backend
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=16m
+    mem_limit: 256m
+    cpus: 0.5
+    pids_limit: 128
+    logging:
+      driver: json-file
+      options:
+        max-size: 5m
+        max-file: "3"
+
+networks:
+  backend:
+    internal: true
+  egress:
+    driver: bridge
+  edge:
+    driver: bridge
+
+volumes:
+  next-cache:
+    name: lunidex-next-cache
+  caddy-data:
+    name: lunidex-caddy-data
+  caddy-config:
+    name: lunidex-caddy-config

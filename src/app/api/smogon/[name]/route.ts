@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
 import { reportHttpFailure } from '@/lib/sentry-observability';
 
-// Cache the full PS formats-data payload at the module level so the Edge
-// runtime re-uses it across requests within the same invocation.
+// Cache the full PS formats-data payload at the module level so the Node
+// server re-uses it across requests within this single application process.
 let psCache: Record<string, unknown> | null = null;
 let psCacheTime = 0;
 const PS_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 h
@@ -36,7 +36,6 @@ async function getPSData(): Promise<Record<string, unknown>> {
   }
 }
 
-export const runtime = 'edge';
 export const revalidate = 86400; // 24 h
 
 async function getSmogonData(
