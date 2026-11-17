@@ -30,7 +30,7 @@ Secrets de l'environnement GitHub déjà configurés :
 - LUNIDEX_CRON_SECRET.
 - OVH_PRODUCTION_DEPLOY_SSH_KEY — clé dédiée configurée dans ovh-production; sa clé publique est installée dans /home/lunidex-deploy/.ssh/authorized_keys.
 
-NEON_DATABASE_URL est toujours manquant. Il reste à le configurer avec la connexion Neon main après résolution du grant de privilège de fonction qui a été rejeté. Tant qu'il manque, le workflow s'arrêtera avant le transfert de configuration au VPS.
+NEON_DATABASE_URL est configuré dans l'environnement GitHub ovh-production avec la connexion Neon main. Le rôle runtime est créé; le GRANT EXECUTE sur analytics.increment_daily_metric a réussi et has_function_privilege confirme l'accès à cette fonction. Une vérification SELECT 1 en lecture seule a réussi. Aucun enregistrement de données applicatives de Neon main n'a été lu ou écrit.
 
 Les valeurs Sentry côté serveur, Resend et VAPID privées restent facultatives et ne sont pas disponibles dans le stockage des secrets Vercel. Les fonctionnalités correspondantes resteront non configurées tant que ces secrets ne seront pas fournis.
 
@@ -43,7 +43,7 @@ NEON_AUTH_JWT_ISSUER et NEON_AUTH_JWT_AUDIENCE restent facultatifs et ne sont pa
 Le préflight valide :
 
 - le healthcheck HTTP local et la disponibilité de l'endpoint JWKS;
-- la connectivité Neon avec uniquement SELECT 1 (lecture sans écriture de test);
+- la connectivité Neon avec uniquement SELECT 1 (lecture sans écriture de test); cette vérification a déjà réussi pour le rôle runtime configuré, sans lecture ni écriture de données applicatives;
 - les routes de contenu, SEO et PWA, dont robots.txt, sitemap.xml, manifest.webmanifest et sw.js;
 - les réponses non authentifiées des routes de profil et des deux API cron;
 - /api/auth/get-session sans cookie fourni, qui doit répondre HTTP 200, avec le type application/json et le corps JSON null;
