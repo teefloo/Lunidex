@@ -275,6 +275,19 @@ jobs:
           remote_command="set -Eeuo pipefail; umask 077; export DOCKER_CONFIG=\$(mktemp -d /tmp/lunidex-production-docker.XXXXXX); trap 'rm -rf \"\$DOCKER_CONFIG\"' EXIT; docker login ghcr.io --username teefloo --password-stdin; bash /opt/lunidex-production/scripts/deployment/deploy-production.sh $PRODUCTION_COMMIT $DEPLOYMENT_MODE"
           printf '%s' "$GITHUB_TOKEN" | ssh "${ssh_args[@]}" "$target" "$remote_command"
 
+      - name: Rehearse candidate-to-baseline rollback after successful private preflight
+        if: success() && inputs.deployment_mode == 'preflight'
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -Eeuo pipefail
+          target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
+          ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
+          baseline=ace4b8eb76e5992c935cfc01120377d17297733d
+          remote_command="set -Eeuo pipefail; umask 077; export DOCKER_CONFIG=\$(mktemp -d /tmp/lunidex-rollback-rehearsal.XXXXXX); trap 'rm -rf \"\$DOCKER_CONFIG\"' EXIT; trap 'exit 129' HUP; trap 'exit 130' INT; trap 'exit 143' TERM; docker login ghcr.io --username teefloo --password-stdin; bash /opt/lunidex-production/scripts/deployment/rehearse-rollback-production.sh $baseline $PRODUCTION_COMMIT"
+          printf '%s' "$GITHUB_TOKEN" | ssh "${ssh_args[@]}" "$target" "$remote_command"
+
       - name: Remove temporary secrets and SSH key
         if: always()
         shell: bash

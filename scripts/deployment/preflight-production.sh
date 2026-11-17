@@ -11,6 +11,18 @@ trap 'docker compose -f "$repo_root/compose.yaml" exec -T caddy caddy reload --c
 cd "$production_root"
 bash /opt/lunidex-production/scripts/deployment/healthcheck-production.sh
 
+report_resources() {
+  local phase="$1"
+  printf '%s\n' "--- VPS resources: $phase ---"
+  uptime
+  free -h
+  df -h / /opt
+  docker stats --no-stream \
+    --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.MemPerc}}'
+}
+
+report_resources "candidate running before probes"
+
 docker cp "$production_root/deploy/production/Caddyfile.production.preflight" "$caddy_container:/data/Caddyfile.production.preflight"
 docker exec "$caddy_container" caddy validate --config /data/Caddyfile.production.preflight --adapter caddyfile
 docker exec "$caddy_container" caddy reload --config /data/Caddyfile.production.preflight --adapter caddyfile
@@ -87,4 +99,5 @@ for header in strict-transport-security content-security-policy x-content-type-o
   fi
 done
 
+report_resources "after preflight probes"
 echo "Production preflight passed over private internal TLS. Public DNS and public Caddy routing were not changed."
