@@ -84,7 +84,7 @@ Aucun cache Cloudflare global n'est configuré. Les directives `Vercel-CDN-Cache
 
 ## CI, GHCR et déploiement préproduction
 
-`.github/workflows/ci.yml` exécute `npm ci`, ESLint, TypeScript, Vitest, le contrôle SEO, le build et le contrôle du package core sur les PR/pushes configurés. `.github/workflows/deploy-ovh.yml` est déclenché manuellement avec une case de confirmation; il relance ces contrôles, construit l'image Linux amd64, la publie dans `ghcr.io/teefloo/lunidex:<SHA>` et la déploie sur la cible préproduction. Il n'y a aucun déclenchement automatique sur chaque commit et aucun flux de production dans ce workflow.
+`.github/workflows/ci.yml` exécute `npm ci`, ESLint, TypeScript, Vitest, le contrôle SEO, le build et le contrôle du package core sur les PR/pushes configurés. `.github/workflows/deploy-ovh.yml` démarre automatiquement sur les pushes de `codex/ovh-vps-migration`; il peut aussi être lancé manuellement avec une case de confirmation. Le job vérifie que la référence est exactement cette branche, relance les contrôles, construit l'image Linux amd64, la publie dans `ghcr.io/teefloo/lunidex:<SHA>` et la déploie sur la cible préproduction. Le script distant refuse tout domaine autre que `vps-test.lunidex.app` dans `LUNIDEX_DOMAIN` et `LUNIDEX_HOSTNAMES`; ce workflow ne déploie jamais `lunidex.app` ni `www.lunidex.app`.
 
 L'environnement GitHub `ovh-preproduction` existe déjà. Il contient la clé SSH dédiée et les variables d'hôte, d'utilisateur et de `known_hosts`. Les variables publiques de build listées ci-dessus restent à configurer après validation de la branche Neon de test.
 

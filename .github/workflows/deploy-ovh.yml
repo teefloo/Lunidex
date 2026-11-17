@@ -1,6 +1,9 @@
 name: Deploy OVH preproduction
 
 on:
+  push:
+    branches:
+      - codex/ovh-vps-migration
   workflow_dispatch:
     inputs:
       confirm_deployment:
@@ -14,7 +17,9 @@ permissions:
 
 jobs:
   deploy:
-    if: inputs.confirm_deployment
+    if: >-
+      github.ref == 'refs/heads/codex/ovh-vps-migration' &&
+      (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.confirm_deployment))
     runs-on: ubuntu-latest
     environment: ovh-preproduction
     permissions:
@@ -36,6 +41,15 @@ jobs:
       OVH_DEPLOY_USER: ${{ vars.OVH_DEPLOY_USER }}
       OVH_DEPLOY_KNOWN_HOSTS: ${{ vars.OVH_DEPLOY_KNOWN_HOSTS }}
     steps:
+      - name: Guard the preproduction branch
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          [[ "$GITHUB_REF" == 'refs/heads/codex/ovh-vps-migration' ]] || {
+            echo 'This workflow only deploys codex/ovh-vps-migration.' >&2
+            exit 1
+          }
+
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
