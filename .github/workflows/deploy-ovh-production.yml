@@ -1,0 +1,281 @@
+name: Deploy OVH production
+
+on:
+  workflow_dispatch:
+    inputs:
+      production_commit:
+        description: Exact 40-character master commit SHA to build and deploy
+        required: true
+        type: string
+      confirmation:
+        description: Type DEPLOY_OVH_PRODUCTION to authorize this production workflow
+        required: true
+        type: string
+      deployment_mode:
+        description: Preflight tests the image privately and stops it; deploy keeps it private and running
+        required: true
+        default: preflight
+        type: choice
+        options:
+          - preflight
+          - deploy
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lunidex-ovh-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      github.ref == 'refs/heads/master' &&
+      inputs.confirmation == 'DEPLOY_OVH_PRODUCTION' &&
+      inputs.production_commit == github.sha
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment: ovh-production
+    permissions:
+      contents: read
+      packages: write
+    env:
+      PRODUCTION_COMMIT: ${{ inputs.production_commit }}
+      PRODUCTION_CONFIRMATION: ${{ inputs.confirmation }}
+      DEPLOYMENT_MODE: ${{ inputs.deployment_mode }}
+      NEXT_PUBLIC_NEON_AUTH_URL: ${{ vars.NEXT_PUBLIC_NEON_AUTH_URL }}
+      NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN: ${{ vars.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN }}
+      NEXT_PUBLIC_POSTHOG_HOST: ${{ vars.NEXT_PUBLIC_POSTHOG_HOST }}
+      NEXT_PUBLIC_POSTHOG_ENABLED: ${{ vars.NEXT_PUBLIC_POSTHOG_ENABLED || 'false' }}
+      NEXT_PUBLIC_POSTHOG_REPLAY_SAMPLE_RATE: ${{ vars.NEXT_PUBLIC_POSTHOG_REPLAY_SAMPLE_RATE }}
+      NEXT_PUBLIC_SENTRY_DSN: ${{ vars.NEXT_PUBLIC_SENTRY_DSN }}
+      NEXT_PUBLIC_GOOGLE_VERIFICATION: ${{ vars.NEXT_PUBLIC_GOOGLE_VERIFICATION }}
+      NEXT_PUBLIC_VAPID_PUBLIC_KEY: ${{ vars.NEXT_PUBLIC_VAPID_PUBLIC_KEY }}
+      OVH_PRODUCTION_DEPLOY_HOST: ${{ vars.OVH_PRODUCTION_DEPLOY_HOST }}
+      OVH_PRODUCTION_DEPLOY_USER: ${{ vars.OVH_PRODUCTION_DEPLOY_USER }}
+      OVH_PRODUCTION_DEPLOY_KNOWN_HOSTS: ${{ vars.OVH_PRODUCTION_DEPLOY_KNOWN_HOSTS }}
+
+    steps:
+      - name: Guard the production branch and commit
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          [[ "$GITHUB_REF" == 'refs/heads/master' ]] || {
+            echo 'Production deployment is permitted only from master.' >&2
+            exit 1
+          }
+          [[ "$PRODUCTION_CONFIRMATION" == 'DEPLOY_OVH_PRODUCTION' ]] || {
+            echo 'The exact production confirmation phrase is required.' >&2
+            exit 1
+          }
+          [[ "$PRODUCTION_COMMIT" == "$GITHUB_SHA" && "$PRODUCTION_COMMIT" =~ ^[0-9a-f]{40}$ ]] || {
+            echo 'The requested full SHA must equal the selected master commit.' >&2
+            exit 1
+          }
+          [[ "$DEPLOYMENT_MODE" == 'preflight' || "$DEPLOYMENT_MODE" == 'deploy' ]] || {
+            echo 'Unknown production deployment mode.' >&2
+            exit 1
+          }
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ inputs.production_commit }}
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Require the production Neon Auth public URL
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          [[ -n "$NEXT_PUBLIC_NEON_AUTH_URL" ]] || {
+            echo 'Set NEXT_PUBLIC_NEON_AUTH_URL in the ovh-production environment.' >&2
+            exit 78
+          }
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run seo:check
+      - run: npm run build
+      - run: npx tsc --project packages/core/tsconfig.json --noEmit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ace4b8eb76e5992c935cfc01120377d17297733d
+          path: .rollback-baseline
+
+      - name: Build and publish the last Vercel production commit as rollback baseline
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -Eeuo pipefail
+          baseline=ace4b8eb76e5992c935cfc01120377d17297733d
+          image=ghcr.io/teefloo/lunidex
+          docker buildx version
+          docker buildx create --name lunidex-production-builder --driver docker-container --use
+          docker buildx inspect --bootstrap
+          printf '%s' "$GITHUB_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+          cp Dockerfile.rollback-baseline .rollback-baseline/Dockerfile.rollback-baseline
+          printf '%s\n' '.git' 'node_modules' '.next' '.env*' >> .rollback-baseline/.dockerignore
+          docker buildx build \
+            --platform linux/amd64 \
+            --file .rollback-baseline/Dockerfile.rollback-baseline \
+            --tag "$image:$baseline" \
+            --label "org.opencontainers.image.revision=$baseline" \
+            --build-arg "NEXT_DEPLOYMENT_ID=$baseline" \
+            --build-arg "NEXT_PUBLIC_NEON_AUTH_URL=$NEXT_PUBLIC_NEON_AUTH_URL" \
+            --build-arg "NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN=$NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN" \
+            --build-arg "NEXT_PUBLIC_POSTHOG_HOST=$NEXT_PUBLIC_POSTHOG_HOST" \
+            --build-arg "NEXT_PUBLIC_POSTHOG_ENABLED=$NEXT_PUBLIC_POSTHOG_ENABLED" \
+            --build-arg "NEXT_PUBLIC_POSTHOG_ENVIRONMENT=production" \
+            --build-arg "NEXT_PUBLIC_APP_RELEASE=$baseline" \
+            --build-arg "NEXT_PUBLIC_POSTHOG_REPLAY_SAMPLE_RATE=$NEXT_PUBLIC_POSTHOG_REPLAY_SAMPLE_RATE" \
+            --build-arg "NEXT_PUBLIC_SENTRY_DSN=$NEXT_PUBLIC_SENTRY_DSN" \
+            --build-arg "NEXT_PUBLIC_SENTRY_ENVIRONMENT=production" \
+            --build-arg "NEXT_PUBLIC_SENTRY_RELEASE=$baseline" \
+            --build-arg "NEXT_PUBLIC_GOOGLE_VERIFICATION=$NEXT_PUBLIC_GOOGLE_VERIFICATION" \
+            --build-arg "NEXT_PUBLIC_VAPID_PUBLIC_KEY=$NEXT_PUBLIC_VAPID_PUBLIC_KEY" \
+            --push \
+            .rollback-baseline
+          docker logout ghcr.io >/dev/null
+
+      - name: Build and publish the production SHA image
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: |
+          set -Eeuo pipefail
+          image=ghcr.io/teefloo/lunidex
+          docker buildx version
+          docker buildx inspect --bootstrap
+          printf '%s' "$GITHUB_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+
+          build_args=(
+            --build-arg "NEXT_DEPLOYMENT_ID=$PRODUCTION_COMMIT"
+            --build-arg "NEXT_PUBLIC_NEON_AUTH_URL=$NEXT_PUBLIC_NEON_AUTH_URL"
+            --build-arg "NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN=$NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN"
+            --build-arg "NEXT_PUBLIC_POSTHOG_HOST=$NEXT_PUBLIC_POSTHOG_HOST"
+            --build-arg "NEXT_PUBLIC_POSTHOG_ENABLED=$NEXT_PUBLIC_POSTHOG_ENABLED"
+            --build-arg "NEXT_PUBLIC_POSTHOG_ENVIRONMENT=production"
+            --build-arg "NEXT_PUBLIC_APP_RELEASE=$PRODUCTION_COMMIT"
+            --build-arg "NEXT_PUBLIC_POSTHOG_REPLAY_SAMPLE_RATE=$NEXT_PUBLIC_POSTHOG_REPLAY_SAMPLE_RATE"
+            --build-arg "NEXT_PUBLIC_SENTRY_DSN=$NEXT_PUBLIC_SENTRY_DSN"
+            --build-arg "NEXT_PUBLIC_SENTRY_ENVIRONMENT=production"
+            --build-arg "NEXT_PUBLIC_SENTRY_RELEASE=$PRODUCTION_COMMIT"
+            --build-arg "NEXT_PUBLIC_GOOGLE_VERIFICATION=$NEXT_PUBLIC_GOOGLE_VERIFICATION"
+            --build-arg "NEXT_PUBLIC_VAPID_PUBLIC_KEY=$NEXT_PUBLIC_VAPID_PUBLIC_KEY"
+          )
+          secret_args=()
+          if [[ -n "$SENTRY_AUTH_TOKEN" ]]; then
+            secret_args+=(--secret id=sentry_auth_token,env=SENTRY_AUTH_TOKEN)
+          fi
+
+          docker buildx build \
+            --platform linux/amd64 \
+            --tag "$image:$PRODUCTION_COMMIT" \
+            --label "org.opencontainers.image.revision=$PRODUCTION_COMMIT" \
+            "${build_args[@]}" \
+            "${secret_args[@]}" \
+            --push .
+          docker logout ghcr.io >/dev/null
+
+      - name: Prepare the server-only production environment
+        shell: bash
+        env:
+          NEON_DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
+          NEON_AUTH_BASE_URL: ${{ secrets.NEON_AUTH_BASE_URL }}
+          NEON_AUTH_JWKS_URL: ${{ secrets.NEON_AUTH_JWKS_URL }}
+          NEON_AUTH_COOKIE_SECRET: ${{ secrets.NEON_AUTH_COOKIE_SECRET }}
+          LUNIDEX_CRON_SECRET: ${{ secrets.LUNIDEX_CRON_SECRET }}
+          LUNIDEX_VAPID_PRIVATE_KEY: ${{ secrets.LUNIDEX_VAPID_PRIVATE_KEY }}
+          LUNIDEX_VAPID_SUBJECT: ${{ vars.LUNIDEX_VAPID_SUBJECT }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          CONTACT_TO_EMAIL: ${{ vars.CONTACT_TO_EMAIL }}
+          CONTACT_FROM_EMAIL: ${{ vars.CONTACT_FROM_EMAIL }}
+        run: |
+          set -Eeuo pipefail
+          app_env="$RUNNER_TEMP/lunidex-production-app.env"
+          umask 077
+          : > "$app_env"
+
+          append_env() {
+            local name="$1" value="$2" required="$3"
+            if [[ "$required" == 'yes' && -z "$value" ]]; then
+              echo "Missing required production setting: $name" >&2
+              exit 78
+            fi
+            [[ "$value" != *$'\n'* && "$value" != *$'\r'* ]] || {
+              echo "Production setting $name must be a single line." >&2
+              exit 78
+            }
+            if [[ -n "$value" ]]; then
+              printf '%s=%s\n' "$name" "$value" >> "$app_env"
+            fi
+          }
+
+          append_env NEON_DATABASE_URL "$NEON_DATABASE_URL" yes
+          append_env NEON_AUTH_BASE_URL "$NEON_AUTH_BASE_URL" yes
+          append_env NEON_AUTH_JWKS_URL "$NEON_AUTH_JWKS_URL" yes
+          append_env NEON_AUTH_COOKIE_SECRET "$NEON_AUTH_COOKIE_SECRET" yes
+          append_env LUNIDEX_CRON_SECRET "$LUNIDEX_CRON_SECRET" yes
+          append_env LUNIDEX_VAPID_PRIVATE_KEY "$LUNIDEX_VAPID_PRIVATE_KEY" no
+          append_env LUNIDEX_VAPID_SUBJECT "$LUNIDEX_VAPID_SUBJECT" no
+          append_env RESEND_API_KEY "$RESEND_API_KEY" no
+          append_env CONTACT_TO_EMAIL "$CONTACT_TO_EMAIL" no
+          append_env CONTACT_FROM_EMAIL "$CONTACT_FROM_EMAIL" no
+          chmod 0600 "$app_env"
+
+      - name: Configure the separate production SSH connection
+        shell: bash
+        env:
+          OVH_PRODUCTION_DEPLOY_SSH_KEY: ${{ secrets.OVH_PRODUCTION_DEPLOY_SSH_KEY }}
+        run: |
+          set -Eeuo pipefail
+          : "$OVH_PRODUCTION_DEPLOY_HOST"
+          : "$OVH_PRODUCTION_DEPLOY_USER"
+          : "$OVH_PRODUCTION_DEPLOY_KNOWN_HOSTS"
+          : "$OVH_PRODUCTION_DEPLOY_SSH_KEY"
+          [[ "$OVH_PRODUCTION_DEPLOY_HOST" == '51.255.40.19' || "$OVH_PRODUCTION_DEPLOY_HOST" == 'vps-5aa00f9a.vps.ovh.net' ]]
+          [[ "$OVH_PRODUCTION_DEPLOY_USER" == 'lunidex-deploy' ]]
+          install -d -m 0700 "$HOME/.ssh"
+          printf '%s\n' "$OVH_PRODUCTION_DEPLOY_SSH_KEY" > "$HOME/.ssh/ovh_deploy"
+          printf '%s\n' "$OVH_PRODUCTION_DEPLOY_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 0600 "$HOME/.ssh/ovh_deploy" "$HOME/.ssh/known_hosts"
+
+      - name: Transfer isolated production files and environment
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
+          ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
+          ssh "${ssh_args[@]}" "$target" 'set -Eeuo pipefail; root=/opt/lunidex-production; install -d -m 0755 "$root/scripts/deployment" "$root/deploy/production" "$root/deploy/systemd-production"; if [[ ! -f "$root/.env" ]]; then umask 077; printf "%s\n" "APP_IMAGE_TAG=ace4b8eb76e5992c935cfc01120377d17297733d" > "$root/.env"; fi; chmod 0600 "$root/.env"'
+          scp "${ssh_args[@]}" compose.production.yaml "$target:/opt/lunidex-production/"
+          scp "${ssh_args[@]}" scripts/deployment/*production*.sh "$target:/opt/lunidex-production/scripts/deployment/"
+          scp "${ssh_args[@]}" scripts/deployment/activate-production-route.sh "$target:/opt/lunidex-production/scripts/deployment/"
+          scp "${ssh_args[@]}" deploy/production/* "$target:/opt/lunidex-production/deploy/production/"
+          scp "${ssh_args[@]}" deploy/systemd-production/* "$target:/opt/lunidex-production/deploy/systemd-production/"
+          scp "$RUNNER_TEMP/lunidex-production-app.env" "$target:/opt/lunidex-production/app.env.$PRODUCTION_COMMIT.tmp"
+          ssh "${ssh_args[@]}" "$target" "chmod 0600 /opt/lunidex-production/app.env.$PRODUCTION_COMMIT.tmp && mv /opt/lunidex-production/app.env.$PRODUCTION_COMMIT.tmp /opt/lunidex-production/app.env"
+
+      - name: Deploy or privately preflight the production image
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -Eeuo pipefail
+          target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
+          ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
+          remote_command="set -Eeuo pipefail; umask 077; export DOCKER_CONFIG=\$(mktemp -d /tmp/lunidex-production-docker.XXXXXX); trap 'rm -rf \"\$DOCKER_CONFIG\"' EXIT; docker login ghcr.io --username teefloo --password-stdin; bash /opt/lunidex-production/scripts/deployment/deploy-production.sh $PRODUCTION_COMMIT $DEPLOYMENT_MODE"
+          printf '%s' "$GITHUB_TOKEN" | ssh "${ssh_args[@]}" "$target" "$remote_command"
+
+      - name: Remove temporary secrets and SSH key
+        if: always()
+        shell: bash
+        run: rm -f "$HOME/.ssh/ovh_deploy" "$RUNNER_TEMP/lunidex-production-app.env"

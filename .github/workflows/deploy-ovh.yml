@@ -11,11 +11,159 @@ on:
         required: true
         default: false
         type: boolean
+      bootstrap_production_ssh_key:
+        description: Append the separate production deploy public key to the OVH SSH user's authorized_keys
+        required: true
+        default: false
+        type: boolean
+      inspect_read_only_resources:
+        description: Read RAM, CPU, disk, containers, and timer states without changing services
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: read
 
 jobs:
+  inspect_read_only_resources:
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      github.ref == 'refs/heads/codex/ovh-vps-migration' &&
+      inputs.inspect_read_only_resources
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: ovh-preproduction
+    permissions:
+      contents: read
+    concurrency:
+      group: ovh-vps-read-only-resource-audit
+      cancel-in-progress: false
+    env:
+      OVH_DEPLOY_HOST: ${{ vars.OVH_DEPLOY_HOST }}
+      OVH_DEPLOY_USER: ${{ vars.OVH_DEPLOY_USER }}
+      OVH_DEPLOY_KNOWN_HOSTS: ${{ vars.OVH_DEPLOY_KNOWN_HOSTS }}
+    steps:
+      - name: Configure the pinned SSH connection
+        shell: bash
+        env:
+          OVH_DEPLOY_SSH_KEY: ${{ secrets.OVH_DEPLOY_SSH_KEY }}
+        run: |
+          set -Eeuo pipefail
+          : "$OVH_DEPLOY_HOST"
+          : "$OVH_DEPLOY_USER"
+          : "$OVH_DEPLOY_KNOWN_HOSTS"
+          : "$OVH_DEPLOY_SSH_KEY"
+          install -d -m 0700 "$HOME/.ssh"
+          printf '%s\n' "$OVH_DEPLOY_SSH_KEY" > "$HOME/.ssh/ovh_deploy"
+          printf '%s\n' "$OVH_DEPLOY_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 0600 "$HOME/.ssh/ovh_deploy" "$HOME/.ssh/known_hosts"
+
+      - name: Inspect VPS resources and timer states without changing services
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          target="$OVH_DEPLOY_USER@$OVH_DEPLOY_HOST"
+          ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
+          ssh "${ssh_args[@]}" "$target" 'bash -s' <<'REMOTE'
+          set -Eeuo pipefail
+          printf '%s\n' '--- Host load and uptime ---'
+          uptime
+          printf '%s\n' '--- RAM ---'
+          free -h
+          printf '%s\n' '--- Disk ---'
+          df -h / /opt
+          printf '%s\n' '--- Swap ---'
+          swapon --show || true
+          printf '%s\n' '--- Containers (no environment values) ---'
+          docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}'
+          docker stats --no-stream --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.MemPerc}}'
+          printf '%s\n' '--- Scheduled timers ---'
+          systemctl list-timers --all --no-pager | grep -E 'lunidex|NEXT|LEFT' || true
+          for timer in \
+            lunidex-cron@metrics-retention.timer \
+            lunidex-cron@tcg-sealed-sync.timer \
+            lunidex-production-cron@metrics-retention.timer \
+            lunidex-production-cron@tcg-sealed-sync.timer; do
+            printf '%s: enabled=' "$timer"
+            systemctl is-enabled "$timer" 2>/dev/null || true
+            printf '%s: active=' "$timer"
+            systemctl is-active "$timer" 2>/dev/null || true
+          done
+          REMOTE
+
+      - name: Remove temporary SSH key
+        if: always()
+        shell: bash
+        run: rm -f "$HOME/.ssh/ovh_deploy"
+
+  bootstrap_production_key:
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      github.ref == 'refs/heads/codex/ovh-vps-migration' &&
+      inputs.bootstrap_production_ssh_key
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: ovh-preproduction
+    concurrency:
+      group: lunidex-ovh-production-key-bootstrap
+      cancel-in-progress: false
+    env:
+      OVH_DEPLOY_HOST: ${{ vars.OVH_DEPLOY_HOST }}
+      OVH_DEPLOY_USER: ${{ vars.OVH_DEPLOY_USER }}
+      OVH_DEPLOY_KNOWN_HOSTS: ${{ vars.OVH_DEPLOY_KNOWN_HOSTS }}
+      OVH_PRODUCTION_DEPLOY_PUBLIC_KEY: ${{ vars.OVH_PRODUCTION_DEPLOY_PUBLIC_KEY }}
+    steps:
+      - name: Validate the exact VPS, account, and Ed25519 public key
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          [[ "$OVH_DEPLOY_HOST" == '51.255.40.19' || "$OVH_DEPLOY_HOST" == 'vps-5aa00f9a.vps.ovh.net' ]] || {
+            echo 'Refusing to install a key on an unexpected VPS host.' >&2
+            exit 78
+          }
+          [[ "$OVH_DEPLOY_USER" == 'lunidex-deploy' ]] || {
+            echo 'Refusing to install a key for an unexpected SSH account.' >&2
+            exit 78
+          }
+          [[ "$OVH_PRODUCTION_DEPLOY_PUBLIC_KEY" =~ ^ssh-ed25519[[:space:]]+[A-Za-z0-9+/=]+([[:space:]][A-Za-z0-9._@+-]+)?$ ]] || {
+            echo 'Set OVH_PRODUCTION_DEPLOY_PUBLIC_KEY to the generated single-line Ed25519 public key.' >&2
+            exit 78
+          }
+          : "$OVH_DEPLOY_KNOWN_HOSTS"
+
+      - name: Configure the existing pinned preproduction SSH connection
+        shell: bash
+        env:
+          OVH_DEPLOY_SSH_KEY: ${{ secrets.OVH_DEPLOY_SSH_KEY }}
+        run: |
+          set -Eeuo pipefail
+          : "$OVH_DEPLOY_SSH_KEY"
+          install -d -m 0700 "$HOME/.ssh"
+          printf '%s\n' "$OVH_DEPLOY_SSH_KEY" > "$HOME/.ssh/ovh_deploy"
+          printf '%s\n' "$OVH_DEPLOY_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 0600 "$HOME/.ssh/ovh_deploy" "$HOME/.ssh/known_hosts"
+
+      - name: Append only the production public key, idempotently
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          target="$OVH_DEPLOY_USER@$OVH_DEPLOY_HOST"
+          runner_key="$RUNNER_TEMP/lunidex-production-key-$GITHUB_RUN_ID.pub"
+          remote_key="/tmp/lunidex-production-key-$GITHUB_RUN_ID.pub"
+          umask 077
+          printf '%s\n' "$OVH_PRODUCTION_DEPLOY_PUBLIC_KEY" > "$runner_key"
+          ssh-keygen -l -f "$runner_key" >/dev/null
+          ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
+          scp "${ssh_args[@]}" "$runner_key" "$target:$remote_key"
+          remote_command="set -Eeuo pipefail; keyfile='$remote_key'; trap 'rm -f \"\$keyfile\"' EXIT; [[ \"\$(id -un)\" == lunidex-deploy ]]; home=\$(getent passwd lunidex-deploy | cut -d: -f6); [[ \"\$home\" == /home/lunidex-deploy ]]; [[ ! -L \"\$home/.ssh\" ]]; install -d -m 0700 \"\$home/.ssh\"; auth=\"\$home/.ssh/authorized_keys\"; [[ ! -L \"\$auth\" ]]; touch \"\$auth\"; chmod 0600 \"\$auth\"; if ! grep -Fqx -f \"\$keyfile\" \"\$auth\"; then cat \"\$keyfile\" >> \"\$auth\"; fi; chmod 0600 \"\$auth\"; echo 'Production deploy public key is installed idempotently.'"
+          ssh "${ssh_args[@]}" "$target" "$remote_command"
+
+      - name: Remove temporary public key copy and SSH key
+        if: always()
+        shell: bash
+        run: rm -f "$RUNNER_TEMP/lunidex-production-key-$GITHUB_RUN_ID.pub" "$HOME/.ssh/ovh_deploy"
+
   deploy:
     if: >-
       github.ref == 'refs/heads/codex/ovh-vps-migration' &&

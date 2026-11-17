@@ -1,0 +1,85 @@
+name: Audit OVH VPS resources
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_read_only_inspection:
+        description: Run a read-only RAM, CPU, disk, container, and timer inspection
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ovh-vps-resource-audit
+  cancel-in-progress: false
+
+jobs:
+  inspect:
+    if: >-
+      (github.ref == 'refs/heads/codex/ovh-vps-migration' || github.ref == 'refs/heads/master') &&
+      inputs.confirm_read_only_inspection
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: ovh-preproduction
+    env:
+      OVH_DEPLOY_HOST: ${{ vars.OVH_DEPLOY_HOST }}
+      OVH_DEPLOY_USER: ${{ vars.OVH_DEPLOY_USER }}
+      OVH_DEPLOY_KNOWN_HOSTS: ${{ vars.OVH_DEPLOY_KNOWN_HOSTS }}
+    steps:
+      - name: Configure the pinned SSH connection
+        shell: bash
+        env:
+          OVH_DEPLOY_SSH_KEY: ${{ secrets.OVH_DEPLOY_SSH_KEY }}
+        run: |
+          set -Eeuo pipefail
+          : "${OVH_DEPLOY_HOST:?Configure the OVH host in ovh-preproduction}"
+          : "${OVH_DEPLOY_USER:?Configure the OVH user in ovh-preproduction}"
+          : "${OVH_DEPLOY_KNOWN_HOSTS:?Configure the verified OVH host key}"
+          : "${OVH_DEPLOY_SSH_KEY:?Configure the OVH SSH key in ovh-preproduction}"
+          [[ "$OVH_DEPLOY_HOST" =~ ^[A-Za-z0-9.-]+$ ]]
+          [[ "$OVH_DEPLOY_USER" =~ ^[a-z_][a-z0-9_-]*$ ]]
+          install -d -m 0700 "$HOME/.ssh"
+          printf '%s\n' "$OVH_DEPLOY_SSH_KEY" > "$HOME/.ssh/ovh_deploy"
+          printf '%s\n' "$OVH_DEPLOY_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 0600 "$HOME/.ssh/ovh_deploy" "$HOME/.ssh/known_hosts"
+
+      - name: Inspect host and container resources without changing services
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          target="$OVH_DEPLOY_USER@$OVH_DEPLOY_HOST"
+          ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
+          ssh "${ssh_args[@]}" "$target" 'bash -s' <<'REMOTE'
+          set -Eeuo pipefail
+          printf '%s\n' '--- Host load and uptime ---'
+          uptime
+          printf '%s\n' '--- RAM ---'
+          free -h
+          printf '%s\n' '--- Disk ---'
+          df -h / /opt
+          printf '%s\n' '--- Swap ---'
+          swapon --show || true
+          printf '%s\n' '--- Containers (no environment values) ---'
+          docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}'
+          docker stats --no-stream --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.MemPerc}}'
+          printf '%s\n' '--- Scheduled timers ---'
+          systemctl list-timers --all --no-pager | grep -E 'lunidex|NEXT|LEFT' || true
+          for timer in \
+            lunidex-cron@metrics-retention.timer \
+            lunidex-cron@tcg-sealed-sync.timer \
+            lunidex-production-cron@metrics-retention.timer \
+            lunidex-production-cron@tcg-sealed-sync.timer; do
+            printf '%s: enabled=' "$timer"
+            systemctl is-enabled "$timer" 2>/dev/null || true
+            printf '%s: active=' "$timer"
+            systemctl is-active "$timer" 2>/dev/null || true
+          done
+          REMOTE
+
+      - name: Remove temporary SSH key
+        if: always()
+        shell: bash
+        run: rm -f "$HOME/.ssh/ovh_deploy"

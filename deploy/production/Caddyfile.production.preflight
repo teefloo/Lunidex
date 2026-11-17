@@ -1,0 +1,23 @@
+{
+	servers {
+		trusted_proxies static {$CLOUDFLARE_TRUSTED_PROXIES}
+		trusted_proxies_strict
+	}
+}
+
+{$LUNIDEX_HOSTNAMES} {
+	encode zstd gzip
+	reverse_proxy app:3000 {
+		header_up X-Forwarded-For {http.request.client_ip}
+	}
+}
+
+lunidex.app, www.lunidex.app {
+	tls internal
+	@outsidePreflight not remote_ip 127.0.0.1/8 ::1/128 172.16.0.0/12
+	respond @outsidePreflight 403
+	encode zstd gzip
+	reverse_proxy lunidex-production-app:3000 {
+		header_up X-Forwarded-For {http.request.client_ip}
+	}
+}
