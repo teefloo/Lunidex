@@ -31,4 +31,6 @@ jobs:
 
       - run: npm run build
 
+      - run: node scripts/ci/smoke-standalone.mjs
+
       - run: npx tsc --project packages/core/tsconfig.json --noEmit
