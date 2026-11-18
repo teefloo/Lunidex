@@ -66,7 +66,7 @@ jobs:
           docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}'
           docker stats --no-stream --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.MemPerc}}'
           printf '%s\n' '--- Production container lifecycle (no environment values) ---'
-          docker inspect --format 'status={{.State.Status}} restarts={{.RestartCount}} oom_killed={{.State.OOMKilled}} exit_code={{.State.ExitCode}} started_at={{.State.StartedAt}} finished_at={{.State.FinishedAt}} error={{.State.Error}}' lunidex-production-app 2>/dev/null || true
+          docker inspect --format 'status={{.State.Status}} restarts={{.RestartCount}} restart_policy={{.HostConfig.RestartPolicy.Name}} oom_killed={{.State.OOMKilled}} exit_code={{.State.ExitCode}} started_at={{.State.StartedAt}} finished_at={{.State.FinishedAt}} error={{.State.Error}}' lunidex-production-app 2>/dev/null || true
           printf '%s\n' '--- Recent production healthcheck results ---'
           docker inspect --format '{{range .State.Health.Log}}{{printf "%s exit=%d output=%q\n" .Start .ExitCode .Output}}{{end}}' lunidex-production-app 2>/dev/null | tail -n 10 || true
           printf '%s\n' '--- Production container events (last 6 hours) ---'
@@ -75,8 +75,8 @@ jobs:
             --until "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
             --filter type=container \
             --filter container=lunidex-production-app \
-            --format '{{.Time}} {{.Action}}' \
-            | grep -E '(^| )(start|die|oom|kill|restart|health_status:)' \
+            --format '{{.Time}} {{.Action}} name={{index .Actor.Attributes "name"}} exitCode={{index .Actor.Attributes "exitCode"}} signal={{index .Actor.Attributes "signal"}}' \
+            | grep -E '(^| )(start|stop|die|oom|kill|restart|health_status:)' \
             | tail -n 40 || true
           printf '%s\n' '--- Scheduled timers ---'
           systemctl list-timers --all --no-pager | grep -E 'lunidex|NEXT|LEFT' || true
