@@ -78,6 +78,24 @@ jobs:
             --format '{{.Time}} {{.Action}} name={{index .Actor.Attributes "name"}} exitCode={{index .Actor.Attributes "exitCode"}} signal={{index .Actor.Attributes "signal"}}' \
             | grep -E '(^| )(start|stop|die|oom|kill|restart|health_status:)' \
             | tail -n 40 || true
+          printf '%s\n' '--- Production log signatures (raw log lines suppressed) ---'
+          if production_logs="$(docker logs --since 6h --tail 2000 lunidex-production-app 2>&1)"; then
+            printf '%s\n' 'log_capture_available=true'
+          else
+            printf '%s\n' 'log_capture_available=false'
+          fi
+          classify_log_signature() {
+            local label="$1" pattern="$2" matched=false
+            if grep -Eiq -- "$pattern" <<<"$production_logs"; then
+              matched=true
+            fi
+            printf '%s=%s\n' "$label" "$matched"
+          }
+          classify_log_signature v8_heap_oom 'JavaScript heap out of memory|Ineffective mark-compacts near heap limit|Reached heap limit|Allocation failed - JavaScript heap out of memory'
+          classify_log_signature node_fatal 'FATAL ERROR:|Fatal process out of memory|node::Abort\('
+          classify_log_signature assertion_or_abort 'Assertion failed|AssertionError|SIGABRT|Aborted \(core dumped\)|abort\(\) called|Check failed:'
+          classify_log_signature uncaught_or_unhandled 'uncaughtException|uncaught exception|unhandledRejection|unhandled promise rejection|UnhandledPromiseRejection|ERR_UNHANDLED_REJECTION'
+          unset production_logs
           printf '%s\n' '--- Scheduled timers ---'
           systemctl list-timers --all --no-pager | grep -E 'lunidex|NEXT|LEFT' || true
           for timer in \
