@@ -9,6 +9,7 @@ fi
 
 expected_ipv4=51.255.40.19
 expected_ipv6=2001:41d0:305:2100::1:916d
+caddy_container=lunidex-caddy
 for hostname in lunidex.app www.lunidex.app; do
   ipv4="$(getent ahostsv4 "$hostname" | awk '{print $1}' | sort -u)"
   if [[ "$ipv4" != "$expected_ipv4" ]]; then
@@ -77,8 +78,8 @@ trap 'exit 130' INT
 trap 'exit 143' TERM
 
 docker cp "$production_caddyfile" \
-  lunidex-caddy:/data/Caddyfile.production
-docker exec lunidex-caddy caddy validate --config /data/Caddyfile.production --adapter caddyfile
+  "$caddy_container:/data/Caddyfile.production"
+docker exec "$caddy_container" caddy validate --config /data/Caddyfile.production --adapter caddyfile
 cp -p "$active_caddyfile" "$backup"
 route_switch_attempted=true
 install -m 0644 "$production_caddyfile" "$active_caddyfile"
