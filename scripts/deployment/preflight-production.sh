@@ -31,6 +31,7 @@ request_status() {
   local host="$1" path="$2"
   curl --insecure --silent --show-error --max-time 20 \
     --resolve "$host:443:127.0.0.1" \
+    --dump-header "$headers_file" \
     --output /dev/null --write-out '%{http_code}' \
     "https://$host$path"
 }
@@ -39,7 +40,22 @@ expect_status() {
   local host="$1" path="$2" expected="$3" actual
   actual="$(request_status "$host" "$path")"
   if [[ "$actual" != "$expected" ]]; then
-    echo "Preflight request failed: $path returned HTTP $actual; expected $expected." >&2
+    echo "Preflight request failed: $path on $host returned HTTP $actual; expected $expected." >&2
+    return 1
+  fi
+}
+
+expect_redirect() {
+  local host="$1" path="$2" expected="$3" expected_location="$4" actual location
+  actual="$(request_status "$host" "$path")"
+  if [[ "$actual" != "$expected" ]]; then
+    echo "Preflight request failed: $path on $host returned HTTP $actual; expected $expected." >&2
+    return 1
+  fi
+
+  location="$(awk 'tolower($1) == "location:" { sub(/^[^:]*:[[:space:]]*/, ""); gsub(/\r/, ""); value = $0 } END { print value }' "$headers_file")"
+  if [[ "$location" != "$expected_location" ]]; then
+    echo "Preflight request failed: $path on $host redirected to '$location'; expected '$expected_location'." >&2
     return 1
   fi
 }
@@ -59,7 +75,10 @@ done
 expect_status lunidex.app /api/profile 401
 expect_status lunidex.app /api/cron/metrics-retention 401
 expect_status lunidex.app /api/cron/tcg-sealed-sync 401
-expect_status www.lunidex.app /api/healthz 200
+# www is an intentional legacy host. Next's host redirect canonicalizes it to
+# the apex over HTTPS, so verify the redirect target instead of expecting the
+# health handler to run on the alias.
+expect_redirect www.lunidex.app /api/healthz 308 https://lunidex.app/api/healthz
 
 session_body="$temp_dir/anonymous-session.json"
 auth_session_meta="$(curl --insecure --silent --show-error --max-time 20 \
