@@ -284,7 +284,7 @@ jobs:
           scp "${ssh_args[@]}" scripts/deployment/activate-production-route.sh "$target:/opt/lunidex-production/scripts/deployment/"
           scp "${ssh_args[@]}" deploy/production/* "$target:/opt/lunidex-production/deploy/production/"
           scp "${ssh_args[@]}" deploy/systemd-production/* "$target:/opt/lunidex-production/deploy/systemd-production/"
-          scp "$RUNNER_TEMP/lunidex-production-app.env" "$target:/opt/lunidex-production/app.env.$PRODUCTION_COMMIT.tmp"
+          scp "${ssh_args[@]}" "$RUNNER_TEMP/lunidex-production-app.env" "$target:/opt/lunidex-production/app.env.$PRODUCTION_COMMIT.tmp"
           ssh "${ssh_args[@]}" "$target" "chmod 0600 /opt/lunidex-production/app.env.$PRODUCTION_COMMIT.tmp && mv /opt/lunidex-production/app.env.$PRODUCTION_COMMIT.tmp /opt/lunidex-production/app.env"
 
       - name: Deploy or privately preflight the production image
