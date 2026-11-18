@@ -75,7 +75,12 @@ for line in sys.stdin:
     if not any(token in combined for token in ("acme", "certificate", "challenge", "tls", "issuance", "obtaining", "obtained", "error", "failed", "failure")):
         continue
     fields = ("ts", "level", "logger", "msg", "error", "identifier", "challenge_type", "issuer", "ca", "attempt", "status", "phase", "remaining")
-    safe_entry = {field: entry[field] for field in fields if field in entry}
+    scalar_types = (str, int, float, bool)
+    safe_entry = {
+        field: entry[field]
+        for field in fields
+        if field in entry and isinstance(entry[field], scalar_types)
+    }
     events.append(json.dumps(safe_entry, ensure_ascii=True, separators=(",", ":"))[:1600])
 
 for event in events:
