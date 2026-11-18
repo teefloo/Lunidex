@@ -91,20 +91,22 @@ if [[ "$auth_session_status" != "200" || "$auth_session_content_type" != applica
   echo "Neon Auth anonymous session endpoint returned an unexpected status or content type." >&2
   exit 1
 fi
-node --input-type=module -e '
-  import { readFileSync } from "node:fs";
-  let payload;
-  try {
-    payload = JSON.parse(readFileSync(process.argv[1], "utf8"));
-  } catch {
-    console.error("Neon Auth session response was not valid JSON.");
-    process.exit(1);
+if ! awk '
+  { lines[NR] = $0 }
+  END {
+    payload = ""
+    for (line = 1; line <= NR; line++) {
+      if (line > 1) payload = payload "\n"
+      payload = payload lines[line]
+    }
+    sub(/^[[:space:]]+/, "", payload)
+    sub(/[[:space:]]+$/, "", payload)
+    if (payload != "null") exit 1
   }
-  if (payload !== null) {
-    console.error("Neon Auth did not return the expected anonymous JSON null.");
-    process.exit(1);
-  }
-' "$session_body"
+' "$session_body"; then
+  echo "Neon Auth did not return the expected anonymous JSON null." >&2
+  exit 1
+fi
 echo "Neon Auth anonymous session path returned HTTP 200 with JSON null."
 
 curl --insecure --silent --show-error --max-time 20 \
