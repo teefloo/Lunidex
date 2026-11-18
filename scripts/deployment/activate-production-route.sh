@@ -51,10 +51,36 @@ restore_route_after_failure() {
   local original_status=$?
   trap - EXIT
   if [[ "$original_status" -ne 0 && "$route_switch_attempted" == true ]]; then
-    echo "Recent Caddy ACME/TLS/certificate/challenge warnings and errors (last 15 minutes, at most 80 lines):" >&2
-    docker logs --since 15m --tail 300 "$caddy_container" 2>&1 \
-      | awk 'tolower($0) ~ /(acme|tls|certificate|challenge|error|warn)/ { print substr($0, 1, 500) }' \
-      | tail -n 80 >&2 || true
+    echo "Recent Caddy TLS/ACME diagnostics (last 15 minutes, at most 80 events; request details omitted):" >&2
+    docker logs --since 15m "$caddy_container" 2>&1 \
+      | python3 -c '
+import json
+import sys
+from collections import deque
+
+events = deque(maxlen=80)
+relevant_loggers = {"tls.obtain", "tls.handshake", "http.acme_client", "http.auto_https"}
+for line in sys.stdin:
+    try:
+        entry = json.loads(line)
+    except (TypeError, ValueError):
+        continue
+    logger = entry.get("logger")
+    message = entry.get("msg")
+    if not isinstance(logger, str) or not isinstance(message, str):
+        continue
+    if logger not in relevant_loggers and not logger.startswith("tls.issuance."):
+        continue
+    combined = (logger + " " + message).lower()
+    if not any(token in combined for token in ("acme", "certificate", "challenge", "tls", "issuance", "obtaining", "obtained", "error", "failed", "failure")):
+        continue
+    fields = ("ts", "level", "logger", "msg", "error", "identifier", "challenge_type", "issuer", "ca", "attempt", "status", "phase", "remaining")
+    safe_entry = {field: entry[field] for field in fields if field in entry}
+    events.append(json.dumps(safe_entry, ensure_ascii=True, separators=(",", ":"))[:1600])
+
+for event in events:
+    print(event)
+' >&2 || true
     if [[ -f "$backup" ]]; then
       if install -m 0644 "$backup" "$active_caddyfile"; then
         if docker compose -f /opt/lunidex/compose.yaml exec -T caddy \
