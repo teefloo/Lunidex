@@ -34,9 +34,15 @@ fi
 backup=/opt/lunidex-production/Caddyfile.before-production
 production_caddyfile=/opt/lunidex-production/deploy/production/Caddyfile.production
 active_caddyfile=/opt/lunidex/Caddyfile
-if [[ -e "$backup" ]]; then
-  echo "A pre-production Caddyfile backup already exists; inspect it before retrying." >&2
-  exit 78
+if [[ -e "$backup" || -L "$backup" ]]; then
+  if [[ -f "$backup" && ! -L "$backup" && -f "$active_caddyfile" && ! -L "$active_caddyfile" ]] \
+    && cmp -s -- "$backup" "$active_caddyfile"; then
+    rm -f -- "$backup"
+    echo "Removed stale Caddyfile backup identical to the active configuration; retrying route activation." >&2
+  else
+    echo "A pre-production Caddyfile backup already exists and does not safely match the active configuration; inspect it before retrying." >&2
+    exit 78
+  fi
 fi
 
 route_switch_attempted=false
@@ -44,6 +50,10 @@ restore_route_after_failure() {
   local original_status=$?
   trap - EXIT
   if [[ "$original_status" -ne 0 && "$route_switch_attempted" == true ]]; then
+    echo "Recent Caddy ACME/TLS/certificate/challenge warnings and errors (last 15 minutes, at most 80 lines):" >&2
+    docker logs --since 15m --tail 300 "$caddy_container" 2>&1 \
+      | awk 'tolower($0) ~ /(acme|tls|certificate|challenge|error|warn)/ { print substr($0, 1, 500) }' \
+      | tail -n 80 >&2 || true
     if [[ -f "$backup" ]]; then
       if install -m 0644 "$backup" "$active_caddyfile"; then
         if docker compose -f /opt/lunidex/compose.yaml exec -T caddy \
