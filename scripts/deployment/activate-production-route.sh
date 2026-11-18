@@ -242,12 +242,16 @@ for event in events:
 ' >&2 || true
     if [[ -f "$backup" ]]; then
       if install -m 0644 "$backup" "$active_caddyfile"; then
-        if docker compose -f /opt/lunidex/compose.yaml exec -T caddy \
-          caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile; then
+        if docker cp "$backup" "$caddy_container:/data/Caddyfile.previous" \
+          && docker exec "$caddy_container" caddy validate \
+            --config /data/Caddyfile.previous --adapter caddyfile \
+          && docker exec "$caddy_container" caddy reload \
+            --config /data/Caddyfile.previous --adapter caddyfile; then
           echo "The previous Caddyfile was restored after production route activation failed." >&2
         else
           echo "The previous Caddyfile was restored, but Caddy reload failed; the original activation error remains." >&2
         fi
+        docker exec "$caddy_container" rm -f /data/Caddyfile.previous >/dev/null 2>&1 || true
       else
         echo "Could not restore the previous Caddyfile after production route activation failed." >&2
       fi
@@ -268,8 +272,8 @@ docker exec "$caddy_container" caddy validate --config /data/Caddyfile.productio
 cp -p "$active_caddyfile" "$backup"
 route_switch_attempted=true
 install -m 0644 "$production_caddyfile" "$active_caddyfile"
-docker compose -f /opt/lunidex/compose.yaml exec -T caddy \
-  caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
+docker exec "$caddy_container" caddy reload \
+  --config /data/Caddyfile.production --adapter caddyfile
 echo "Production Caddy configuration loaded."
 
 for hostname in lunidex.app www.lunidex.app; do
