@@ -47,10 +47,164 @@ if [[ -e "$backup" || -L "$backup" ]]; then
 fi
 
 route_switch_attempted=false
+report_caddy_route_state() {
+  echo "Caddy active route projection (admin API fields only):" >&2
+  local admin_config=''
+  admin_config="$(docker exec "$caddy_container" sh -c '
+    if command -v wget >/dev/null 2>&1; then
+      wget -q -T 4 -O - http://127.0.0.1:2019/config/
+    elif command -v curl >/dev/null 2>&1; then
+      curl -fsS --max-time 4 http://127.0.0.1:2019/config/
+    else
+      exit 127
+    fi
+  ' 2>/dev/null)" || admin_config=''
+  if [[ -z "$admin_config" ]]; then
+    echo "Caddy admin API config: unavailable" >&2
+  elif ! printf '%s' "$admin_config" | python3 -c '
+import json
+import sys
+from urllib.parse import urlsplit
+
+def strings(value):
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, list):
+        return [item for item in value if isinstance(item, str)]
+    return []
+
+def collect_route_hosts(node, hosts):
+    if isinstance(node, list):
+        for item in node:
+            collect_route_hosts(item, hosts)
+    elif isinstance(node, dict):
+        matchers = node.get("match", [])
+        if isinstance(matchers, dict):
+            matchers = [matchers]
+        for matcher in matchers if isinstance(matchers, list) else []:
+            if isinstance(matcher, dict):
+                hosts.update(strings(matcher.get("host")))
+        for key in ("routes", "handle"):
+            if key in node:
+                collect_route_hosts(node[key], hosts)
+
+try:
+    config = json.load(sys.stdin)
+    apps = config.get("apps", {})
+    http = apps.get("http", {}) if isinstance(apps, dict) else {}
+    servers = http.get("servers", {}) if isinstance(http, dict) else {}
+    rows = []
+    if isinstance(servers, dict):
+        for name, server in servers.items():
+            if not isinstance(server, dict):
+                continue
+            hosts = set()
+            collect_route_hosts(server.get("routes", []), hosts)
+            safe_policies = []
+            connection_policies = server.get("tls_connection_policies", [])
+            for policy in connection_policies if isinstance(connection_policies, list) else []:
+                if not isinstance(policy, dict):
+                    continue
+                match = policy.get("match", [])
+                if isinstance(match, dict):
+                    match = [match]
+                sni = set()
+                for matcher in match if isinstance(match, list) else []:
+                    if isinstance(matcher, dict):
+                        sni.update(strings(matcher.get("sni")))
+                safe = {"match_sni": sorted(sni), "alpn": strings(policy.get("alpn"))}
+                for field in ("protocol_min", "protocol_max"):
+                    if isinstance(policy.get(field), str):
+                        safe[field] = policy[field]
+                safe_policies.append(safe)
+            rows.append({
+                "name": name if isinstance(name, str) else "",
+                "listen": strings(server.get("listen")),
+                "route_hosts": sorted(hosts),
+                "tls_connection_policies": safe_policies,
+            })
+
+    tls = apps.get("tls", {}) if isinstance(apps, dict) else {}
+    automation = tls.get("automation", {}) if isinstance(tls, dict) else {}
+    policies = automation.get("policies", []) if isinstance(automation, dict) else []
+    safe_automation = []
+    for policy in policies if isinstance(policies, list) else []:
+        if not isinstance(policy, dict):
+            continue
+        issuers = []
+        configured_issuers = policy.get("issuers", [])
+        for issuer in configured_issuers if isinstance(configured_issuers, list) else []:
+            if not isinstance(issuer, dict):
+                continue
+            safe_issuer = {}
+            if isinstance(issuer.get("module"), str):
+                safe_issuer["module"] = issuer["module"]
+            ca = issuer.get("ca")
+            if isinstance(ca, str):
+                try:
+                    ca_host = urlsplit(ca).hostname
+                    if ca_host:
+                        safe_issuer["ca_host"] = ca_host
+                except ValueError:
+                    pass
+            issuers.append(safe_issuer)
+        safe = {"subjects": strings(policy.get("subjects")), "issuers": issuers}
+        if isinstance(policy.get("on_demand"), bool):
+            safe["on_demand"] = policy["on_demand"]
+        safe_automation.append(safe)
+
+    print(json.dumps({"servers": rows, "tls_automation_policies": safe_automation}, separators=(",", ":")))
+except (AttributeError, TypeError, ValueError, json.JSONDecodeError):
+    sys.exit(1)
+' >&2; then
+    echo "Caddy admin API config: unavailable or unparseable" >&2
+  fi
+
+  echo "Caddy published ports:" >&2
+  for port in 80 443; do
+    local mapping=''
+    mapping="$(docker port "$caddy_container" "${port}/tcp" 2>/dev/null || true)"
+    printf '  %s/tcp: %s\n' "$port" "${mapping:-unpublished}" >&2
+  done
+  if command -v ss >/dev/null 2>&1; then
+    echo "Host listeners on ports 80/443:" >&2
+    ss -ltnH 2>/dev/null | awk '$4 ~ /:(80|443)$/ { print "  " $1, $4 }' >&2 || true
+  else
+    echo "Host listeners on ports 80/443: ss unavailable" >&2
+  fi
+
+  for hostname in lunidex.app www.lunidex.app; do
+    local probe_output=''
+    local probe_exit=0
+    probe_output="$(curl --silent --show-error --insecure --connect-timeout 3 --max-time 8 \
+      --resolve "$hostname:443:127.0.0.1" --output /dev/null \
+      --write-out 'http_code=%{http_code} remote_ip=%{remote_ip} ssl_verify_result=%{ssl_verify_result}' \
+      "https://$hostname/api/healthz" 2>&1)" || probe_exit=$?
+    probe_output="${probe_output//$'\n'/ }"
+    printf 'Internal TLS probe %s: exit=%s result=%s\n' \
+      "$hostname" "$probe_exit" "${probe_output:0:400}" >&2
+  done
+
+  if docker exec "$caddy_container" sh -c '
+    if command -v wget >/dev/null 2>&1; then
+      wget -q -T 8 -O /dev/null https://acme-v02.api.letsencrypt.org/directory
+    elif command -v curl >/dev/null 2>&1; then
+      curl -fsS --connect-timeout 3 --max-time 8 -o /dev/null https://acme-v02.api.letsencrypt.org/directory
+    else
+      exit 127
+    fi
+  ' >/dev/null 2>&1; then
+    echo "ACME directory egress from Caddy container: reachable" >&2
+  else
+    echo "ACME directory egress from Caddy container: failed or unavailable" >&2
+  fi
+}
+
 restore_route_after_failure() {
   local original_status=$?
   trap - EXIT
   if [[ "$original_status" -ne 0 && "$route_switch_attempted" == true ]]; then
+    report_caddy_route_state || echo "Caddy route diagnostics could not be completed." >&2
     echo "Recent Caddy TLS/ACME diagnostics (last 15 minutes, at most 80 events; request details omitted):" >&2
     docker logs --since 15m "$caddy_container" 2>&1 \
       | python3 -c '
