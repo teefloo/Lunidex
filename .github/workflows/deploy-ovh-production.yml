@@ -96,6 +96,25 @@ jobs:
             exit 78
           }
 
+      - name: Require production contact delivery configuration
+        shell: bash
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          CONTACT_TO_EMAIL: ${{ vars.CONTACT_TO_EMAIL }}
+          CONTACT_FROM_EMAIL: ${{ vars.CONTACT_FROM_EMAIL }}
+        run: |
+          set -Eeuo pipefail
+          missing=()
+          [[ -n "${RESEND_API_KEY//[[:space:]]/}" ]] || missing+=(RESEND_API_KEY)
+          [[ -n "${CONTACT_TO_EMAIL//[[:space:]]/}" ]] || missing+=(CONTACT_TO_EMAIL)
+          [[ -n "${CONTACT_FROM_EMAIL//[[:space:]]/}" ]] || missing+=(CONTACT_FROM_EMAIL)
+          if ((${#missing[@]})); then
+            printf 'Missing required production contact setting names:' >&2
+            printf ' %s' "${missing[@]}" >&2
+            printf '\n' >&2
+            exit 78
+          fi
+
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
@@ -287,6 +306,35 @@ jobs:
           scp "${ssh_args[@]}" "$RUNNER_TEMP/lunidex-production-app.env" "$target:/opt/lunidex-production/app.env.$PRODUCTION_COMMIT.tmp"
           ssh "${ssh_args[@]}" "$target" "chmod 0600 /opt/lunidex-production/app.env.$PRODUCTION_COMMIT.tmp && mv /opt/lunidex-production/app.env.$PRODUCTION_COMMIT.tmp /opt/lunidex-production/app.env"
 
+      - name: Stop preproduction before durable production deployment
+        if: inputs.deployment_mode == 'deploy'
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
+          ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=10 -o ServerAliveInterval=5 -o ServerAliveCountMax=4)
+          timeout 60s ssh "${ssh_args[@]}" "$target" 'bash -s' <<'REMOTE'
+          set -Eeuo pipefail
+          running="$(docker inspect --format '{{.State.Running}}' lunidex-app 2>/dev/null)" || {
+            echo 'Could not inspect the preproduction app container; refusing production start.' >&2
+            exit 1
+          }
+          case "$running" in
+            true) docker stop --time 30 lunidex-app >/dev/null ;;
+            false) ;;
+            *) echo 'Unexpected preproduction container state; refusing production start.' >&2; exit 1 ;;
+          esac
+          running="$(docker inspect --format '{{.State.Running}}' lunidex-app 2>/dev/null)" || {
+            echo 'Could not verify the preproduction app state; refusing production start.' >&2
+            exit 1
+          }
+          if [[ "$running" != false ]]; then
+            echo 'The preproduction app is still running; refusing production start.' >&2
+            exit 1
+          fi
+          echo 'Preproduction app is stopped before durable production deployment.'
+          REMOTE
+
       - name: Deploy or privately preflight the production image
         shell: bash
         env:
@@ -297,6 +345,15 @@ jobs:
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
           remote_command="set -Eeuo pipefail; umask 077; export DOCKER_CONFIG=\$(mktemp -d /tmp/lunidex-production-docker.XXXXXX); trap 'rm -rf \"\$DOCKER_CONFIG\"' EXIT; docker login ghcr.io --username teefloo --password-stdin; bash /opt/lunidex-production/scripts/deployment/deploy-production.sh $PRODUCTION_COMMIT $DEPLOYMENT_MODE"
           printf '%s' "$GITHUB_TOKEN" | ssh "${ssh_args[@]}" "$target" "$remote_command"
+
+      - name: Verify the private production deployment
+        if: success() && inputs.deployment_mode == 'deploy'
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
+          ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=10 -o ServerAliveInterval=5 -o ServerAliveCountMax=4)
+          timeout 90s ssh "${ssh_args[@]}" "$target" 'bash /opt/lunidex-production/scripts/deployment/healthcheck-production.sh'
 
       - name: Rehearse candidate-to-baseline rollback after successful private preflight
         if: success() && inputs.deployment_mode == 'preflight'
