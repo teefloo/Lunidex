@@ -15,7 +15,10 @@ for hostname in lunidex.app www.lunidex.app; do
     echo "Refusing route activation: $hostname does not resolve only to the OVH IPv4." >&2
     exit 78
   fi
-  ipv6="$(getent ahostsv6 "$hostname" | awk '{print $1}' | sort -u || true)"
+  # `ahostsv6` sets AI_V4MAPPED and can return an IPv4-only A record as
+  # `::ffff:x.x.x.x`. Inspect the AF_UNSPEC list instead, then keep only
+  # native IPv6 literals so the IPv4-mapped fallback cannot fail this guard.
+  ipv6="$(getent ahosts "$hostname" | awk 'index($1, ":") { print tolower($1) }' | sort -u || true)"
   if [[ -n "$ipv6" && "$ipv6" != "$expected_ipv6" ]]; then
     echo "Refusing route activation: $hostname has a non-OVH IPv6 record." >&2
     exit 78

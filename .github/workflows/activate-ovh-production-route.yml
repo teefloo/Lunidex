@@ -55,6 +55,11 @@ jobs:
             exit 1
           }
 
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
       - name: Configure the pinned production SSH connection
         shell: bash
         env:
@@ -76,17 +81,24 @@ jobs:
           printf '%s\n' "$OVH_PRODUCTION_DEPLOY_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
           chmod 0600 "$HOME/.ssh/ovh_deploy" "$HOME/.ssh/known_hosts"
 
-      - name: Verify the deployed image and activate the guarded production route
+      - name: Install the checked-out route helper and activate the guarded production route
         shell: bash
         run: |
           set -Eeuo pipefail
           target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=10 -o ServerAliveInterval=5 -o ServerAliveCountMax=4)
-          timeout 240s ssh "${ssh_args[@]}" "$target" "bash -s -- $PRODUCTION_COMMIT" <<'REMOTE'
+          remote_helper=/opt/lunidex-production/scripts/deployment/activate-production-route.sh
+          remote_helper_tmp="${remote_helper}.${GITHUB_RUN_ID}.tmp"
+          timeout 30s ssh "${ssh_args[@]}" "$target" "bash -s -- $PRODUCTION_COMMIT $remote_helper_tmp" <<'REMOTE'
           set -Eeuo pipefail
           production_commit="${1:-}"
+          helper_temp="${2:-}"
           [[ "$production_commit" =~ ^[0-9a-f]{40}$ ]] || {
             echo 'Invalid production SHA supplied to the VPS.' >&2
+            exit 78
+          }
+          [[ "$helper_temp" =~ ^/opt/lunidex-production/scripts/deployment/activate-production-route\.sh\.[0-9]+\.tmp$ ]] || {
+            echo 'Invalid temporary route helper path.' >&2
             exit 78
           }
           cd /opt/lunidex-production
@@ -99,7 +111,56 @@ jobs:
             echo 'The private production image does not match the requested SHA; route activation refused.' >&2
             exit 78
           }
-          bash /opt/lunidex-production/scripts/deployment/activate-production-route.sh ACTIVATE_PRODUCTION_ROUTE
+          helper_dir=/opt/lunidex-production/scripts/deployment
+          [[ -d "$helper_dir" && ! -L "$helper_dir" ]] || {
+            echo 'Production deployment helper directory is missing or unsafe.' >&2
+            exit 78
+          }
+          [[ ! -e "$helper_temp" && ! -L "$helper_temp" ]] || {
+            echo 'Temporary route helper path already exists; refusing to overwrite it.' >&2
+            exit 78
+          }
+          REMOTE
+
+          scp "${ssh_args[@]}" scripts/deployment/activate-production-route.sh "$target:$remote_helper_tmp"
+
+          timeout 240s ssh "${ssh_args[@]}" "$target" "bash -s -- $PRODUCTION_COMMIT $remote_helper_tmp" <<'REMOTE'
+          set -Eeuo pipefail
+          production_commit="${1:-}"
+          helper_temp="${2:-}"
+          helper_dir=/opt/lunidex-production/scripts/deployment
+          helper_path="$helper_dir/activate-production-route.sh"
+          [[ "$production_commit" =~ ^[0-9a-f]{40}$ ]] || {
+            echo 'Invalid production SHA supplied to the VPS.' >&2
+            exit 78
+          }
+          [[ "$helper_temp" =~ ^/opt/lunidex-production/scripts/deployment/activate-production-route\.sh\.[0-9]+\.tmp$ ]] || {
+            echo 'Invalid temporary route helper path.' >&2
+            exit 78
+          }
+          cd /opt/lunidex-production
+          [[ -f .env && ! -L .env ]] || {
+            echo 'Production image selection is missing or unsafe; route activation refused.' >&2
+            exit 78
+          }
+          current_tag="$(sed -n 's/^APP_IMAGE_TAG=//p' .env)"
+          [[ "$current_tag" == "$production_commit" ]] || {
+            echo 'The private production image does not match the requested SHA; route activation refused.' >&2
+            exit 78
+          }
+          [[ -d "$helper_dir" && ! -L "$helper_dir" ]] || {
+            echo 'Production deployment helper directory is missing or unsafe.' >&2
+            exit 78
+          }
+          [[ -f "$helper_temp" && ! -L "$helper_temp" ]] || {
+            echo 'The staged route helper is missing or unsafe.' >&2
+            exit 78
+          }
+          trap 'rm -f -- "$helper_temp"' EXIT
+          chmod 0755 "$helper_temp"
+          mv -f -- "$helper_temp" "$helper_path"
+          trap - EXIT
+          bash "$helper_path" ACTIVATE_PRODUCTION_ROUTE
           REMOTE
 
       - name: Remove the temporary SSH key
