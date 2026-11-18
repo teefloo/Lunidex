@@ -67,6 +67,12 @@ RUN addgroup --system --gid 1001 nodejs \
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+# Next bundles this driver into route chunks but omits it from the standalone
+# root module tree; the deployment's direct Node health check needs the ESM entry.
+COPY --from=builder --chown=nextjs:nodejs \
+    /app/node_modules/@neondatabase/serverless/package.json \
+    /app/node_modules/@neondatabase/serverless/index.mjs \
+    ./node_modules/@neondatabase/serverless/
 
 USER nextjs
 EXPOSE 3000
