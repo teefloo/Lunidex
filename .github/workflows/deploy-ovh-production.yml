@@ -96,6 +96,25 @@ jobs:
             exit 78
           }
 
+      - name: Require production contact delivery configuration
+        shell: bash
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          CONTACT_TO_EMAIL: ${{ vars.CONTACT_TO_EMAIL }}
+          CONTACT_FROM_EMAIL: ${{ vars.CONTACT_FROM_EMAIL }}
+        run: |
+          set -Eeuo pipefail
+          missing=()
+          [[ -n "${RESEND_API_KEY//[[:space:]]/}" ]] || missing+=(RESEND_API_KEY)
+          [[ -n "${CONTACT_TO_EMAIL//[[:space:]]/}" ]] || missing+=(CONTACT_TO_EMAIL)
+          [[ -n "${CONTACT_FROM_EMAIL//[[:space:]]/}" ]] || missing+=(CONTACT_FROM_EMAIL)
+          if ((${#missing[@]})); then
+            printf 'Missing required production contact setting names:' >&2
+            printf ' %s' "${missing[@]}" >&2
+            printf '\n' >&2
+            exit 78
+          fi
+
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
