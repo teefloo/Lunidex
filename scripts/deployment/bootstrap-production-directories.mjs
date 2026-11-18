@@ -1,5 +1,6 @@
-const fs = require("node:fs");
-const path = require("node:path");
+import fs from "node:fs";
+import path from "node:path";
+import { pathToFileURL } from "node:url";
 
 function bootstrapProductionDirectories({ root, uid, gid, fileSystem = fs, log = console.log }) {
   if (typeof root !== "string" || !path.isAbsolute(root)) {
@@ -67,7 +68,7 @@ function bootstrapProductionDirectories({ root, uid, gid, fileSystem = fs, log =
   }
 }
 
-if (require.main === module) {
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
   try {
     const uidValue = process.env.BOOTSTRAP_UID;
     const gidValue = process.env.BOOTSTRAP_GID;
@@ -85,4 +86,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { bootstrapProductionDirectories };
+export { bootstrapProductionDirectories };
