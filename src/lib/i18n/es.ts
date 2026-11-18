@@ -354,7 +354,7 @@ export default {
       },
       banner: {
         title: 'Consentimiento de cookies',
-        description: 'Elija por separado la medición de audiencia y rendimiento (Vercel) y la medición del producto (Neon, PostHog). Ambas siguen desactivadas sin su consentimiento.',
+        description: 'Elija por separado la medición del rendimiento (Sentry) y la medición del producto (Neon, PostHog). Ambas siguen desactivadas sin su consentimiento.',
         accept: 'Aceptar todo',
         reject: 'Rechazar todo',
         manage: 'Personalizar',

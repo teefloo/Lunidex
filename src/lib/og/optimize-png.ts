@@ -2,7 +2,7 @@ import sharp from 'sharp';
 
 const MINIMUM_JPEG_SAVINGS_RATIO = 0.3;
 
-/** Recompress a generated OG image losslessly before it reaches Vercel's CDN. */
+/** Recompress a generated OG image losslessly before serving it. */
 export async function optimizeOgPngResponse(image: Response): Promise<Response> {
   const original = new Uint8Array(await image.arrayBuffer());
   let payload = original;

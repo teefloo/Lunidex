@@ -1,34 +1,21 @@
 import { NextRequest } from 'next/server';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { proxy } from './proxy';
 
-const originalVercel = process.env.VERCEL;
-
-beforeEach(() => {
-  process.env.VERCEL = '1';
-});
-
-afterEach(() => {
-  if (originalVercel === undefined) delete process.env.VERCEL;
-  else process.env.VERCEL = originalVercel;
-  vi.restoreAllMocks();
-});
+afterEach(() => { vi.restoreAllMocks(); });
 
 describe('public localized proxy responses', () => {
-  it('does not emit Vercel CDN cache directives in a self-hosted deployment', async () => {
-    delete process.env.VERCEL;
-
+  it('does not attach a locale preference cookie to a public localized page', async () => {
     const response = await proxy(new NextRequest('https://lunidex.test/fr/tcg', {
       headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
     }));
 
     expect(response.status).toBe(200);
-    expect(response.headers.get('Vercel-CDN-Cache-Control')).toBeNull();
-    expect(response.headers.get('CDN-Cache-Control')).toBeNull();
+    expect(response.headers.get('set-cookie')).toBeNull();
   });
 
-  it('caches confirmed public 404s at the CDN', async () => {
+  it('returns a hard 404 for confirmed missing public resources', async () => {
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 404 }));
 
     const response = await proxy(new NextRequest('https://lunidex.test/fr/pokemon/not-a-real-pokemon', {
@@ -36,135 +23,7 @@ describe('public localized proxy responses', () => {
     }));
 
     expect(response.status).toBe(404);
-    expect(response.headers.get('Vercel-CDN-Cache-Control')).toBe(
-      'public, s-maxage=3600, stale-while-revalidate=86400',
-    );
   });
-
-  it('marks document responses for Vercel CDN caching without enabling browser caching', async () => {
-    const response = await proxy(new NextRequest('https://lunidex.test/fr/tcg', {
-      headers: { accept: 'text/html', 'user-agent': 'ClaudeBot/1.0' },
-    }));
-
-    expect(response.status).toBe(200);
-    expect(response.headers.get('Vercel-CDN-Cache-Control')).toBe(
-      'public, s-maxage=3600, stale-while-revalidate=86400',
-    );
-    expect(response.headers.get('CDN-Cache-Control')).toBe(
-      'public, s-maxage=3600, stale-while-revalidate=86400',
-    );
-    expect(response.headers.get('Cache-Control')).toBeNull();
-  });
-
-  it('treats illustrator galleries as cacheable public TCG pages without resource probes', async () => {
-    const fetchMock = vi.spyOn(globalThis, 'fetch');
-    const response = await proxy(new NextRequest('https://lunidex.test/fr/tcg/illustrators/shinji%20kanda?page=2', {
-      headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
-    }));
-
-    expect(response.status).toBe(200);
-    expect(response.headers.get('Vercel-CDN-Cache-Control')).toBe(
-      'public, s-maxage=3600, stale-while-revalidate=86400',
-    );
-    expect(fetchMock).not.toHaveBeenCalled();
-  });
-
-  it('gives stable public content a one-day CDN lifetime', async () => {
-    const response = await proxy(new NextRequest('https://lunidex.test/fr/cookies', {
-      headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
-    }));
-    const apiGuideResponse = await proxy(new NextRequest('https://lunidex.test/fr/docs/api', {
-      headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
-    }));
-
-    expect(response.headers.get('Vercel-CDN-Cache-Control')).toBe(
-      'public, s-maxage=86400, stale-while-revalidate=604800',
-    );
-    expect(response.headers.get('CDN-Cache-Control')).toBe(
-      'public, s-maxage=86400, stale-while-revalidate=604800',
-    );
-    expect(response.headers.get('Cache-Control')).toBeNull();
-    expect(apiGuideResponse.headers.get('Vercel-CDN-Cache-Control')).toBe(
-      'public, s-maxage=86400, stale-while-revalidate=604800',
-    );
-  });
-
-  it('gives stable Pokémon data detail pages a one-day CDN lifetime', async () => {
-    vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }));
-
-    const paths = [
-      '/fr/pokemon/pikachu-cost-cache-check',
-      '/fr/moves/thunderbolt-cost-cache-check',
-      '/fr/abilities/static-cost-cache-check',
-      '/fr/items/potion-cost-cache-check',
-    ];
-    const responses = await Promise.all(paths.map((path) => proxy(new NextRequest(`https://lunidex.test${path}`, {
-      headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
-    }))));
-
-    expect(responses.map((response) => response.status)).toEqual([200, 200, 200, 200]);
-    expect(responses.map((response) => response.headers.get('Vercel-CDN-Cache-Control'))).toEqual(
-      paths.map(() => 'public, s-maxage=86400, stale-while-revalidate=604800'),
-    );
-  });
-
-  it('caches only the public sealed market listing, not the portfolio route', async () => {
-    const marketResponse = await proxy(new NextRequest('https://lunidex.test/fr/tcg/sealed/market?q=booster', {
-      headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
-    }));
-    const portfolioResponse = await proxy(new NextRequest('https://lunidex.test/fr/tcg/sealed/collection', {
-      headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
-    }));
-
-    expect(marketResponse.headers.get('Vercel-CDN-Cache-Control')).toBe(
-      'public, s-maxage=3600, stale-while-revalidate=86400',
-    );
-    expect(portfolioResponse.headers.get('Vercel-CDN-Cache-Control')).toBeNull();
-  });
-
-  it('uses longer CDN caching for sealed editorial pages and hourly caching for product prices', async () => {
-    const editorialResponse = await proxy(new NextRequest('https://lunidex.test/fr/tcg/sealed/buy-safely', {
-      headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
-    }));
-    const productResponse = await proxy(new NextRequest('https://lunidex.test/fr/tcg/sealed/market/123', {
-      headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
-    }));
-    const productAliasResponse = await proxy(new NextRequest('https://lunidex.test/fr/tcg/sealed/market/products/123', {
-      headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
-    }));
-
-    expect(editorialResponse.headers.get('Vercel-CDN-Cache-Control')).toBe(
-      'public, s-maxage=86400, stale-while-revalidate=604800',
-    );
-    expect(productResponse.headers.get('Vercel-CDN-Cache-Control')).toBe(
-      'public, s-maxage=3600, stale-while-revalidate=86400',
-    );
-    expect(productAliasResponse.headers.get('Vercel-CDN-Cache-Control')).toBe(
-      'public, s-maxage=3600, stale-while-revalidate=86400',
-    );
-  });
-
-  it('does not mark Flight navigations as cacheable documents', async () => {
-    const response = await proxy(new NextRequest('https://lunidex.test/fr/tcg', {
-      headers: { accept: 'text/x-component', 'user-agent': 'Mozilla/5.0' },
-    }));
-
-    expect(response.status).toBe(200);
-    expect(response.headers.get('Vercel-CDN-Cache-Control')).toBeNull();
-  });
-
-  it('keeps HEAD document probes cacheable even without an Accept header', async () => {
-    const response = await proxy(new NextRequest('https://lunidex.test/fr/tcg', {
-      method: 'HEAD',
-      headers: { 'user-agent': 'ClaudeBot/1.0' },
-    }));
-
-    expect(response.status).toBe(200);
-    expect(response.headers.get('Vercel-CDN-Cache-Control')).toBe(
-      'public, s-maxage=3600, stale-while-revalidate=86400',
-    );
-  });
-
   it('short-circuits automated Next prefetches before rendering the page', async () => {
     const fetchMock = vi.spyOn(globalThis, 'fetch');
 
@@ -190,9 +49,6 @@ describe('public localized proxy responses', () => {
 
     expect(response.status).toBe(404);
     expect(fetchMock).not.toHaveBeenCalled();
-    expect(response.headers.get('Vercel-CDN-Cache-Control')).toBe(
-      'public, s-maxage=3600, stale-while-revalidate=86400',
-    );
   });
 
   it('stops ClaudeBot card detail requests before TCGdex probes and page rendering', async () => {
@@ -258,7 +114,6 @@ describe('public localized proxy responses', () => {
 
     expect(response.status).toBe(200);
     expect(fetchMock).not.toHaveBeenCalled();
-    expect(response.headers.get('Vercel-CDN-Cache-Control')).toBeNull();
   });
 
   it('reuses a confirmed English TCG card across localized document probes', async () => {
@@ -387,16 +242,5 @@ describe('public localized proxy responses', () => {
     }));
 
     expect(fetchMock).toHaveBeenCalledTimes(513);
-  });
-
-  it('marks the localized home document as CDN-cacheable', async () => {
-    const response = await proxy(new NextRequest('https://lunidex.test/fr', {
-      headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
-    }));
-
-    expect(response.status).toBe(200);
-    expect(response.headers.get('Vercel-CDN-Cache-Control')).toBe(
-      'public, s-maxage=3600, stale-while-revalidate=86400',
-    );
   });
 });

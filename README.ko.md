@@ -7,7 +7,7 @@
 
 **플레이어, 트레이너, TCG 컬렉터를 위한 집중형 포켓몬 워크스페이스.**
 
-[![온라인 앱](https://img.shields.io/badge/Live-lunidex.app-ef4440?style=flat-square&logo=vercel&logoColor=white)](https://lunidex.app)
+[![온라인 앱](https://img.shields.io/badge/Live-lunidex.app-ef4440?style=flat-square)](https://lunidex.app)
 [![CI](https://img.shields.io/github/actions/workflow/status/teefloo/Lunidex/ci.yml?style=flat-square&label=CI)](https://github.com/teefloo/Lunidex/actions/workflows/ci.yml)
 [![Node.js 22](https://img.shields.io/badge/Node.js-22-3c873a?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
@@ -109,7 +109,7 @@ cp .env.example .env.local
 | `NEXT_PUBLIC_NEON_AUTH_URL` | Web / 공개 | 브라우저 클라이언트가 사용하는 Neon Auth 엔드포인트. |
 | `NEON_AUTH_BASE_URL`, `NEON_AUTH_JWKS_URL` | 서버 전용 | Neon Auth 프록시 및 JWT 검증 엔드포인트. |
 | `NEON_AUTH_COOKIE_SECRET`, `NEON_AUTH_JWT_ISSUER`, `NEON_AUTH_JWT_AUDIENCE` | 서버 전용 | 인증 쿠키 보호 및 JWT 검증 조건. |
-| `NEON_DATABASE_URL` / `DATABASE_URL` | 서버 전용 | Neon PostgreSQL 연결. Vercel의 Neon 통합은 `DATABASE_URL`을 제공하며 로컬에서는 `NEON_DATABASE_URL`을 사용할 수 있습니다. |
+| `NEON_DATABASE_URL` | 서버 전용 | 웹 런타임과 로컬 마이그레이션 도구에서 사용하는 Neon PostgreSQL 연결입니다. |
 | `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Web / 공개 | 선택적인 Google Search Console 인증 값. |
 | `NEXT_PUBLIC_ENABLE_AGENTATION` | 개발 | `true`일 때 Agentation UI 리뷰 오버레이 활성화. |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Web / 공개 | 선택적인 브라우저 Push 구독 키. |
@@ -201,22 +201,9 @@ Web (Next.js App Router)
 
 ## 배포
 
-Lunidex는 [Vercel](https://vercel.com/)에 맞게 구성되어 있으며 Next.js 서버 runtime과 이미지 최적화를 지원하는 호스트에서도 실행할 수 있습니다.
+Lunidex 프로덕션은 Docker와 Caddy를 사용하는 OVHcloud VPS에서 실행됩니다. GitHub Actions는 보호된 `ovh-production` 환경을 통해 변경 불가 이미지를 빌드하고 배포합니다.
 
-```bash
-npm run build
-npm run start
-```
-
-Vercel에서는:
-
-1. `teefloo/Lunidex`를 Vercel 프로젝트로 가져옵니다.
-2. Preview 및 Production에 Neon Auth 값과 서버 전용 데이터베이스 연결을 설정합니다.
-3. 표준 Next.js build 설정을 사용합니다. 커밋된 [`vercel.json`](./vercel.json)은 의도적으로 최소 구성입니다.
-
-현재 Web runtime은 Neon을 사용합니다. Supabase SQL 마이그레이션은 더 이상 저장소에 보관하지 않으며, 이 디렉터리에는 보관된 Edge Function과 보안 기록만 남아 있습니다. 관리형 마이그레이션 스크립트는 역사적 도구이며 Web 앱의 인증 또는 데이터베이스 runtime이 아닙니다.
-
-스키마, 환경 경계, 검증 절차는 [Neon 마이그레이션 runbook](./docs/neon-migration.md)을 참고하세요.
+배포, 상태 확인, 롤백은 [OVH 프로덕션 가이드](./docs/deployment/ovh-production.md)를 참조하세요.
 
 ## 관련 문서
 

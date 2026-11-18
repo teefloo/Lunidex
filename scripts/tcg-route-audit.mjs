@@ -60,9 +60,6 @@ async function get(url) {
       headers: { accept: 'text/html,application/json,application/xml;q=0.9,*/*;q=0.8', 'user-agent': 'LunidexTechnicalSEOAudit/1.0' },
     });
     const result = { url, status: response.status, headers: Object.fromEntries(response.headers), body: await response.text() };
-    if (response.headers.get('x-vercel-mitigated') === 'challenge') {
-      throw new Error(`Vercel challenge at ${url} (${response.status}); origin status is unverified, stopping redundant requests`);
-    }
     return result;
   })();
   requests.set(url, pending);
@@ -94,7 +91,7 @@ async function checkPage(path) {
     title: metadata.title, canonical: metadata.canonical, robots: metadata.robots,
     xRobotsTag: response.headers['x-robots-tag'] ?? null, hreflang: metadata.alternates,
     og: metadata.og, htmlLanguage: metadata.htmlLanguage,
-    cache: { age: response.headers.age, vercel: response.headers['x-vercel-cache'], control: response.headers['cache-control'], cdn: response.headers['cdn-cache-control'] },
+    cache: { age: response.headers.age, control: response.headers['cache-control'], cdn: response.headers['cdn-cache-control'] },
     tcgLanguage: new URL(path, base).searchParams.get('tcgLang') ?? 'en',
   };
   checkedPages.set(path, { result, metadata });

@@ -20,33 +20,15 @@ const LIMITED_TCG_EMPTY_PROBE_MAX_BYTES = 400;
 const CANONICAL_HOST = 'lunidex.app';
 const ANNIVERSARY_30_ROUTE = '30e-anniversaire';
 const ANNIVERSARY_30_UNSUPPORTED_LOCALES = new Set(['de', 'es', 'it', 'ja', 'ko', 'zh']);
-// Canonical public URLs already carry their locale. Avoiding Set-Cookie on
-// those responses keeps them eligible for the Vercel CDN cache; the client
-// provider persists the selected locale for unprefixed redirects below.
+// Canonical public URLs already carry their locale. The client provider
+// persists the selected locale after hydration; unprefixed redirects below
+// still store the selected locale directly.
 const AUTOMATED_CLIENT_PATTERN = /(?:bot|crawler|spider|lighthouse|headless|externalagent|lightpanda)/i;
 const CLAUDE_BOT_USER_AGENT_PATTERN = /(?:^|[^a-z0-9])claudebot(?:[^a-z0-9]|$)/i;
 const OBVIOUSLY_INVALID_RESOURCE_IDENTIFIER = /^(?:null|undefined)$/i;
 // These paths are common WordPress probes but are not part of Lunidex. Return
 // a cacheable edge 404 before Next renders the global not-found route.
 const KNOWN_SCANNER_PATH_PREFIXES = ['/wp-admin', '/wp-login.php', '/xmlrpc.php'];
-// Next keeps request-dependent layouts private, so the route-level header in
-// next.config.ts is not present after the locale rewrite. Set Vercel's CDN-only
-// directive on the proxy response instead; browser caching remains private.
-const PUBLIC_PAGE_VERCEL_CACHE_CONTROL =
-  'public, s-maxage=3600, stale-while-revalidate=86400';
-const PUBLIC_STABLE_PAGE_VERCEL_CACHE_CONTROL =
-  'public, s-maxage=86400, stale-while-revalidate=604800';
-const PUBLIC_STABLE_SINGLE_SEGMENT_ROUTES = new Set([
-  'about',
-  'blog',
-  'contact',
-  'cookies',
-  'docs',
-  'faq',
-  'legal',
-  'privacy',
-  'terms',
-]);
 const PUBLIC_SINGLE_SEGMENT_ROUTES = new Set([
   'pokedex',
   'moves',
@@ -77,14 +59,6 @@ const PUBLIC_DETAIL_ROUTE_PREFIXES = new Set([
   'compare',
   'guides',
   'u',
-]);
-const STABLE_PUBLIC_DETAIL_ROUTE_PREFIXES = new Set(['pokemon', 'moves', 'abilities', 'items']);
-const LEGACY_HOSTS = new Set([
-  'www.lunidex.app',
-  'primedex.vercel.app',
-  'poke-app-lake.vercel.app',
-  'lunidex-teeflo.vercel.app',
-  'lunidex-teeflo-teeflo.vercel.app',
 ]);
 
 type SupportedResource =
@@ -214,15 +188,6 @@ function isPublicLocalizedRoute(segments: string[]): boolean {
     || (segments.length === 5 && segments[2] === 'sealed' && segments[3] === 'market' && /^\d+$/.test(segments[4] ?? ''))
     || (segments.length === 6 && segments[2] === 'sealed' && segments[3] === 'market'
       && segments[4] === 'products' && /^\d+$/.test(segments[5] ?? ''));
-}
-
-function isStablePublicLocalizedRoute(segments: string[]): boolean {
-  return (segments.length === 2 && PUBLIC_STABLE_SINGLE_SEGMENT_ROUTES.has(segments[1] ?? ''))
-    || (segments.length === 3 && STABLE_PUBLIC_DETAIL_ROUTE_PREFIXES.has(segments[1] ?? ''))
-    || (segments.length === 3 && segments[1] === 'guides')
-    || (segments.length === 3 && segments[1] === 'docs' && segments[2] === 'api')
-    || (segments.length === 4 && segments[1] === 'tcg' && segments[2] === 'sealed'
-      && ['releases', 'buy-safely'].includes(segments[3] ?? ''));
 }
 
 function getResourceProbe(pathname: string, locale: string): ResourceProbe | null {
@@ -493,22 +458,13 @@ function hardNotFoundResponse(request: NextRequest, locale: string) {
   // A confirmed missing public resource is safe to reuse briefly. This avoids
   // invoking the global not-found render repeatedly for crawler probes while
   // keeping the browser response private.
-  applyVercelCdnCacheHeaders(response.headers, PUBLIC_PAGE_VERCEL_CACHE_CONTROL);
   return response;
-}
-
-function applyVercelCdnCacheHeaders(headers: Headers, cacheControl: string): void {
-  // These CDN-only directives are understood by Vercel. Self-hosted
-  // deployments leave caching to Next's own cache and explicit route headers.
-  if (process.env.VERCEL !== '1') return;
-  headers.set('Vercel-CDN-Cache-Control', cacheControl);
-  headers.set('CDN-Cache-Control', cacheControl);
 }
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (LEGACY_HOSTS.has(request.nextUrl.hostname)) {
+  if (request.nextUrl.hostname === 'www.lunidex.app') {
     const canonicalUrl = request.nextUrl.clone();
     canonicalUrl.protocol = 'https:';
     canonicalUrl.hostname = CANONICAL_HOST;
@@ -611,19 +567,12 @@ export async function proxy(request: NextRequest) {
 
     // The locale in the URL is authoritative for this render. Do not attach a
     // preference cookie to the public page response: Set-Cookie makes an
-    // otherwise cacheable localized document private to the browser. The
-    // client provider persists the language choice after hydration, while
-    // unlocalized requests still receive a cookie on the redirect below.
+    // the client's locale choice after hydration, while unlocalized requests
+    // still receive a cookie on the redirect below.
     const isPublicPage = isPublicLocalizedRoute(segments);
     const response = NextResponse.next({
       request: { headers: forwardedHeaders },
     });
-    if (isPublicPage && isDocumentRequest) {
-      const cacheControl = isStablePublicLocalizedRoute(segments)
-        ? PUBLIC_STABLE_PAGE_VERCEL_CACHE_CONTROL
-        : PUBLIC_PAGE_VERCEL_CACHE_CONTROL;
-      applyVercelCdnCacheHeaders(response.headers, cacheControl);
-    }
     if (cookieLang !== urlLocale && shouldPersistLocaleCookie(request) && !isPublicPage) {
       response.cookies.set(COOKIE_NAME, urlLocale, {
         path: '/',

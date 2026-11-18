@@ -10,7 +10,6 @@ type DeferredComponents = {
   SentryConsentBridge: ComponentType | null;
   PostHogConsentBridge: ComponentType | null;
   PostHogIdentityBridge: ComponentType | null;
-  VercelInsights: ComponentType | null;
 };
 
 function fulfilled<T>(result: PromiseSettledResult<T>): T | null {
@@ -24,7 +23,7 @@ const OPTIONAL_SERVICES_MIN_DELAY_MS = 6_000;
  * render has had a chance to settle. The bridges remain mounted for the rest
  * of the session once their chunks are available.
  */
-export function IdleClientServices({ enableVercelInsights }: { enableVercelInsights: boolean }) {
+export function IdleClientServices() {
   const [components, setComponents] = useState<DeferredComponents | null>(null);
 
   useEffect(() => {
@@ -38,10 +37,7 @@ export function IdleClientServices({ enableVercelInsights }: { enableVercelInsig
         process.env.NEXT_PUBLIC_SENTRY_DSN ? import('@/components/analytics/SentryConsentBridge') : Promise.resolve(null),
         hasPostHog ? import('@/components/analytics/PostHogConsentBridge') : Promise.resolve(null),
         hasPostHog ? import('@/components/analytics/PostHogIdentityBridge') : Promise.resolve(null),
-        enableVercelInsights
-          ? import('@/components/analytics/VercelInsights')
-          : Promise.resolve(null),
-      ]).then(([sync, pwa, sentry, posthogConsent, posthogIdentity, vercel]) => {
+      ]).then(([sync, pwa, sentry, posthogConsent, posthogIdentity]) => {
         if (!active) return;
         setComponents({
           NeonSyncBridge: fulfilled(sync)?.NeonSyncBridge ?? null,
@@ -49,7 +45,6 @@ export function IdleClientServices({ enableVercelInsights }: { enableVercelInsig
           SentryConsentBridge: fulfilled(sentry)?.SentryConsentBridge ?? null,
           PostHogConsentBridge: fulfilled(posthogConsent)?.PostHogConsentBridge ?? null,
           PostHogIdentityBridge: fulfilled(posthogIdentity)?.PostHogIdentityBridge ?? null,
-          VercelInsights: fulfilled(vercel)?.VercelInsights ?? null,
         });
       }).catch(() => {
         // Optional bridges must never block or destabilize the application.
@@ -60,7 +55,7 @@ export function IdleClientServices({ enableVercelInsights }: { enableVercelInsig
       active = false;
       cancel();
     };
-  }, [enableVercelInsights]);
+  }, []);
 
   if (!components) return null;
 
@@ -70,7 +65,6 @@ export function IdleClientServices({ enableVercelInsights }: { enableVercelInsig
     SentryConsentBridge,
     PostHogConsentBridge,
     PostHogIdentityBridge,
-    VercelInsights,
   } = components;
 
   return (
@@ -80,7 +74,6 @@ export function IdleClientServices({ enableVercelInsights }: { enableVercelInsig
       {SentryConsentBridge && <SentryConsentBridge />}
       {PostHogConsentBridge && <PostHogConsentBridge />}
       {PostHogIdentityBridge && <PostHogIdentityBridge />}
-      {VercelInsights && <VercelInsights />}
     </>
   );
 }

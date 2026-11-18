@@ -13,14 +13,14 @@ import { PRODUCT_CONSENT_POLICY_VERSION, PRODUCT_CONSENT_VERSION } from '@/lib/p
 const STORAGE_KEY = 'primedex-cookie-consent';
 
 const preferenceLabels: Record<SupportedLanguage, { audience: string; product: string; save: string; customize: string }> = {
-  en: { audience: 'Audience and performance measurement (Vercel Web Analytics, Speed Insights, Sentry)', product: 'Product measurement (Neon, PostHog)', save: 'Save my choices', customize: 'Customize' },
-  fr: { audience: 'Mesure de l’audience et des performances (Vercel Web Analytics, Speed Insights, Sentry)', product: 'Mesure produit (Neon, PostHog)', save: 'Enregistrer mes choix', customize: 'Personnaliser' },
-  es: { audience: 'Medición de audiencia y rendimiento (Vercel Web Analytics, Speed Insights, Sentry)', product: 'Medición del producto (Neon, PostHog)', save: 'Guardar mis elecciones', customize: 'Personalizar' },
-  de: { audience: 'Reichweiten- und Leistungsmessung (Vercel Web Analytics, Speed Insights, Sentry)', product: 'Produktmessung (Neon, PostHog)', save: 'Meine Auswahl speichern', customize: 'Anpassen' },
-  it: { audience: 'Misurazione di pubblico e prestazioni (Vercel Web Analytics, Speed Insights, Sentry)', product: 'Misurazione del prodotto (Neon, PostHog)', save: 'Salva le mie scelte', customize: 'Personalizza' },
-  ja: { audience: '利用状況とパフォーマンスの測定（Vercel Web Analytics、Speed Insights、Sentry）', product: '製品利用状況の測定（Neon、PostHog）', save: '選択を保存', customize: 'カスタマイズ' },
-  ko: { audience: '이용 현황 및 성능 측정 (Vercel Web Analytics, Speed Insights, Sentry)', product: '제품 측정 (Neon, PostHog)', save: '선택 저장', customize: '맞춤 설정' },
-  zh: { audience: '受众与性能测量（Vercel Web Analytics、Speed Insights、Sentry）', product: '产品使用情况测量（Neon、PostHog）', save: '保存我的选择', customize: '自定义' },
+  en: { audience: 'Performance measurement (Sentry)', product: 'Product measurement (Neon, PostHog)', save: 'Save my choices', customize: 'Customize' },
+  fr: { audience: 'Mesure des performances (Sentry)', product: 'Mesure produit (Neon, PostHog)', save: 'Enregistrer mes choix', customize: 'Personnaliser' },
+  es: { audience: 'Medición del rendimiento (Sentry)', product: 'Medición del producto (Neon, PostHog)', save: 'Guardar mis elecciones', customize: 'Personalizar' },
+  de: { audience: 'Leistungsmessung (Sentry)', product: 'Produktmessung (Neon, PostHog)', save: 'Meine Auswahl speichern', customize: 'Anpassen' },
+  it: { audience: 'Misurazione delle prestazioni (Sentry)', product: 'Misurazione del prodotto (Neon, PostHog)', save: 'Salva le mie scelte', customize: 'Personalizza' },
+  ja: { audience: 'パフォーマンス測定（Sentry）', product: '製品利用状況の測定（Neon、PostHog）', save: '選択を保存', customize: 'カスタマイズ' },
+  ko: { audience: '성능 측정 (Sentry)', product: '제품 측정 (Neon, PostHog)', save: '선택 저장', customize: '맞춤 설정' },
+  zh: { audience: '性能测量（Sentry）', product: '产品使用情况测量（Neon、PostHog）', save: '保存我的选择', customize: '自定义' },
 };
 
 function readStoredConsent(): ProductConsent | null {

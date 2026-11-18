@@ -347,7 +347,7 @@ export default {
       },
       banner: {
         title: 'Cookieの同意',
-        description: '利用状況とパフォーマンスの測定（Vercel）と製品測定（Neon、PostHog）は個別に選べます。どちらも同意なしでは無効です。',
+        description: 'パフォーマンス測定（Sentry）と製品測定（Neon、PostHog）は個別に選べます。どちらも同意なしでは無効です。',
         accept: 'すべて許可',
         reject: 'すべて拒否',
         manage: 'カスタマイズ',

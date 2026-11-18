@@ -347,7 +347,7 @@ export default {
       },
       banner: {
         title: '쿠키 동의',
-        description: '이용 현황 및 성능 측정(Vercel)과 제품 측정(Neon, PostHog)을 각각 선택하세요. 동의 전에는 두 기능 모두 비활성화됩니다.',
+        description: '성능 측정(Sentry)과 제품 측정(Neon, PostHog)을 각각 선택하세요. 동의 전에는 두 기능 모두 비활성화됩니다.',
         accept: '모두 허용',
         reject: '모두 거부',
         manage: '맞춤 설정',

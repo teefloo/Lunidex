@@ -5,13 +5,12 @@ import { scrubSentryEvent } from './src/lib/sentry-common';
 const dsn = process.env.SENTRY_DSN ?? process.env.NEXT_PUBLIC_SENTRY_DSN;
 const environment = process.env.SENTRY_ENVIRONMENT
   ?? process.env.NEXT_PUBLIC_SENTRY_ENVIRONMENT
-  ?? process.env.VERCEL_ENV
   ?? process.env.NODE_ENV
   ?? 'development';
 Sentry.init({
   dsn,
   enabled: Boolean(dsn),
-  release: process.env.SENTRY_RELEASE ?? process.env.VERCEL_GIT_COMMIT_SHA,
+  release: process.env.SENTRY_RELEASE ?? process.env.NEXT_PUBLIC_APP_RELEASE,
   environment,
   sendDefaultPii: false,
   tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.02 : 0,

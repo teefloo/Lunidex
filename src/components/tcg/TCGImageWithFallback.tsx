@@ -24,8 +24,8 @@ export function TCGImageWithFallback({ candidates, ...props }: TCGImageWithFallb
       key={`${candidatesKey}:${src}`}
       src={src}
       alt={props.alt}
-      // TCGdex already serves card-sized CDN variants; do not route them
-      // through Vercel's quota-limited image optimizer.
+      // TCGdex already serves card-sized CDN variants; do not reprocess them
+      // through the local image optimizer.
       unoptimized
       onError={(event) => {
         props.onError?.(event);

@@ -5,8 +5,8 @@ import { refreshDuePriceHistoryCards, type PriceHistoryRefreshSummary } from '@/
 import { reportSentryException } from '@/lib/sentry-observability';
 
 /**
- * Scheduled retention job (see the `crons` entry in vercel.json and the
- * self-hosted systemd timers under deploy/systemd/).
+ * Scheduled retention job (invoked by the self-hosted systemd timers under
+ * deploy/systemd/).
  *
  * Bounds append-only growth that no other code path cleans up:
  * - abandoned daily quiz attempts would otherwise stay `active` forever;

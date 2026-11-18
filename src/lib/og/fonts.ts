@@ -10,7 +10,7 @@ import type { SupportedLanguage } from '@/lib/languages';
  * (Pixelify Sans / Nunito) are vendored as static TTFs next to this module and
  * read from the traced project-relative path, with a `new URL(..., import.meta.url)`
  * fallback for development. The URL references make the bundler emit the assets
- * and have @vercel/nft trace them into the function.
+ * and have Next.js file tracing include them in the standalone server output.
  *
  * The OG routes run on the Node.js runtime (not edge): the edge bundle of
  * `next/og` + satori + the vendored faces exceeds the 1 MB edge function size

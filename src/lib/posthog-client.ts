@@ -19,10 +19,8 @@ const POSTHOG_PROJECT_TOKEN = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN;
 const POSTHOG_HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://eu.i.posthog.com';
 const POSTHOG_ENABLED = process.env.NEXT_PUBLIC_POSTHOG_ENABLED === 'true';
 const POSTHOG_ENVIRONMENT = process.env.NEXT_PUBLIC_POSTHOG_ENVIRONMENT
-  || process.env.VERCEL_ENV
   || (process.env.NODE_ENV === 'production' ? 'production' : 'development');
 const POSTHOG_RELEASE = process.env.NEXT_PUBLIC_APP_RELEASE
-  || process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA
   || 'local';
 const EXCLUDED_ROUTE_PREFIXES = ['/auth', '/api/'];
 const MAX_RECENT_EVENTS = 256;
