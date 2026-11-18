@@ -347,7 +347,7 @@ export default {
       },
       banner: {
         title: 'Cookie-Einwilligung',
-        description: 'Wählen Sie Reichweiten- und Leistungsmessung (Vercel) sowie Produktmessung (Neon, PostHog) getrennt aus. Beide bleiben ohne Ihre Einwilligung deaktiviert.',
+        description: 'Wählen Sie die Leistungsmessung durch Sentry und die Produktmessung durch Neon und PostHog getrennt aus. Beide bleiben ohne Ihre Einwilligung deaktiviert.',
         accept: 'Alle akzeptieren',
         reject: 'Alle ablehnen',
         manage: 'Anpassen',

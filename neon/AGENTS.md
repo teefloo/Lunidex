@@ -12,7 +12,7 @@
 
 ## Environment and verification
 
-- Vercel supplies the server-only `DATABASE_URL`; local server/migration scripts use `NEON_DATABASE_URL`. Neither belongs in browser-exposed variables.
+- The server runtime and migration scripts use `NEON_DATABASE_URL`. It must never be exposed in browser variables.
 - The root scripts are the available migration workflow:
 
 ```bash

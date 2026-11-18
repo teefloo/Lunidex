@@ -20,7 +20,7 @@ try {
     const context = await browser.newContext({ viewport: mobile ? { width: 390, height: 844 } : { width: 1440, height: 900 }, isMobile: mobile, hasTouch: mobile, serviceWorkers: 'block' });
     const page = await context.newPage();
     const cdp = await context.newCDPSession(page); await cdp.send('Network.enable');
-    await cdp.send('Network.setBlockedURLs', { urls: ['*posthog.com/*', '*ingest.sentry.io/*', '*vercel-insights.com/*', '*va.vercel-scripts.com/*'] });
+    await cdp.send('Network.setBlockedURLs', { urls: ['*posthog.com/*', '*ingest.sentry.io/*'] });
     if (mobile) {
       await cdp.send('Emulation.setCPUThrottlingRate', { rate: 4 });
       await cdp.send('Network.emulateNetworkConditions', { offline: false, latency: 150, downloadThroughput: 200000, uploadThroughput: 93750 });

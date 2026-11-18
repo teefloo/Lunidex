@@ -373,7 +373,7 @@ export default {
       },
       banner: {
         title: 'Cookies sur Lunidex',
-        description: "Choisissez séparément la mesure d’audience et des performances (Vercel) et la mesure produit (Neon, PostHog). Elles restent désactivées sans votre consentement.",
+        description: "Choisissez séparément la mesure des performances (Sentry) et la mesure produit (Neon, PostHog). Elles restent désactivées sans votre consentement.",
         accept: 'Tout accepter',
         reject: 'Tout refuser',
         manage: 'Gérer mes préférences',

@@ -24,7 +24,8 @@ describe('optimizeOgPngResponse', () => {
     const response = new Response(new Uint8Array(source), {
       headers: {
         'Content-Type': 'image/png',
-        'Vercel-CDN-Cache-Control': 'public, s-maxage=86400',
+        'Cache-Control': 'public, max-age=0, must-revalidate',
+        'CDN-Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=604800',
       },
     });
 
@@ -33,7 +34,8 @@ describe('optimizeOgPngResponse', () => {
 
     expect(optimized.status).toBe(200);
     expect(optimized.headers.get('Content-Type')).toBe('image/png');
-    expect(optimized.headers.get('Vercel-CDN-Cache-Control')).toBe('public, s-maxage=86400');
+    expect(optimized.headers.get('Cache-Control')).toBe('public, max-age=0, must-revalidate');
+    expect(optimized.headers.get('CDN-Cache-Control')).toBe('public, s-maxage=86400, stale-while-revalidate=604800');
     expect(result.length).toBeLessThan(source.length);
     expect(await sharp(result).raw().toBuffer()).toEqual(await sharp(source).raw().toBuffer());
   });
@@ -60,7 +62,8 @@ describe('optimizeOgImageResponse', () => {
     const response = new Response(new Uint8Array(source), {
       headers: {
         'Content-Type': 'image/png',
-        'Vercel-CDN-Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=604800',
+        'Cache-Control': 'public, max-age=0, must-revalidate',
+        'CDN-Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=604800',
       },
     });
 
@@ -70,7 +73,8 @@ describe('optimizeOgImageResponse', () => {
 
     expect(optimized.status).toBe(200);
     expect(optimized.headers.get('Content-Type')).toBe('image/jpeg');
-    expect(optimized.headers.get('Vercel-CDN-Cache-Control'))
+    expect(optimized.headers.get('Cache-Control')).toBe('public, max-age=0, must-revalidate');
+    expect(optimized.headers.get('CDN-Cache-Control'))
       .toBe('public, s-maxage=86400, stale-while-revalidate=604800');
     expect(result.byteLength).toBeLessThanOrEqual(source.byteLength * 0.7);
     expect(metadata.width).toBe(width);

@@ -1,18 +1,18 @@
 # Héberger Lunidex sur un VPS OVHcloud
 
-Ce guide décrit la préproduction Lunidex actuellement servie sur le VPS OVHcloud et son exploitation. **Vercel reste l'hébergement de production : `lunidex.app` et `www.lunidex.app` n'ont pas été basculés.** Le sous-domaine `vps-test.lunidex.app` sert uniquement aux essais.
+Ce guide décrit les environnements Lunidex hébergés sur le VPS OVHcloud : la production sur `lunidex.app` et `www.lunidex.app`, ainsi que le sous-domaine de test `vps-test.lunidex.app`. Les images, caches et configurations Docker de production et de préproduction restent séparés; évitez de faire tourner deux instances lourdes durablement sur les 4 Gio de mémoire du VPS.
 
-## État du VPS au 17 novembre 2026
+## État du VPS au 18 novembre 2026
 
 - L'accès par clé SSH à `ubuntu@51.255.40.19:22` fonctionne. La connexion root est refusée; `ubuntu` reste le compte d'administration. Aucun mot de passe ni clé privée n'est documenté ici.
 - Ubuntu 24.04 LTS est confirmé. Les mises à jour système ont été appliquées et le VPS a été redémarré.
 - Docker Engine et Docker Compose sont installés. UFW est actif et autorise SSH (22), HTTP (80) et HTTPS (443); aucun port Next.js n'est publié.
 - La rotation journald est configurée avec un plafond de 250 Mio.
-- Le compte `lunidex-deploy` est créé et verrouillé, appartient au groupe `docker`, et `/opt/lunidex` héberge le déploiement. La clé dédiée de GitHub Actions est installée et stockée dans l'environnement GitHub `ovh-preproduction`; ses variables d'hôte, d'utilisateur et de `known_hosts` sont configurées.
-- L'image immuable `7efeb008b5b6f4c54db9d0887c8e64753ba15fa0` est déployée. Les conteneurs Lunidex et Caddy sont actifs; Caddy sert HTTPS sur le sous-domaine de préproduction et le healthcheck `/api/healthz` est validé. Le fichier d'environnement d'exécution existe sur le VPS; aucune valeur secrète n'est enregistrée dans ce guide ou dans Git.
-- Les unités systemd cron sont copiées et installées, mais les deux timers restent désactivés pendant que Vercel exécute encore les tâches planifiées de production.
+- Le compte `lunidex-deploy` est créé et verrouillé, appartient au groupe `docker`, et `/opt/lunidex` héberge les fichiers de préproduction. La clé dédiée de GitHub Actions est installée et stockée dans l'environnement GitHub `ovh-preproduction`; ses variables d'hôte, d'utilisateur et de `known_hosts` sont configurées.
+- La préproduction a utilisé l'image immuable `7efeb008b5b6f4c54db9d0887c8e64753ba15fa0`; cette instance n'est pas maintenue en fonctionnement permanent afin de préserver les ressources du VPS. La production utilise une image distincte déployée par le workflow protégé; son conteneur et Caddy sont actifs, Caddy sert HTTPS sur les domaines principaux et le healthcheck `/api/healthz` est validé. Le fichier d'environnement d'exécution existe sur le VPS; aucune valeur secrète n'est enregistrée dans ce guide ou dans Git.
+- Les unités systemd cron sont préparées, mais les deux timers de production restent désactivés jusqu’à une validation opérationnelle distincte; aucun rattrapage automatique ne doit déclencher des traitements non contrôlés.
 - La branche Neon `ovh-preproduction`, enfant de `main`, est active avec Neon Auth. L'application utilise un rôle runtime dédié à cette branche isolée; les secrets et données de production Neon ne sont pas utilisés en préproduction.
-- Le DNS est géré par Namecheap (`dns1.registrar-servers.com` et `dns2.registrar-servers.com`). L'enregistrement A `vps-test.lunidex.app → 51.255.40.19` a été créé et sa résolution a été confirmée via Namecheap, `8.8.8.8` et `1.1.1.1`. Les enregistrements de production `lunidex.app` et `www.lunidex.app` restent inchangés; Vercel reste en production.
+- Le DNS est géré par Namecheap (`dns1.registrar-servers.com` et `dns2.registrar-servers.com`). L'enregistrement A `vps-test.lunidex.app → 51.255.40.19` a été créé et sa résolution a été confirmée via Namecheap, `8.8.8.8` et `1.1.1.1`. Les enregistrements A de `lunidex.app` et `www.lunidex.app` pointent désormais vers le VPS OVHcloud.
 - Le workflow GitHub Actions de déploiement par push sur `codex/ovh-vps-migration` a réussi (run `44129652554`), y compris `npm ci`, ESLint, TypeScript, 970 tests Vitest, SEO, build Next.js, contrôle du package core, publication de l'image, HTTPS et healthcheck.
 
 ## Architecture
@@ -28,9 +28,9 @@ Navigateur → Cloudflare → Caddy (HTTPS) → réseau Docker privé → Next.j
 - L'image Next.js est compilée dans GitHub Actions avec Node 22.23.4 et publiée dans GHCR sous un SHA Git complet. Aucun build Next.js ne s'exécute sur le VPS.
 - Les seules données persistantes de l'application sur le VPS sont le cache Next.js et l'état TLS/Caddy. Lunidex ne nécessite pas de base PostgreSQL locale; les données synchronisées restent dans Neon.
 
-`next.config.ts` n'active `output: 'standalone'` que hors Vercel. Le tracing part de la racine du monorepo afin d'inclure `@primedex/core`. Le Dockerfile copie `public/` et `.next/static/` manuellement, comme requis par le serveur standalone. Le dossier `public/og/` et les polices OG sous `src/lib/og/fonts/` sont inclus par les règles de tracing existantes et le contexte de build. `sharp` est déjà une dépendance du projet, donc `next/image` reste optimisé dans le runtime Node.
+`next.config.ts` active `output: 'standalone'` pour le runtime Docker. Le tracing part de la racine du monorepo afin d'inclure `@primedex/core`. Le Dockerfile copie `public/` et `.next/static/` manuellement, comme requis par le serveur standalone. Le dossier `public/og/` et les polices OG sous `src/lib/og/fonts/` sont inclus par les règles de tracing existantes et le contexte de build. `sharp` est déjà une dépendance du projet, donc `next/image` reste optimisé dans le runtime Node.
 
-La mesure Vercel et ses endpoints CSP restent actifs uniquement dans les builds Vercel; les dépendances restent installées pour ne pas modifier la production actuelle. Le VPS conserve Sentry et PostHog avec leurs contrôles de consentement. `automaticVercelMonitors` est désactivé sur les builds autonomes.
+Le runtime utilise Sentry et PostHog avec leurs contrôles de consentement. Les mesures Sentry de performance et de replay restent facultatives et ne se déclenchent qu’après consentement.
 
 Le SHA transmis comme `NEXT_DEPLOYMENT_ID` permet à Next.js de détecter les onglets et clients PWA qui naviguent encore avec un ancien build et de demander un rechargement. Le volume `lunidex-next-cache` conserve le cache Next.js local d'une instance unique; il ne contient pas de données utilisateur.
 
@@ -47,14 +47,14 @@ Le sous-domaine `vps-test.lunidex.app` pointe déjà vers le VPS et Caddy y sert
 
 ## Variables et secrets
 
-Les valeurs sensibles sont stockées sur le VPS dans `/opt/lunidex/app.env`, propriété de `lunidex-deploy`, permissions `0600`. Ne pas copier `.env.local`, `.env.production` ou une valeur Vercel complète.
+Les valeurs sensibles sont stockées sur le VPS dans `/opt/lunidex/app.env`, propriété de `lunidex-deploy`, permissions `0600`. Ne pas copier `.env.local`, `.env.production` ni une exportation complète de secrets.
 
 | Emplacement | Variables | Notes |
 | --- | --- | --- |
 | `/opt/lunidex/.env` (Compose) | `APP_IMAGE_TAG`, `LUNIDEX_DOMAIN`, `LUNIDEX_HOSTNAMES` | SHA de l'image; hôte TLS de santé; hôtes servis par Caddy. Le script de déploiement actuel exige exactement `vps-test.lunidex.app` pour les deux noms. Une future configuration de production nécessitera un changement séparé après autorisation. |
 | `/opt/lunidex/app.env` (exécution) | `NEON_DATABASE_URL`, `NEON_AUTH_BASE_URL`, `NEON_AUTH_JWKS_URL`, `NEON_AUTH_COOKIE_SECRET`, `NEON_AUTH_JWT_ISSUER`, `NEON_AUTH_JWT_AUDIENCE` | Garder les mêmes valeurs Neon adaptées à l'environnement. Pour tester des écritures, utiliser une branche Neon isolée et ses identifiants, jamais la base de production. |
 | `/opt/lunidex/app.env` (optionnel) | `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL`, `SENTRY_DSN`, `SENTRY_ENVIRONMENT`, `SENTRY_RELEASE` | Les erreurs Sentry restent actives sans token de build. `SENTRY_AUTH_TOKEN` est un secret de build distinct, transmis à BuildKit seulement si configuré. |
-| `/opt/lunidex/app.env` (optionnel) | `LUNIDEX_CRON_SECRET`, `LUNIDEX_VAPID_PRIVATE_KEY`, `LUNIDEX_VAPID_SUBJECT` | Secrets serveur propres au runtime web Lunidex. Les routes gardent leurs anciens noms `CRON_SECRET` / `VAPID_PRIVATE_KEY` en fallback pour les déploiements Vercel. Ne pas copier les variables réservées à Supabase Edge Functions. |
+| `/opt/lunidex/app.env` (optionnel) | `LUNIDEX_CRON_SECRET`, `LUNIDEX_VAPID_PRIVATE_KEY`, `LUNIDEX_VAPID_SUBJECT` | Secrets serveur du runtime web Lunidex. Les anciens noms `CRON_SECRET` / `VAPID_PRIVATE_KEY` restent acceptés pour compatibilité; utiliser les noms `LUNIDEX_*` pour les nouveaux déploiements. Ne pas copier les variables réservées à Supabase Edge Functions. |
 | Variables GitHub de l'environnement `ovh-preproduction` | `NEXT_PUBLIC_NEON_AUTH_URL`, `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN`, `NEXT_PUBLIC_POSTHOG_HOST`, `NEXT_PUBLIC_POSTHOG_ENABLED`, `NEXT_PUBLIC_POSTHOG_ENVIRONMENT`, `NEXT_PUBLIC_POSTHOG_REPLAY_SAMPLE_RATE`, `NEXT_PUBLIC_SENTRY_DSN`, `NEXT_PUBLIC_SENTRY_ENVIRONMENT`, `NEXT_PUBLIC_SENTRY_RELEASE`, `NEXT_PUBLIC_GOOGLE_VERIFICATION`, `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Valeurs publiques injectées au build; ne jamais y placer une clé privée. Garder PostHog désactivé ou utiliser son projet de test jusqu'à validation. Le SHA est injecté comme `NEXT_PUBLIC_APP_RELEASE` et `NEXT_DEPLOYMENT_ID`. |
 
 `NEXT_PUBLIC_*` est incorporé au bundle client pendant `next build`; modifier une telle valeur impose de reconstruire l'image. Les valeurs serveur non préfixées ci-dessus sont lues à l'exécution. Utiliser pour l'application l'URL Neon existante prévue pour le runtime; l'URL non poolée destinée à `pg_dump`/`pg_restore` n'est pas un paramètre de runtime. `SUPABASE_DB_URL` reste réservé aux scripts de migration historiques.
@@ -81,7 +81,7 @@ docker compose restart caddy
 
 Caddy ne fait confiance qu'aux adresses Cloudflare configurées et transmet `X-Forwarded-For` avec l'adresse client vérifiée. Cela évite qu'une requête directe puisse usurper l'adresse utilisée par les limites de débit. Actualiser les plages si Cloudflare les modifie. Le port 80 doit rester accessible pour ACME; le port 443 sert le trafic et les certificats renouvelés sont conservés dans les volumes Caddy.
 
-Aucun cache Cloudflare global n'est configuré. Les directives `Vercel-CDN-Cache-Control` des pages publiques ne sont émises que pour les builds Vercel; sur le VPS, Next.js conserve ses caches locaux et les en-têtes privés/authentifiés restent `private, no-store`. Ne pas créer de règle Cloudflare qui met en cache les pages HTML, méthodes API, cookies, routes de compte ou réponses d'authentification. Ajouter des règles ciblées uniquement après vérification route par route et test des cookies/méthodes.
+Aucun cache HTML global n’est configuré devant Caddy. Next.js conserve ses caches locaux; les en-têtes privés et authentifiés restent `private, no-store`. Ne pas créer de règle Cloudflare qui met en cache les pages HTML, méthodes API, cookies, routes de compte ou réponses d'authentification. Ajouter des règles ciblées uniquement après vérification route par route et test des cookies/méthodes.
 
 ## CI, GHCR et déploiement préproduction
 
@@ -122,7 +122,7 @@ sudo install -m 0644 deploy/systemd/lunidex-cron@tcg-sealed-sync.timer /etc/syst
 sudo systemctl daemon-reload
 ```
 
-**Ne pas activer les timers pendant que Vercel exécute les mêmes tâches ou que la préproduction pointe vers Neon production.** Garder les deux timers désactivés pendant les tests. Après validation DNS/production et une approbation explicite, retirer les entrées cron de `vercel.json`, déployer ce changement à Vercel, vérifier qu'aucun ancien cron n'est actif, puis activer les deux timers systemd. `Persistent=true` rattrape une exécution manquée au redémarrage; le verrou commun évite que les deux tâches de rattrapage écrivent simultanément.
+**Les deux timers de production restent désactivés.** Leur activation demande une approbation distincte après vérification des secrets, de la base Neon main, de l’absence de timers préproduction actifs et d’un plan de démarrage sans rattrapage dangereux. Vérifier qu’aucun autre scheduler n’appelle ces routes avant toute activation. `Persistent=true` rattrape une exécution manquée au redémarrage; le verrou commun évite que les deux tâches de rattrapage écrivent simultanément.
 
 Contrôler les unités avec :
 
@@ -159,9 +159,9 @@ Tester la restauration périodiquement sur un volume distinct et un nom préprod
 
 ## Bascule DNS et retour arrière
 
-Avant toute modification de `lunidex.app`, inventorier les enregistrements actuels A/AAAA, `www`, MX et TXT, noter leurs valeurs et TTL, puis présenter les résultats de Vercel et de la préproduction déjà vérifiée sur `vps-test.lunidex.app`. Ne modifier ensuite que les A/AAAA nécessaires; préserver les enregistrements email et les sous-domaines tiers. Activer Cloudflare Full (strict), vérifier HTTPS, sessions Neon, langues, SEO, PWA, emails, notifications et les permissions avec la Neon production seulement après validation. Comparer TTFB, latence API, CPU, mémoire et espace disque sous trafic mesuré; aucun benchmark n'a encore été exécuté.
+Pour toute modification DNS future, inventorier les enregistrements A/AAAA, `www`, MX et TXT et préserver les enregistrements de messagerie et les sous-domaines tiers. Les domaines principaux servent maintenant depuis OVH avec HTTPS public. Vérifier après un changement les sessions Neon, langues, SEO, PWA, e-mails, notifications, permissions et les ressources du VPS.
 
-La procédure de retour consiste à restaurer les valeurs DNS Vercel enregistrées avant la bascule, vérifier le site Vercel et les connexions, puis laisser le VPS et Neon intacts pendant l'analyse. Le projet Vercel, son abonnement et ses secrets restent en place comme solution de secours. La bascule production ne doit pas être effectuée avant une approbation explicite accompagnée du rapport de tests et de l'état DNS exact.
+Le retour applicatif s’effectue en gardant les DNS sur OVH et en restaurant la dernière image OVH connue comme saine avec `rollback-production.sh`. Vérifier ensuite le healthcheck, les sessions Neon et Caddy. Le changement DNS vers un ancien fournisseur ne constitue pas un rollback opérationnel. Les timers cron restent séparément désactivés pendant le diagnostic.
 
 ## Accès Codex/Hermes
 

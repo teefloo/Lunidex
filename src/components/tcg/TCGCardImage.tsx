@@ -52,9 +52,9 @@ export function TCGCardImage({ card, alt, fill = true, priority = false, sizes, 
       priority={priority}
       sizes={sizes}
       className={className}
-      // TCGdex already serves card-sized CDN variants. Bypassing Vercel's
-      // image proxy avoids quota failures while keeping fallback candidates;
-      // non-CDN fallbacks (such as CardTrader) still use Next image resizing.
+      // TCGdex already serves card-sized CDN variants. Loading those directly
+      // avoids duplicate image processing; non-CDN fallbacks still use Next's
+      // image resizing.
       unoptimized={isOptimizableTcgImage(src)}
       onError={() => {
         const nextIndex = Math.min(imageIndex + 1, imageCandidates.length - 1);

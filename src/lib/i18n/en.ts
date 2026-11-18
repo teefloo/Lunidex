@@ -354,7 +354,7 @@ export default {
       },
       banner: {
         title: 'Cookies on Lunidex',
-        description: 'Choose audience and performance measurement (Vercel) and product measurement (Neon, PostHog) separately. Both stay off until you consent.',
+        description: 'Choose audience and performance measurement (Sentry) and product measurement (Neon, PostHog) separately. Both stay off until you consent.',
         accept: 'Accept all',
         reject: 'Reject all',
         manage: 'Manage my preferences',

@@ -347,7 +347,7 @@ export default {
       },
       banner: {
         title: 'Cookie 同意',
-        description: '请分别选择受众与性能测量（Vercel）和产品测量（Neon、PostHog）。未经同意，两者均保持禁用。',
+        description: '请分别选择性能测量（Sentry）和产品测量（Neon、PostHog）。未经同意，两者均保持禁用。',
         accept: '全部接受',
         reject: '全部拒绝',
         manage: '自定义',

@@ -7,7 +7,7 @@
 
 **为玩家、训练家和 TCG 收藏者打造的专注型宝可梦工作空间。**
 
-[![在线应用](https://img.shields.io/badge/Live-lunidex.app-ef4440?style=flat-square&logo=vercel&logoColor=white)](https://lunidex.app)
+[![在线应用](https://img.shields.io/badge/Live-lunidex.app-ef4440?style=flat-square)](https://lunidex.app)
 [![CI](https://img.shields.io/github/actions/workflow/status/teefloo/Lunidex/ci.yml?style=flat-square&label=CI)](https://github.com/teefloo/Lunidex/actions/workflows/ci.yml)
 [![Node.js 22](https://img.shields.io/badge/Node.js-22-3c873a?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
@@ -109,7 +109,7 @@ cp .env.example .env.local
 | `NEXT_PUBLIC_NEON_AUTH_URL` | Web / 公开 | 浏览器客户端使用的 Neon Auth 端点。 |
 | `NEON_AUTH_BASE_URL`、`NEON_AUTH_JWKS_URL` | 仅服务器 | Neon Auth 代理和 JWT 验证端点。 |
 | `NEON_AUTH_COOKIE_SECRET`、`NEON_AUTH_JWT_ISSUER`、`NEON_AUTH_JWT_AUDIENCE` | 仅服务器 | 认证 Cookie 保护和 JWT 验证约束。 |
-| `NEON_DATABASE_URL` / `DATABASE_URL` | 仅服务器 | Neon PostgreSQL 连接。Vercel 的 Neon 集成提供 `DATABASE_URL`；本地可以使用 `NEON_DATABASE_URL`。 |
+| `NEON_DATABASE_URL` | 仅服务器 | Web 运行时和本地迁移工具使用的 Neon PostgreSQL 连接。 |
 | `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Web / 公开 | 可选的 Google Search Console 验证值。 |
 | `NEXT_PUBLIC_ENABLE_AGENTATION` | 开发环境 | 值为 `true` 时启用 Agentation UI 审查浮层。 |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Web / 公开 | 可选的浏览器 Push 订阅公钥。 |
@@ -202,22 +202,9 @@ Web (Next.js App Router)
 
 ## 部署
 
-Lunidex 已针对 [Vercel](https://vercel.com/) 配置，也可以运行在支持 Next.js 服务器 runtime 和图片优化的主机上。
+Lunidex 生产环境运行在 OVHcloud VPS 上，使用 Docker 和 Caddy。GitHub Actions 通过受保护的 `ovh-production` 环境构建并部署不可变镜像。
 
-```bash
-npm run build
-npm run start
-```
-
-在 Vercel 上：
-
-1. 将 `teefloo/Lunidex` 导入 Vercel 项目。
-2. 在 Preview 和 Production 中配置 Neon Auth 参数以及仅服务器使用的数据库连接。
-3. 使用标准 Next.js 构建设置。已提交的 [`vercel.json`](./vercel.json) 有意保持最小化。
-
-当前 Web runtime 使用 Neon。仓库中不再保留 Supabase SQL 迁移；此目录现在仅包含已归档的 Edge Function 和安全历史资料。受控迁移脚本属于历史工具，并不是 Web 应用的身份验证或数据库 runtime。
-
-有关架构、环境边界和验证流程，请参阅 [Neon 迁移 runbook](./docs/neon-migration.md)。
+部署、健康检查和回滚步骤请参阅 [OVH 生产运行手册](./docs/deployment/ovh-production.md)。
 
 ## 相关文档
 

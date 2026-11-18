@@ -1,3 +1,5 @@
+> **État opérationnel (18 novembre 2026) :** Lunidex est désormais hébergé uniquement sur le VPS OVHcloud; Vercel ne fait plus partie du runtime ni du processus de déploiement. Les mentions de Vercel dans ce document décrivent l’étape historique de migration Neon et ne sont pas des procédures actuelles. Pour les opérations OVH, utiliser le [guide de production](./deployment/ovh-production.md).
+
 # Migration PostgreSQL Supabase vers Neon
 
 ## État de la migration

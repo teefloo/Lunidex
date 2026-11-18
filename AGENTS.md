@@ -35,7 +35,7 @@ Do not rename those identifiers as part of a visible rebrand. Persisted data and
 - Use Node.js 22 and npm with the committed `package-lock.json`. Do not add a second package manager or lockfile.
 - Install reproducibly with `npm ci`; use `npm install` only when intentionally updating the local workspace installation.
 - Copy `.env.example` to `.env.local` for optional web configuration. This file is ignored and must never be committed.
-- The web runtime uses Neon variables: `NEXT_PUBLIC_NEON_AUTH_URL` is public; `NEON_AUTH_BASE_URL`, `NEON_AUTH_JWKS_URL`, `NEON_AUTH_COOKIE_SECRET`, `NEON_DATABASE_URL`, and Vercel's server-only `DATABASE_URL` are not public.
+- The web runtime uses Neon variables: `NEXT_PUBLIC_NEON_AUTH_URL` is public; `NEON_AUTH_BASE_URL`, `NEON_AUTH_JWKS_URL`, `NEON_AUTH_COOKIE_SECRET`, and `NEON_DATABASE_URL` are server-only.
 - `SUPABASE_DB_URL` is only for the Neon migration tooling. `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, VAPID private material/subject, and `CRON_SECRET` belong only to the separately deployed Supabase Edge Function. The browser-facing `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, when configured, is public by design. Do not add Supabase runtime credentials to the web bundle.
 - Without Neon configuration, authentication, cloud sync, and server-backed features degrade to their established unavailable/local-first behavior.
 - Set `NEXT_PUBLIC_ENABLE_AGENTATION=true` only for the development overlay. Its local port is 4747 and the required development origins/CSP entries already exist; do not weaken production security headers for it.

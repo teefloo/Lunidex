@@ -8,12 +8,12 @@ fi
 
 confirmation="${1:-}"
 if [[ "$confirmation" != "ENABLE_PRODUCTION_CRONS" ]]; then
-  echo "Pass ENABLE_PRODUCTION_CRONS only after Vercel schedules have been disabled." >&2
+  echo "Pass ENABLE_PRODUCTION_CRONS only after legacy schedules have been disabled and the production cutover is verified." >&2
   exit 64
 fi
 cd /opt/lunidex-production
-if [[ ! -f VERCEL_CRONS_DISABLED ]]; then
-  echo "Create VERCEL_CRONS_DISABLED after verifying no Vercel cron can target production." >&2
+if [[ ! -f LEGACY_SCHEDULES_DISABLED ]]; then
+  echo "Create LEGACY_SCHEDULES_DISABLED after verifying no other scheduler can target production." >&2
   exit 78
 fi
 if [[ ! -f .env || ! -f app.env ]]; then

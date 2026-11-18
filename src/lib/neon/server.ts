@@ -1,10 +1,7 @@
 import { neon, type NeonQueryFunction } from '@neondatabase/serverless';
 
-/**
- * The Vercel Neon integration exposes DATABASE_URL. NEON_DATABASE_URL remains
- * supported for local development and explicit server deployments.
- */
-const connectionString = process.env.NEON_DATABASE_URL ?? process.env.DATABASE_URL;
+/** Server-only Neon connection configured for the Lunidex runtime. */
+const connectionString = process.env.NEON_DATABASE_URL;
 
 export type NeonSql = NeonQueryFunction<false, false>;
 

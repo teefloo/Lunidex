@@ -15,7 +15,7 @@
   "scripts": {
     "dev": "next dev --webpack",
     "build": "next build --webpack",
-    "start": "next start",
+    "start": "node .next/standalone/server.js",
     "lint": "eslint",
     "test": "vitest run",
     "seo:check": "node scripts/seo-check.mjs",
@@ -43,8 +43,6 @@
     "@neondatabase/serverless": "^1.1.0",
     "@sentry/nextjs": "^10.73.0",
     "@tanstack/react-query": "^5.90.21",
-    "@vercel/analytics": "^2.0.1",
-    "@vercel/speed-insights": "^1.2.0",
     "axios": "^1.19.0",
     "axios-retry": "^4.5.0",
     "class-variance-authority": "^0.7.1",

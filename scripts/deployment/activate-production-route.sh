@@ -287,7 +287,7 @@ for hostname in lunidex.app www.lunidex.app; do
     sleep 5
   done
   if [[ "$ready" != true ]]; then
-    echo "Caddy did not serve trusted HTTPS for $hostname. Keep DNS on OVH while diagnosing; Vercel is not a working rollback target." >&2
+    echo "Caddy did not serve trusted HTTPS for $hostname. Keep DNS on OVH while diagnosing; use the previous OVH image for application rollback." >&2
     exit 1
   fi
 done

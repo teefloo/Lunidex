@@ -128,7 +128,7 @@ jobs:
           ref: ace4b8eb76e5992c935cfc01120377d17297733d
           path: .rollback-baseline
 
-      - name: Build and publish the last Vercel production commit as rollback baseline
+      - name: Build and publish the historical rollback baseline
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

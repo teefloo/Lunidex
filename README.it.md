@@ -7,7 +7,7 @@
 
 **Uno spazio Pokémon dedicato a giocatori, allenatori e collezionisti TCG.**
 
-[![Online](https://img.shields.io/badge/Live-lunidex.app-ef4440?style=flat-square&logo=vercel&logoColor=white)](https://lunidex.app)
+[![Online](https://img.shields.io/badge/Live-lunidex.app-ef4440?style=flat-square)](https://lunidex.app)
 [![CI](https://img.shields.io/github/actions/workflow/status/teefloo/Lunidex/ci.yml?style=flat-square&label=CI)](https://github.com/teefloo/Lunidex/actions/workflows/ci.yml)
 [![Node.js 22](https://img.shields.io/badge/Node.js-22-3c873a?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
@@ -109,7 +109,7 @@ cp .env.example .env.local
 | `NEXT_PUBLIC_NEON_AUTH_URL` | Web / pubblico | Endpoint Neon Auth usato dal client browser. |
 | `NEON_AUTH_BASE_URL`, `NEON_AUTH_JWKS_URL` | Solo server | Endpoint del proxy Neon Auth e della verifica JWT. |
 | `NEON_AUTH_COOKIE_SECRET`, `NEON_AUTH_JWT_ISSUER`, `NEON_AUTH_JWT_AUDIENCE` | Solo server | Protezione del cookie di autenticazione e vincoli di validazione JWT. |
-| `NEON_DATABASE_URL` / `DATABASE_URL` | Solo server | Connessione PostgreSQL Neon. L’integrazione Neon di Vercel fornisce `DATABASE_URL`; in locale puoi usare `NEON_DATABASE_URL`. |
+| `NEON_DATABASE_URL` | Solo server | Connessione PostgreSQL Neon usata dal runtime web e dagli strumenti di migrazione locali. |
 | `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Web / pubblico | Valore opzionale per la verifica Google Search Console. |
 | `NEXT_PUBLIC_ENABLE_AGENTATION` | Sviluppo | Attiva l’overlay di revisione UI Agentation quando vale `true`. |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Web / pubblico | Chiave opzionale per gli abbonamenti alle notifiche push del browser. |
@@ -202,22 +202,9 @@ Il codice sorgente è distribuito con licenza MIT in [`LICENSE`](./LICENSE). La 
 
 ## Distribuzione
 
-Lunidex è configurato per [Vercel](https://vercel.com/) e può essere eseguito anche su un host che supporti il runtime server Next.js e l’ottimizzazione delle immagini.
+La produzione di Lunidex funziona sul VPS OVHcloud con Docker e Caddy. GitHub Actions crea e distribuisce immagini immutabili tramite l’ambiente protetto `ovh-production`.
 
-```bash
-npm run build
-npm run start
-```
-
-Per Vercel:
-
-1. Importa `teefloo/Lunidex` in un progetto Vercel.
-2. Configura i valori Neon Auth e la connessione al database solo server in Preview e Production.
-3. Usa le impostazioni di build standard di Next.js. Il [`vercel.json`](./vercel.json) versionato resta intenzionalmente minimale.
-
-Il runtime web attivo usa Neon. Le migrazioni SQL Supabase non sono più conservate nel repository; questa directory contiene ora solo un’Edge Function archiviata e materiale storico di sicurezza. Gli script di migrazione controllati sono strumenti storici e non fanno parte del runtime di autenticazione o database dell’applicazione web.
-
-Consulta il [runbook della migrazione Neon](./docs/neon-migration.md) per schema, confini degli ambienti e procedura di validazione.
+Consulta la [guida alla produzione OVH](./docs/deployment/ovh-production.md) per distribuzione, controlli e rollback.
 
 ## Documentazione correlata
 

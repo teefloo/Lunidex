@@ -208,10 +208,8 @@ export const TCGHolographicCard = memo(function TCGHolographicCard({
               height={921}
               sizes={sizes}
               priority={priority}
-              // TCG CDNs are already optimized and Vercel's image proxy can
-              // reject these remote assets (402), leaving every card on the
-              // desktop grid as a placeholder. Load the authorized CDN URL
-              // directly instead.
+              // TCG CDNs already provide optimized card images, so load the
+              // authorized image URL directly instead of reprocessing it.
               unoptimized
               className={cn('card__image', imageClassName)}
             />
