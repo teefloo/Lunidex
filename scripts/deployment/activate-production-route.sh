@@ -29,25 +29,49 @@ if [[ ! -f /opt/lunidex/Caddyfile ]]; then
   exit 78
 fi
 backup=/opt/lunidex-production/Caddyfile.before-production
+production_caddyfile=/opt/lunidex-production/deploy/production/Caddyfile.production
+active_caddyfile=/opt/lunidex/Caddyfile
 if [[ -e "$backup" ]]; then
   echo "A pre-production Caddyfile backup already exists; inspect it before retrying." >&2
   exit 78
 fi
 
-docker cp /opt/lunidex-production/deploy/production/Caddyfile.production \
+route_switch_attempted=false
+restore_route_after_failure() {
+  local original_status=$?
+  trap - EXIT
+  if [[ "$original_status" -ne 0 && "$route_switch_attempted" == true ]]; then
+    if [[ -f "$backup" ]]; then
+      if install -m 0644 "$backup" "$active_caddyfile"; then
+        if docker compose -f /opt/lunidex/compose.yaml exec -T caddy \
+          caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile; then
+          echo "The previous Caddyfile was restored after production route activation failed." >&2
+        else
+          echo "The previous Caddyfile was restored, but Caddy reload failed; the original activation error remains." >&2
+        fi
+      else
+        echo "Could not restore the previous Caddyfile after production route activation failed." >&2
+      fi
+    else
+      echo "The Caddy backup is missing; automatic route restoration was not possible." >&2
+    fi
+  fi
+  exit "$original_status"
+}
+trap restore_route_after_failure EXIT
+trap 'exit 129' HUP
+trap 'exit 130' INT
+trap 'exit 143' TERM
+
+docker cp "$production_caddyfile" \
   lunidex-caddy:/data/Caddyfile.production
 docker exec lunidex-caddy caddy validate --config /data/Caddyfile.production --adapter caddyfile
-cp -p /opt/lunidex/Caddyfile "$backup"
-install -m 0644 /opt/lunidex-production/deploy/production/Caddyfile.production \
-  /opt/lunidex/Caddyfile
-if ! docker compose -f /opt/lunidex/compose.yaml exec -T caddy \
-  caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile; then
-  install -m 0644 "$backup" /opt/lunidex/Caddyfile
-  docker compose -f /opt/lunidex/compose.yaml exec -T caddy \
-    caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile || true
-  echo "Caddy reload failed; the preproduction configuration was restored." >&2
-  exit 1
-fi
+cp -p "$active_caddyfile" "$backup"
+route_switch_attempted=true
+install -m 0644 "$production_caddyfile" "$active_caddyfile"
+docker compose -f /opt/lunidex/compose.yaml exec -T caddy \
+  caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
+echo "Production Caddy configuration loaded."
 
 for hostname in lunidex.app www.lunidex.app; do
   ready=false
