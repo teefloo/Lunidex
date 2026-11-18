@@ -25,6 +25,8 @@ jobs:
 
       - run: npm test
 
+      - run: node --test scripts/deployment/bootstrap-production-directories.test.mjs
+
       - run: npm run seo:check
 
       - run: npm run build

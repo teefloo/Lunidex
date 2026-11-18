@@ -2,7 +2,8 @@
 
 ## État et garde-fous
 
-- Le workflow .github/workflows/deploy-ovh-production.yml est uniquement manuel et n'a pas été lancé.
+- Le workflow .github/workflows/deploy-ovh-production.yml est uniquement manuel et ne démarre que depuis master avec le SHA complet courant, la confirmation explicite et l'approbation de l'environnement ovh-production.
+- Une première exécution en preflight, le 18 novembre 2026 sur le SHA 693d7f196c5cb6259c01c7a9d47453e203020441, a construit et publié les images candidate et baseline ace4b8e, puis s'est arrêtée avant le transfert : lunidex-deploy ne pouvait pas créer directement /opt/lunidex-production. Aucun conteneur de production n'a été lancé et aucune connexion à Neon ni modification DNS/Caddy/cron n'a eu lieu. Le workflow prépare maintenant uniquement les répertoires attendus via Docker, avec /opt comme seul volume monté, sans écraser les chemins existants ni changement récursif de propriétaire; il échoue si un chemin existe avec un propriétaire inattendu.
 - Il est limité à master, exige le SHA complet actuellement sélectionné et la phrase DEPLOY_OVH_PRODUCTION, puis attend l'approbation de l'environnement GitHub protégé ovh-production.
 - Le workflow produit deux images immuables : le candidat sélectionné et une image de rollback basée sur le dernier commit connu de production Vercel, ace4b8eb76e5992c935cfc01120377d17297733d.
 - Le premier fichier .env du VPS est initialisé sur ce tag de rollback. Si le candidat échoue, le script tente de restaurer cette image. Ce filet de sécurité n'existe qu'après que le workflow a réussi à construire et publier l'image baseline.
