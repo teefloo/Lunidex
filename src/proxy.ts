@@ -493,9 +493,16 @@ function hardNotFoundResponse(request: NextRequest, locale: string) {
   // A confirmed missing public resource is safe to reuse briefly. This avoids
   // invoking the global not-found render repeatedly for crawler probes while
   // keeping the browser response private.
-  response.headers.set('Vercel-CDN-Cache-Control', PUBLIC_PAGE_VERCEL_CACHE_CONTROL);
-  response.headers.set('CDN-Cache-Control', PUBLIC_PAGE_VERCEL_CACHE_CONTROL);
+  applyVercelCdnCacheHeaders(response.headers, PUBLIC_PAGE_VERCEL_CACHE_CONTROL);
   return response;
+}
+
+function applyVercelCdnCacheHeaders(headers: Headers, cacheControl: string): void {
+  // These CDN-only directives are understood by Vercel. Self-hosted
+  // deployments leave caching to Next's own cache and explicit route headers.
+  if (process.env.VERCEL !== '1') return;
+  headers.set('Vercel-CDN-Cache-Control', cacheControl);
+  headers.set('CDN-Cache-Control', cacheControl);
 }
 
 export async function proxy(request: NextRequest) {
@@ -615,8 +622,7 @@ export async function proxy(request: NextRequest) {
       const cacheControl = isStablePublicLocalizedRoute(segments)
         ? PUBLIC_STABLE_PAGE_VERCEL_CACHE_CONTROL
         : PUBLIC_PAGE_VERCEL_CACHE_CONTROL;
-      response.headers.set('Vercel-CDN-Cache-Control', cacheControl);
-      response.headers.set('CDN-Cache-Control', cacheControl);
+      applyVercelCdnCacheHeaders(response.headers, cacheControl);
     }
     if (cookieLang !== urlLocale && shouldPersistLocaleCookie(request) && !isPublicPage) {
       response.cookies.set(COOKIE_NAME, urlLocale, {

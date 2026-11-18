@@ -149,6 +149,7 @@ function ThemeProvider({ children, translationInstance }: ThemeProviderProps) {
 
 interface ProvidersProps {
   children: ReactNode;
+  enableVercelInsights?: boolean;
   initialLanguage: SupportedLanguage;
   initialTranslations: ResourceLanguage;
   initialTranslationsPartial?: boolean;
@@ -176,6 +177,7 @@ function DeferredInitialLanguageBundle({
 
 export default function Providers({
   children,
+  enableVercelInsights = false,
   initialLanguage,
   initialTranslations,
   initialTranslationsPartial = false,
@@ -215,7 +217,7 @@ export default function Providers({
                   translationInstance={translationInstance}
                 />
                 {children}
-                <IdleClientServices />
+                <IdleClientServices enableVercelInsights={enableVercelInsights} />
                 <DeferredOverlays />
               </ThemeProvider>
             </AuthProvider>

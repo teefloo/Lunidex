@@ -24,7 +24,7 @@ const OPTIONAL_SERVICES_MIN_DELAY_MS = 6_000;
  * render has had a chance to settle. The bridges remain mounted for the rest
  * of the session once their chunks are available.
  */
-export function IdleClientServices() {
+export function IdleClientServices({ enableVercelInsights }: { enableVercelInsights: boolean }) {
   const [components, setComponents] = useState<DeferredComponents | null>(null);
 
   useEffect(() => {
@@ -38,7 +38,9 @@ export function IdleClientServices() {
         process.env.NEXT_PUBLIC_SENTRY_DSN ? import('@/components/analytics/SentryConsentBridge') : Promise.resolve(null),
         hasPostHog ? import('@/components/analytics/PostHogConsentBridge') : Promise.resolve(null),
         hasPostHog ? import('@/components/analytics/PostHogIdentityBridge') : Promise.resolve(null),
-        import('@/components/analytics/VercelInsights'),
+        enableVercelInsights
+          ? import('@/components/analytics/VercelInsights')
+          : Promise.resolve(null),
       ]).then(([sync, pwa, sentry, posthogConsent, posthogIdentity, vercel]) => {
         if (!active) return;
         setComponents({
@@ -58,7 +60,7 @@ export function IdleClientServices() {
       active = false;
       cancel();
     };
-  }, []);
+  }, [enableVercelInsights]);
 
   if (!components) return null;
 

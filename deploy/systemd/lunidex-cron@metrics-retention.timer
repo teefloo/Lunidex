@@ -1,0 +1,11 @@
+[Unit]
+Description=Run Lunidex metrics retention at 04:17 UTC
+
+[Timer]
+OnCalendar=*-*-* 04:17:00 UTC
+AccuracySec=1s
+Persistent=true
+Unit=lunidex-cron@metrics-retention.service
+
+[Install]
+WantedBy=timers.target

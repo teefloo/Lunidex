@@ -1,0 +1,11 @@
+[Unit]
+Description=Run Lunidex sealed TCG sync at 04:47 UTC
+
+[Timer]
+OnCalendar=*-*-* 04:47:00 UTC
+AccuracySec=1s
+Persistent=true
+Unit=lunidex-cron@tcg-sealed-sync.service
+
+[Install]
+WantedBy=timers.target

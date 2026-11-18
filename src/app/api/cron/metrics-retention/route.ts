@@ -5,7 +5,8 @@ import { refreshDuePriceHistoryCards, type PriceHistoryRefreshSummary } from '@/
 import { reportSentryException } from '@/lib/sentry-observability';
 
 /**
- * Scheduled retention job (see the `crons` entry in vercel.json).
+ * Scheduled retention job (see the `crons` entry in vercel.json and the
+ * self-hosted systemd timers under deploy/systemd/).
  *
  * Bounds append-only growth that no other code path cleans up:
  * - abandoned daily quiz attempts would otherwise stay `active` forever;
@@ -33,7 +34,7 @@ function unauthorized(): NextResponse {
 }
 
 async function getMetricsRetention(request: NextRequest): Promise<NextResponse> {
-  const secret = process.env.CRON_SECRET;
+  const secret = process.env.LUNIDEX_CRON_SECRET ?? process.env.CRON_SECRET;
   // No secret configured: the job is disabled rather than open to anyone.
   if (!secret) return NextResponse.json({ error: 'Retention job unavailable' }, { status: 503, headers: NO_STORE_HEADERS });
 

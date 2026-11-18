@@ -1,0 +1,20 @@
+[Unit]
+Description=Lunidex scheduled task (%i)
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+User=lunidex-deploy
+Group=lunidex-deploy
+SupplementaryGroups=docker
+WorkingDirectory=/opt/lunidex
+RuntimeDirectory=lunidex-cron
+RuntimeDirectoryMode=0750
+RuntimeDirectoryPreserve=yes
+ExecStart=/usr/local/bin/lunidex-cron %i
+TimeoutStartSec=10min
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
