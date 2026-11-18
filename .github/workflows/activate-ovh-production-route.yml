@@ -1,0 +1,108 @@
+name: Activate OVH production route
+
+on:
+  workflow_dispatch:
+    inputs:
+      production_commit:
+        description: Exact full Git SHA currently deployed in the private production app
+        required: true
+        type: string
+      confirmation:
+        description: Type ACTIVATE_OVH_PRODUCTION_ROUTE to authorize public route activation
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lunidex-ovh-production
+  cancel-in-progress: false
+
+jobs:
+  activate:
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      github.ref == 'refs/heads/master' &&
+      inputs.confirmation == 'ACTIVATE_OVH_PRODUCTION_ROUTE'
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    environment: ovh-production
+    permissions:
+      contents: read
+    env:
+      PRODUCTION_COMMIT: ${{ inputs.production_commit }}
+      PRODUCTION_CONFIRMATION: ${{ inputs.confirmation }}
+      OVH_PRODUCTION_DEPLOY_HOST: ${{ vars.OVH_PRODUCTION_DEPLOY_HOST }}
+      OVH_PRODUCTION_DEPLOY_USER: ${{ vars.OVH_PRODUCTION_DEPLOY_USER }}
+      OVH_PRODUCTION_DEPLOY_KNOWN_HOSTS: ${{ vars.OVH_PRODUCTION_DEPLOY_KNOWN_HOSTS }}
+
+    steps:
+      - name: Guard the master ref, confirmation, and production SHA
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          [[ "$GITHUB_REF" == 'refs/heads/master' ]] || {
+            echo 'Production route activation is permitted only from master.' >&2
+            exit 1
+          }
+          [[ "$PRODUCTION_CONFIRMATION" == 'ACTIVATE_OVH_PRODUCTION_ROUTE' ]] || {
+            echo 'The exact route activation confirmation phrase is required.' >&2
+            exit 1
+          }
+          [[ "$PRODUCTION_COMMIT" =~ ^[0-9a-f]{40}$ ]] || {
+            echo 'The production commit must be a full 40-character Git SHA.' >&2
+            exit 1
+          }
+
+      - name: Configure the pinned production SSH connection
+        shell: bash
+        env:
+          OVH_PRODUCTION_DEPLOY_SSH_KEY: ${{ secrets.OVH_PRODUCTION_DEPLOY_SSH_KEY }}
+        run: |
+          set -Eeuo pipefail
+          [[ "$OVH_PRODUCTION_DEPLOY_HOST" == '51.255.40.19' || "$OVH_PRODUCTION_DEPLOY_HOST" == 'vps-5aa00f9a.vps.ovh.net' ]] || {
+            echo 'Refusing an unexpected production VPS host.' >&2
+            exit 78
+          }
+          [[ "$OVH_PRODUCTION_DEPLOY_USER" == 'lunidex-deploy' ]] || {
+            echo 'Refusing an unexpected production deploy account.' >&2
+            exit 78
+          }
+          : "$OVH_PRODUCTION_DEPLOY_KNOWN_HOSTS"
+          : "$OVH_PRODUCTION_DEPLOY_SSH_KEY"
+          install -d -m 0700 "$HOME/.ssh"
+          printf '%s\n' "$OVH_PRODUCTION_DEPLOY_SSH_KEY" > "$HOME/.ssh/ovh_deploy"
+          printf '%s\n' "$OVH_PRODUCTION_DEPLOY_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 0600 "$HOME/.ssh/ovh_deploy" "$HOME/.ssh/known_hosts"
+
+      - name: Verify the deployed image and activate the guarded production route
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
+          ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=10 -o ServerAliveInterval=5 -o ServerAliveCountMax=4)
+          timeout 240s ssh "${ssh_args[@]}" "$target" "bash -s -- $PRODUCTION_COMMIT" <<'REMOTE'
+          set -Eeuo pipefail
+          production_commit="${1:-}"
+          [[ "$production_commit" =~ ^[0-9a-f]{40}$ ]] || {
+            echo 'Invalid production SHA supplied to the VPS.' >&2
+            exit 78
+          }
+          cd /opt/lunidex-production
+          [[ -f .env && ! -L .env ]] || {
+            echo 'Production image selection is missing or unsafe; route activation refused.' >&2
+            exit 78
+          }
+          current_tag="$(sed -n 's/^APP_IMAGE_TAG=//p' .env)"
+          [[ "$current_tag" == "$production_commit" ]] || {
+            echo 'The private production image does not match the requested SHA; route activation refused.' >&2
+            exit 78
+          }
+          bash /opt/lunidex-production/scripts/deployment/activate-production-route.sh ACTIVATE_PRODUCTION_ROUTE
+          REMOTE
+
+      - name: Remove the temporary SSH key
+        if: always()
+        shell: bash
+        run: rm -f "$HOME/.ssh/ovh_deploy"
