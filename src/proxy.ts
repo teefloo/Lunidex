@@ -161,12 +161,30 @@ function shouldBlockClaudeBotTcgCard(request: NextRequest, segments: string[]): 
 }
 
 function isFlightRequest(request: NextRequest): boolean {
-  return request.headers.get('rsc') === '1' || isNextPrefetchRequest(request);
+  const accept = request.headers.get('accept') ?? '';
+  const acceptsFlight = accept.split(',').some((mediaType) =>
+    mediaType.split(';', 1)[0]?.trim().toLowerCase() === 'text/x-component',
+  );
+
+  // Next's production Proxy adapter strips its internal RSC/prefetch headers
+  // before invoking user code. The Flight media type survives and identifies
+  // the same client-navigation requests in standalone deployments.
+  return request.headers.get('rsc') === '1' || isNextPrefetchRequest(request) || acceptsFlight;
 }
 
 function isAutomatedPrefetchRequest(request: NextRequest): boolean {
   if (request.method !== 'GET' || !isNextPrefetchRequest(request)) return false;
   return AUTOMATED_CLIENT_PATTERN.test(request.headers.get('user-agent') ?? '');
+}
+
+function isAutomatedTcgCardFlightRequest(request: NextRequest, segments: string[]): boolean {
+  if (request.method !== 'GET' || !isFlightRequest(request)) return false;
+  if (!AUTOMATED_CLIENT_PATTERN.test(request.headers.get('user-agent') ?? '')) return false;
+
+  return segments.length === 4
+    && segments[1] === 'tcg'
+    && segments[2] === 'cards'
+    && Boolean(segments[3]);
 }
 
 function isKnownScannerPath(pathname: string): boolean {
@@ -618,6 +636,18 @@ export async function proxy(request: NextRequest) {
     if (shouldBlockClaudeBotTcgCard(request, segments)) {
       return new NextResponse(null, {
         status: 403,
+        headers: { 'Cache-Control': 'private, no-store' },
+      });
+    }
+
+    // Card details can be fetched as interactive Flight responses by crawlers
+    // that follow links rather than sending an explicit Next prefetch signal.
+    // Their indexable HTML requests still use ISR above; this avoids repeating
+    // the dynamic modal render for automated clients without changing browser
+    // navigations.
+    if (isAutomatedTcgCardFlightRequest(request, segments)) {
+      return new NextResponse(null, {
+        status: 204,
         headers: { 'Cache-Control': 'private, no-store' },
       });
     }
