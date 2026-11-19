@@ -152,19 +152,19 @@ describe('heap allocation sampler summaries', () => {
     });
   });
 
-  it('triggers one bounded sample when either RSS or V8 heap reaches 55 percent', () => {
+  it('triggers one bounded sample when either RSS or V8 heap reaches 85 percent', () => {
     const belowThreshold = {
-      rss: 549,
+      rss: 849,
       heapTotal: 400,
-      heapUsed: 549,
+      heapUsed: 849,
       external: 0,
       arrayBuffers: 0,
       heapLimit: 1_000,
     };
     expect(shouldTriggerHeapSample(belowThreshold)).toBe(false);
-    expect(shouldTriggerHeapSample({ ...belowThreshold, rss: 550, heapUsed: 0 })).toBe(true);
-    expect(shouldTriggerHeapSample({ ...belowThreshold, rss: 0, heapUsed: 550 })).toBe(true);
-    expect(shouldTriggerHeapSample({ ...belowThreshold, rss: 550, heapUsed: 550 })).toBe(true);
+    expect(shouldTriggerHeapSample({ ...belowThreshold, rss: 850, heapUsed: 0 })).toBe(true);
+    expect(shouldTriggerHeapSample({ ...belowThreshold, rss: 0, heapUsed: 850 })).toBe(true);
+    expect(shouldTriggerHeapSample({ ...belowThreshold, rss: 850, heapUsed: 850 })).toBe(true);
     expect(shouldTriggerHeapSample({ ...belowThreshold, heapLimit: 0 })).toBe(false);
   });
 
