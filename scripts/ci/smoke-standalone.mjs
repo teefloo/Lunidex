@@ -20,8 +20,34 @@ server.once('error', (error) => {
 try {
   await waitForHealth(server, `http://${host}:${port}/api/healthz`);
   console.log('Standalone server health check passed.');
+  await assertMetadataRoute(`http://${host}:${port}/robots.txt`, 'text/plain', (body) => {
+    if (!body.includes('User-Agent: *') || !body.includes('Sitemap: https://lunidex.app/sitemap.xml')) {
+      throw new Error('robots.txt is missing the crawler policy or canonical sitemap URL.');
+    }
+  });
+  await assertMetadataRoute(`http://${host}:${port}/manifest.webmanifest`, 'application/manifest+json', (body) => {
+    const manifest = JSON.parse(body);
+    if (manifest.name !== 'Lunidex — Pokémon TCG collection tracker' || manifest.start_url !== '/en') {
+      throw new Error('manifest.webmanifest is missing the Lunidex name or start URL.');
+    }
+  });
+  console.log('Standalone root metadata routes passed.');
 } finally {
   await stopServer(server);
+}
+
+async function assertMetadataRoute(url, expectedContentType, validateBody) {
+  const response = await fetch(url, { signal: AbortSignal.timeout(requestTimeoutMs) });
+  if (!response.ok) {
+    throw new Error(`Standalone metadata route ${new URL(url).pathname} returned HTTP ${response.status}.`);
+  }
+
+  const contentType = response.headers.get('content-type') ?? '';
+  if (!contentType.includes(expectedContentType)) {
+    throw new Error(`Standalone metadata route ${new URL(url).pathname} returned content-type ${contentType}.`);
+  }
+
+  validateBody(await response.text());
 }
 
 async function findAvailablePort(address) {
