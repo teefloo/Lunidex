@@ -5,6 +5,7 @@ from collections import Counter
 from audit_ovh_container_diagnostics import (
     heap_sampler_status,
     heap_sampler_summary_seen,
+    parse_host_node_processes,
     parse_numeric_pairs,
     parse_proc_status,
     route_family,
@@ -24,6 +25,19 @@ class AuditOvhContainerDiagnosticsTests(unittest.TestCase):
             "Name:\tnode\nVmHWM:\t120000 kB\nVmRSS:\t80000 kB\nUid:\t1001\n"
         )
         self.assertEqual(status, {"VmHWM": "120000", "VmRSS": "80000"})
+
+    def test_host_process_parser_matches_next_server_comm_with_version_suffix(self):
+        process_table = (
+            "PID %CPU RSS COMMAND\n"
+            "410 0.0 744 docker-init\n"
+            "418 52.4 2125532 next-server (v22.23.4)\n"
+            "419 21.0 100000 next-server (v22.23\n"
+            "422 0.1 24000 sh\n"
+        )
+        self.assertEqual(
+            parse_host_node_processes(process_table),
+            [(418, "52.4", 2125532), (419, "21.0", 100000)],
+        )
 
     def test_heap_sampler_reports_state_without_environment_values(self):
         result = heap_sampler_status(
