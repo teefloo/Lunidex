@@ -89,6 +89,8 @@ class AuditOvhContainerDiagnosticsTests(unittest.TestCase):
     def test_route_family_diagnostic_counts_only_allowlisted_fields(self):
         log_text = "\n".join(
             [
+                "2026-11-19T12:00:00Z LUNIDEX_ROUTE_FAMILY_V1 run=1234-5 family=localized_tcg_cards method=GET",
+                "2026-11-19T12:00:00Z LUNIDEX_ROUTE_FAMILY_V1 run=1234-5 family=localized_tcg_collection method=GET",
                 "2026-11-19T12:00:00Z LUNIDEX_ROUTE_FAMILY_V1 run=1234-5 family=localized_tcg method=GET",
                 "2026-11-19T12:00:01Z LUNIDEX_ROUTE_FAMILY_V1 run=1234-5 family=scanner_probe method=HEAD",
                 "2026-11-19T12:00:02Z LUNIDEX_ROUTE_FAMILY_V1 run=1234-5 family=secret-path method=GET",
@@ -101,7 +103,15 @@ class AuditOvhContainerDiagnosticsTests(unittest.TestCase):
         counts = summarize_route_family_diagnostics(log_text, "1234-5")
         summary = " ".join(f"{key}={value}" for key, value in sorted(counts.items()))
 
-        self.assertEqual(counts, Counter({"localized_tcg": 1, "scanner_probe": 1}))
+        self.assertEqual(
+            counts,
+            Counter({
+                "localized_tcg": 1,
+                "localized_tcg_cards": 1,
+                "localized_tcg_collection": 1,
+                "scanner_probe": 1,
+            }),
+        )
         self.assertEqual(summarize_route_family_diagnostics(log_text, "invalid-run-id"), Counter())
         self.assertNotIn("private-card-id", summary)
         self.assertNotIn("private-query", summary)
@@ -112,6 +122,25 @@ class AuditOvhContainerDiagnosticsTests(unittest.TestCase):
             route_family("/en/pokemon/private-pokemon-id?token=private-query"),
             "localized_pokemon",
         )
+        self.assertEqual(route_family("/en/tcg"), "localized_tcg_home")
+        self.assertEqual(
+            route_family("/en/tcg/cards/private-card-id?token=private-query"),
+            "localized_tcg_cards",
+        )
+        self.assertEqual(route_family("/fr/tcg/sets/private-set-id"), "localized_tcg_sets")
+        self.assertEqual(
+            route_family("/en/tcg/collection/fr/private-set-id"),
+            "localized_tcg_collection",
+        )
+        self.assertEqual(
+            route_family("/en/tcg/sealed/market/private-product-id"),
+            "localized_tcg_sealed",
+        )
+        self.assertEqual(
+            route_family("/en/tcg/illustrators/private-artist"),
+            "localized_tcg_illustrators",
+        )
+        self.assertEqual(route_family("/en/tcg/pull-rates/private-study"), "localized_tcg_other")
         self.assertEqual(route_family("/api/auth/callback?code=private-code"), "api_auth")
         self.assertEqual(route_family("/fr/pokedex/anything"), "localized_pokedex")
         self.assertEqual(route_family("/manifest.webmanifest"), "static_metadata")
