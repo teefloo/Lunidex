@@ -8,6 +8,8 @@ import { SITE_NAME } from '@/lib/site';
 import { buildLunidexHomeFaqJsonLd } from '@/lib/lunidex-home-content';
 import { serializeJsonLd } from '@/lib/json-ld';
 
+export const revalidate = 3600;
+
 export async function generateMetadata({
   params,
 }: {
