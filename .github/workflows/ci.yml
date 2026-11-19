@@ -31,6 +31,8 @@ jobs:
 
       - run: node --test scripts/deployment/production-memory-gate.test.mjs
 
+      - run: node --test scripts/patch-next-control-flow-errors.test.mjs
+
       - run: npm run seo:check
 
       - run: npm run build
