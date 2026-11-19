@@ -29,6 +29,12 @@ jobs:
       OVH_DEPLOY_USER: ${{ vars.OVH_DEPLOY_USER }}
       OVH_DEPLOY_KNOWN_HOSTS: ${{ vars.OVH_DEPLOY_KNOWN_HOSTS }}
     steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Validate redacted resource diagnostics
+        shell: bash
+        run: python3 -m unittest discover -s scripts/deployment -p 'test_audit_ovh_container_diagnostics.py'
+
       - name: Configure the pinned SSH connection
         shell: bash
         env:
@@ -113,6 +119,14 @@ jobs:
             systemctl is-active "$timer" 2>/dev/null || true
           done
           REMOTE
+
+      - name: Inspect production cgroup memory and redacted Caddy traffic
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          target="$OVH_DEPLOY_USER@$OVH_DEPLOY_HOST"
+          ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
+          ssh "${ssh_args[@]}" "$target" 'python3 -' < scripts/deployment/audit_ovh_container_diagnostics.py
 
       - name: Remove temporary SSH key
         if: always()
