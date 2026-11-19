@@ -266,38 +266,44 @@ def report_cgroup_memory(cgroup_directory: Path | None) -> None:
         emit(f"app_cgroup_memory_stat_{key}_bytes", stats.get(key, "unavailable"))
 
 
-def report_container_processes(host_pid: int) -> None:
-    print("--- Container PID 1 RSS / high-water mark ---")
-    proc_text = read_file(Path("/proc") / str(host_pid) / "status")
-    proc_status = parse_proc_status(proc_text or "")
-    for key in PROC_STATUS_KEYS:
-        value = proc_status.get(key)
-        emit(f"container_pid1_{key.lower()}_kib", value if value is not None else "unavailable")
+def parse_host_node_processes(process_table: str) -> list[tuple[int, str, int]]:
+    matching_processes: list[tuple[int, str, int]] = []
+    for line in process_table.splitlines()[1:]:
+        fields = line.split(maxsplit=3)
+        if len(fields) < 4 or not fields[0].isdigit() or not fields[2].isdigit():
+            continue
+        command = fields[3].strip()
+        is_node_process = command == "node" or command == "next-server" or command.startswith(
+            "next-server (v"
+        )
+        if not is_node_process:
+            continue
+        cpu = fields[1]
+        if not re.fullmatch(r"[0-9]+(?:\.[0-9]+)?", cpu):
+            continue
+        matching_processes.append((int(fields[0]), cpu, int(fields[2])))
+    return matching_processes
 
+
+def report_container_processes() -> None:
     print("--- Production app host process CPU / RSS ---")
     process_table = run_command(
         ["docker", "top", APP_CONTAINER, "-eo", "pid,pcpu,rss,comm"]
     )
-    matching_processes: list[tuple[int, str, int]] = []
-    if process_table:
-        for line in process_table.splitlines()[1:]:
-            fields = line.split()
-            if len(fields) < 4 or fields[3] != "node":
-                continue
-            if not fields[0].isdigit() or not fields[2].isdigit():
-                continue
-            cpu = fields[1]
-            if not re.fullmatch(r"[0-9]+(?:\.[0-9]+)?", cpu):
-                continue
-            matching_processes.append((int(fields[0]), cpu, int(fields[2])))
-
+    matching_processes = parse_host_node_processes(process_table or "")
     if not matching_processes:
-        emit("app_host_node_processes", "unavailable")
+        emit("app_host_runtime_processes", "unavailable")
         return
     for index, (pid, cpu, rss) in enumerate(matching_processes[:4], start=1):
-        emit(f"app_host_node_{index}_pid", pid)
-        emit(f"app_host_node_{index}_cpu_pct", cpu)
-        emit(f"app_host_node_{index}_rss_kib", rss)
+        prefix = f"app_host_runtime_{index}"
+        emit(f"{prefix}_pid", pid)
+        emit(f"{prefix}_cpu_pct", cpu)
+        emit(f"{prefix}_ps_rss_kib", rss)
+        proc_text = read_file(Path("/proc") / str(pid) / "status")
+        proc_status = parse_proc_status(proc_text or "")
+        for key in ("VmRSS", "VmHWM", "RssAnon"):
+            value = proc_status.get(key)
+            emit(f"{prefix}_{key.lower()}_kib", value if value is not None else "unavailable")
 
 
 def report_heap_sampler() -> None:
@@ -358,7 +364,7 @@ def main() -> None:
     print("--- Production app container diagnostics ---")
     emit("app_container_available", "true")
     report_cgroup_memory(container_cgroup_directory(container_id, host_pid))
-    report_container_processes(host_pid)
+    report_container_processes()
     report_heap_sampler()
     report_caddy_access_logs()
 
