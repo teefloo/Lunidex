@@ -22,7 +22,7 @@ const POSTHOG_ENVIRONMENT = process.env.NEXT_PUBLIC_POSTHOG_ENVIRONMENT
   || (process.env.NODE_ENV === 'production' ? 'production' : 'development');
 const POSTHOG_RELEASE = process.env.NEXT_PUBLIC_APP_RELEASE
   || 'local';
-const EXCLUDED_ROUTE_PREFIXES = ['/auth', '/api/'];
+const EXCLUDED_ROUTE_PREFIXES = ['/auth', '/api/', '/tcg/showcase'];
 const MAX_RECENT_EVENTS = 256;
 const EVENT_DEDUPLICATION_WINDOW_MS = 750;
 

@@ -128,6 +128,14 @@ async function mockAuthenticatedApp(context: BrowserContext, initialState: E2ESt
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, data: state, updatedAt: stateVersion }) });
   });
 
+  await context.route('**/api/tcg/custom-collections/*/share', async (route: Route) => {
+    if (route.request().method() === 'GET') {
+      await route.fulfill({ json: { active: false, showQuantities: false, showPrices: false } });
+      return;
+    }
+    await route.fulfill({ status: 405, json: { error: 'Method not allowed in the test mock' } });
+  });
+
   await context.route('https://api.tcgdex.net/v2/**', async (route: Route) => {
     const url = new URL(route.request().url());
     const language = url.pathname.split('/')[2];
@@ -229,6 +237,11 @@ async function openCardActions(card: Locator, name: string) {
   if (await trigger.getAttribute('aria-expanded') !== 'true') await trigger.click();
 }
 
+function cardActionsPanel(page: Page, name: string) {
+  return page.getByRole('dialog', { name: `Card actions for ${name}`, exact: true })
+    .or(page.getByRole('complementary', { name: `Card actions for ${name}`, exact: true }));
+}
+
 test('shows the estimated value of positive custom binder quantities across languages', async ({ browser }) => {
   test.skip(!customE2EEnabled, 'Run with npm run test:e2e:tcg-custom to enable the locally mocked Neon session.');
   const binder = { id: collectionId, name: 'Valuation binder', createdAt: updatedAt, updatedAt };
@@ -247,7 +260,7 @@ test('shows the estimated value of positive custom binder quantities across lang
   await expect(page.getByRole('heading', { name: 'Valuation binder', level: 1 })).toBeVisible({ timeout: 15_000 });
   await expect(page.getByText('Estimated binder value', { exact: true })).toBeVisible();
   await expect(page.getByText('$7.00', { exact: true })).toBeVisible({ timeout: 15_000 });
-  await expect(page.getByText('3/3 cards priced', { exact: true })).toBeVisible();
+  await expect(page.getByText('3 of 3 copies have a price.', { exact: true })).toBeVisible();
   expect(app.getState().tcgCollectionCards).toEqual([]);
   await context.close();
 });
@@ -340,11 +353,15 @@ for (const viewport of [
 
     await page.reload();
     await expect(page.getByRole('heading', { name: 'Favorites', level: 1 })).toBeVisible({ timeout: 20_000 });
-    await expect(page.getByText('Alakazam', { exact: true })).toBeVisible();
-    await expect(page.getByText('Charizard', { exact: true })).toBeVisible();
-    await expect(page.getByRole('spinbutton', { name: 'Binder quantity: Alakazam, copy 1 (en)', exact: true })).toHaveValue('2');
-    await expect(page.getByRole('list', { name: 'Favorites', exact: true }).locator('[data-sortable-id]')).toHaveCount(3);
-    await expect(page.locator('main')).toContainText('2 cards');
+    const binderList = page.getByRole('list', { name: 'Favorites', exact: true });
+    await expect(binderList.locator('[data-sortable-id^="binder-card:base1-001:en:"]')).toHaveCount(2);
+    await expect(binderList.locator('[data-sortable-id^="binder-card:base1-4:en:"]')).toHaveCount(1);
+    await expect(binderList.locator('[data-sortable-id]')).toHaveCount(3);
+    const alakazamCopy = binderList.locator('[data-sortable-id="binder-card:base1-001:en:0"]');
+    await openCardActions(alakazamCopy, 'Alakazam, copy 1');
+    await expect(cardActionsPanel(page, 'Alakazam, copy 1').getByRole('spinbutton', { name: 'Binder quantity: Alakazam, copy 1 (en)', exact: true })).toHaveValue('2');
+    await expect(page.locator('main')).toContainText('3 cards');
+    await cardActionsPanel(page, 'Alakazam, copy 1').getByRole('button', { name: 'Close', exact: true }).click();
 
     await page.getByRole('button', { name: 'Delete: Favorites' }).click();
     await expect(page.getByText('Cards in your global inventory will be kept.')).toBeVisible();
@@ -386,8 +403,7 @@ test('custom binder combines rarity and set filters and sorts missing prices las
   const sort = page.getByRole('combobox', { name: 'Sort cards', exact: true });
   await sort.selectOption('asc');
   await expect(cardSlots).toHaveCount(3);
-  const unpricedItem = cardSlots.filter({ hasText: 'Card 10' });
-  await expect(unpricedItem.getByRole('img', { name: 'No price in USD', exact: true })).toBeVisible();
+  await expect(page.getByText('1 known copies have no quote in the selected currency.', { exact: true })).toBeVisible();
   const ascendingNames = (await cardSlots.allTextContents()).map((text) =>
     ['Charizard', 'Alakazam', 'Card 10'].find((name) => text.includes(name)) ?? '',
   );
@@ -469,7 +485,7 @@ test('quantity expands physical pockets and one duplicate copy moves independent
   const copyThree = list.locator('[data-sortable-id="binder-card:base1-0001:en:2"]');
   await expect(copyThree.getByRole('button', { name: 'Drag Card 1, copy 3, to reorder', exact: true })).toBeVisible();
   await openCardActions(copyThree, 'Card 1, copy 3');
-  await copyThree.getByRole('button', { name: 'Move Card 1 one pocket earlier', exact: true }).click();
+  await cardActionsPanel(page, 'Card 1, copy 3').getByRole('button', { name: 'Move Card 1 one pocket earlier', exact: true }).click();
 
   await expect.poll(() => getLayoutOrder(app.getState())?.cardOrder).toEqual([
     { cardId: 'base1-0001', language: 'en', copyIndex: 0 },
@@ -672,7 +688,7 @@ test('keyboard sorting and pocket controls reorder the complete binder without d
 
   const movedCard = list.getByRole('listitem').filter({ has: page.getByRole('link', { name: 'Card 2', exact: true }) });
   await openCardActions(movedCard, 'Card 2');
-  await movedCard.getByRole('button', { name: 'Move Card 2 one pocket later', exact: true }).click();
+  await cardActionsPanel(page, 'Card 2').getByRole('button', { name: 'Move Card 2 one pocket later', exact: true }).click();
   await expect.poll(() => getLayoutOrder(app.getState())?.cardOrder[0]?.cardId).toBe('base1-0001');
   await expect.poll(() => getLayoutOrder(app.getState())?.cardOrder.map(({ cardId }) => cardId)).toEqual([
     'base1-0001', 'base1-0002', 'base1-0003', 'base1-0004',
@@ -691,7 +707,7 @@ test('keyboard pocket move across pages restores focus to the moved card', async
   const list = page.getByRole('list', { name: 'Focus binder', exact: true });
   const movedCard = list.locator('[data-sortable-id="binder-card:base1-0004:en:0"]');
   await openCardActions(movedCard, 'Card 4');
-  const moveLater = movedCard.getByRole('button', { name: 'Move Card 4 one pocket later', exact: true });
+  const moveLater = cardActionsPanel(page, 'Card 4').getByRole('button', { name: 'Move Card 4 one pocket later', exact: true });
   await moveLater.focus();
   await expect(moveLater).toBeFocused();
   await page.keyboard.press('Enter');
@@ -756,7 +772,7 @@ test('a missing binder card becomes owned without changing series after tapping 
 
   await expect(card.locator('img')).not.toHaveClass(/grayscale/);
   await openCardActions(card, 'Alakazam');
-  await expect(card.getByRole('spinbutton', { name: 'Binder quantity: Alakazam (en)', exact: true })).toHaveValue('1');
+  await expect(cardActionsPanel(page, 'Alakazam').getByRole('spinbutton', { name: 'Binder quantity: Alakazam (en)', exact: true })).toHaveValue('1');
   await expect(card.getByRole('button', { name: 'Add Alakazam to my collection' })).toHaveCount(0);
   await expect.poll(() => (app.getState().tcgCustomCollectionCards as { quantity: number }[])[0]?.quantity).toBe(1);
   expect(app.getState().tcgOwnedCards).toEqual([]);
@@ -948,7 +964,7 @@ test('multilingual binder quantities, filters, removal and series ownership stay
   await expect(list.locator('img').first()).toHaveAttribute('src', /\/fr\//);
   await expect(list.locator('img').last()).toHaveAttribute('src', /\/ja\//);
   await openCardActions(frCard, 'Dracaufeu');
-  const frQuantity = frCard.getByRole('spinbutton', { name: 'Binder quantity: Dracaufeu (fr)', exact: true });
+  const frQuantity = cardActionsPanel(page, 'Dracaufeu').getByRole('spinbutton', { name: 'Binder quantity: Dracaufeu (fr)', exact: true });
   const binderLanguageFilter = page.getByRole('combobox', { name: 'Card language', exact: true })
     .filter({ has: page.getByRole('option', { name: 'All languages', exact: true }) });
   await frQuantity.focus();
@@ -970,10 +986,10 @@ test('multilingual binder quantities, filters, removal and series ownership stay
   await page.reload();
   await expect(page.getByRole('heading', { name: 'Multilingual binder', exact: true })).toBeVisible({ timeout: 20_000 });
   await openCardActions(frCard, 'Dracaufeu, copy 1');
-  const frQuantityCopy1 = frCard.getByRole('spinbutton', { name: 'Binder quantity: Dracaufeu, copy 1 (fr)', exact: true });
+  const frQuantityCopy1 = cardActionsPanel(page, 'Dracaufeu, copy 1').getByRole('spinbutton', { name: 'Binder quantity: Dracaufeu, copy 1 (fr)', exact: true });
   await expect(frQuantityCopy1).toHaveValue('4');
   await openCardActions(jaCard, 'リザードン');
-  await expect(jaCard.getByRole('spinbutton', { name: 'Binder quantity: リザードン (ja)', exact: true })).toHaveValue('1');
+  await expect(cardActionsPanel(page, 'リザードン').getByRole('spinbutton', { name: 'Binder quantity: リザードン (ja)', exact: true })).toHaveValue('1');
   await page.setViewportSize({ width: 390, height: 844 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await page.screenshot({ path: testInfo.outputPath('multilingual-binder-mobile.png'), fullPage: true });
@@ -1005,5 +1021,271 @@ test('multilingual binder quantities, filters, removal and series ownership stay
   await page.screenshot({ path: testInfo.outputPath('multilingual-binder-mobile-after-removal.png'), fullPage: true });
   expect(consoleErrors).toEqual([]);
   expect(errors).toEqual([]);
+  await context.close();
+});
+
+test('share link defaults to private, can reveal fields, rotate, and revoke @share', async ({ browser }) => {
+  test.skip(!customE2EEnabled, 'Requires the isolated local session.');
+  test.setTimeout(120_000);
+  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  await mockAuthenticatedApp(context, makeBinderState('Shared binder', 1));
+
+  let active = false;
+  let showQuantities = false;
+  let showPrices = false;
+  let createdLinks = 0;
+  const mutationCalls: { method: string; body?: Record<string, unknown> }[] = [];
+  const firstToken = 'A'.repeat(43);
+  const rotatedToken = 'B'.repeat(43);
+
+  await context.route(`**/api/tcg/custom-collections/${collectionId}/share`, async (route) => {
+    const method = route.request().method();
+    if (method === 'GET') {
+      await route.fulfill({ json: { active, showQuantities, showPrices } });
+      return;
+    }
+    if (method === 'POST') {
+      const body = route.request().postDataJSON() as Record<string, unknown>;
+      mutationCalls.push({ method, body });
+      active = true;
+      const token = createdLinks++ === 0 ? firstToken : rotatedToken;
+      const url = new URL(`/en/tcg/showcase/${token}`, route.request().url()).toString();
+      await route.fulfill({ json: { active, showQuantities, showPrices, url } });
+      return;
+    }
+    if (method === 'PATCH') {
+      const body = route.request().postDataJSON() as Record<string, unknown>;
+      mutationCalls.push({ method, body });
+      showQuantities = body.showQuantities === true;
+      showPrices = body.showPrices === true;
+      await route.fulfill({ json: { active, showQuantities, showPrices } });
+      return;
+    }
+    mutationCalls.push({ method });
+    active = false;
+    showQuantities = false;
+    showPrices = false;
+    await route.fulfill({ json: { active, showQuantities, showPrices } });
+  });
+
+  const page = await context.newPage();
+  const ownerUrl = `/en/tcg/collection/custom/${collectionId}`;
+  const sharePanel = page.locator('section[aria-labelledby="custom-collection-share-title"]');
+  await page.goto(ownerUrl);
+  const rejectCookies = page.getByRole('button', { name: 'Reject all', exact: true });
+  if (await rejectCookies.isVisible()) await rejectCookies.click();
+  await expect(page.getByRole('heading', { name: 'Shared binder', level: 1 })).toBeVisible({ timeout: 15_000 });
+  await expect(sharePanel.getByText('This binder is private.', { exact: true })).toBeVisible();
+  await sharePanel.getByRole('button', { name: 'Create share link', exact: true }).click();
+
+  const quantityToggle = sharePanel.getByRole('checkbox', { name: 'Show card quantities', exact: true });
+  const priceToggle = sharePanel.getByRole('checkbox', { name: 'Show estimated prices', exact: true });
+  await expect(quantityToggle).not.toBeChecked();
+  await expect(priceToggle).not.toBeChecked();
+  const linkInput = sharePanel.getByRole('textbox', { name: 'Read-only share link', exact: true });
+  await expect(linkInput).toHaveValue(new RegExp(`${firstToken}$`));
+  await expect(sharePanel.getByText('Anyone with this unlisted link can view the binder.', { exact: true })).toBeVisible();
+  await quantityToggle.click();
+  await expect.poll(() => mutationCalls.at(-1)).toEqual({
+    method: 'PATCH',
+    body: { showQuantities: true, showPrices: false },
+  });
+  await expect(quantityToggle).toBeChecked();
+  await priceToggle.click();
+  await expect.poll(() => mutationCalls.at(-1)).toEqual({
+    method: 'PATCH',
+    body: { showQuantities: true, showPrices: true },
+  });
+  await expect(priceToggle).toBeChecked();
+  await sharePanel.getByRole('button', { name: 'Create a new link', exact: true }).click();
+  await expect(linkInput).toHaveValue(new RegExp(`${rotatedToken}$`));
+  await expect(sharePanel.getByText('Anyone with this unlisted link can view the binder.', { exact: true })).toBeVisible();
+  await sharePanel.getByRole('button', { name: 'Revoke link', exact: true }).click();
+  await expect(sharePanel.getByText('Share link revoked.', { exact: true })).toBeVisible();
+
+  expect(mutationCalls).toEqual([
+    { method: 'POST', body: { rotate: false } },
+    { method: 'PATCH', body: { showQuantities: true, showPrices: false } },
+    { method: 'PATCH', body: { showQuantities: true, showPrices: true } },
+    { method: 'POST', body: { rotate: true } },
+    { method: 'DELETE' },
+  ]);
+  await context.close();
+});
+
+test('anonymous showcase shows only fields allowed by its API response @showcase', async ({ browser }) => {
+  test.skip(!customE2EEnabled, 'Requires the isolated local session.');
+  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  const showcaseToken = 'C'.repeat(43);
+  let showQuantities = false;
+  let showPrices = false;
+  let requests = 0;
+
+  await context.route('**/api/auth/**', async (route) => {
+    if (new URL(route.request().url()).pathname.endsWith('/get-session')) {
+      await route.fulfill({ status: 401, json: { error: 'Unauthenticated' } });
+      return;
+    }
+    await route.fulfill({ json: {} });
+  });
+  await context.route('**/api/tcg/showcase/**', async (route) => {
+    requests += 1;
+    await route.fulfill({
+      json: {
+        collection: { name: 'Public binder', description: '' },
+        cards: [{
+          id: 'base1-4',
+          language: 'en',
+          name: 'Charizard',
+          localId: '4',
+          setName: 'Base Set',
+          image: 'https://assets.tcgdex.net/en/base/base1/4',
+          ...(showQuantities ? { quantity: 3 } : {}),
+          ...(showPrices ? { price: { amount: 12.34, currency: 'USD', source: 'tcgplayer', updatedAt: '2026-10-01T00:00:00.000Z' } } : {}),
+        }],
+        page: 1,
+        pageSize: 24,
+        pageCount: 1,
+        totalCards: 1,
+        showQuantities,
+        showPrices,
+      },
+    });
+  });
+  await context.route('https://assets.tcgdex.net/**', async (route) => {
+    await route.fulfill({ status: 200, contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 3"><rect width="2" height="3" fill="#222"/></svg>' });
+  });
+
+  const page = await context.newPage();
+  await page.goto(`/en/tcg/showcase/${showcaseToken}`);
+  const rejectCookies = page.getByRole('button', { name: 'Reject all', exact: true });
+  if (await rejectCookies.isVisible()) await rejectCookies.click();
+  await expect(page.getByRole('heading', { name: 'Public binder', level: 1 })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Charizard', level: 2 })).toBeVisible();
+  await expect(page.getByText('3 copies', { exact: true })).toHaveCount(0);
+  await expect(page.getByText('$12.34', { exact: true })).toHaveCount(0);
+  await expect(page.locator('main input, main button')).toHaveCount(0);
+
+  showQuantities = true;
+  showPrices = true;
+  await page.reload();
+  await expect(page.getByRole('heading', { name: 'Public binder', level: 1 })).toBeVisible();
+  await expect(page.getByText('3 copies', { exact: true })).toBeVisible();
+  await expect(page.getByText('$12.34', { exact: true })).toBeVisible();
+  await expect(page.getByText('TCGplayer', { exact: true })).toBeVisible();
+  await expect(page.getByText(/Oct 1, 2026 UTC/)).toBeVisible();
+  await expect(page.locator('main input, main button')).toHaveCount(0);
+  expect(requests).toBeGreaterThanOrEqual(2);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await context.close();
+});
+
+test('bulk add from the set album applies per-card finishes and quantities, then undoes @bulk', async ({ browser }) => {
+  test.skip(!customE2EEnabled, 'Requires the isolated local session.');
+  test.setTimeout(120_000);
+  const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+  const app = await mockAuthenticatedApp(context, makeState());
+  await context.route('https://api.tcgdex.net/v2/en/cards/**', async (route) => {
+    const cardId = decodeURIComponent(new URL(route.request().url()).pathname.split('/').at(-1) ?? '');
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ ...cardPayload(cardId), variants: { normal: true, reverse: true } }),
+    });
+  });
+  const page = await context.newPage();
+  await page.goto('/en/tcg/collection/en/base1');
+  await expect(page.locator('#album-card-grid article').first()).toBeVisible({ timeout: 30_000 });
+  await page.getByRole('button', { name: 'Select multiple cards', exact: true }).click();
+  const selectors = page.locator('#album-card-grid').getByRole('button', { name: /Select .* for bulk add/ });
+  const selectedCardCount = Math.min(2, await selectors.count());
+  expect(selectedCardCount).toBe(2);
+  await selectors.nth(0).click();
+  await selectors.nth(1).click();
+  await page.getByRole('button', { name: 'Configure selected cards', exact: true }).click();
+
+  const sheet = page.getByRole('dialog');
+  await expect(sheet.getByRole('heading', { name: 'Configure selected cards', exact: true })).toBeVisible();
+  const rows = sheet.locator('article');
+  await expect(rows).toHaveCount(2);
+  const rowIds = await Promise.all([0, 1].map(async (index) => {
+    const details = await rows.nth(index).locator('p.font-mono').innerText();
+    return details.split('·').at(-1)?.trim() ?? '';
+  }));
+  expect(rowIds.every(Boolean)).toBe(true);
+  await expect(rows.nth(0).getByRole('combobox')).toContainText('Normal');
+  await expect(rows.nth(0).getByRole('combobox')).toContainText('Reverse holo');
+  await rows.nth(0).getByRole('combobox').selectOption('normal');
+  await rows.nth(0).getByRole('spinbutton').fill('2');
+  await rows.nth(1).getByRole('combobox').selectOption('reverse');
+  await rows.nth(1).getByRole('spinbutton').fill('1');
+  await sheet.getByRole('button', { name: 'Review changes', exact: true }).click();
+  await expect(sheet.getByText('You are about to add 3 copies across 2 cards.', { exact: true })).toBeVisible();
+
+  const writesBeforeApply = app.getStateWriteCount();
+  await sheet.getByRole('button', { name: 'Add 2 cards', exact: true }).click();
+  await expect(sheet.getByRole('button', { name: 'Undo bulk add', exact: true })).toBeVisible();
+  await expect.poll(() => app.getStateWriteCount()).toBe(writesBeforeApply + 1);
+  const appliedCards = app.getState().tcgCollectionCards as string[];
+  expect(appliedCards).toContain(`tcg2:en:base1|${rowIds[0]}|normal|2`);
+  expect(appliedCards).toContain(`tcg2:en:base1|${rowIds[1]}|reverse|1`);
+  expect(appliedCards).toHaveLength(2);
+
+  await sheet.getByRole('button', { name: 'Undo bulk add', exact: true }).click();
+  await expect(sheet.getByText('The previous quantities were restored.', { exact: true })).toBeVisible();
+  await expect.poll(() => app.getStateWriteCount()).toBe(writesBeforeApply + 2);
+  expect(app.getState().tcgCollectionCards).toEqual([]);
+  await context.close();
+});
+
+test('card detail shows price source evidence and explains unavailable history @market-evidence', async ({ browser }) => {
+  test.skip(!customE2EEnabled, 'Requires the isolated local session.');
+  test.setTimeout(120_000);
+  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  await mockAuthenticatedApp(context, makeState());
+  await context.route('https://api.tcgdex.net/v2/en/cards/base1-4', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        ...cardPayload('base1-4', 'en'),
+        pricing: {
+          cardmarket: { unit: 'EUR', updated: '2026-10-18T12:00:00.000Z', idProduct: 123456, trend: 2.5 },
+          tcgplayer: { unit: 'USD', updated: '2026-10-18T12:00:00.000Z', normal: { marketPrice: 3.25 } },
+        },
+      }),
+    });
+  });
+  const historyRequests: { method: string; path: string; body?: unknown }[] = [];
+  await context.route('**/api/tcg/price-history/base1-4**', async (route) => {
+    const request = route.request();
+    const path = new URL(request.url()).pathname;
+    if (request.method() === 'POST') {
+      historyRequests.push({ method: 'POST', path, body: request.postDataJSON() });
+      await route.fulfill({ json: { captured: 0, variants: ['normal'], status: 'captured' } });
+      return;
+    }
+    historyRequests.push({ method: 'GET', path });
+    await route.fulfill({ json: { history: [], status: 'empty' } });
+  });
+
+  const page = await context.newPage();
+  await page.goto('/en/tcg/cards/base1-4?tcgLang=en', { waitUntil: 'domcontentloaded' });
+  await expect(page.getByRole('heading', { name: 'Charizard', level: 1 })).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByText('€2.50', { exact: true })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByText('Cardmarket', { exact: true })).toBeVisible();
+  await expect(page.getByText(/^Source timestamp: Oct 18, 2026.*12:00 PM UTC$/)).toBeVisible();
+
+  const historySection = page.locator('section[aria-label="Price history"]');
+  await historySection.scrollIntoViewIfNeeded();
+  await expect(historySection.getByRole('heading', { name: 'Price history', exact: true })).toBeVisible();
+  await expect(historySection.getByText('No comparable TCGdex/Cardmarket trend snapshots are available for this card and finish.', { exact: true })).toBeVisible();
+  await expect(historySection.getByText(/Opening a card detail starts a current TCGdex\/Cardmarket trend observation/)).toBeVisible();
+  expect(historyRequests).toEqual([
+    { method: 'POST', path: '/api/tcg/price-history/base1-4', body: { language: 'en' } },
+    { method: 'GET', path: '/api/tcg/price-history/base1-4' },
+  ]);
   await context.close();
 });

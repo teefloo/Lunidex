@@ -60,6 +60,7 @@ describe('sentry observability', () => {
   it('normalizes routes and removes sensitive context values', () => {
     expect(normalizeSentryRoute('/fr/pokemon/pikachu?token=secret#details')).toBe('/pokemon/:name');
     expect(normalizeSentryRoute('https://api.tcgdex.net/v2/en/cards/base-1?token=secret')).toBe('/v2/en/cards/:id');
+    expect(normalizeSentryRoute(`/en/tcg/showcase/${'A'.repeat(43)}`)).toBe('/tcg/showcase/:token');
 
     expect(sanitizeSentryContext({
       feature: 'profile',

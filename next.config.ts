@@ -144,6 +144,9 @@ const withPWA = withPWAInit({
           // Localized URLs are rewritten internally, so normalize before
           // excluding APIs and auth pages from the document cache.
           if (/^\/(?:api|auth)(?:\/|$)/i.test(pathname)) return false;
+          // Unlisted collection links can be revoked at any time. Never save
+          // their HTML in the installed service worker's document cache.
+          if (pathname === '/tcg/showcase' || pathname.startsWith('/tcg/showcase/')) return false;
           if (pathname.startsWith("/offline")) return false;
           return pathname.startsWith("/");
         },
@@ -151,7 +154,7 @@ const withPWA = withPWAInit({
         options: {
           // Bump the namespace when the page eligibility rules change so
           // entries created by an older worker cannot be reused.
-          cacheName: "pages-v3",
+          cacheName: "pages-v4",
           expiration: {
             maxEntries: 50,
             maxAgeSeconds: 86400,
@@ -372,6 +375,32 @@ const nextConfig: NextConfig = {
           { key: 'Cache-Control', value: 'no-store, no-cache, max-age=0, must-revalidate' },
           { key: 'Referrer-Policy', value: 'no-referrer' },
         ],
+      },
+      {
+        // Unlisted collection links are read-only, but still reveal owner data.
+        // Keep documents and token API responses private and out of indexes.
+        source: '/:locale(en|fr|es|de|it|ja|ko|zh)/tcg/showcase/:token',
+        headers: [
+          { key: 'Cache-Control', value: 'private, no-store' },
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' },
+          { key: 'Referrer-Policy', value: 'no-referrer' },
+        ],
+      },
+      {
+        source: '/tcg/showcase/:token',
+        headers: [
+          { key: 'Cache-Control', value: 'private, no-store' },
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' },
+          { key: 'Referrer-Policy', value: 'no-referrer' },
+        ],
+      },
+      {
+        source: '/api/tcg/showcase/:token',
+        headers: [{ key: 'Cache-Control', value: 'private, no-store' }],
+      },
+      {
+        source: '/:locale(en|fr|es|de|it|ja|ko|zh)/api/tcg/showcase/:token',
+        headers: [{ key: 'Cache-Control', value: 'private, no-store' }],
       },
       {
         // Auth API responses include session state and must never be served

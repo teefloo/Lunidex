@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Search } from 'lucide-react';
+import { ArrowLeft, ListChecks, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMounted } from '@/hooks/useMounted';
@@ -29,6 +29,7 @@ import { TCGImageWithFallback } from './TCGImageWithFallback';
 import { getTCGSetImageCandidates } from '@/lib/tcg-images';
 import { TCGCardDetailModal } from './TCGCardDetailModal';
 import { TCGCollectionVariantSheet } from './TCGCollectionVariantSheet';
+import { TCGBulkCollectionAddSheet } from './TCGBulkCollectionAddSheet';
 import { getProductConsent, getServerProductConsent, subscribeProductConsent, setProductTrackingIdentity, trackProductEvent, trackReturnAfterActivation } from '@/lib/product-measurement';
 import { encodeTCGCollectionKey, getTCGCollectionCardIds, getTCGCollectionCardOwnerships } from '@/lib/tcg-collections';
 import type { TCGCardLanguage } from '@/lib/tcg-language';
@@ -108,6 +109,9 @@ export function TCGAlbumPage({
   const [managedCard, setManagedCard] = useState<TCGCard | null>(null);
   const [isVariantSheetOpen, setIsVariantSheetOpen] = useState(false);
   const [firstValueReached, setFirstValueReached] = useState(false);
+  const [bulkSelectionMode, setBulkSelectionMode] = useState(false);
+  const [bulkSelectedIds, setBulkSelectedIds] = useState<string[]>([]);
+  const [bulkSheetOpen, setBulkSheetOpen] = useState(false);
   const historyReturnTargetRef = useRef<string | null>(null);
   const historyReturnScrollPositionRef = useRef<TCGCollectionScrollPosition | null>(null);
   const firstValueReachedRef = useRef(false);
@@ -166,6 +170,12 @@ export function TCGAlbumPage({
   }, [activation, language, rememberCollectionScrollRestore, returnQuery, set.id]);
 
   const sortedCards = useMemo(() => sortCardsByNumber(cards), [cards]);
+  const bulkSelectedIdSet = useMemo(() => new Set(bulkSelectedIds), [bulkSelectedIds]);
+  const bulkSelectedCards = useMemo(
+    () => sortedCards.filter((card) => bulkSelectedIdSet.has(card.id)),
+    [bulkSelectedIdSet, sortedCards],
+  );
+  const canUseBulkSelection = Boolean(user && resolvedCollectionKey && !demoOwnership);
   const completion = useMemo(() => getSetCompletion(cards, ownedIds), [cards, ownedIds]);
   const completionSnapshotRef = useRef({ owned: completion.owned, total: completion.total });
   useEffect(() => {
@@ -264,6 +274,12 @@ export function TCGAlbumPage({
     demoOwnership.toggleOwned(cardId);
     handleOwnershipChange(!demoOwnership.ownedIds.has(cardId));
   }, [demoOwnership, handleOwnershipChange]);
+
+  const toggleBulkCard = useCallback((card: TCGCard) => {
+    setBulkSelectedIds((current) => current.includes(card.id)
+      ? current.filter((cardId) => cardId !== card.id)
+      : [...current, card.id]);
+  }, []);
 
   if (!mounted) return null;
 
@@ -368,7 +384,47 @@ export function TCGAlbumPage({
             {t('tcg.collection_missing')} (<span className="tabular-nums">{missingCards.length}</span>)
           </button>
         )}
+        {canUseBulkSelection && (
+          <button
+            type="button"
+            onClick={() => {
+              if (bulkSelectionMode) {
+                setBulkSelectionMode(false);
+                setBulkSelectedIds([]);
+                setBulkSheetOpen(false);
+              } else {
+                setBulkSelectionMode(true);
+              }
+            }}
+            aria-pressed={bulkSelectionMode}
+            className={`inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-sm border px-3 text-[11px] font-black uppercase tracking-[0.06em] transition-[border-color,background-color,color] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 ${bulkSelectionMode ? 'border-primary/45 bg-primary/15 text-primary' : 'border-border/40 bg-card/45 text-foreground/70 hover:border-primary/35 hover:text-primary'}`}
+          >
+            <ListChecks className="h-4 w-4" aria-hidden="true" />
+            {t(bulkSelectionMode ? 'tcg.custom_collections.bulk_cancel_selection' : 'tcg.custom_collections.bulk_select_mode')}
+          </button>
+        )}
       </div>
+
+      {bulkSelectionMode && canUseBulkSelection && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-sm border border-primary/25 bg-primary/5 p-3" role="group" aria-label={t('tcg.custom_collections.bulk_selection_controls')}>
+          <p className="text-sm font-bold text-foreground/75" role="status" aria-live="polite">
+            {t('tcg.custom_collections.bulk_selected_count', { count: bulkSelectedIds.length })}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setBulkSheetOpen(true)}
+              disabled={bulkSelectedIds.length === 0}
+              className="inline-flex min-h-11 items-center justify-center rounded-sm bg-primary px-4 text-xs font-black text-primary-foreground disabled:cursor-not-allowed disabled:opacity-45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              {t('tcg.custom_collections.bulk_configure_selected')}
+            </button>
+            <button type="button" onClick={() => setBulkSelectedIds([])} disabled={bulkSelectedIds.length === 0} className="inline-flex min-h-11 items-center justify-center rounded-sm border border-border px-3 text-xs font-bold disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+              {t('tcg.custom_collections.bulk_clear_selection')}
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Grid */}
       {filteredCards.length === 0 ? (
@@ -401,6 +457,9 @@ export function TCGAlbumPage({
               ownerships={ownershipByCard.get(card.id) ?? []}
               onOwnershipChange={handleOwnershipChange}
               onToggleOwned={demoOwnership ? toggleDemoOwned : undefined}
+              selectionMode={bulkSelectionMode && canUseBulkSelection}
+              selected={bulkSelectedIdSet.has(card.id)}
+              onSelect={toggleBulkCard}
             />
           ))}
         </div>
@@ -499,6 +558,21 @@ export function TCGAlbumPage({
             if (!open) setManagedCard(null);
           }}
           onOwnershipChange={handleOwnershipChange}
+        />
+      )}
+      {canUseBulkSelection && resolvedCollectionKey && (
+        <TCGBulkCollectionAddSheet
+          open={bulkSheetOpen}
+          onOpenChange={setBulkSheetOpen}
+          collectionKey={resolvedCollectionKey}
+          language={selectedLanguage}
+          cards={bulkSelectedCards}
+          onRemoveCard={(cardId) => setBulkSelectedIds((current) => current.filter((id) => id !== cardId))}
+          onApplied={(newlyOwnedCount) => {
+            handleOwnershipChange(newlyOwnedCount > 0);
+            setBulkSelectedIds([]);
+            setBulkSelectionMode(false);
+          }}
         />
       )}
     </div>

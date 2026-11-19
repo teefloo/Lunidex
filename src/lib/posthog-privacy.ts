@@ -58,6 +58,7 @@ function redactText(value: string): string {
 function normalizePathSegments(pathname: string): string {
   return pathname
     .replace(LOCALE_PREFIX, '')
+    .replace(/(\/tcg\/showcase\/)[A-Za-z0-9_-]{43}(?=\/|$)/i, '$1[token]')
     .replace(/(\/u\/)[^/]+(?=\/|$)/i, '$1[handle]')
     .replace(/(\/friends\/)[^/]+(?=\/|$)/i, '$1[friendId]')
     .replace(/(\/api\/auth\/)[^/]+(?=\/|$)/i, '$1[path]')

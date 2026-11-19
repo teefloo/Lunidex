@@ -10,6 +10,8 @@ describe('PostHog privacy helpers', () => {
   it('removes locale and personal route segments', () => {
     expect(normalizePostHogRoute('/fr/u/esteban?tab=collection')).toBe('/u/[handle]');
     expect(normalizePostHogRoute('https://lunidex.app/ja/friends/private-id?token=secret')).toBe('/friends/[friendId]');
+    const shareToken = 'A'.repeat(43);
+    expect(normalizePostHogRoute(`/fr/tcg/showcase/${shareToken}`)).toBe('/tcg/showcase/[token]');
   });
 
   it('drops sensitive values and keeps bounded low-cardinality context', () => {

@@ -3,7 +3,9 @@
 import type { TCGCard } from '@/types/tcg';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
-import { getCardMarketValue } from '@/lib/tcg-collection';
+import { getCardMarketValue, getTCGVariantValue } from '@/lib/tcg-collection';
+import { TCG_DEFAULT_VARIANT_ORDER } from '@/lib/tcg-collections';
+import type { TCGPhysicalVariant } from '@/types/tcg';
 import { cn } from '@/lib/utils';
 import { usePrimeDexStore } from '@/store/primedex';
 import type { SupportedLanguage } from '@/lib/languages';
@@ -12,14 +14,25 @@ interface TCGMarketSummaryProps {
   card: TCGCard;
   compact?: boolean;
   interfaceLanguage?: SupportedLanguage;
+  evidenceOnly?: boolean;
 }
 
-export function TCGMarketSummary({ card, compact = false, interfaceLanguage }: TCGMarketSummaryProps) {
+export function TCGMarketSummary({ card, compact = false, interfaceLanguage, evidenceOnly = false }: TCGMarketSummaryProps) {
   const { t } = useTranslation();
   const clientLanguage = useClientLanguage();
   const locale = interfaceLanguage ?? clientLanguage;
   const displayCurrency = usePrimeDexStore((state) => state.tcgDisplayCurrency);
   const value = getCardMarketValue(card, displayCurrency);
+  const representativeVariant = card.variants
+    ? TCG_DEFAULT_VARIANT_ORDER.find((variant) => (
+      card.variants?.[variant] === true && getTCGVariantValue(card, variant, displayCurrency) !== null
+    ))
+    : undefined;
+  const variantTranslation: Record<TCGPhysicalVariant, string> = {
+    normal: 'tcg.collection_variant_normal',
+    holo: 'tcg.collection_variant_holo',
+    reverse: 'tcg.collection_variant_reverse',
+  };
   const provider = value?.provider
     ?? (value?.currency === 'EUR' ? 'cardmarket' : value?.currency === 'USD' ? 'tcgplayer' : undefined);
   const source = provider === 'cardmarket'
@@ -56,25 +69,15 @@ export function TCGMarketSummary({ card, compact = false, interfaceLanguage }: T
   return (
     <div className={cn(
       'min-w-0 rounded-sm border border-border/50 bg-card/50',
-      compact ? 'px-2.5 py-2' : 'px-4 py-3',
+      evidenceOnly ? 'border-0 bg-transparent px-0 py-0' : compact ? 'px-2.5 py-2' : 'px-4 py-3',
     )}>
-      <p className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">
-        {t('tcg.market_price')}
-      </p>
-      <div className="mt-1 flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
-        <span className={cn(
-          'font-black tabular-nums',
-          formattedValue ? 'text-foreground' : 'text-muted-foreground',
-          compact ? 'text-sm' : 'text-xl',
-        )}>
-          {formattedValue ?? t('tcg.collection_value_unavailable')}
+      {!evidenceOnly && <p className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">{t('tcg.market_price')}</p>}
+      {!evidenceOnly && <div className="mt-1 flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
+        <span className={cn('font-black tabular-nums', formattedValue ? 'text-foreground' : 'text-muted-foreground', compact ? 'text-sm' : 'text-xl')}>
+          {formattedValue ?? t('investments.price_unavailable')}
         </span>
-        {source && (
-          <span className="text-[11px] font-medium text-muted-foreground">
-            {source}
-          </span>
-        )}
-      </div>
+        {source && <span className="text-[11px] font-medium text-muted-foreground">{source}</span>}
+      </div>}
       {source && (
         <>
           <p className="mt-1 text-[10px] text-muted-foreground">
@@ -95,6 +98,14 @@ export function TCGMarketSummary({ card, compact = false, interfaceLanguage }: T
           )}
         </>
       )}
+      {evidenceOnly && value && (
+        <p className="mt-1 text-[10px] leading-5 text-muted-foreground">
+          {representativeVariant
+            ? t('tcg.custom_collections.market_representative_variant', { variant: t(variantTranslation[representativeVariant]) })
+            : t('tcg.custom_collections.market_representative_limit')}
+        </p>
+      )}
+      {!source && evidenceOnly && <p className="text-[11px] font-medium text-muted-foreground">{t('investments.price_unavailable')}</p>}
     </div>
   );
 }

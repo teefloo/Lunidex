@@ -30,6 +30,9 @@ interface TCGAlbumCardProps {
   language?: TCGCardLanguage;
   priority?: boolean;
   onToggleOwned?: (cardId: string) => void;
+  selectionMode?: boolean;
+  selected?: boolean;
+  onSelect?: (card: TCGCard) => void;
 }
 
 const VARIANT_LABELS: Record<TCGPhysicalVariant, string> = {
@@ -50,6 +53,9 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
   language,
   priority = false,
   onToggleOwned,
+  selectionMode = false,
+  selected = false,
+  onSelect,
 }: TCGAlbumCardProps) {
   const { t } = useTranslation();
   const accessibleCardName = getTCGCardAccessibleName(card.name, card.localId);
@@ -97,10 +103,14 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
     )} style={{ contentVisibility: 'auto', containIntrinsicSize: '280px' }}>
       <button
         type="button"
-        onClick={onToggleOwned ? () => onToggleOwned(card.id) : primaryAction === 'add' ? handleAdd : () => onView?.(card)}
+        onClick={selectionMode
+          ? () => onSelect?.(card)
+          : onToggleOwned ? () => onToggleOwned(card.id) : primaryAction === 'add' ? handleAdd : () => onView?.(card)}
         className="group/card relative aspect-[2.15/3] cursor-pointer touch-manipulation overflow-hidden rounded-sm text-left transition-[box-shadow,transform] duration-150 hover:shadow-[var(--shadow-pixel-sm)] active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
-        aria-label={t(onToggleOwned ? owned ? 'tcg.demo.mark_missing' : 'tcg.demo.mark_owned' : primaryAction === 'add' ? 'tcg.activation.add_card_aria' : 'detail.view_card_aria', { name: accessibleCardName })}
-        aria-pressed={onToggleOwned ? owned : undefined}
+        aria-label={selectionMode
+          ? t(selected ? 'tcg.custom_collections.bulk_deselect_card_aria' : 'tcg.custom_collections.bulk_select_card_aria', { name: accessibleCardName })
+          : t(onToggleOwned ? owned ? 'tcg.demo.mark_missing' : 'tcg.demo.mark_owned' : primaryAction === 'add' ? 'tcg.activation.add_card_aria' : 'detail.view_card_aria', { name: accessibleCardName })}
+        aria-pressed={selectionMode ? selected : onToggleOwned ? owned : undefined}
       >
         <TCGCardImage
           card={card}
@@ -113,10 +123,10 @@ export const TCGAlbumCard = memo(function TCGAlbumCard({
           <p className="truncate text-[11px] font-black uppercase text-white drop-shadow-md">{card.name}</p>
           <p className="text-[11px] text-white/60">#{card.localId}</p>
         </div>
-        {(primaryAction === 'add' || onToggleOwned) && (
+        {(primaryAction === 'add' || onToggleOwned || selectionMode) && (
           <span aria-hidden="true" className="absolute left-1 top-1 inline-flex min-h-7 items-center gap-1 rounded-sm border border-emerald-300/35 bg-black/75 px-2 text-[10px] font-black uppercase tracking-[0.05em] text-emerald-100">
-            {onToggleOwned && owned ? <Check className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
-            {t(onToggleOwned && owned ? 'tcg.owned_short' : 'tcg.collection_add_card')}
+            {(selectionMode ? selected : onToggleOwned && owned) ? <Check className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
+            {t(selectionMode ? selected ? 'tcg.custom_collections.bulk_selected_short' : 'tcg.custom_collections.bulk_select_short' : onToggleOwned && owned ? 'tcg.owned_short' : 'tcg.collection_add_card')}
           </span>
         )}
         <div className="absolute right-1 top-1"><TCGRarityBadge rarity={card.rarity} /></div>
@@ -189,6 +199,9 @@ function areTCGAlbumCardPropsEqual(previous: TCGAlbumCardProps, next: TCGAlbumCa
     && previous.language === next.language
     && previous.priority === next.priority
     && previous.onToggleOwned === next.onToggleOwned
+    && previous.selectionMode === next.selectionMode
+    && previous.selected === next.selected
+    && previous.onSelect === next.onSelect
     && sameOwnerships(previous.ownerships ?? [], next.ownerships ?? []);
 }
 

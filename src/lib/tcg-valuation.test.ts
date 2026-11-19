@@ -138,8 +138,33 @@ describe('fetchCollectionValue', () => {
     expect(calls).toEqual(['fr:sv1-1', 'fr:sv1-2']);
     expect(result.ownedCount).toBe(5);
     expect(result.pricedCount).toBe(4);
-    expect(result.unpricedCount).toBe(1);
-    expect(result.groups).toEqual([{ currency: 'USD', total: 8, count: 4 }]);
+    expect(result.unpricedCount).toBe(0);
+    expect(result.unavailableCount).toBe(1);
+    expect(result.groups).toEqual([{ currency: 'USD', total: 8, count: 4, provider: 'tcgplayer', staleCount: 0, missingTimestampCount: 4 }]);
+  });
+
+  it('separates unavailable detail responses from known cards without a quote', async () => {
+    const knownUnpriced: TCGCard = {
+      id: 'sv1-1',
+      localId: '1',
+      name: 'Known unpriced',
+      variants: { normal: true },
+    };
+    const result = await fetchCollectionValue(
+      [
+        { cardId: 'sv1-1', variant: 'normal', quantity: 2 },
+        { cardId: 'sv1-2', variant: 'normal', quantity: 3 },
+      ],
+      'en',
+      undefined,
+      'USD',
+      {
+        fetchCard: async (cardId) => cardId === 'sv1-1' ? knownUnpriced : null,
+        cardTimeoutMs: 25,
+      },
+    );
+
+    expect(result).toMatchObject({ ownedCount: 5, pricedCount: 0, unpricedCount: 2, unavailableCount: 3 });
   });
 
   it('times out one card without blocking the rest of the valuation', async () => {
@@ -159,7 +184,8 @@ describe('fetchCollectionValue', () => {
 
     expect(result.ownedCount).toBe(2);
     expect(result.pricedCount).toBe(1);
-    expect(result.unpricedCount).toBe(1);
+    expect(result.unpricedCount).toBe(0);
+    expect(result.unavailableCount).toBe(1);
   });
 
   it('limits concurrent detail requests and caps large collections', async () => {
@@ -189,7 +215,8 @@ describe('fetchCollectionValue', () => {
     expect(maxActive).toBeLessThanOrEqual(2);
     expect(result.ownedCount).toBe(20);
     expect(result.pricedCount).toBe(5);
-    expect(result.unpricedCount).toBe(15);
+    expect(result.unpricedCount).toBe(0);
+    expect(result.unavailableCount).toBe(15);
   });
 });
 
@@ -212,7 +239,7 @@ describe('fetchCustomCollectionValue', () => {
 
     expect(calls.sort()).toEqual(['fr:sv1-1', 'ja:sv1-1']);
     expect(result).toMatchObject({
-      groups: [{ currency: 'USD', total: 10, count: 3 }],
+      groups: [{ currency: 'USD', total: 10, count: 3, provider: 'tcgplayer', staleCount: 0, missingTimestampCount: 3 }],
       ownedCount: 3,
       pricedCount: 3,
       unpricedCount: 0,
@@ -229,6 +256,6 @@ describe('fetchCustomCollectionValue', () => {
       cardTimeoutMs: 25,
     });
 
-    expect(result).toMatchObject({ ownedCount: 3, pricedCount: 2, unpricedCount: 1 });
+    expect(result).toMatchObject({ ownedCount: 3, pricedCount: 2, unpricedCount: 0, unavailableCount: 1 });
   });
 });

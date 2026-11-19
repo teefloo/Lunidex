@@ -52,6 +52,7 @@ import type { TCGCardLanguage } from '@/lib/tcg-language';
 import { getTCGRarityLabel } from '@/lib/tcg-labels';
 import { TCGCollectionVariantSheet } from './TCGCollectionVariantSheet';
 import { TCGCustomCollectionPicker } from './TCGCustomCollectionPicker';
+import { TCGMarketSummary } from './TCGMarketSummary';
 import { trackProductEvent } from '@/lib/product-measurement';
 import { getFocusTrapTarget } from '@/lib/focus-management';
 import { isTCGIllustratorCredit } from '@/lib/tcg-illustrators';
@@ -581,11 +582,11 @@ export function TCGCardDetailContent({
                       </div>
                       <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
                         <p className="text-3xl font-display font-black leading-none tracking-[-0.02em] text-primary">
-                          {marketValueLabel ?? '—'}
+                          {marketValueLabel ?? t('investments.price_unavailable')}
                         </p>
                         {marketValue && (
                           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-                            via {marketValue.currency === 'EUR' ? 'Cardmarket' : 'TCGplayer'}
+                            {marketValue.currency === 'EUR' ? 'Cardmarket' : 'TCGplayer'}
                           </p>
                         )}
                       </div>
@@ -602,6 +603,14 @@ export function TCGCardDetailContent({
                       </a>
                     )}
                   </div>
+                  <div className="relative px-5 pb-5 sm:px-6">
+                    <TCGMarketSummary card={displayCard} evidenceOnly />
+                  </div>
+                </section>
+
+                {/* Keep qualified history directly beside the estimate and its source evidence. */}
+                <section className="space-y-3" aria-label={t('tcg.price_history')}>
+                  <DeferredPriceChart cardId={displayCard.id} language={resolvedLang} />
                 </section>
 
                 {/* ── Card details ─────────────────────────────────── */}
@@ -701,11 +710,6 @@ export function TCGCardDetailContent({
                     )}
                   </section>
                 )}
-
-                {/* ── Price history chart ──────────────────────────── */}
-                <section className="space-y-3">
-                  <DeferredPriceChart cardId={displayCard.id} language={resolvedLang} />
-                </section>
 
                 {/* ── Footer ───────────────────────────────────────── */}
                 <div className="flex justify-end border-t border-border/60 pt-5">

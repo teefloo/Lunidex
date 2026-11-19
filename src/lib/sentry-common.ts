@@ -43,6 +43,7 @@ function redactUrl(value: string): string {
     const parsed = new URL(value, 'https://lunidex.app');
     parsed.search = '';
     parsed.hash = '';
+    parsed.pathname = parsed.pathname.replace(/(\/tcg\/showcase\/)[A-Za-z0-9_-]{43}(?=\/|$)/i, '$1[token]');
 
     if (value.startsWith('/')) {
       return `${parsed.pathname}${parsed.search}${parsed.hash}`;

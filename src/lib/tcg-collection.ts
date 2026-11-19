@@ -783,6 +783,11 @@ export interface TCGCollectionValueGroup {
   currency: string;
   total: number;
   count: number;
+  provider?: TCGCardValue['provider'];
+  oldestPriceAt?: string;
+  newestPriceAt?: string;
+  staleCount?: number;
+  missingTimestampCount?: number;
 }
 
 export interface TCGCollectionValuation {
@@ -794,6 +799,8 @@ export interface TCGCollectionValuation {
   pricedCount: number;
   /** Number of owned physical cards with no usable provider price. */
   unpricedCount?: number;
+  /** Number whose catalog detail could not be retrieved, so price availability is unknown. */
+  unavailableCount?: number;
 }
 
 export interface TCGCollectionSetValuation {
@@ -818,16 +825,72 @@ export interface TCGOwnedVariant {
   quantity: number;
 }
 
+type CollectionValueProvenance = {
+  oldestTimestamp: number | null;
+  newestTimestamp: number | null;
+  staleCount: number;
+  missingTimestampCount: number;
+};
+
+const COLLECTION_PRICE_STALE_AFTER_MS = 30 * 24 * 60 * 60 * 1000;
+
+function valueGroupKey(currency: string, provider: TCGCardValue['provider']): string {
+  return `${currency}\u001f${provider ?? ''}`;
+}
+
 function groupsFromTotals(
   totals: Map<string, { total: number; count: number }>,
+  provenance?: Map<string, CollectionValueProvenance>,
 ): TCGCollectionValueGroup[] {
   return [...totals.entries()]
-    .map(([currency, { total, count }]) => ({
-      currency,
-      total: Math.round(total * 100) / 100,
-      count,
-    }))
+    .map(([key, { total, count }]) => {
+      const [currency, providerName] = key.split('\u001f');
+      const provider: TCGCardValue['provider'] = providerName === 'cardmarket' || providerName === 'tcgplayer'
+        ? providerName
+        : undefined;
+      const source = provenance?.get(key);
+      return {
+        currency,
+        total: Math.round(total * 100) / 100,
+        count,
+        ...(provider ? { provider } : {}),
+        ...(source?.oldestTimestamp !== null && source?.oldestTimestamp !== undefined
+          ? { oldestPriceAt: new Date(source.oldestTimestamp).toISOString() }
+          : {}),
+        ...(source?.newestTimestamp !== null && source?.newestTimestamp !== undefined
+          ? { newestPriceAt: new Date(source.newestTimestamp).toISOString() }
+          : {}),
+        ...(source ? {
+          staleCount: source.staleCount,
+          missingTimestampCount: source.missingTimestampCount,
+        } : {}),
+      };
+    })
     .sort((a, b) => b.total - a.total);
+}
+
+function recordPriceProvenance(
+  provenance: Map<string, CollectionValueProvenance>,
+  key: string,
+  value: TCGCardValue,
+  quantity: number,
+  now: number,
+): void {
+  const entry = provenance.get(key) ?? {
+    oldestTimestamp: null,
+    newestTimestamp: null,
+    staleCount: 0,
+    missingTimestampCount: 0,
+  };
+  const timestamp = value.updatedAt ? Date.parse(value.updatedAt) : NaN;
+  if (!Number.isFinite(timestamp) || timestamp > now) {
+    entry.missingTimestampCount += quantity;
+  } else {
+    entry.oldestTimestamp = entry.oldestTimestamp === null ? timestamp : Math.min(entry.oldestTimestamp, timestamp);
+    entry.newestTimestamp = entry.newestTimestamp === null ? timestamp : Math.max(entry.newestTimestamp, timestamp);
+    if (now - timestamp > COLLECTION_PRICE_STALE_AFTER_MS) entry.staleCount += quantity;
+  }
+  provenance.set(key, entry);
 }
 
 function getOnlyAvailablePhysicalVariant(
@@ -876,17 +939,18 @@ export function aggregateCollectionValueWithSets(
     }
 
     pricedCount += 1;
-    const totalEntry = totals.get(currency) ?? { total: 0, count: 0 };
+    const groupKey = valueGroupKey(currency, value.provider);
+    const totalEntry = totals.get(groupKey) ?? { total: 0, count: 0 };
     totalEntry.total += value.amount;
     totalEntry.count += 1;
-    totals.set(currency, totalEntry);
+    totals.set(groupKey, totalEntry);
 
     if (card.setId) {
       const setTotals = totalsBySet.get(card.setId)!;
-      const setEntry = setTotals.get(currency) ?? { total: 0, count: 0 };
+      const setEntry = setTotals.get(groupKey) ?? { total: 0, count: 0 };
       setEntry.total += value.amount;
       setEntry.count += 1;
-      setTotals.set(currency, setEntry);
+      setTotals.set(groupKey, setEntry);
       pricedBySet.set(card.setId, (pricedBySet.get(card.setId) ?? 0) + 1);
     }
   }
@@ -914,9 +978,11 @@ export function aggregateCollectionValueWithVariants(
   cards: TCGCollectionCard[],
   ownedVariants: readonly TCGOwnedVariant[],
   displayCurrency?: TCGDisplayCurrency,
+  evaluatedAt = new Date(),
 ): TCGCollectionValuationResult {
   const cardsById = new Map(cards.map((card) => [card.id, card]));
   const totals = new Map<string, { total: number; count: number }>();
+  const provenance = new Map<string, CollectionValueProvenance>();
   const totalsBySet = new Map<string, Map<string, { total: number; count: number }>>();
   const pricedBySet = new Map<string, number>();
   const unpricedBySet = new Map<string, number>();
@@ -961,16 +1027,18 @@ export function aggregateCollectionValueWithVariants(
     }
     pricedCount += quantity;
 
-    const entry = totals.get(currency) ?? { total: 0, count: 0 };
+    const groupKey = valueGroupKey(currency, displayValue.provider);
+    const entry = totals.get(groupKey) ?? { total: 0, count: 0 };
     entry.total += displayValue.amount * quantity;
     entry.count += quantity;
-    totals.set(currency, entry);
+    totals.set(groupKey, entry);
+    recordPriceProvenance(provenance, groupKey, displayValue, quantity, evaluatedAt.getTime());
 
     if (setTotals && card.setId) {
-      const setEntry = setTotals.get(currency) ?? { total: 0, count: 0 };
+      const setEntry = setTotals.get(groupKey) ?? { total: 0, count: 0 };
       setEntry.total += displayValue.amount * quantity;
       setEntry.count += quantity;
-      setTotals.set(currency, setEntry);
+      setTotals.set(groupKey, setEntry);
       pricedBySet.set(card.setId, (pricedBySet.get(card.setId) ?? 0) + quantity);
     }
   }
@@ -987,7 +1055,7 @@ export function aggregateCollectionValueWithVariants(
     ]),
   );
 
-  return { groups: groupsFromTotals(totals), ownedCount, pricedCount, unpricedCount, bySet };
+  return { groups: groupsFromTotals(totals, provenance), ownedCount, pricedCount, unpricedCount, bySet };
 }
 
 /** Aggregate the owned value globally, preserving the legacy return shape. */
@@ -1047,7 +1115,8 @@ export function getActiveSetInsightsFallback(
       groups: [],
       ownedCount: physicalOwned,
       pricedCount: 0,
-      unpricedCount: physicalOwned,
+      unpricedCount: 0,
+      unavailableCount: physicalOwned,
     },
     setTotalValue: [],
   };
