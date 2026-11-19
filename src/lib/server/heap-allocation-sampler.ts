@@ -14,19 +14,31 @@ const SAMPLE_INTERVAL_BYTES = 64 * 1024;
 const MAX_PROFILE_NODES = 50_000;
 const MAX_PROFILE_DEPTH = 128;
 const MAX_SUMMARY_FRAMES = 20;
+const MAX_SUMMARY_STACKS = 10;
+const MAX_STACK_FRAMES = 8;
+const MAX_SUMMARY_JSON_LENGTH = 15_000;
 const MAX_FUNCTION_NAME_LENGTH = 80;
 const MAX_SOURCE_BASENAME_LENGTH = 120;
 
-export interface HeapSampleFrame {
+export interface HeapSampleStackFrame {
   functionName: string;
   sourceFile: string;
   line: number;
   column: number;
+}
+
+export interface HeapSampleFrame extends HeapSampleStackFrame {
+  sampledBytes: number;
+}
+
+export interface HeapSampleStack {
+  frames: HeapSampleStackFrame[];
   sampledBytes: number;
 }
 
 export interface HeapSampleSummary {
   frames: HeapSampleFrame[];
+  stacks: HeapSampleStack[];
 }
 
 interface RawProfileNode {
@@ -36,6 +48,10 @@ interface RawProfileNode {
 }
 
 interface MutableHeapSampleFrame extends HeapSampleFrame {
+  key: string;
+}
+
+interface MutableHeapSampleStack extends HeapSampleStack {
   key: string;
 }
 
@@ -79,52 +95,134 @@ function safeColumnNumber(value: unknown): number {
 
 function safeSampledBytes(value: unknown): number {
   return typeof value === 'number' && Number.isFinite(value) && value > 0
-    ? Math.floor(value)
+    ? Math.min(Number.MAX_SAFE_INTEGER, Math.floor(value))
     : 0;
 }
 
-/** Reduce the inspector profile to bounded, non-sensitive source-frame totals. */
+function safeCallFrame(value: unknown): HeapSampleStackFrame | null {
+  const callFrame = asRecord(value);
+  if (!callFrame) return null;
+
+  const frame = {
+    functionName: safeFunctionName(callFrame.functionName),
+    sourceFile: safeSourceBasename(callFrame.url),
+    line: safeLineNumber(callFrame.lineNumber),
+    column: safeColumnNumber(callFrame.columnNumber),
+  };
+
+  // The inspector's root frame is not useful to source-map, so omit it rather
+  // than spending one of the bounded caller slots on placeholder metadata.
+  const hasSourceLocation = (typeof callFrame.url === 'string' && callFrame.url.length > 0)
+    || (typeof callFrame.lineNumber === 'number' && callFrame.lineNumber > 0)
+    || (typeof callFrame.columnNumber === 'number' && callFrame.columnNumber > 0);
+  return frame.functionName === '(anonymous)'
+    && frame.sourceFile === '(unknown)'
+    && !hasSourceLocation
+    ? null
+    : frame;
+}
+
+function addSampledStack(
+  totals: Map<string, MutableHeapSampleStack>,
+  callStack: HeapSampleStackFrame[],
+  sampledBytes: number,
+): void {
+  if (sampledBytes <= 0 || callStack.length === 0) return;
+
+  const frames = callStack.slice(-MAX_STACK_FRAMES);
+  const key = JSON.stringify(frames);
+  const existing = totals.get(key);
+  if (existing) {
+    existing.sampledBytes = Math.min(Number.MAX_SAFE_INTEGER, existing.sampledBytes + sampledBytes);
+    return;
+  }
+
+  const entry: MutableHeapSampleStack = { frames, key, sampledBytes };
+  if (totals.size < MAX_SUMMARY_STACKS) {
+    totals.set(key, entry);
+    return;
+  }
+
+  // The V8 profile is a call tree whose nodes already aggregate samples for
+  // each raw stack. Keep only its ten strongest sanitized paths so the extra
+  // diagnostic state stays strictly bounded while walking up to 50,000 nodes.
+  let smallest: MutableHeapSampleStack | undefined;
+  for (const candidate of totals.values()) {
+    if (!smallest || candidate.sampledBytes < smallest.sampledBytes) smallest = candidate;
+  }
+  if (smallest && entry.sampledBytes > smallest.sampledBytes) {
+    totals.delete(smallest.key);
+    totals.set(key, entry);
+  }
+}
+
+function fitSummaryToLogLimit(summary: HeapSampleSummary): HeapSampleSummary {
+  const stacks = summary.stacks.map((stack) => ({ ...stack, frames: [...stack.frames] }));
+  let json = JSON.stringify({ frames: summary.frames, stacks });
+
+  while (json.length > MAX_SUMMARY_JSON_LENGTH && stacks.length > 0) {
+    let index = stacks.length - 1;
+    while (index >= 0 && stacks[index]!.frames.length <= 1) index -= 1;
+
+    if (index >= 0) {
+      // Preserve the allocation frame and its nearest callers when a rare
+      // long source name would otherwise exceed the workflow's 16 KiB cap.
+      stacks[index] = { ...stacks[index]!, frames: stacks[index]!.frames.slice(1) };
+    } else {
+      stacks.pop();
+    }
+    json = JSON.stringify({ frames: summary.frames, stacks });
+  }
+
+  return { frames: summary.frames, stacks };
+}
+
+/** Reduce the inspector profile to bounded, non-sensitive frames and stacks. */
 export function summarizeHeapProfile(profileValue: unknown): HeapSampleSummary {
   const profile = asRecord(profileValue);
   const root = asRecord(profile?.head) as RawProfileNode | null;
-  if (!root) return { frames: [] };
+  if (!root) return { frames: [], stacks: [] };
 
   const totals = new Map<string, MutableHeapSampleFrame>();
-  const pending: Array<{ node: RawProfileNode; depth: number }> = [{ node: root, depth: 0 }];
+  const stackTotals = new Map<string, MutableHeapSampleStack>();
+  const callStack: HeapSampleStackFrame[] = [];
   let visited = 0;
 
-  while (pending.length > 0 && visited < MAX_PROFILE_NODES) {
-    const current = pending.pop();
-    if (!current) break;
+  const visit = (node: RawProfileNode, depth: number): void => {
+    if (visited >= MAX_PROFILE_NODES) return;
     visited += 1;
 
-    const callFrame = asRecord(current.node.callFrame);
-    const sampledBytes = safeSampledBytes(current.node.selfSize);
-    if (callFrame && sampledBytes > 0) {
-      const frame: HeapSampleFrame = {
-        functionName: safeFunctionName(callFrame.functionName),
-        sourceFile: safeSourceBasename(callFrame.url),
-        line: safeLineNumber(callFrame.lineNumber),
-        column: safeColumnNumber(callFrame.columnNumber),
-        sampledBytes,
-      };
+    const frame = safeCallFrame(node.callFrame);
+    if (frame) callStack.push(frame);
+
+    const sampledBytes = safeSampledBytes(node.selfSize);
+    if (frame && sampledBytes > 0) {
+      const frameWithBytes: HeapSampleFrame = { ...frame, sampledBytes };
       const key = JSON.stringify([frame.functionName, frame.sourceFile, frame.line, frame.column]);
       const existing = totals.get(key);
       totals.set(key, {
-        ...frame,
+        ...frameWithBytes,
         key,
         sampledBytes: Math.min(Number.MAX_SAFE_INTEGER, (existing?.sampledBytes ?? 0) + sampledBytes),
       });
     }
 
-    if (current.depth >= MAX_PROFILE_DEPTH || !Array.isArray(current.node.children)) continue;
-    for (const child of current.node.children) {
-      const childNode = asRecord(child) as RawProfileNode | null;
-      if (childNode) pending.push({ node: childNode, depth: current.depth + 1 });
-    }
-  }
+    addSampledStack(stackTotals, callStack, sampledBytes);
 
-  return {
+    if (depth < MAX_PROFILE_DEPTH && Array.isArray(node.children)) {
+      for (const child of node.children) {
+        if (visited >= MAX_PROFILE_NODES) break;
+        const childNode = asRecord(child) as RawProfileNode | null;
+        if (childNode) visit(childNode, depth + 1);
+      }
+    }
+
+    if (frame) callStack.pop();
+  };
+
+  visit(root, 0);
+
+  const summary: HeapSampleSummary = {
     frames: [...totals.values()]
       .sort((left, right) => right.sampledBytes - left.sampledBytes || left.key.localeCompare(right.key))
       .slice(0, MAX_SUMMARY_FRAMES)
@@ -135,7 +233,13 @@ export function summarizeHeapProfile(profileValue: unknown): HeapSampleSummary {
         column,
         sampledBytes,
       })),
+    stacks: [...stackTotals.values()]
+      .sort((left, right) => right.sampledBytes - left.sampledBytes || left.key.localeCompare(right.key))
+      .slice(0, MAX_SUMMARY_STACKS)
+      .map(({ frames, sampledBytes }) => ({ frames, sampledBytes })),
   };
+
+  return fitSummaryToLogLimit(summary);
 }
 
 /** Start one in-process inspector sampling window. It opens no inspector port. */
@@ -200,7 +304,7 @@ export function startHeapAllocationSampler(): void {
     clearInterval(monitor);
     void collectHeapSample().then(
       (summary) => logSafeSummary(summary, runId),
-      () => logSafeSummary({ frames: [] }, runId),
+      () => logSafeSummary({ frames: [], stacks: [] }, runId),
     );
   }, MONITOR_INTERVAL_MS);
   monitor.unref();
