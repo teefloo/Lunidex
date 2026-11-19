@@ -2,7 +2,8 @@ import Link from 'next/link';
 import HomeFaqSection from '@/components/layout/HomeFaqSection';
 import { isNeonConfiguredServer } from '@/lib/neon/server';
 import { getServerAuthUser } from '@/lib/neon/auth';
-import { getServerLanguage, getServerT } from '@/lib/server-i18n';
+import { getServerLanguage, getServerT, getServerTForLanguage } from '@/lib/server-i18n';
+import type { SupportedLanguage } from '@/lib/languages';
 import { localeHref } from '@/lib/seo';
 import { GITHUB_REPO_URL } from '@/lib/site';
 import { HOME_CATALOG_PREVIEW_CARDS } from '@/lib/home-catalog-preview';
@@ -14,14 +15,21 @@ import HomeHeader from './HomeHeader';
 import HomePokedexPreview from './HomePokedexPreview';
 import HomeTeamPreview from './HomeTeamPreview';
 
-export async function HomeArchiveExperience() {
-  const [t, language, serverUser] = await Promise.all([
-    getServerT(),
-    getServerLanguage(),
-    getServerAuthUser(),
-  ]);
-  const initialSignedIn = Boolean(serverUser);
-  const collectionServiceAvailable = Boolean(
+interface HomeArchiveExperienceProps {
+  language?: SupportedLanguage;
+  initialSignedIn?: boolean;
+  serviceAvailable?: boolean;
+}
+
+export async function HomeArchiveExperience({
+  language: requestedLanguage,
+  initialSignedIn: requestedInitialSignedIn,
+  serviceAvailable: requestedServiceAvailable,
+}: HomeArchiveExperienceProps = {}) {
+  const language = requestedLanguage ?? await getServerLanguage();
+  const t = requestedLanguage ? getServerTForLanguage(language) : await getServerT();
+  const initialSignedIn = requestedInitialSignedIn ?? Boolean(await getServerAuthUser());
+  const collectionServiceAvailable = requestedServiceAvailable ?? Boolean(
     process.env.NEXT_PUBLIC_NEON_AUTH_URL
       && process.env.NEON_AUTH_BASE_URL
       && process.env.NEON_AUTH_JWKS_URL
@@ -30,7 +38,7 @@ export async function HomeArchiveExperience() {
   );
   return (
     <div className="lunidex-home">
-      <HomeHeader initialSignedIn={initialSignedIn} serviceAvailable={collectionServiceAvailable} />
+      <HomeHeader language={language} initialSignedIn={initialSignedIn} serviceAvailable={collectionServiceAvailable} />
       <main id="home-main" tabIndex={-1} className="home-landing-main">
         <section id="threshold" className="home-landing-hero" aria-labelledby="home-hero-title">
           <div className="home-landing-hero-copy">

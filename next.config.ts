@@ -298,7 +298,7 @@ const nextConfig: NextConfig = {
         {
           source: '/:locale(en|fr|es|de|it|ja|ko|zh)/:path*',
           destination: '/:path*',
-          missing: [{ type: 'header', key: 'x-primedex-static-pokedex-route' }],
+          missing: [{ type: 'header', key: 'x-primedex-static-localized-route' }],
         },
       ],
       afterFiles: [

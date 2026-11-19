@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { getServerLanguage, getServerT } from '@/lib/server-i18n';
+import { getServerTForLanguage } from '@/lib/server-i18n';
+import type { SupportedLanguage } from '@/lib/languages';
 import { localeHref } from '@/lib/seo';
 import LunidexLogo from '@/components/ui/LunidexLogo';
 import { HomeCollectionEntry } from './HomeCollectionEntry';
@@ -8,12 +9,13 @@ import { HomeHeaderMoreMenu } from './HomeHeaderMoreMenu';
 import { HeaderActions } from '@/components/layout/HeaderActions';
 
 interface HomeHeaderProps {
+  language: SupportedLanguage;
   initialSignedIn?: boolean;
   serviceAvailable?: boolean;
 }
 
-export default async function HomeHeader({ initialSignedIn = false, serviceAvailable = true }: HomeHeaderProps) {
-  const [t, language] = await Promise.all([getServerT(), getServerLanguage()]);
+export default function HomeHeader({ language, initialSignedIn = false, serviceAvailable = true }: HomeHeaderProps) {
+  const t = getServerTForLanguage(language);
   const links = [
     { href: '/tcg', label: t('tcg.nav_catalog', { defaultValue: 'TCG catalog' }) },
     { href: '/pokedex', label: t('nav.pokedex') },
