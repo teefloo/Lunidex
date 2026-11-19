@@ -51,6 +51,78 @@ describe('public localized proxy responses', () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
+  it.each([
+    ['/en/pokemon', 'bulbasaur', 'https://pokeapi.co/api/v2/pokemon/bulbasaur'],
+    ['/en/moves', 'tackle', 'https://pokeapi.co/api/v2/move/tackle'],
+    ['/en/abilities', 'overgrow', 'https://pokeapi.co/api/v2/ability/overgrow'],
+    ['/en/items', 'potion', 'https://pokeapi.co/api/v2/item/potion'],
+    ['/en/tcg/cards', 'base1-4', 'https://api.tcgdex.net/v2/en/cards/base1-4'],
+    ['/en/tcg/sets', 'base1', 'https://api.tcgdex.net/v2/en/sets/base1'],
+  ])('continues probing normal resource IDs at %s', async (path, id, upstreamUrl) => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }));
+
+    const response = await proxy(new NextRequest(`https://lunidex.test${path}/${id}`, {
+      headers: { accept: 'text/html' },
+    }));
+
+    expect(response.status).toBe(200);
+    expect(fetchMock.mock.calls.map(([url]) => url)).toEqual([upstreamUrl]);
+  });
+
+  it.each([
+    '/en/pokemon',
+    '/en/moves',
+    '/en/abilities',
+    '/en/items',
+    '/en/tcg/cards',
+    '/en/tcg/sets',
+  ])('rejects resource IDs longer than 128 decoded characters at %s before probing', async (path) => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch');
+    const oversizedId = 'x'.repeat(129);
+
+    const response = await proxy(new NextRequest(`https://lunidex.test${path}/${oversizedId}`, {
+      headers: { accept: 'text/html' },
+    }));
+
+    expect(response.status).toBe(404);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('accepts a 128-character percent-encoded ID and rejects a 129-character one', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }));
+    const encodedBoundaryId = encodeURIComponent('あ'.repeat(128));
+    const encodedOversizedId = encodeURIComponent('あ'.repeat(129));
+
+    const acceptedResponse = await proxy(new NextRequest(
+      `https://lunidex.test/en/tcg/cards/${encodedBoundaryId}`,
+      { headers: { accept: 'text/html' } },
+    ));
+    const rejectedResponse = await proxy(new NextRequest(
+      `https://lunidex.test/en/tcg/cards/${encodedOversizedId}`,
+      { headers: { accept: 'text/html' } },
+    ));
+
+    expect(acceptedResponse.status).toBe(200);
+    expect(rejectedResponse.status).toBe(404);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls[0]?.[0]).toBe(
+      `https://api.tcgdex.net/v2/en/cards/${encodedBoundaryId}`,
+    );
+  });
+
+  it('rejects oversized Flight resource identifiers before page rendering', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch');
+    const oversizedId = 'x'.repeat(129);
+
+    const response = await proxy(new NextRequest(
+      `https://lunidex.test/en/pokemon/${oversizedId}`,
+      { headers: { accept: 'text/x-component', rsc: '1' } },
+    ));
+
+    expect(response.status).toBe(404);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it('stops ClaudeBot card detail requests before TCGdex probes and page rendering', async () => {
     const fetchMock = vi.spyOn(globalThis, 'fetch');
 

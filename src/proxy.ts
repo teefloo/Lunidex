@@ -12,6 +12,10 @@ const RESOURCE_PROBE_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 // Negative and failed checks stay short so new data and upstream recovery show quickly.
 const RESOURCE_PROBE_FAILURE_TTL_MS = 60 * 60 * 1000;
 const MAX_RESOURCE_PROBE_CACHE_ENTRIES = 8192;
+const MAX_RESOURCE_IDENTIFIER_LENGTH = 128;
+// Percent-encoded UTF-8 can use up to nine ASCII characters per UTF-16 code
+// unit. Bound the raw segment too so it is rejected before decode allocation.
+const MAX_ENCODED_RESOURCE_IDENTIFIER_LENGTH = MAX_RESOURCE_IDENTIFIER_LENGTH * 9;
 // Empty Japanese/Korean set payloads contain only metadata and are currently
 // smaller than 400 bytes. Confirm those compact responses with a GET only when
 // the English fallback is also absent, keeping valid fallback albums to their
@@ -142,23 +146,46 @@ function isKnownScannerPath(pathname: string): boolean {
   );
 }
 
-function hasObviouslyInvalidResourceIdentifier(pathname: string, locale: string): boolean {
-  const segments = pathname.split('/').filter(Boolean);
-  if (segments[0] !== locale) return false;
+interface DecodedResourceIdentifier {
+  identifier: string | null;
+  oversized: boolean;
+}
 
-  const identifier = segments.length === 3 && ['pokemon', 'moves', 'abilities', 'items'].includes(segments[1] ?? '')
+function getResourceIdentifierFromPathname(pathname: string, locale: string): string | undefined {
+  const segments = pathname.split('/').filter(Boolean);
+  if (segments[0] !== locale) return undefined;
+
+  return segments.length === 3 && ['pokemon', 'moves', 'abilities', 'items'].includes(segments[1] ?? '')
     ? segments[2]
     : segments.length === 4
       && segments[1] === 'tcg'
       && ['cards', 'sets'].includes(segments[2] ?? '')
       ? segments[3]
       : undefined;
+}
 
+function hasObviouslyInvalidResourceIdentifier(pathname: string, locale: string): boolean {
+  const identifier = getResourceIdentifierFromPathname(pathname, locale);
   if (!identifier) return false;
+  const decoded = decodeResourceIdentifier(identifier);
+  return decoded.identifier === null || OBVIOUSLY_INVALID_RESOURCE_IDENTIFIER.test(decoded.identifier);
+}
+
+function hasOversizedResourceIdentifier(pathname: string, locale: string): boolean {
+  const identifier = getResourceIdentifierFromPathname(pathname, locale);
+  return identifier ? decodeResourceIdentifier(identifier).oversized : false;
+}
+
+function decodeResourceIdentifier(rawIdentifier: string): DecodedResourceIdentifier {
+  if (rawIdentifier.length > MAX_ENCODED_RESOURCE_IDENTIFIER_LENGTH) {
+    return { identifier: null, oversized: true };
+  }
   try {
-    return OBVIOUSLY_INVALID_RESOURCE_IDENTIFIER.test(decodeURIComponent(identifier));
+    const identifier = decodeURIComponent(rawIdentifier);
+    if (identifier.length > MAX_RESOURCE_IDENTIFIER_LENGTH) return { identifier: null, oversized: true };
+    return { identifier: identifier || null, oversized: false };
   } catch {
-    return true;
+    return { identifier: null, oversized: false };
   }
 }
 
@@ -198,12 +225,8 @@ function getResourceProbe(pathname: string, locale: string): ResourceProbe | nul
   const rawIdentifier = segments[2];
   if (!rawIdentifier) return null;
 
-  let identifier: string;
-  try {
-    identifier = decodeURIComponent(rawIdentifier);
-  } catch {
-    return null;
-  }
+  const { identifier } = decodeResourceIdentifier(rawIdentifier);
+  if (identifier === null) return null;
 
   const encodedIdentifier = encodeURIComponent(identifier);
   switch (resource) {
@@ -229,13 +252,8 @@ function getTcgResourceProbe(
   if (segments[0] !== locale || segments[1] !== 'tcg') return null;
   if (segments.length !== 4) return null;
 
-  let identifier: string;
-  try {
-    identifier = decodeURIComponent(segments[3] ?? '');
-  } catch {
-    return null;
-  }
-  if (!identifier) return null;
+  const { identifier } = decodeResourceIdentifier(segments[3] ?? '');
+  if (identifier === null) return null;
 
   const encodedIdentifier = encodeURIComponent(identifier);
   // TCG data language is independent from the interface locale. The detail
@@ -510,6 +528,12 @@ export async function proxy(request: NextRequest) {
         status: 403,
         headers: { 'Cache-Control': 'private, no-store' },
       });
+    }
+
+    // Bound dynamic resource paths before either document probes or Flight
+    // rendering can build cache keys or pass a large identifier downstream.
+    if (hasOversizedResourceIdentifier(pathname, urlLocale)) {
+      return hardNotFoundResponse(request, urlLocale);
     }
 
     // There is no standalone /pokemon index; preserve the legacy entry point
