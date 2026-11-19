@@ -54,6 +54,7 @@ import {
   sealedEuroPlaceholder,
   type SealedMoneyField,
 } from '@/lib/tcg-sealed-input';
+import { getSealedProductCardmarketUrl } from '@/lib/tcg-sealed-marketplace';
 import { formatSealedExchangeSummary } from '@/lib/tcg-sealed-display';
 import {
   getSealedExchangeProducts,
@@ -184,6 +185,39 @@ function ProductThumb({ product, size = 'md' }: { product: SealedProduct; size?:
     return <div className={`flex shrink-0 items-center justify-center rounded-sm border border-border/60 bg-muted/30 text-primary/50 ${size === 'lg' ? 'h-36 w-28' : size === 'sm' ? 'h-[4.25rem] w-[3.25rem]' : 'h-[6.25rem] w-[4.75rem]'}`} aria-label={t('tcg.sealed.no_price')}><Package className="h-6 w-6" aria-hidden="true" /></div>;
   }
   return <Image src={productImagePath(product)} alt={t('tcg.sealed.image_alt', { name: product.name })} width={dimensions.width} height={dimensions.height} unoptimized className={`shrink-0 rounded-sm object-cover ${size === 'lg' ? 'h-36 w-28' : size === 'sm' ? 'h-[4.25rem] w-[3.25rem]' : 'h-[6.25rem] w-[4.75rem]'}`} onError={() => setFailed(true)} />;
+}
+
+function SealedCollectionProductIdentity({ product, language, t }: {
+  product: SealedProduct;
+  language: SealedProductLanguage;
+  t: (key: string, options?: Record<string, unknown>) => string;
+}) {
+  const href = getSealedProductCardmarketUrl(product);
+  const name = product.alias ?? product.name;
+  const content = <>
+    <ProductThumb product={product} size="md" />
+    <span className="min-w-0 flex-1">
+      <span className="flex min-w-0 items-center gap-2">
+        <span className="truncate font-black">{name}</span>
+        {href ? <ExternalLink className="h-3.5 w-3.5 shrink-0 text-foreground/45" aria-hidden="true" /> : null}
+      </span>
+      <span className="mt-1 block truncate text-xs text-foreground/50">{product.categoryName} · {language.toUpperCase()}</span>
+    </span>
+  </>;
+
+  if (!href) return <div className="flex min-w-0 items-center gap-4">{content}</div>;
+
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`${t('tcg.view_on_cardmarket')}: ${name}`}
+      className="flex min-w-0 items-center gap-4 rounded-sm text-left hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+    >
+      {content}
+    </a>
+  );
 }
 
 function StatCard({ icon: Icon, label, value, tone = 'default', hint }: { icon: typeof Package; label: string; value: string; tone?: 'default' | 'positive' | 'negative'; hint?: string }) {
@@ -827,7 +861,39 @@ function CollectionView({ data, language, t, localizedHref, onAdd }: { data: Sea
       <label className="space-y-1.5 text-xs font-bold text-foreground/65"><span>{t('tcg.sealed.sort_by')}</span><select className="glass-control h-11 w-full px-3 text-sm sm:w-44" value={sort} onChange={(event) => setSort(event.target.value as typeof sort)}><option value="cost">{t('tcg.sealed.cost')}</option><option value="value">{t('tcg.sealed.value')}</option><option value="latent">{t('tcg.sealed.latent')}</option><option value="quantity">{t('tcg.sealed.quantity')}</option></select></label>
       <label className="flex min-h-11 items-center gap-2 text-xs font-bold text-foreground/65"><input type="checkbox" checked={includeSold} onChange={(event) => setIncludeSold(event.target.checked)} />{t('tcg.sealed.include_sold')}</label>
     </div>
-    {positions.length ? <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{positions.map((position) => <Card key={`${position.cardmarketProductId}-${position.language}`} className={`p-0 ${position.quantity <= 0 ? 'opacity-60' : ''}`}><CardContent className="flex gap-4 p-4"><ProductThumb product={position.product} size="md" /><div className="min-w-0 flex-1"><p className="truncate font-black">{position.product.alias ?? position.product.name}</p><p className="mt-1 text-xs text-foreground/50">{position.product.categoryName} · {position.language.toUpperCase()}</p><div className="mt-4 grid grid-cols-2 gap-3 text-sm"><div><p className="text-[10px] font-black uppercase text-foreground/40">{t('tcg.sealed.stock')}</p><p className="font-black">{position.quantity}</p></div><div><p className="text-[10px] font-black uppercase text-foreground/40">{t('tcg.sealed.value')}</p><p className="font-black">{money(position.valueCents, language)}</p><PriceStatus valuation={position.valuation} t={t} /></div><div><p className="text-[10px] font-black uppercase text-foreground/40">{t('tcg.sealed.cost')}</p><p>{money(position.costCents, language)}</p></div><div><p className="text-[10px] font-black uppercase text-foreground/40">{t('tcg.sealed.latent')}</p><p className={position.latentCents !== null && position.latentCents >= 0 ? 'text-emerald-400' : 'text-rose-400'}>{money(position.latentCents, language)}</p></div></div><Button type="button" variant="outline" className="mt-4 w-full" onClick={() => onAdd(position.product)}><Plus aria-hidden="true" />{t('tcg.sealed.buy')}</Button></div></CardContent></Card>)}</div> : data.positions.length ? <Card className="border-dashed"><CardContent className="flex min-h-48 flex-col items-center justify-center p-8 text-center"><Search className="h-8 w-8 text-primary/60" aria-hidden="true" /><p className="mt-4 text-sm font-bold text-foreground/65">{t('tcg.sealed.no_matches')}</p><p className="mt-2 text-sm text-foreground/50">{t('tcg.sealed.clear_filters_hint')}</p></CardContent></Card> : <EmptyPortfolio t={t} localizedHref={localizedHref} />}
+    {positions.length ? (
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        {positions.map((position) => (
+          <Card key={`${position.cardmarketProductId}-${position.language}`} className={`p-0 ${position.quantity <= 0 ? 'opacity-60' : ''}`}>
+            <CardContent className="flex flex-col gap-4 p-4">
+              <SealedCollectionProductIdentity product={position.product} language={position.language} t={t} />
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                  <p className="text-[10px] font-black uppercase text-foreground/40">{t('tcg.sealed.stock')}</p>
+                  <p className="font-black">{position.quantity}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase text-foreground/40">{t('tcg.sealed.value')}</p>
+                  <p className="font-black">{money(position.valueCents, language)}</p>
+                  <PriceStatus valuation={position.valuation} t={t} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase text-foreground/40">{t('tcg.sealed.cost')}</p>
+                  <p>{money(position.costCents, language)}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase text-foreground/40">{t('tcg.sealed.latent')}</p>
+                  <p className={position.latentCents !== null && position.latentCents >= 0 ? 'text-emerald-400' : 'text-rose-400'}>{money(position.latentCents, language)}</p>
+                </div>
+              </div>
+              <Button type="button" variant="outline" className="w-full" onClick={() => onAdd(position.product)}>
+                <Plus aria-hidden="true" />{t('tcg.sealed.buy')}
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    ) : data.positions.length ? <Card className="border-dashed"><CardContent className="flex min-h-48 flex-col items-center justify-center p-8 text-center"><Search className="h-8 w-8 text-primary/60" aria-hidden="true" /><p className="mt-4 text-sm font-bold text-foreground/65">{t('tcg.sealed.no_matches')}</p><p className="mt-2 text-sm text-foreground/50">{t('tcg.sealed.clear_filters_hint')}</p></CardContent></Card> : <EmptyPortfolio t={t} localizedHref={localizedHref} />}
   </div>;
 }
 
