@@ -17,6 +17,7 @@ if [[ ! -f .env || ! -f app.env || ! -f /opt/lunidex/.env || ! -f /opt/lunidex/c
   echo "Production env files and the shared Caddy stack must exist before deployment." >&2
   exit 78
 fi
+source /opt/lunidex-production/scripts/deployment/production-memory-gate.sh
 
 required_runtime_vars=(
   NEON_DATABASE_URL
@@ -41,10 +42,24 @@ fi
 previous_tag="$(sed -n 's/^APP_IMAGE_TAG=//p' .env | tail -n 1)"
 if [[ "$previous_tag" == "0000000000000000000000000000000000000000" ]]; then previous_tag=""; fi
 
-mem_available_kb="$(awk '/^MemAvailable:/ {print $2}' /proc/meminfo)"
-if [[ ! "$mem_available_kb" =~ ^[0-9]+$ ]] || ((mem_available_kb < 1572864)); then
-  echo "Not enough available RAM for the bounded production preflight (need at least 1.5 GiB free)." >&2
-  exit 75
+was_running="$(docker inspect --format '{{.State.Running}}' lunidex-production-app 2>/dev/null || true)"
+was_running="${was_running:-false}"
+memory_gate_decision="$(production_memory_gate_decision "$mode" "$was_running")" || {
+  echo "Could not determine the production RAM guard for this deployment state." >&2
+  exit 64
+}
+if [[ "$memory_gate_decision" == "enforce" ]]; then
+  mem_available_kb="$(awk '/^MemAvailable:/ {print $2}' /proc/meminfo)"
+  if [[ ! "$mem_available_kb" =~ ^[0-9]+$ ]] || ((mem_available_kb < 1572864)); then
+    if [[ "$mode" == "preflight" ]]; then
+      echo "Not enough available RAM for the bounded production preflight (need at least 1.5 GiB free)." >&2
+    else
+      echo "Not enough available RAM to start production without an existing app instance (need at least 1.5 GiB free)." >&2
+    fi
+    exit 75
+  fi
+else
+  echo "Skipping the 1.5 GiB RAM pre-check because the running production app will be replaced in place."
 fi
 disk_available_kb="$(df -Pk / | awk 'NR == 2 {print $4}')"
 if [[ ! "$disk_available_kb" =~ ^[0-9]+$ ]] || ((disk_available_kb < 2097152)); then
@@ -109,8 +124,6 @@ rollback() {
   exit "$exit_code"
 }
 
-was_running="$(docker inspect --format '{{.State.Running}}' lunidex-production-app 2>/dev/null || true)"
-was_running="${was_running:-false}"
 if [[ "$mode" == "preflight" && "$was_running" == "true" ]]; then
   echo "Preflight mode refuses to replace an already running production app." >&2
   exit 78
