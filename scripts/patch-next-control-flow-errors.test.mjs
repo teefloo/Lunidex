@@ -89,3 +89,14 @@ test('fails closed on upstream content drift without partially patching other fi
   assert.equal(await readFile(path.join(root, nextTarget), 'utf8'), originalReact);
   assert.equal(await readFile(path.join(root, dynamicRenderingTarget), 'utf8'), originalDynamic);
 });
+
+test('Docker dependency stage includes the postinstall patch helper before npm ci', async () => {
+  const dockerfile = await readFile(new URL('../Dockerfile', import.meta.url), 'utf8');
+  const dependencyStage = dockerfile.match(/^FROM base AS deps([\s\S]*?)(?=^FROM base AS builder)/m)?.[1];
+
+  assert.ok(dependencyStage, 'Dockerfile must include a deps stage before the builder stage');
+  const helperCopy = dependencyStage.indexOf('COPY scripts/patch-next-control-flow-errors.mjs ./scripts/');
+  const npmInstall = dependencyStage.indexOf('RUN npm ci');
+
+  assert.ok(helperCopy >= 0 && helperCopy < npmInstall, 'the root postinstall helper must be copied before npm ci');
+});

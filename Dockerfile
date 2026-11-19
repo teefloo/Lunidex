@@ -9,6 +9,7 @@ FROM base AS deps
 
 COPY package.json package-lock.json ./
 COPY packages/core/package.json packages/core/package.json
+COPY scripts/patch-next-control-flow-errors.mjs ./scripts/
 RUN npm ci
 
 FROM base AS builder
