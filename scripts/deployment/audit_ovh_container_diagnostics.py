@@ -52,16 +52,30 @@ STATIC_METADATA_PATHS = {"/robots.txt", "/manifest.webmanifest", "/sitemap.xml",
 LOCALIZED_ROUTE_FAMILIES = {
     "pokedex": "localized_pokedex",
     "pokemon": "localized_pokemon",
-    "tcg": "localized_tcg",
     "team": "localized_team",
     "quiz": "localized_quiz",
+}
+LOCALIZED_TCG_ROUTE_FAMILIES = {
+    "cards": "localized_tcg_cards",
+    "sets": "localized_tcg_sets",
+    "collection": "localized_tcg_collection",
+    "sealed": "localized_tcg_sealed",
+    "illustrators": "localized_tcg_illustrators",
 }
 ROUTE_DIAGNOSTIC_PREFIX = "LUNIDEX_ROUTE_FAMILY_V1"
 ROUTE_DIAGNOSTIC_FAMILIES = {
     "localized_home",
     "localized_pokedex",
     "localized_pokemon",
+    # Retain the broad family for logs from the previous diagnostic version.
     "localized_tcg",
+    "localized_tcg_home",
+    "localized_tcg_cards",
+    "localized_tcg_sets",
+    "localized_tcg_collection",
+    "localized_tcg_sealed",
+    "localized_tcg_illustrators",
+    "localized_tcg_other",
     "localized_team",
     "localized_quiz",
     "localized_other",
@@ -199,6 +213,10 @@ def route_family(uri: object) -> str:
         return "unclassified"
     if len(segments) == 1:
         return "localized_home"
+    if segments[1] == "tcg":
+        if len(segments) == 2:
+            return "localized_tcg_home"
+        return LOCALIZED_TCG_ROUTE_FAMILIES.get(segments[2], "localized_tcg_other")
     return LOCALIZED_ROUTE_FAMILIES.get(segments[1], "localized_other")
 
 

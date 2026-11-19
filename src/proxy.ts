@@ -51,7 +51,13 @@ type RouteDiagnosticFamily =
   | 'localized_home'
   | 'localized_pokedex'
   | 'localized_pokemon'
-  | 'localized_tcg'
+  | 'localized_tcg_home'
+  | 'localized_tcg_cards'
+  | 'localized_tcg_sets'
+  | 'localized_tcg_collection'
+  | 'localized_tcg_sealed'
+  | 'localized_tcg_illustrators'
+  | 'localized_tcg_other'
   | 'localized_team'
   | 'localized_quiz'
   | 'localized_other'
@@ -178,10 +184,22 @@ function getRouteDiagnosticFamily(pathname: string): RouteDiagnosticFamily {
   if (!isSupportedLanguage(segments[0] ?? '')) return 'unlocalized_redirect';
   if (segments.length === 1) return 'localized_home';
 
+  if (segments[1] === 'tcg') {
+    if (segments.length === 2) return 'localized_tcg_home';
+
+    switch (segments[2]) {
+      case 'cards': return 'localized_tcg_cards';
+      case 'sets': return 'localized_tcg_sets';
+      case 'collection': return 'localized_tcg_collection';
+      case 'sealed': return 'localized_tcg_sealed';
+      case 'illustrators': return 'localized_tcg_illustrators';
+      default: return 'localized_tcg_other';
+    }
+  }
+
   switch (segments[1]) {
     case 'pokedex': return 'localized_pokedex';
     case 'pokemon': return 'localized_pokemon';
-    case 'tcg': return 'localized_tcg';
     case 'team': return 'localized_team';
     case 'quiz': return 'localized_quiz';
     default: return 'localized_other';

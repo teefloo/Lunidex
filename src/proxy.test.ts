@@ -110,9 +110,40 @@ describe('public localized proxy responses', () => {
 
     expect(response.status).toBe(200);
     expect(infoMock).toHaveBeenCalledOnce();
-    expect(infoMock).toHaveBeenCalledWith('LUNIDEX_ROUTE_FAMILY_V1 run=1234-5 family=localized_tcg method=GET');
+    expect(infoMock).toHaveBeenCalledWith('LUNIDEX_ROUTE_FAMILY_V1 run=1234-5 family=localized_tcg_cards method=GET');
     const loggedValues = JSON.stringify(infoMock.mock.calls);
     for (const sensitiveValue of ['private-card-id', 'private-query', 'private-header-value']) {
+      expect(loggedValues).not.toContain(sensitiveValue);
+    }
+  });
+
+  it.each([
+    ['/en/tcg', 'localized_tcg_home'],
+    ['/en/tcg/sets/private-set-id?token=private-query', 'localized_tcg_sets'],
+    ['/en/tcg/collection/fr/private-set-id?token=private-query', 'localized_tcg_collection'],
+    ['/en/tcg/sealed/market/private-product-id?token=private-query', 'localized_tcg_sealed'],
+    ['/en/tcg/illustrators/private-artist?token=private-query', 'localized_tcg_illustrators'],
+    ['/en/tcg/pull-rates/private-study?token=private-query', 'localized_tcg_other'],
+  ])('records only the fixed TCG route family for %s', async (path, family) => {
+    vi.stubEnv('NODE_ENV', 'production');
+    vi.stubEnv('LUNIDEX_HEAP_SAMPLER_DIAGNOSTIC', 'enabled');
+    vi.stubEnv('LUNIDEX_HEAP_SAMPLER_EXPIRES_AT', '2000');
+    vi.stubEnv('LUNIDEX_HEAP_SAMPLER_RUN_ID', '1234-5');
+    vi.spyOn(Date, 'now').mockReturnValue(1_000_000);
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }));
+    const infoMock = vi.spyOn(console, 'info').mockImplementation(() => {});
+
+    const response = await proxy(new NextRequest(`https://lunidex.test${path}`, {
+      headers: { accept: 'text/html' },
+    }));
+
+    expect(response.status).toBe(200);
+    expect(infoMock).toHaveBeenCalledOnce();
+    expect(infoMock).toHaveBeenCalledWith(
+      `LUNIDEX_ROUTE_FAMILY_V1 run=1234-5 family=${family} method=GET`,
+    );
+    const loggedValues = JSON.stringify(infoMock.mock.calls);
+    for (const sensitiveValue of ['private-set-id', 'private-product-id', 'private-artist', 'private-study', 'private-query']) {
       expect(loggedValues).not.toContain(sensitiveValue);
     }
   });
