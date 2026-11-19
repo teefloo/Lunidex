@@ -30,9 +30,33 @@ const ANNIVERSARY_30_UNSUPPORTED_LOCALES = new Set(['de', 'es', 'it', 'ja', 'ko'
 const AUTOMATED_CLIENT_PATTERN = /(?:bot|crawler|spider|lighthouse|headless|externalagent|lightpanda)/i;
 const CLAUDE_BOT_USER_AGENT_PATTERN = /(?:^|[^a-z0-9])claudebot(?:[^a-z0-9]|$)/i;
 const OBVIOUSLY_INVALID_RESOURCE_IDENTIFIER = /^(?:null|undefined)$/i;
-// These paths are common WordPress probes but are not part of Lunidex. Return
-// a cacheable edge 404 before Next renders the global not-found route.
-const KNOWN_SCANNER_PATH_PREFIXES = ['/wp-admin', '/wp-login.php', '/xmlrpc.php'];
+// These paths are common secret/configuration probes and are not part of
+// Lunidex. Return a cacheable 404 before Next renders the global not-found route.
+const KNOWN_SCANNER_PATH_PREFIXES = [
+  '/wp-admin',
+  '/wp-login.php',
+  '/xmlrpc.php',
+  '/.config',
+  '/.claude',
+  '/.dockercfg',
+  '/config',
+];
+const HEAP_DIAGNOSTIC_ENABLED_ENV = 'LUNIDEX_HEAP_SAMPLER_DIAGNOSTIC';
+const HEAP_DIAGNOSTIC_EXPIRES_ENV = 'LUNIDEX_HEAP_SAMPLER_EXPIRES_AT';
+const HEAP_DIAGNOSTIC_RUN_ID_ENV = 'LUNIDEX_HEAP_SAMPLER_RUN_ID';
+const ROUTE_DIAGNOSTIC_PREFIX = 'LUNIDEX_ROUTE_FAMILY_V1';
+const ROUTE_DIAGNOSTIC_METHODS = ['GET', 'HEAD', 'POST', 'OTHER'] as const;
+type RouteDiagnosticMethod = (typeof ROUTE_DIAGNOSTIC_METHODS)[number];
+type RouteDiagnosticFamily =
+  | 'localized_home'
+  | 'localized_pokedex'
+  | 'localized_pokemon'
+  | 'localized_tcg'
+  | 'localized_team'
+  | 'localized_quiz'
+  | 'localized_other'
+  | 'scanner_probe'
+  | 'unlocalized_redirect';
 const PUBLIC_SINGLE_SEGMENT_ROUTES = new Set([
   'pokedex',
   'moves',
@@ -141,9 +165,58 @@ function isAutomatedPrefetchRequest(request: NextRequest): boolean {
 
 function isKnownScannerPath(pathname: string): boolean {
   const unlocalizedPath = pathname.replace(/^\/(?:en|fr|es|de|it|ja|ko|zh)(?=\/)/, '');
-  return KNOWN_SCANNER_PATH_PREFIXES.some(
+  const isEnvProbe = /^\/\.env(?:$|[./-])/.test(unlocalizedPath);
+  return isEnvProbe || KNOWN_SCANNER_PATH_PREFIXES.some(
     (prefix) => unlocalizedPath === prefix || unlocalizedPath.startsWith(`${prefix}/`),
   );
+}
+
+function getRouteDiagnosticFamily(pathname: string): RouteDiagnosticFamily {
+  if (isKnownScannerPath(pathname)) return 'scanner_probe';
+
+  const segments = pathname.split('/').filter(Boolean);
+  if (!isSupportedLanguage(segments[0] ?? '')) return 'unlocalized_redirect';
+  if (segments.length === 1) return 'localized_home';
+
+  switch (segments[1]) {
+    case 'pokedex': return 'localized_pokedex';
+    case 'pokemon': return 'localized_pokemon';
+    case 'tcg': return 'localized_tcg';
+    case 'team': return 'localized_team';
+    case 'quiz': return 'localized_quiz';
+    default: return 'localized_other';
+  }
+}
+
+function getActiveHeapDiagnosticRunId(nowMs = Date.now()): string | null {
+  if (process.env.NODE_ENV !== 'production'
+    || process.env[HEAP_DIAGNOSTIC_ENABLED_ENV] !== 'enabled') {
+    return null;
+  }
+
+  const runId = process.env[HEAP_DIAGNOSTIC_RUN_ID_ENV] ?? '';
+  const expiresAt = Number(process.env[HEAP_DIAGNOSTIC_EXPIRES_ENV]);
+  if (!/^\d+-\d+$/.test(runId)
+    || !Number.isSafeInteger(expiresAt)
+    || expiresAt <= Math.floor(nowMs / 1_000)) {
+    return null;
+  }
+  return runId;
+}
+
+function getRouteDiagnosticMethod(method: string): RouteDiagnosticMethod {
+  return ROUTE_DIAGNOSTIC_METHODS.includes(method as RouteDiagnosticMethod)
+    ? method as RouteDiagnosticMethod
+    : 'OTHER';
+}
+
+function logRouteDiagnostic(request: NextRequest): void {
+  const runId = getActiveHeapDiagnosticRunId();
+  if (!runId) return;
+
+  const family = getRouteDiagnosticFamily(request.nextUrl.pathname);
+  const method = getRouteDiagnosticMethod(request.method);
+  console.info(`${ROUTE_DIAGNOSTIC_PREFIX} run=${runId} family=${family} method=${method}`);
 }
 
 interface DecodedResourceIdentifier {
@@ -481,6 +554,7 @@ function hardNotFoundResponse(request: NextRequest, locale: string) {
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  logRouteDiagnostic(request);
 
   if (request.nextUrl.hostname === 'www.lunidex.app') {
     const canonicalUrl = request.nextUrl.clone();
