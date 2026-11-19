@@ -1,9 +1,20 @@
 import { spawn } from 'node:child_process';
+import { readFile } from 'node:fs/promises';
 import { createServer } from 'node:net';
 
 const host = '127.0.0.1';
 const startupTimeoutMs = 60_000;
 const requestTimeoutMs = 2_000;
+
+const appPageRuntime = await readFile(
+  new URL('../../.next/standalone/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js', import.meta.url),
+  'utf8',
+);
+if (!appPageRuntime.includes('LUNIDEX_NEXT_CONTROL_FLOW_STACK_PATCH')
+  || !appPageRuntime.includes('void cacheSignalAbortReason.stack')) {
+  throw new Error('Standalone App Router runtime is missing the guarded Flight abort stack patch.');
+}
+console.log('Standalone App Router runtime patch verified.');
 
 const port = await findAvailablePort(host);
 const server = spawn('npm', ['run', 'start'], {
