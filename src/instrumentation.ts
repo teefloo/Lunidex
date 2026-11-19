@@ -4,6 +4,12 @@ import { capturePostHogServerException } from '@/lib/posthog-server';
 export async function register() {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
     await import('../sentry.server.config');
+
+    if (process.env.NODE_ENV === 'production'
+      && process.env.LUNIDEX_HEAP_SAMPLER_DIAGNOSTIC === 'enabled') {
+      const { startHeapAllocationSampler } = await import('./lib/server/heap-allocation-sampler');
+      startHeapAllocationSampler();
+    }
   }
 
   if (process.env.NEXT_RUNTIME === 'edge') {

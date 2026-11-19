@@ -12,13 +12,18 @@ on:
         required: true
         type: string
       deployment_mode:
-        description: Preflight tests the image privately and stops it; deploy keeps it private and running
+        description: Preflight tests the image without keeping it running; deploy starts the app behind Caddy
         required: true
         default: preflight
         type: choice
         options:
           - preflight
           - deploy
+      heap_sampling_diagnostic:
+        description: Collect one sanitized Node heap allocation summary during a short production deploy window
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -44,6 +49,8 @@ jobs:
       PRODUCTION_COMMIT: ${{ inputs.production_commit }}
       PRODUCTION_CONFIRMATION: ${{ inputs.confirmation }}
       DEPLOYMENT_MODE: ${{ inputs.deployment_mode }}
+      HEAP_SAMPLING_DIAGNOSTIC: ${{ inputs.heap_sampling_diagnostic }}
+      HEAP_SAMPLING_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
       NEXT_PUBLIC_NEON_AUTH_URL: ${{ vars.NEXT_PUBLIC_NEON_AUTH_URL }}
       NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN: ${{ vars.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN }}
       NEXT_PUBLIC_POSTHOG_HOST: ${{ vars.NEXT_PUBLIC_POSTHOG_HOST }}
@@ -76,6 +83,14 @@ jobs:
           [[ "$DEPLOYMENT_MODE" == 'preflight' || "$DEPLOYMENT_MODE" == 'deploy' ]] || {
             echo 'Unknown production deployment mode.' >&2
             exit 1
+          }
+          if [[ "$HEAP_SAMPLING_DIAGNOSTIC" == 'true' && "$DEPLOYMENT_MODE" != 'deploy' ]]; then
+            echo 'Heap sampling can only be enabled for the confirmed production deploy mode.' >&2
+            exit 78
+          fi
+          [[ "$HEAP_SAMPLING_RUN_ID" =~ ^[0-9]+-[0-9]+$ ]] || {
+            echo 'The production diagnostic run identifier is invalid.' >&2
+            exit 78
           }
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -249,6 +264,12 @@ jobs:
           append_env RESEND_API_KEY "$RESEND_API_KEY" no
           append_env CONTACT_TO_EMAIL "$CONTACT_TO_EMAIL" no
           append_env CONTACT_FROM_EMAIL "$CONTACT_FROM_EMAIL" no
+          if [[ "$HEAP_SAMPLING_DIAGNOSTIC" == 'true' ]]; then
+            diagnostic_expires_at=$(( $(date -u +%s) + 15 * 60 ))
+            append_env LUNIDEX_HEAP_SAMPLER_DIAGNOSTIC enabled yes
+            append_env LUNIDEX_HEAP_SAMPLER_EXPIRES_AT "$diagnostic_expires_at" yes
+            append_env LUNIDEX_HEAP_SAMPLER_RUN_ID "$HEAP_SAMPLING_RUN_ID" yes
+          fi
           chmod 0600 "$app_env"
 
       - name: Configure the separate production SSH connection
@@ -346,7 +367,7 @@ jobs:
           remote_command="set -Eeuo pipefail; umask 077; export DOCKER_CONFIG=\$(mktemp -d /tmp/lunidex-production-docker.XXXXXX); trap 'rm -rf \"\$DOCKER_CONFIG\"' EXIT; docker login ghcr.io --username teefloo --password-stdin; bash /opt/lunidex-production/scripts/deployment/deploy-production.sh $PRODUCTION_COMMIT $DEPLOYMENT_MODE"
           printf '%s' "$GITHUB_TOKEN" | ssh "${ssh_args[@]}" "$target" "$remote_command"
 
-      - name: Verify the private production deployment
+      - name: Verify the production deployment health
         if: success() && inputs.deployment_mode == 'deploy'
         shell: bash
         run: |
@@ -354,6 +375,34 @@ jobs:
           target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=10 -o ServerAliveInterval=5 -o ServerAliveCountMax=4)
           timeout 90s ssh "${ssh_args[@]}" "$target" 'bash /opt/lunidex-production/scripts/deployment/healthcheck-production.sh'
+
+      - name: Retrieve only the sanitized heap allocation summary
+        if: success() && inputs.deployment_mode == 'deploy' && inputs.heap_sampling_diagnostic
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
+          ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=10 -o ServerAliveInterval=5 -o ServerAliveCountMax=4)
+          [[ "$HEAP_SAMPLING_RUN_ID" =~ ^[0-9]+-[0-9]+$ ]]
+          expected_prefix="LUNIDEX_HEAP_SAMPLE_SUMMARY_${HEAP_SAMPLING_RUN_ID}="
+          remote_command="EXPECTED_SUMMARY_PREFIX='$expected_prefix' bash -s"
+          safe_summary_line="$(timeout 620s ssh "${ssh_args[@]}" "$target" "$remote_command" <<'REMOTE'
+          set -Eeuo pipefail
+          [[ "${EXPECTED_SUMMARY_PREFIX:-}" =~ ^LUNIDEX_HEAP_SAMPLE_SUMMARY_[0-9]+-[0-9]+=$ ]]
+          for ((attempt = 0; attempt < 60; attempt += 1)); do
+            safe_summary="$(docker logs --since 20m --tail 5000 lunidex-production-app 2>/dev/null \
+              | awk -v prefix="$EXPECTED_SUMMARY_PREFIX" 'length($0) <= 16384 && index($0, prefix) == 1 { summary = $0 } END { if (summary != "") print summary }' \
+              || true)"
+            if [[ -n "$safe_summary" ]]; then
+              printf '%s\n' "$safe_summary"
+              exit 0
+            fi
+            sleep 10
+          done
+          exit 78
+          REMOTE
+          )"
+          printf '%s\n' "$safe_summary_line" | node scripts/deployment/validate-heap-sample-summary.mjs "$HEAP_SAMPLING_RUN_ID"
 
       - name: Rehearse candidate-to-baseline rollback after successful private preflight
         if: success() && inputs.deployment_mode == 'preflight'
