@@ -25,6 +25,11 @@ const PATCHES = [
       ),`,
   },
   {
+    relativePath: 'node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js',
+    before: `cacheController.abort(Error("This render completed successfully. All cacheSignals are now aborted to allow clean up of any unused resources."))`,
+    after: `cacheController.abort((()=>{const cacheSignalAbortReason=Error("This render completed successfully. All cacheSignals are now aborted to allow clean up of any unused resources.");/* LUNIDEX_NEXT_CONTROL_FLOW_STACK_PATCH */void cacheSignalAbortReason.stack;return cacheSignalAbortReason})())`,
+  },
+  {
     relativePath: 'node_modules/next/dist/server/app-render/dynamic-rendering.js',
     before: `function createPrerenderInterruptedError(message) {
     const error = new Error(message);
@@ -66,8 +71,10 @@ async function validateAndPlanPatch(root, patch) {
 }
 
 /**
- * Materialize stacks only for the two Next.js internal control-flow errors whose
- * lazy V8 CallSite objects are retained through abort-signal reasons.
+ * Materialize stacks only for Next.js internal control-flow abort reasons whose
+ * lazy V8 CallSite objects are retained through abort-signal reasons. The
+ * successful-render reason exists in both the standalone RSC package and the
+ * bundled App Router runtime, so both copies must receive the same patch.
  *
  * @param {string} projectRoot Root containing node_modules/next.
  * @returns {Promise<{ changed: number }>} Number of vendored files changed.
