@@ -296,6 +296,16 @@ const nextConfig: NextConfig = {
       // They match physical paths, so remove the public locale prefix first.
       beforeFiles: [
         {
+          // Full card documents use the static locale tree and encode the
+          // normalized TCG language in an internal path segment for ISR.
+          source: '/:locale(en|fr|es|de|it|ja|ko|zh)/tcg/cards/:id',
+          destination: '/:locale/tcg/cards/:id/cached/:tcgLanguage',
+          has: [
+            { type: 'header', key: 'x-primedex-static-localized-route', value: 'tcg-card-detail' },
+            { type: 'header', key: 'x-primedex-tcg-language', value: '(?<tcgLanguage>[^/]+)' },
+          ],
+        },
+        {
           source: '/:locale(en|fr|es|de|it|ja|ko|zh)/:path*',
           destination: '/:path*',
           missing: [{ type: 'header', key: 'x-primedex-static-localized-route' }],

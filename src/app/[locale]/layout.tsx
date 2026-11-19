@@ -5,7 +5,9 @@ import RootLayoutDocument, { buildRootMetadata } from '../root-layout-document';
 import { isSupportedLanguage, supportedLanguages } from '@/lib/languages';
 
 export const dynamic = 'force-static';
-export const dynamicParams = false;
+// Permit nested dynamic detail routes to generate their static pages on demand.
+// This layout still rejects every locale outside the supported allowlist.
+export const dynamicParams = true;
 
 export function generateStaticParams() {
   return supportedLanguages.map((locale) => ({ locale }));

@@ -7,6 +7,7 @@ import { usePrimeDexStore } from '@/store/primedex';
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ back: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(),
 }));
 
 vi.mock('next/dynamic', () => ({
@@ -28,7 +29,7 @@ vi.mock('./TCGImageWithFallback', () => ({
   TCGImageWithFallback: () => createElement('img', { alt: 'Pokémon TCG card' }),
 }));
 
-import { TCGCardDetailRoute } from './TCGCardDetailRoute';
+import { TCGCardDetailRoute, getQueryReturnHref } from './TCGCardDetailRoute';
 
 describe('TCGCardDetailRoute', () => {
   it('keeps the first render independent of already hydrated comparison preferences', () => {
@@ -63,5 +64,33 @@ describe('TCGCardDetailRoute', () => {
     expect(markup).toContain('tcg.add_to_compare');
     expect(markup).toContain('tcg.mark_wishlist');
     expect(markup).toContain('detail.share');
+  });
+});
+
+const frenchLocaleHref = (path: string) => `/fr${path}`;
+
+describe('getQueryReturnHref', () => {
+  it('preserves a validated catalog return path and its search state', () => {
+    const searchParams = new URLSearchParams({
+      from: '/fr/tcg?tcgLang=ja&set=base1&view=grid',
+    });
+
+    expect(getQueryReturnHref(searchParams, frenchLocaleHref)).toBe('/fr/tcg?tcgLang=ja&set=base1&view=grid');
+  });
+
+  it('does not accept an external return URL and retains only catalog filters', () => {
+    const searchParams = new URLSearchParams({
+      from: 'https://attacker.invalid/tcg',
+      q: 'charizard',
+      view: 'grid',
+    });
+
+    expect(getQueryReturnHref(searchParams, frenchLocaleHref)).toBe('/fr/tcg?q=charizard&view=grid');
+  });
+
+  it('ignores card-to-card return paths', () => {
+    const searchParams = new URLSearchParams({ from: '/en/tcg/cards/base1-5' });
+
+    expect(getQueryReturnHref(searchParams, frenchLocaleHref)).toBeUndefined();
   });
 });
