@@ -21,6 +21,7 @@ export interface HeapSampleFrame {
   functionName: string;
   sourceFile: string;
   line: number;
+  column: number;
   sampledBytes: number;
 }
 
@@ -70,6 +71,12 @@ function safeLineNumber(value: unknown): number {
     : 0;
 }
 
+function safeColumnNumber(value: unknown): number {
+  if (typeof value !== 'number' || !Number.isSafeInteger(value) || value < 0) return 0;
+  const oneBasedColumn = value + 1;
+  return Number.isSafeInteger(oneBasedColumn) ? oneBasedColumn : 0;
+}
+
 function safeSampledBytes(value: unknown): number {
   return typeof value === 'number' && Number.isFinite(value) && value > 0
     ? Math.floor(value)
@@ -98,9 +105,10 @@ export function summarizeHeapProfile(profileValue: unknown): HeapSampleSummary {
         functionName: safeFunctionName(callFrame.functionName),
         sourceFile: safeSourceBasename(callFrame.url),
         line: safeLineNumber(callFrame.lineNumber),
+        column: safeColumnNumber(callFrame.columnNumber),
         sampledBytes,
       };
-      const key = `${frame.functionName}\0${frame.sourceFile}\0${frame.line}`;
+      const key = JSON.stringify([frame.functionName, frame.sourceFile, frame.line, frame.column]);
       const existing = totals.get(key);
       totals.set(key, {
         ...frame,
@@ -120,10 +128,11 @@ export function summarizeHeapProfile(profileValue: unknown): HeapSampleSummary {
     frames: [...totals.values()]
       .sort((left, right) => right.sampledBytes - left.sampledBytes || left.key.localeCompare(right.key))
       .slice(0, MAX_SUMMARY_FRAMES)
-      .map(({ functionName, sourceFile, line, sampledBytes }) => ({
+      .map(({ functionName, sourceFile, line, column, sampledBytes }) => ({
         functionName,
         sourceFile,
         line,
+        column,
         sampledBytes,
       })),
   };

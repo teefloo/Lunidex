@@ -5,7 +5,7 @@ const MAX_INPUT_LENGTH = 16_384;
 const MAX_FRAMES = 20;
 const MAX_FUNCTION_NAME_LENGTH = 80;
 const MAX_SOURCE_FILE_LENGTH = 120;
-const FRAME_KEYS = ['functionName', 'line', 'sampledBytes', 'sourceFile'];
+const FRAME_KEYS = ['functionName', 'line', 'column', 'sampledBytes', 'sourceFile'];
 
 function hasOnlyKeys(value, keys) {
   return Object.keys(value).length === keys.length
@@ -56,6 +56,8 @@ export function normalizeHeapSampleSummaryLine(line, expectedRunId) {
       || !isSafeSourceFile(frame.sourceFile)
       || !Number.isSafeInteger(frame.line)
       || frame.line < 0
+      || !Number.isSafeInteger(frame.column)
+      || frame.column < 0
       || !Number.isSafeInteger(frame.sampledBytes)
       || frame.sampledBytes <= 0) {
       return null;
@@ -64,6 +66,7 @@ export function normalizeHeapSampleSummaryLine(line, expectedRunId) {
       functionName: frame.functionName,
       sourceFile: frame.sourceFile,
       line: frame.line,
+      column: frame.column,
       sampledBytes: frame.sampledBytes,
     });
   }
