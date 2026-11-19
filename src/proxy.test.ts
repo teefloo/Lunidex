@@ -62,12 +62,45 @@ describe('public localized proxy responses', () => {
 
   it('keeps TCG card client navigations on the existing intercepted route', async () => {
     const response = await proxy(new NextRequest('https://lunidex.test/en/tcg/cards/lxd-oom-card-1?tcgLang=fr', {
-      headers: { rsc: '1', accept: 'text/x-component' },
+      headers: { rsc: '1', accept: 'text/x-component', 'user-agent': 'Mozilla/5.0' },
     }));
 
     expect(response.headers.get('x-middleware-next')).toBe('1');
     expect(response.headers.get('x-middleware-rewrite')).toBeNull();
     expect(response.headers.get('x-middleware-request-x-primedex-static-localized-route')).toBeNull();
+  });
+
+  it('recognizes standalone Flight requests by Accept when Next strips its internal RSC header', async () => {
+    const response = await proxy(new NextRequest('https://lunidex.test/en/tcg/cards/lxd-oom-card-flight-accept', {
+      headers: { accept: 'text/x-component', 'user-agent': 'Mozilla/5.0' },
+    }));
+
+    expect(response.headers.get('x-middleware-next')).toBe('1');
+    expect(response.headers.get('x-middleware-rewrite')).toBeNull();
+    expect(response.headers.get('x-middleware-request-x-primedex-static-localized-route')).toBeNull();
+  });
+
+  it.each(['Googlebot/2.1', 'Lightpanda/1.0', 'Mozilla/5.0 HeadlessChrome/126.0']) (
+    'drops automated card Flight requests from %s before dynamic rendering',
+    async (userAgent) => {
+      const response = await proxy(new NextRequest('https://lunidex.test/en/tcg/cards/lxd-oom-card-flight', {
+        headers: { accept: 'text/x-component', 'user-agent': userAgent },
+      }));
+
+      expect(response.status).toBe(204);
+      expect(response.headers.get('Cache-Control')).toBe('private, no-store');
+      expect(response.headers.get('x-middleware-next')).toBeNull();
+    },
+  );
+
+  it('keeps automated card HTML documents crawlable through ISR', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }));
+    const response = await proxy(new NextRequest('https://lunidex.test/en/tcg/cards/lxd-oom-card-crawler-html', {
+      headers: { accept: 'text/html', 'user-agent': 'Googlebot/2.1' },
+    }));
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('x-middleware-request-x-primedex-static-localized-route')).toBe('tcg-card-detail');
   });
 
   it('keeps localized Pokedex paths on the locale-aware static route and forwards returnCount', async () => {
