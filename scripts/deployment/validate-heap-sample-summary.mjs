@@ -3,9 +3,13 @@ import { pathToFileURL } from 'node:url';
 export const HEAP_SAMPLE_SUMMARY_PREFIX = 'LUNIDEX_HEAP_SAMPLE_SUMMARY_';
 const MAX_INPUT_LENGTH = 16_384;
 const MAX_FRAMES = 20;
+const MAX_STACKS = 10;
+const MAX_STACK_FRAMES = 8;
 const MAX_FUNCTION_NAME_LENGTH = 80;
 const MAX_SOURCE_FILE_LENGTH = 120;
 const FRAME_KEYS = ['functionName', 'line', 'column', 'sampledBytes', 'sourceFile'];
+const STACK_KEYS = ['frames', 'sampledBytes'];
+const STACK_FRAME_KEYS = ['functionName', 'line', 'column', 'sourceFile'];
 
 function hasOnlyKeys(value, keys) {
   return Object.keys(value).length === keys.length
@@ -24,7 +28,7 @@ function isSafeSourceFile(value) {
     && (value === '(unknown)' || /^[A-Za-z0-9._-]+$/.test(value));
 }
 
-/** Accept only the exact allowlisted frame summary; never echo unvalidated input. */
+/** Accept only the exact allowlisted frame and call-stack summary. */
 export function normalizeHeapSampleSummaryLine(line, expectedRunId) {
   if (typeof expectedRunId !== 'string' || !/^\d+-\d+$/.test(expectedRunId)) return null;
   const expectedPrefix = `${HEAP_SAMPLE_SUMMARY_PREFIX}${expectedRunId}=`;
@@ -42,9 +46,11 @@ export function normalizeHeapSampleSummaryLine(line, expectedRunId) {
   }
 
   if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)
-    || !hasOnlyKeys(parsed, ['frames'])
+    || !hasOnlyKeys(parsed, ['frames', 'stacks'])
     || !Array.isArray(parsed.frames)
-    || parsed.frames.length > MAX_FRAMES) {
+    || parsed.frames.length > MAX_FRAMES
+    || !Array.isArray(parsed.stacks)
+    || parsed.stacks.length > MAX_STACKS) {
     return null;
   }
 
@@ -71,7 +77,42 @@ export function normalizeHeapSampleSummaryLine(line, expectedRunId) {
     });
   }
 
-  return `${expectedPrefix}${JSON.stringify({ frames })}`;
+  const stacks = [];
+  for (const stack of parsed.stacks) {
+    if (!stack || typeof stack !== 'object' || Array.isArray(stack)
+      || !hasOnlyKeys(stack, STACK_KEYS)
+      || !Array.isArray(stack.frames)
+      || stack.frames.length === 0
+      || stack.frames.length > MAX_STACK_FRAMES
+      || !Number.isSafeInteger(stack.sampledBytes)
+      || stack.sampledBytes <= 0) {
+      return null;
+    }
+
+    const stackFrames = [];
+    for (const frame of stack.frames) {
+      if (!frame || typeof frame !== 'object' || Array.isArray(frame)
+        || !hasOnlyKeys(frame, STACK_FRAME_KEYS)
+        || !isSafeFunctionName(frame.functionName)
+        || !isSafeSourceFile(frame.sourceFile)
+        || !Number.isSafeInteger(frame.line)
+        || frame.line < 0
+        || !Number.isSafeInteger(frame.column)
+        || frame.column < 0) {
+        return null;
+      }
+      stackFrames.push({
+        functionName: frame.functionName,
+        sourceFile: frame.sourceFile,
+        line: frame.line,
+        column: frame.column,
+      });
+    }
+
+    stacks.push({ frames: stackFrames, sampledBytes: stack.sampledBytes });
+  }
+
+  return `${expectedPrefix}${JSON.stringify({ frames, stacks })}`;
 }
 
 async function runCli() {
