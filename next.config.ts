@@ -304,6 +304,20 @@ const nextConfig: NextConfig = {
             { type: 'header', key: 'x-primedex-static-localized-route', value: 'tcg-card-detail' },
             { type: 'header', key: 'x-primedex-tcg-language', value: '(?<tcgLanguage>[^/]+)' },
           ],
+          // The Node Proxy adapter strips Next's internal Flight headers before
+          // calling user code. A client navigation still carries `next-url` when
+          // the adapter restores the headers for rewrites, so it must not be
+          // routed through the full-page ISR route above the intercepted route.
+          missing: [{ type: 'header', key: 'next-url' }],
+        },
+        {
+          // Proxy cannot distinguish an RSC card navigation from a document
+          // request after the adapter strips its Flight marker. Use Next's
+          // restored `next-url` signal to unprefix the card path so the
+          // generated `(.)tcg/cards/[id]` interception rewrite can match.
+          source: '/:locale(en|fr|es|de|it|ja|ko|zh)/tcg/cards/:id',
+          destination: '/tcg/cards/:id',
+          has: [{ type: 'header', key: 'next-url' }],
         },
         {
           source: '/:locale(en|fr|es|de|it|ja|ko|zh)/:path*',
