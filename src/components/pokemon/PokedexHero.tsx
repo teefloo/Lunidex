@@ -1,8 +1,9 @@
-import { getServerT } from '@/lib/server-i18n';
+import { getServerTForLanguage } from '@/lib/server-i18n';
+import type { SupportedLanguage } from '@/lib/languages';
 import HeroControls from './HeroControls';
 
-export default async function PokedexHero() {
-  const t = await getServerT();
+export default function PokedexHero({ lang }: { lang: SupportedLanguage }) {
+  const t = getServerTForLanguage(lang);
 
   return (
     <section aria-labelledby="pokedex-title" className="mx-auto w-full max-w-6xl px-4 pb-5 pt-4 sm:px-6">

@@ -186,7 +186,7 @@ describe('PokemonList pagination hydration', () => {
     } finally { act(() => root.unmount()); container.remove(); }
   });
 
-  it('synchronizes the display count from the active URL when the server prop is stale', () => {
+  it('restores returnCount from the URL after static Pokedex hydration when the server prop is stale', () => {
     (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
     fixture.state._hasHydrated = true;
     fixture.activeSearch = '';
@@ -200,8 +200,8 @@ describe('PokemonList pagination hydration', () => {
       act(() => { root.render(createElement(PokemonList, { initialDisplayCount: 20 })); });
       expect(container.querySelectorAll('.pokemon-grid-item')).toHaveLength(20);
 
-      // The browser returns to an entry whose URL was replaced with
-      // `returnCount=40`, while the reused RSC prop remains 20.
+      // Static Pokedex HTML uses the default server prop. A browser returning
+      // to this entry still has `returnCount=40` in its URL after hydration.
       fixture.activeSearch = 'returnCount=40';
       act(() => { root.render(createElement(PokemonList, { initialDisplayCount: 20 })); });
       expect(container.querySelectorAll('.pokemon-grid-item')).toHaveLength(40);

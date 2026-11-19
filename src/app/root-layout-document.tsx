@@ -1,23 +1,21 @@
-import type { Metadata, Viewport } from "next";
-import { connection } from "next/server";
-import { headers } from "next/headers";
-import localFont from "next/font/local";
-import Providers from "./providers";
-import "./globals.css";
-import { cn } from "@/lib/utils";
+import type { ReactNode } from 'react';
+import type { Metadata } from 'next';
+import localFont from 'next/font/local';
+import Providers from './providers';
+import { cn } from '@/lib/utils';
 import {
   getEditorialClientTranslations,
   getPublicClientTranslations,
+  getServerTForLanguage,
   isEditorialClientRoute,
-  getServerT,
-  getServerLanguage,
 } from '@/lib/server-i18n';
-import { AppContent } from "./AppContent";
-import SiteFooter from "@/components/layout/SiteFooter";
-import ClientCookieBanner from "@/components/layout/ClientCookieBanner";
-import { SkipLink } from "@/components/layout/SkipLink";
-import { serializeJsonLd } from "@/lib/json-ld";
-import { languageToOpenGraphLocale, supportedLanguages } from "@/lib/languages";
+import type { SupportedLanguage } from '@/lib/languages';
+import { AppContent } from './AppContent';
+import SiteFooter from '@/components/layout/SiteFooter';
+import ClientCookieBanner from '@/components/layout/ClientCookieBanner';
+import { SkipLink } from '@/components/layout/SkipLink';
+import { serializeJsonLd } from '@/lib/json-ld';
+import { languageToOpenGraphLocale, supportedLanguages } from '@/lib/languages';
 import { buildCreatorJsonLd, buildOrganizationJsonLd, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import {
   SITE_URL,
@@ -27,41 +25,37 @@ import {
   SITE_DISAMBIGUATION_DESCRIPTION,
   SITE_KEYWORDS,
   FEATURE_LIST,
-} from "@/lib/site";
+} from '@/lib/site';
 
 const displayFont = localFont({
-  src: "../lib/fonts/Nunito[wght].ttf",
-  weight: "200 1000",
-  variable: "--font-nunito",
-  display: "optional",
+  src: '../lib/fonts/Nunito[wght].ttf',
+  weight: '200 1000',
+  variable: '--font-nunito',
+  display: 'optional',
   preload: false,
 });
 
 const brandPixelFont = localFont({
-  src: "../lib/fonts/PixelifySans[wght].ttf",
-  weight: "400 700",
-  variable: "--font-pixel",
-  display: "optional",
+  src: '../lib/fonts/PixelifySans[wght].ttf',
+  weight: '400 700',
+  variable: '--font-pixel',
+  display: 'optional',
   preload: false,
 });
 
-export const viewport: Viewport = {
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#F2F6FF' },
-    { media: '(prefers-color-scheme: dark)', color: '#07144F' },
-  ],
-  width: 'device-width',
-  initialScale: 1,
-  viewportFit: 'cover',
-};
+export interface RootLayoutDocumentProps {
+  children: ReactNode;
+  lang: SupportedLanguage;
+  requestPathname?: string;
+  modal?: ReactNode;
+}
 
-export async function generateMetadata(): Promise<Metadata> {
-  await connection();
-  const t = await getServerT();
-  const lang = await getServerLanguage();
+export function buildRootMetadata(lang: SupportedLanguage): Metadata {
+  const t = getServerTForLanguage(lang);
   const title = t('lunidex_home.meta_title', { defaultValue: t('meta.title') });
   const description = t('lunidex_home.meta_description', { defaultValue: SITE_DESCRIPTION });
   const openGraphTitle = t('lunidex_home.og_title', { defaultValue: title });
+
   return {
     metadataBase: new URL(SITE_URL),
     title: {
@@ -78,22 +72,22 @@ export async function generateMetadata(): Promise<Metadata> {
       title: SITE_NAME,
       statusBarStyle: 'black-translucent',
     },
-    category: "games",
-    classification: "Games, Entertainment, Education",
-    referrer: "strict-origin-when-cross-origin",
+    category: 'games',
+    classification: 'Games, Entertainment, Education',
+    referrer: 'strict-origin-when-cross-origin',
     formatDetection: { email: false, address: false, telephone: false },
     alternates: {
       canonical: `/${lang}`,
       languages: {
-        en: "/en",
-        fr: "/fr",
-        de: "/de",
-        es: "/es",
-        it: "/it",
-        ja: "/ja",
-        ko: "/ko",
-        zh: "/zh",
-        "x-default": "/en",
+        en: '/en',
+        fr: '/fr',
+        de: '/de',
+        es: '/es',
+        it: '/it',
+        ja: '/ja',
+        ko: '/ko',
+        zh: '/zh',
+        'x-default': '/en',
       },
     },
     robots: {
@@ -118,27 +112,25 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: openGraphTitle,
       description,
-      type: "website",
+      type: 'website',
       siteName: SITE_NAME,
       locale: languageToOpenGraphLocale[lang],
       url: `/${lang}`,
       images: [DEFAULT_OG_IMAGE],
     },
     twitter: {
-      // Site-level fallback so routes without their own twitter metadata still
-      // render a large share card instead of a bare summary.
-      card: "summary_large_image",
+      card: 'summary_large_image',
       images: [DEFAULT_OG_IMAGE],
     },
     icons: {
       icon: [
-        { url: "/icon-512.png?v=3", sizes: "512x512", type: "image/png" },
-        { url: "/icon-192.png?v=3", sizes: "192x192", type: "image/png" },
-        { url: "/favicon-32x32.png?v=3", sizes: "32x32", type: "image/png" },
-        { url: "/favicon-16x16.png?v=3", sizes: "16x16", type: "image/png" },
+        { url: '/icon-512.png?v=3', sizes: '512x512', type: 'image/png' },
+        { url: '/icon-192.png?v=3', sizes: '192x192', type: 'image/png' },
+        { url: '/favicon-32x32.png?v=3', sizes: '32x32', type: 'image/png' },
+        { url: '/favicon-16x16.png?v=3', sizes: '16x16', type: 'image/png' },
       ],
       apple: [
-        { url: "/apple-touch-icon.png?v=3", sizes: "180x180", type: "image/png" },
+        { url: '/apple-touch-icon.png?v=3', sizes: '180x180', type: 'image/png' },
       ],
     },
     appLinks: {
@@ -148,27 +140,20 @@ export async function generateMetadata(): Promise<Metadata> {
       },
     },
     other: {
-      // Array values render as repeated og:locale:alternate metatags, which is
-      // the format social scrapers expect (one tag per alternate locale).
-      "og:locale:alternate": supportedLanguages
-        .filter((l) => l !== lang)
-        .map((l) => languageToOpenGraphLocale[l]),
+      'og:locale:alternate': supportedLanguages
+        .filter((language) => language !== lang)
+        .map((language) => languageToOpenGraphLocale[language]),
     },
   };
 }
 
-export default async function RootLayout({
+export default function RootLayoutDocument({
   children,
-  modal,
-}: Readonly<{
-  children: React.ReactNode;
-  modal: React.ReactNode;
-}>) {
-  await connection();
-  const requestHeaders = await headers();
-  const lang = await getServerLanguage();
-  const t = await getServerT();
-  const requestPathname = requestHeaders.get('x-primedex-pathname') ?? '';
+  lang,
+  requestPathname = '',
+  modal = null,
+}: RootLayoutDocumentProps) {
+  const t = getServerTForLanguage(lang);
   const isHomeRoute = /^\/(?:en|fr|es|de|it|ja|ko|zh)\/?$/.test(requestPathname);
   const isEditorialRoute = isEditorialClientRoute(requestPathname);
   const initialTranslations = isEditorialRoute
@@ -189,7 +174,7 @@ export default async function RootLayout({
       url: baseUrl,
       description,
       disambiguatingDescription: SITE_DISAMBIGUATION_DESCRIPTION,
-      inLanguage: supportedInLanguage,
+      inLanguage: ['en', 'fr', 'de', 'es', 'it', 'ja', 'ko', 'zh'],
       keywords: SITE_KEYWORDS.join(', '),
       publisher: { '@id': `${baseUrl}/#organization` },
       mainEntity: { '@id': `${baseUrl}/#webapp` },
@@ -211,7 +196,7 @@ export default async function RootLayout({
       image: `${baseUrl}${DEFAULT_OG_IMAGE.url}`,
       featureList: FEATURE_LIST.join(', '),
       keywords: SITE_KEYWORDS.join(', '),
-      inLanguage: supportedInLanguage,
+      inLanguage: ['en', 'fr', 'de', 'es', 'it', 'ja', 'ko', 'zh'],
       about: [
         { '@type': 'Thing', name: 'Pokémon reference data' },
         { '@type': 'Thing', name: 'Pokémon Trading Card Game collection tracking' },
@@ -222,9 +207,8 @@ export default async function RootLayout({
   ];
 
   return (
-      <html lang={lang} suppressHydrationWarning className={cn("font-body", displayFont.variable, brandPixelFont.variable)}>
+    <html lang={lang} suppressHydrationWarning className={cn('font-body', displayFont.variable, brandPixelFont.variable)}>
       <head>
-        {/* Autodiscovery for the OpenSearch description shipped at this path. */}
         <link
           rel="search"
           type="application/opensearchdescription+xml"
@@ -233,23 +217,21 @@ export default async function RootLayout({
         />
       </head>
       <body className="antialiased bg-background text-foreground font-body">
-        <SkipLink>
-          {t('common.skip_to_content')}
-        </SkipLink>
-         <Providers
-           initialLanguage={lang}
-           initialTranslations={initialTranslations}
-           initialTranslationsPartial={isEditorialRoute}
-         >
-           <AppContent>
-             <div id="main-content" tabIndex={-1}>
-               {children}
-             </div>
-             <SiteFooter compact={isHomeRoute} />
-             <ClientCookieBanner />
-           </AppContent>
-           {modal}
-         </Providers>
+        <SkipLink>{t('common.skip_to_content')}</SkipLink>
+        <Providers
+          initialLanguage={lang}
+          initialTranslations={initialTranslations}
+          initialTranslationsPartial={isEditorialRoute}
+        >
+          <AppContent>
+            <div id="main-content" tabIndex={-1}>
+              {children}
+            </div>
+            <SiteFooter compact={isHomeRoute} />
+            <ClientCookieBanner />
+          </AppContent>
+          {modal}
+        </Providers>
         <script
           id="primedex-jsonld"
           type="application/ld+json"
@@ -259,5 +241,3 @@ export default async function RootLayout({
     </html>
   );
 }
-
-const supportedInLanguage = ['en', 'fr', 'de', 'es', 'it', 'ja', 'ko', 'zh'];

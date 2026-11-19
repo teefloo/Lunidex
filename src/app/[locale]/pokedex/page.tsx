@@ -9,17 +9,25 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 import { getPokemonListCached, getPokemonSummarySliceCached } from '@/lib/api/server-cache';
 import { pokemonKeys } from '@/lib/api/keys';
 import { SITE_NAME, SITE_URL } from '@/lib/site';
-import { getServerLanguage, getServerT } from '@/lib/server-i18n';
+import { getServerTForLanguage } from '@/lib/server-i18n';
 import { DEFAULT_OG_IMAGE, buildBreadcrumbJsonLd, buildSubpathLanguages, buildWebPageJsonLd, localeHref } from '@/lib/seo';
-import { languageToOpenGraphLocale } from '@/lib/languages';
+import { isSupportedLanguage, languageToOpenGraphLocale, type SupportedLanguage } from '@/lib/languages';
 import { serializeJsonLd } from '@/lib/json-ld';
 import { FEATURED_POKEMON } from '@/lib/pokemon-featured';
-import { POKEDEX_DEFAULT_DISPLAY_COUNT, parseDetailReturnCount } from '@/lib/pokemon-filter-url';
+import { POKEDEX_DEFAULT_DISPLAY_COUNT } from '@/lib/pokemon-filter-url';
+import { notFound } from 'next/navigation';
 
 export const revalidate = 3600;
 
-export async function generateMetadata(): Promise<Metadata> {
-  const [t, language] = await Promise.all([getServerT(), getServerLanguage()]);
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  if (!isSupportedLanguage(locale)) notFound();
+  const language = locale;
+  const t = getServerTForLanguage(language);
   const title = t('pokedex.meta_title');
   const description = t('pokedex.meta_description');
 
@@ -42,16 +50,16 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function PokedexPage({
-  searchParams,
+  params,
 }: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  params: Promise<{ locale: string }>;
 }) {
   const queryClient = new QueryClient();
-  const [t, lang, query] = await Promise.all([getServerT(), getServerLanguage(), searchParams]);
-  const initialDisplayCount = parseDetailReturnCount(
-    typeof query.returnCount === 'string' ? query.returnCount : null,
-    POKEDEX_DEFAULT_DISPLAY_COUNT,
-  );
+  const { locale } = await params;
+  if (!isSupportedLanguage(locale)) notFound();
+  const lang: SupportedLanguage = locale;
+  const t = getServerTForLanguage(lang);
+  const initialDisplayCount = POKEDEX_DEFAULT_DISPLAY_COUNT;
   const baseUrl = SITE_URL;
   const pokedexTitle = t('pokedex.title');
 
@@ -115,14 +123,14 @@ export default async function PokedexPage({
       <div className="app-page pokedex-redesign">
         <Header />
         <main className="pokedex-redesign-main relative z-10 pt-28 pb-8 md:pt-32">
-          <PokedexHero />
+          <PokedexHero lang={lang} />
           <nav className="mx-auto mt-4 max-w-7xl px-5 md:px-8" aria-label={t('lunidex_home.guide_reference_label')}>
             <Link href={localeHref('/guides/pokemon-reference-guide', lang)} className="inline-flex min-h-11 items-center font-bold text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">
               {t('lunidex_home.guide_reference_label')} <span aria-hidden="true" className="ml-1">↗</span>
             </Link>
           </nav>
           <PokemonList initialDisplayCount={initialDisplayCount} />
-          <PokemonOfTheDay />
+          <PokemonOfTheDay lang={lang} />
           <ClientRecentlyViewed />
         </main>
       </div>

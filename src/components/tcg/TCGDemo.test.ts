@@ -79,9 +79,9 @@ vi.mock('./TCGLanguageSelector', () => ({ TCGLanguageSelector: () => null }));
 vi.mock('./TCGPageTabs', () => ({ TCGPageTabs: () => null }));
 vi.mock('./TCGCollectionVariantSheet', () => ({ TCGCollectionVariantSheet: () => null }));
 
-import { TCGSetAlbumPage } from '@/app/tcg/collection/[language]/TCGSetAlbumPage';
-import { TCGStartPage } from '@/app/tcg/start/TCGStartPage';
-import { TCGCollectionPage } from '@/app/tcg/collection/TCGCollectionPage';
+import { TCGSetAlbumPage } from '@/app/(request-rendered)/tcg/collection/[language]/TCGSetAlbumPage';
+import { TCGStartPage } from '@/app/(request-rendered)/tcg/start/TCGStartPage';
+import { TCGCollectionPage } from '@/app/(request-rendered)/tcg/collection/TCGCollectionPage';
 import { usePrimeDexStore } from '@/store/primedex';
 import { onSyncAccessRequired, onSyncAccessRetry, setSyncAccessStatus } from '@/store/sync-access';
 import { encodeTCGCollectionKey } from '@/lib/tcg-collections';

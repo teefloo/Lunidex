@@ -9,9 +9,7 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock('@/lib/server-i18n', () => ({
-  getServerT: async () => mocks.translate,
-  getServerLanguage: async () => 'fr',
-  getServerPokemonLanguage: async () => 'fr',
+  getServerTForLanguage: () => mocks.translate,
 }));
 
 vi.mock('@/lib/api/server-cache', () => ({
@@ -48,7 +46,7 @@ describe('PokemonOfTheDay', () => {
   });
 
   it('uses the species slug to load the localized daily Pokémon name', async () => {
-    const page = await PokemonOfTheDay();
+    const page = await PokemonOfTheDay({ lang: 'fr' });
 
     expect(textContent(page)).toContain('Pikachu GraphQL');
     expect(mocks.localized).toHaveBeenCalledWith('pikachu', 5);

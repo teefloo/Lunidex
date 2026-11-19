@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { GET } from '../app/api/v1/openapi.json/route';
+import { GET } from '../app/(request-rendered)/api/v1/openapi.json/route';
 import { API_GUIDE_OPERATIONS, API_GUIDE_QUOTAS } from '@/lib/public-api-docs';
 import { buildStaticSitemapEntries } from '@/lib/sitemap';
 import en from '@/lib/i18n/en';
