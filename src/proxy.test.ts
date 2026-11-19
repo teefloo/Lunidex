@@ -6,28 +6,43 @@ import { proxy } from './proxy';
 afterEach(() => { vi.restoreAllMocks(); });
 
 describe('public localized proxy responses', () => {
+  it.each(['en', 'fr', 'es', 'de', 'it', 'ja', 'ko', 'zh'] as const)(
+    'keeps the localized homepage on the locale-aware static route for %s',
+    async (locale) => {
+      const response = await proxy(new NextRequest(`https://lunidex.test/${locale}`, {
+        headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
+      }));
+
+      expect(response.status).toBe(200);
+      expect(response.headers.get('x-middleware-request-x-primedex-static-localized-route')).toBe('home');
+      expect(response.headers.get('x-middleware-request-x-primedex-lang')).toBe(locale);
+      expect(response.headers.get('set-cookie')).toBeNull();
+    },
+  );
+
   it('keeps localized Pokedex paths on the locale-aware static route and forwards returnCount', async () => {
     const response = await proxy(new NextRequest('https://lunidex.test/fr/pokedex?returnCount=40', {
       headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },
     }));
 
     expect(response.status).toBe(200);
-    expect(response.headers.get('x-middleware-request-x-primedex-static-pokedex-route')).toBe('1');
+    expect(response.headers.get('x-middleware-request-x-primedex-static-localized-route')).toBe('pokedex');
     expect(response.headers.get('x-middleware-request-x-primedex-lang')).toBe('fr');
     expect(response.headers.get('set-cookie')).toBeNull();
   });
 
-  it('does not let a client supplied static Pokedex marker bypass normal locale routing', async () => {
+  it('does not let client supplied static route markers bypass normal locale routing', async () => {
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }));
     const response = await proxy(new NextRequest('https://lunidex.test/fr/pokemon/static-marker-spoof-test', {
       headers: {
         accept: 'text/html',
         'x-primedex-static-pokedex-route': '1',
+        'x-primedex-static-localized-route': 'home',
       },
     }));
 
     expect(response.status).toBe(200);
-    expect(response.headers.get('x-middleware-request-x-primedex-static-pokedex-route')).toBeNull();
+    expect(response.headers.get('x-middleware-request-x-primedex-static-localized-route')).toBeNull();
   });
 
   it('does not attach a locale preference cookie to a public localized page', async () => {

@@ -589,8 +589,11 @@ export async function proxy(request: NextRequest) {
     forwardedHeaders.set('x-primedex-lang', urlLocale);
     forwardedHeaders.set('x-primedex-pathname', pathname);
     forwardedHeaders.delete('x-primedex-static-pokedex-route');
-    if (segments.length === 2 && segments[1] === 'pokedex') {
-      forwardedHeaders.set('x-primedex-static-pokedex-route', '1');
+    forwardedHeaders.delete('x-primedex-static-localized-route');
+    if (segments.length === 1) {
+      forwardedHeaders.set('x-primedex-static-localized-route', 'home');
+    } else if (segments.length === 2 && segments[1] === 'pokedex') {
+      forwardedHeaders.set('x-primedex-static-localized-route', 'pokedex');
     }
 
     // The locale in the URL is authoritative for this render. Do not attach a

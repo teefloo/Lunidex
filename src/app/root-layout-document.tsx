@@ -227,7 +227,7 @@ export default function RootLayoutDocument({
             <div id="main-content" tabIndex={-1}>
               {children}
             </div>
-            <SiteFooter compact={isHomeRoute} />
+            <SiteFooter compact={isHomeRoute} language={lang} />
             <ClientCookieBanner />
           </AppContent>
           {modal}

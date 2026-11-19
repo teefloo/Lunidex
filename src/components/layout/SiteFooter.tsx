@@ -16,7 +16,8 @@ import { ConsentPreferencesButton } from '@/components/layout/ConsentPreferences
 import { ReportProblemButton } from '@/components/layout/ReportProblemButton';
 import LunidexLogo from '@/components/ui/LunidexLogo';
 import { ANNIVERSARY_30_PATH, isAnniversary30Language } from '@/lib/anniversary-30';
-import { getServerLanguage, getServerT } from '@/lib/server-i18n';
+import { getServerLanguage, getServerT, getServerTForLanguage } from '@/lib/server-i18n';
+import type { SupportedLanguage } from '@/lib/languages';
 import { isEditorialIndexable } from '@/lib/editorial';
 import { cn } from '@/lib/utils';
 import { GITHUB_REPO_URL, SITE_NAME } from '@/lib/site';
@@ -124,10 +125,12 @@ function FooterLinkGroup({
 
 interface SiteFooterProps {
   compact?: boolean;
+  language?: SupportedLanguage;
 }
 
-export default async function SiteFooter({ compact = false }: SiteFooterProps) {
-  const [t, language] = await Promise.all([getServerT(), getServerLanguage()]);
+export default async function SiteFooter({ compact = false, language: requestedLanguage }: SiteFooterProps) {
+  const language = requestedLanguage ?? await getServerLanguage();
+  const t = requestedLanguage ? getServerTForLanguage(language) : await getServerT();
   const localizedHref = (href: string) => `/${language}${href}`;
   const year = new Date().getFullYear();
 
