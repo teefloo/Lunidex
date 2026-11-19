@@ -10,6 +10,7 @@ const MAX_SOURCE_FILE_LENGTH = 120;
 const FRAME_KEYS = ['functionName', 'line', 'column', 'sampledBytes', 'sourceFile'];
 const STACK_KEYS = ['frames', 'sampledBytes'];
 const STACK_FRAME_KEYS = ['functionName', 'line', 'column', 'sourceFile'];
+const MEMORY_KEYS = ['rss', 'heapTotal', 'heapUsed', 'external', 'arrayBuffers', 'heapLimit'];
 
 function hasOnlyKeys(value, keys) {
   return Object.keys(value).length === keys.length
@@ -28,7 +29,7 @@ function isSafeSourceFile(value) {
     && (value === '(unknown)' || /^[A-Za-z0-9._-]+$/.test(value));
 }
 
-/** Accept only the exact allowlisted frame and call-stack summary. */
+/** Accept only the exact legacy or current allowlisted sample-summary schema. */
 export function normalizeHeapSampleSummaryLine(line, expectedRunId) {
   if (typeof expectedRunId !== 'string' || !/^\d+-\d+$/.test(expectedRunId)) return null;
   const expectedPrefix = `${HEAP_SAMPLE_SUMMARY_PREFIX}${expectedRunId}=`;
@@ -45,14 +46,38 @@ export function normalizeHeapSampleSummaryLine(line, expectedRunId) {
     return null;
   }
 
-  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)
-    || !hasOnlyKeys(parsed, ['frames', 'stacks'])
-    || !Array.isArray(parsed.frames)
+  const hasLegacySchema = parsed && typeof parsed === 'object' && !Array.isArray(parsed)
+    && hasOnlyKeys(parsed, ['frames', 'stacks']);
+  const hasMemorySchema = parsed && typeof parsed === 'object' && !Array.isArray(parsed)
+    && hasOnlyKeys(parsed, ['frames', 'stacks', 'memory']);
+  if (!hasLegacySchema && !hasMemorySchema) return null;
+
+  if (!Array.isArray(parsed.frames)
     || parsed.frames.length > MAX_FRAMES
     || !Array.isArray(parsed.stacks)
     || parsed.stacks.length > MAX_STACKS) {
     return null;
   }
+
+  let memory;
+  if (hasMemorySchema) {
+    if (!parsed.memory || typeof parsed.memory !== 'object' || Array.isArray(parsed.memory)
+      || !hasOnlyKeys(parsed.memory, MEMORY_KEYS)) {
+      return null;
+    }
+
+    memory = {};
+    for (const key of MEMORY_KEYS) {
+      if (!Number.isSafeInteger(parsed.memory[key]) || parsed.memory[key] < 0) return null;
+      memory[key] = parsed.memory[key];
+    }
+  }
+
+  /*
+   * The legacy exact schema remains readable so an already-emitted bounded
+   * sample can be retrieved after deployment. Every new sampler summary uses
+   * the current schema with the numeric memory snapshot.
+   */
 
   const frames = [];
   for (const frame of parsed.frames) {
@@ -112,7 +137,9 @@ export function normalizeHeapSampleSummaryLine(line, expectedRunId) {
     stacks.push({ frames: stackFrames, sampledBytes: stack.sampledBytes });
   }
 
-  return `${expectedPrefix}${JSON.stringify({ frames, stacks })}`;
+  const normalized = { frames, stacks };
+  if (memory) normalized.memory = memory;
+  return `${expectedPrefix}${JSON.stringify(normalized)}`;
 }
 
 async function runCli() {

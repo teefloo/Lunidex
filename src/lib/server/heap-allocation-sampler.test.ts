@@ -1,6 +1,20 @@
 import { describe, expect, it } from 'vitest';
 
-import { collectHeapSample, summarizeHeapProfile } from './heap-allocation-sampler';
+import {
+  collectHeapSample,
+  sanitizeHeapMemorySnapshot,
+  shouldTriggerHeapSample,
+  summarizeHeapProfile,
+} from './heap-allocation-sampler';
+
+const MEMORY_SNAPSHOT = {
+  rss: 1_000,
+  heapTotal: 800,
+  heapUsed: 500,
+  external: 100,
+  arrayBuffers: 50,
+  heapLimit: 2_000,
+};
 
 describe('heap allocation sampler summaries', () => {
   it('aggregates only bounded frame metadata and strips paths and unsafe names', () => {
@@ -51,7 +65,7 @@ describe('heap allocation sampler summaries', () => {
           },
         ],
       },
-    });
+    }, MEMORY_SNAPSHOT);
 
     expect(summary).toEqual({
       frames: [
@@ -64,6 +78,7 @@ describe('heap allocation sampler summaries', () => {
         { frames: [{ functionName: 'loadCatalog', sourceFile: 'catalog.js', line: 41, column: 9 }], sampledBytes: 350 },
         { frames: [{ functionName: 'loadCatalog', sourceFile: 'catalog.js', line: 41, column: 15 }], sampledBytes: 75 },
       ],
+      memory: MEMORY_SNAPSHOT,
     });
     expect(JSON.stringify(summary)).not.toContain('/srv/lunidex');
     expect(JSON.stringify(summary)).not.toContain('private@example.com');
@@ -105,7 +120,7 @@ describe('heap allocation sampler summaries', () => {
         selfSize: 0,
         children: branches,
       },
-    });
+    }, MEMORY_SNAPSHOT);
 
     expect(summary.stacks).toHaveLength(10);
     expect(summary.stacks.every((stack) => stack.frames.length <= 8)).toBe(true);
@@ -118,6 +133,41 @@ describe('heap allocation sampler summaries', () => {
     expect(JSON.stringify(summary)).not.toContain('must-not-log');
   });
 
+  it('sanitizes the snapshot to six non-negative integer counters', () => {
+    expect(sanitizeHeapMemorySnapshot({
+      rss: 1_000,
+      heapTotal: 800,
+      heapUsed: -1,
+      external: 10.5,
+      arrayBuffers: Number.MAX_SAFE_INTEGER + 1,
+      heapLimit: 2_000,
+      environment: 'must-not-log',
+    })).toEqual({
+      rss: 1_000,
+      heapTotal: 800,
+      heapUsed: 0,
+      external: 0,
+      arrayBuffers: 0,
+      heapLimit: 2_000,
+    });
+  });
+
+  it('triggers one bounded sample when either RSS or V8 heap reaches 55 percent', () => {
+    const belowThreshold = {
+      rss: 549,
+      heapTotal: 400,
+      heapUsed: 549,
+      external: 0,
+      arrayBuffers: 0,
+      heapLimit: 1_000,
+    };
+    expect(shouldTriggerHeapSample(belowThreshold)).toBe(false);
+    expect(shouldTriggerHeapSample({ ...belowThreshold, rss: 550, heapUsed: 0 })).toBe(true);
+    expect(shouldTriggerHeapSample({ ...belowThreshold, rss: 0, heapUsed: 550 })).toBe(true);
+    expect(shouldTriggerHeapSample({ ...belowThreshold, rss: 550, heapUsed: 550 })).toBe(true);
+    expect(shouldTriggerHeapSample({ ...belowThreshold, heapLimit: 0 })).toBe(false);
+  });
+
   it('starts and stops a short in-process Node inspector sampling window', async () => {
     const sample = collectHeapSample(25);
     const allocations: Array<{ label: string; payload: string }> = [];
@@ -127,6 +177,13 @@ describe('heap allocation sampler summaries', () => {
     await new Promise<void>((resolve) => setTimeout(resolve, 35));
     const summary = await sample;
 
+    expect(Object.keys(summary.memory).sort()).toEqual([
+      'arrayBuffers', 'external', 'heapLimit', 'heapTotal', 'heapUsed', 'rss',
+    ]);
+    for (const value of Object.values(summary.memory)) {
+      expect(Number.isSafeInteger(value)).toBe(true);
+      expect(value).toBeGreaterThanOrEqual(0);
+    }
     expect(summary.frames.length).toBeLessThanOrEqual(20);
     expect(summary.stacks.length).toBeLessThanOrEqual(10);
     for (const frame of summary.frames) {
@@ -144,6 +201,7 @@ describe('heap allocation sampler summaries', () => {
         expect(frame.sourceFile).not.toContain('/');
       }
     }
+    expect(JSON.stringify(summary).length).toBeLessThanOrEqual(15_000);
     expect(JSON.stringify(summary)).not.toContain('heap-sampler-test-payload');
     expect(allocations).toHaveLength(4_000);
   });

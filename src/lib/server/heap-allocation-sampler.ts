@@ -36,9 +36,19 @@ export interface HeapSampleStack {
   sampledBytes: number;
 }
 
+export interface HeapMemorySnapshot {
+  rss: number;
+  heapTotal: number;
+  heapUsed: number;
+  external: number;
+  arrayBuffers: number;
+  heapLimit: number;
+}
+
 export interface HeapSampleSummary {
   frames: HeapSampleFrame[];
   stacks: HeapSampleStack[];
+  memory: HeapMemorySnapshot;
 }
 
 interface RawProfileNode {
@@ -59,6 +69,35 @@ function asRecord(value: unknown): Record<string, unknown> | null {
   return value && typeof value === 'object' && !Array.isArray(value)
     ? value as Record<string, unknown>
     : null;
+}
+
+function safeMemoryByteCount(value: unknown): number {
+  return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0 ? value : 0;
+}
+
+/** Return only the six numeric runtime memory counters approved for diagnostics. */
+export function sanitizeHeapMemorySnapshot(value: unknown): HeapMemorySnapshot {
+  const record = asRecord(value);
+  return {
+    rss: safeMemoryByteCount(record?.rss),
+    heapTotal: safeMemoryByteCount(record?.heapTotal),
+    heapUsed: safeMemoryByteCount(record?.heapUsed),
+    external: safeMemoryByteCount(record?.external),
+    arrayBuffers: safeMemoryByteCount(record?.arrayBuffers),
+    heapLimit: safeMemoryByteCount(record?.heapLimit),
+  };
+}
+
+export function readHeapMemorySnapshot(): HeapMemorySnapshot {
+  const usage = process.memoryUsage();
+  const heapLimit = getHeapStatistics().heap_size_limit;
+  return sanitizeHeapMemorySnapshot({ ...usage, heapLimit });
+}
+
+export function shouldTriggerHeapSample(memory: HeapMemorySnapshot): boolean {
+  if (!Number.isSafeInteger(memory.heapLimit) || memory.heapLimit <= 0) return false;
+  return memory.heapUsed / memory.heapLimit >= HEAP_LIMIT_TRIGGER_RATIO
+    || memory.rss / memory.heapLimit >= HEAP_LIMIT_TRIGGER_RATIO;
 }
 
 function safeFunctionName(value: unknown): string {
@@ -158,7 +197,7 @@ function addSampledStack(
 
 function fitSummaryToLogLimit(summary: HeapSampleSummary): HeapSampleSummary {
   const stacks = summary.stacks.map((stack) => ({ ...stack, frames: [...stack.frames] }));
-  let json = JSON.stringify({ frames: summary.frames, stacks });
+  let json = JSON.stringify({ frames: summary.frames, stacks, memory: summary.memory });
 
   while (json.length > MAX_SUMMARY_JSON_LENGTH && stacks.length > 0) {
     let index = stacks.length - 1;
@@ -171,17 +210,21 @@ function fitSummaryToLogLimit(summary: HeapSampleSummary): HeapSampleSummary {
     } else {
       stacks.pop();
     }
-    json = JSON.stringify({ frames: summary.frames, stacks });
+    json = JSON.stringify({ frames: summary.frames, stacks, memory: summary.memory });
   }
 
-  return { frames: summary.frames, stacks };
+  return { frames: summary.frames, stacks, memory: summary.memory };
 }
 
 /** Reduce the inspector profile to bounded, non-sensitive frames and stacks. */
-export function summarizeHeapProfile(profileValue: unknown): HeapSampleSummary {
+export function summarizeHeapProfile(
+  profileValue: unknown,
+  memorySnapshot: HeapMemorySnapshot = readHeapMemorySnapshot(),
+): HeapSampleSummary {
+  const memory = sanitizeHeapMemorySnapshot(memorySnapshot);
   const profile = asRecord(profileValue);
   const root = asRecord(profile?.head) as RawProfileNode | null;
-  if (!root) return { frames: [], stacks: [] };
+  if (!root) return { frames: [], stacks: [], memory };
 
   const totals = new Map<string, MutableHeapSampleFrame>();
   const stackTotals = new Map<string, MutableHeapSampleStack>();
@@ -237,6 +280,7 @@ export function summarizeHeapProfile(profileValue: unknown): HeapSampleSummary {
       .sort((left, right) => right.sampledBytes - left.sampledBytes || left.key.localeCompare(right.key))
       .slice(0, MAX_SUMMARY_STACKS)
       .map(({ frames, sampledBytes }) => ({ frames, sampledBytes })),
+    memory,
   };
 
   return fitSummaryToLogLimit(summary);
@@ -253,7 +297,7 @@ export async function collectHeapSample(durationMs = SAMPLE_DURATION_MS): Promis
     });
     await new Promise<void>((resolve) => setTimeout(resolve, Math.max(1, Math.min(durationMs, SAMPLE_DURATION_MS))));
     const { profile } = await session.post('HeapProfiler.stopSampling');
-    return summarizeHeapProfile(profile);
+    return summarizeHeapProfile(profile, readHeapMemorySnapshot());
   } finally {
     session.disconnect();
   }
@@ -289,22 +333,20 @@ export function startHeapAllocationSampler(): void {
       return;
     }
 
-    let heapLimit: number;
-    let heapUsed: number;
+    let memory: HeapMemorySnapshot;
     try {
-      heapLimit = getHeapStatistics().heap_size_limit;
-      heapUsed = process.memoryUsage().heapUsed;
+      memory = readHeapMemorySnapshot();
     } catch {
       clearInterval(monitor);
       return;
     }
-    if (!Number.isFinite(heapLimit) || heapLimit <= 0 || heapUsed / heapLimit < HEAP_LIMIT_TRIGGER_RATIO) return;
+    if (!shouldTriggerHeapSample(memory)) return;
 
     triggered = true;
     clearInterval(monitor);
     void collectHeapSample().then(
       (summary) => logSafeSummary(summary, runId),
-      () => logSafeSummary({ frames: [], stacks: [] }, runId),
+      () => logSafeSummary({ frames: [], stacks: [], memory: readHeapMemorySnapshot() }, runId),
     );
   }, MONITOR_INTERVAL_MS);
   monitor.unref();

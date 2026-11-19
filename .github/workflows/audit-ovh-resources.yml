@@ -8,6 +8,11 @@ on:
         required: true
         default: false
         type: boolean
+      expected_heap_sample_run_id:
+        description: Optional run ID for retrieving one sanitized heap summary (digits-digits)
+        required: false
+        default: ''
+        type: string
 
 permissions:
   contents: read
@@ -127,6 +132,36 @@ jobs:
           target="$OVH_DEPLOY_USER@$OVH_DEPLOY_HOST"
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
           ssh "${ssh_args[@]}" "$target" 'python3 -' < scripts/deployment/audit_ovh_container_diagnostics.py
+
+      - name: Retrieve one matching sanitized heap sample
+        if: inputs.expected_heap_sample_run_id != ''
+        shell: bash
+        env:
+          EXPECTED_HEAP_SAMPLE_RUN_ID: ${{ inputs.expected_heap_sample_run_id }}
+        run: |
+          set -Eeuo pipefail
+          [[ "$EXPECTED_HEAP_SAMPLE_RUN_ID" =~ ^[0-9]+-[0-9]+$ ]] || {
+            echo 'The expected heap sample run ID must contain only digits and one hyphen.' >&2
+            exit 78
+          }
+          target="$OVH_DEPLOY_USER@$OVH_DEPLOY_HOST"
+          ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
+          expected_prefix="LUNIDEX_HEAP_SAMPLE_SUMMARY_${EXPECTED_HEAP_SAMPLE_RUN_ID}="
+          remote_command="EXPECTED_SUMMARY_PREFIX='$expected_prefix' bash -s"
+          safe_summary="$(timeout 30s ssh "${ssh_args[@]}" "$target" "$remote_command" <<'REMOTE'
+          set -Eeuo pipefail
+          [[ "${EXPECTED_SUMMARY_PREFIX:-}" =~ ^LUNIDEX_HEAP_SAMPLE_SUMMARY_[0-9]+-[0-9]+=$ ]]
+          summary="$(docker logs --since 24h --tail 10000 lunidex-production-app 2>/dev/null \
+            | awk -v prefix="$EXPECTED_SUMMARY_PREFIX" 'length($0) <= 16384 && index($0, prefix) == 1 { line = $0 } END { if (line != "") print line }' \
+            || true)"
+          [[ -n "$summary" ]] || {
+            echo 'No bounded heap sample summary matched the requested run ID.' >&2
+            exit 78
+          }
+          printf '%s\n' "$summary"
+          REMOTE
+          )"
+          printf '%s\n' "$safe_summary" | node scripts/deployment/validate-heap-sample-summary.mjs "$EXPECTED_HEAP_SAMPLE_RUN_ID"
 
       - name: Remove temporary SSH key
         if: always()
