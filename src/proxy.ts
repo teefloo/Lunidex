@@ -674,11 +674,14 @@ export async function proxy(request: NextRequest) {
       }
     }
 
-    // Serve full card documents through the locale-aware ISR route. The
-    // server component can then use route params instead of request headers
-    // and searchParams, while client Flight navigations keep the intercepted
+    // Serve every non-Flight card GET/HEAD through the locale-aware ISR route,
+    // even when a minimal client omits Accept. Otherwise those requests fall
+    // through to the request-rendered card route and repeat its root RSC render
+    // on every hit. Explicit Flight navigations/prefetches keep the intercepted
     // detail modal below `(request-rendered)`.
-    const localizedCardId = isDocumentRequest
+    const isCardDocumentRequest = !isFlightRequest(request)
+      && (request.method === 'GET' || request.method === 'HEAD');
+    const localizedCardId = isCardDocumentRequest
       && segments.length === 4
       && segments[1] === 'tcg'
       && segments[2] === 'cards'
