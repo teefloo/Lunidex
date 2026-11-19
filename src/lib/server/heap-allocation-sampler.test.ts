@@ -14,6 +14,7 @@ describe('heap allocation sampler summaries', () => {
               functionName: 'loadCatalog',
               url: 'file:///srv/lunidex/.next/server/chunks/catalog.js?token=do-not-log',
               lineNumber: 40,
+              columnNumber: 8,
             },
             selfSize: 100,
             children: [],
@@ -23,8 +24,19 @@ describe('heap allocation sampler summaries', () => {
               functionName: 'loadCatalog',
               url: 'file:///srv/lunidex/.next/server/chunks/catalog.js',
               lineNumber: 40,
+              columnNumber: 8,
             },
             selfSize: 250,
+            children: [],
+          },
+          {
+            callFrame: {
+              functionName: 'loadCatalog',
+              url: 'file:///srv/lunidex/.next/server/chunks/catalog.js',
+              lineNumber: 40,
+              columnNumber: 14,
+            },
+            selfSize: 75,
             children: [],
           },
           {
@@ -32,6 +44,7 @@ describe('heap allocation sampler summaries', () => {
               functionName: 'user@example.com',
               url: '/private/customer-data.js?email=private@example.com',
               lineNumber: 6,
+              columnNumber: Number.POSITIVE_INFINITY,
             },
             selfSize: 500,
             children: [],
@@ -42,8 +55,9 @@ describe('heap allocation sampler summaries', () => {
 
     expect(summary).toEqual({
       frames: [
-        { functionName: '(anonymous)', sourceFile: 'customer-data.js', line: 7, sampledBytes: 500 },
-        { functionName: 'loadCatalog', sourceFile: 'catalog.js', line: 41, sampledBytes: 350 },
+        { functionName: '(anonymous)', sourceFile: 'customer-data.js', line: 7, column: 0, sampledBytes: 500 },
+        { functionName: 'loadCatalog', sourceFile: 'catalog.js', line: 41, column: 9, sampledBytes: 350 },
+        { functionName: 'loadCatalog', sourceFile: 'catalog.js', line: 41, column: 15, sampledBytes: 75 },
       ],
     });
     expect(JSON.stringify(summary)).not.toContain('/srv/lunidex');
@@ -62,7 +76,9 @@ describe('heap allocation sampler summaries', () => {
 
     expect(summary.frames.length).toBeLessThanOrEqual(20);
     for (const frame of summary.frames) {
-      expect(Object.keys(frame).sort()).toEqual(['functionName', 'line', 'sampledBytes', 'sourceFile']);
+      expect(Object.keys(frame).sort()).toEqual(['column', 'functionName', 'line', 'sampledBytes', 'sourceFile']);
+      expect(frame.column).toBeGreaterThanOrEqual(0);
+      expect(Number.isSafeInteger(frame.column)).toBe(true);
       expect(frame.sampledBytes).toBeGreaterThan(0);
       expect(frame.sourceFile).not.toContain('/');
     }
