@@ -588,6 +588,10 @@ export async function proxy(request: NextRequest) {
     const forwardedHeaders = new Headers(request.headers);
     forwardedHeaders.set('x-primedex-lang', urlLocale);
     forwardedHeaders.set('x-primedex-pathname', pathname);
+    forwardedHeaders.delete('x-primedex-static-pokedex-route');
+    if (segments.length === 2 && segments[1] === 'pokedex') {
+      forwardedHeaders.set('x-primedex-static-pokedex-route', '1');
+    }
 
     // The locale in the URL is authoritative for this render. Do not attach a
     // preference cookie to the public page response: Set-Cookie makes an

@@ -2,9 +2,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { CSSProperties } from 'react';
 import { Sparkles, BrainCircuit } from 'lucide-react';
-import { getServerT, getServerLanguage, getServerPokemonLanguage } from '@/lib/server-i18n';
+import { getServerTForLanguage } from '@/lib/server-i18n';
 import { getPokemonDetailCached, getPokemonSpeciesCached, getLocalizedPokemonDataCached } from '@/lib/api/server-cache';
-import { languageToPokemonLanguageId } from '@/lib/languages';
+import { getPokemonApiLanguageCode, languageToPokemonLanguageId, type SupportedLanguage } from '@/lib/languages';
 import { TYPE_COLORS } from '@/types/pokemon';
 import { getBaseSpeciesName, getPokemonDisplayName } from '@/lib/form-names';
 import { localeHref } from '@/lib/seo';
@@ -18,10 +18,9 @@ function dailyPokemonId(size: number): number {
   return (dayOfYear % size) + 1;
 }
 
-export default async function PokemonOfTheDay() {
-  const t = await getServerT();
-  const lang = await getServerLanguage();
-  const speciesLangCode = await getServerPokemonLanguage();
+export default async function PokemonOfTheDay({ lang }: { lang: SupportedLanguage }) {
+  const t = getServerTForLanguage(lang);
+  const speciesLangCode = getPokemonApiLanguageCode(lang);
   const langId = languageToPokemonLanguageId[lang];
 
   const id = dailyPokemonId(NATIONAL_DEX_SIZE);
