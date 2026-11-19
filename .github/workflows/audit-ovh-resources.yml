@@ -56,6 +56,10 @@ jobs:
           set -Eeuo pipefail
           printf '%s\n' '--- Host load and uptime ---'
           uptime
+          printf '%s\n' '--- Host CPU capacity ---'
+          nproc
+          printf '%s\n' '--- Top host processes (PID, CPU %, RSS KiB, command name only) ---'
+          ps -eo pid,pcpu,rss,comm --sort=-pcpu | head -n 8 || true
           printf '%s\n' '--- RAM ---'
           free -h
           printf '%s\n' '--- Disk ---'
@@ -66,7 +70,7 @@ jobs:
           docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}'
           docker stats --no-stream --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.MemPerc}}'
           printf '%s\n' '--- Production container lifecycle (no environment values) ---'
-          docker inspect --format 'status={{.State.Status}} restarts={{.RestartCount}} restart_policy={{.HostConfig.RestartPolicy.Name}} oom_killed={{.State.OOMKilled}} exit_code={{.State.ExitCode}} started_at={{.State.StartedAt}} finished_at={{.State.FinishedAt}} error={{.State.Error}}' lunidex-production-app 2>/dev/null || true
+          docker inspect --format 'status={{.State.Status}} restarts={{.RestartCount}} restart_policy={{.HostConfig.RestartPolicy.Name}} nano_cpus={{.HostConfig.NanoCpus}} cpu_period={{.HostConfig.CpuPeriod}} oom_killed={{.State.OOMKilled}} exit_code={{.State.ExitCode}} started_at={{.State.StartedAt}} finished_at={{.State.FinishedAt}} error={{.State.Error}}' lunidex-production-app 2>/dev/null || true
           printf '%s\n' '--- Recent production healthcheck results ---'
           docker inspect --format '{{range .State.Health.Log}}{{printf "%s exit=%d output=%q\n" .Start .ExitCode .Output}}{{end}}' lunidex-production-app 2>/dev/null | tail -n 10 || true
           printf '%s\n' '--- Production container events (last 6 hours) ---'
