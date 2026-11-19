@@ -23,6 +23,33 @@ describe('public localized proxy responses', () => {
     },
   );
 
+  it.each([
+    { query: '', expectedLanguage: 'en' },
+    { query: '?tcgLang=fr', expectedLanguage: 'fr' },
+  ])('rewrites a full TCG card document to its locale-aware cached route ($expectedLanguage)', async ({ query, expectedLanguage }) => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }));
+
+    const response = await proxy(new NextRequest(`https://lunidex.test/en/tcg/cards/lxd-oom-card-1${query}`, {
+      headers: { accept: 'text/html' },
+    }));
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('x-middleware-next')).toBe('1');
+    expect(response.headers.get('x-middleware-rewrite')).toBeNull();
+    expect(response.headers.get('x-middleware-request-x-primedex-static-localized-route')).toBe('tcg-card-detail');
+    expect(response.headers.get('x-middleware-request-x-primedex-tcg-language')).toBe(expectedLanguage);
+  });
+
+  it('keeps TCG card client navigations on the existing intercepted route', async () => {
+    const response = await proxy(new NextRequest('https://lunidex.test/en/tcg/cards/lxd-oom-card-1?tcgLang=fr', {
+      headers: { rsc: '1', accept: 'text/x-component' },
+    }));
+
+    expect(response.headers.get('x-middleware-next')).toBe('1');
+    expect(response.headers.get('x-middleware-rewrite')).toBeNull();
+    expect(response.headers.get('x-middleware-request-x-primedex-static-localized-route')).toBeNull();
+  });
+
   it('keeps localized Pokedex paths on the locale-aware static route and forwards returnCount', async () => {
     const response = await proxy(new NextRequest('https://lunidex.test/fr/pokedex?returnCount=40', {
       headers: { accept: 'text/html', 'user-agent': 'Mozilla/5.0' },

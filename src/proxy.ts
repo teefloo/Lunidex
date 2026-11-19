@@ -674,6 +674,23 @@ export async function proxy(request: NextRequest) {
       }
     }
 
+    // Serve full card documents through the locale-aware ISR route. The
+    // server component can then use route params instead of request headers
+    // and searchParams, while client Flight navigations keep the intercepted
+    // detail modal below `(request-rendered)`.
+    const localizedCardId = isDocumentRequest
+      && segments.length === 4
+      && segments[1] === 'tcg'
+      && segments[2] === 'cards'
+      ? decodeResourceIdentifier(segments[3] ?? '').identifier
+      : null;
+    const staticTcgLanguage = localizedCardId
+      ? normalizeTCGCardLanguage(
+        request.nextUrl.searchParams.get('tcgLang'),
+        DEFAULT_TCG_CARD_LANGUAGE,
+      ) ?? DEFAULT_TCG_CARD_LANGUAGE
+      : null;
+
     // Forward the URL's locale as a request header so this exact render uses
     // it immediately. The route rewrite itself is declared in next.config.ts,
     // keeping the public URL separate from the physical route.
@@ -682,10 +699,14 @@ export async function proxy(request: NextRequest) {
     forwardedHeaders.set('x-primedex-pathname', pathname);
     forwardedHeaders.delete('x-primedex-static-pokedex-route');
     forwardedHeaders.delete('x-primedex-static-localized-route');
+    forwardedHeaders.delete('x-primedex-tcg-language');
     if (segments.length === 1) {
       forwardedHeaders.set('x-primedex-static-localized-route', 'home');
     } else if (segments.length === 2 && segments[1] === 'pokedex') {
       forwardedHeaders.set('x-primedex-static-localized-route', 'pokedex');
+    } else if (localizedCardId && staticTcgLanguage) {
+      forwardedHeaders.set('x-primedex-static-localized-route', 'tcg-card-detail');
+      forwardedHeaders.set('x-primedex-tcg-language', staticTcgLanguage);
     }
 
     // The locale in the URL is authoritative for this render. Do not attach a
