@@ -40,6 +40,26 @@ describe('public localized proxy responses', () => {
     expect(response.headers.get('x-middleware-request-x-primedex-tcg-language')).toBe(expectedLanguage);
   });
 
+  it('routes non-Flight card requests without Accept through ISR too', async () => {
+    const response = await proxy(new NextRequest('https://lunidex.test/en/tcg/cards/lxd-oom-card-no-accept?tcgLang=ja'));
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('x-middleware-next')).toBe('1');
+    expect(response.headers.get('x-middleware-rewrite')).toBeNull();
+    expect(response.headers.get('x-middleware-request-x-primedex-static-localized-route')).toBe('tcg-card-detail');
+    expect(response.headers.get('x-middleware-request-x-primedex-tcg-language')).toBe('ja');
+  });
+
+  it('routes card HEAD requests without Accept through ISR', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }));
+    const response = await proxy(new NextRequest('https://lunidex.test/en/tcg/cards/lxd-oom-card-head', {
+      method: 'HEAD',
+    }));
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('x-middleware-request-x-primedex-static-localized-route')).toBe('tcg-card-detail');
+  });
+
   it('keeps TCG card client navigations on the existing intercepted route', async () => {
     const response = await proxy(new NextRequest('https://lunidex.test/en/tcg/cards/lxd-oom-card-1?tcgLang=fr', {
       headers: { rsc: '1', accept: 'text/x-component' },
