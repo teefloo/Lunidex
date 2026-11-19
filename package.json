@@ -13,11 +13,13 @@
     "packages/*"
   ],
   "scripts": {
+    "postinstall": "node scripts/patch-next-control-flow-errors.mjs",
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "node .next/standalone/server.js",
     "lint": "eslint",
     "test": "vitest run",
+    "test:next-patch": "node --test scripts/patch-next-control-flow-errors.test.mjs",
     "seo:check": "node scripts/seo-check.mjs",
     "typecheck": "tsc --noEmit",
     "db:neon:export": "bash scripts/neon/export-supabase.sh",
