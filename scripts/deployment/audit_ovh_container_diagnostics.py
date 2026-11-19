@@ -9,6 +9,7 @@ paths, request IDs, IP addresses, command arguments, or environment values.
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 import time
@@ -55,6 +56,19 @@ LOCALIZED_ROUTE_FAMILIES = {
     "team": "localized_team",
     "quiz": "localized_quiz",
 }
+ROUTE_DIAGNOSTIC_PREFIX = "LUNIDEX_ROUTE_FAMILY_V1"
+ROUTE_DIAGNOSTIC_FAMILIES = {
+    "localized_home",
+    "localized_pokedex",
+    "localized_pokemon",
+    "localized_tcg",
+    "localized_team",
+    "localized_quiz",
+    "localized_other",
+    "scanner_probe",
+    "unlocalized_redirect",
+}
+ROUTE_DIAGNOSTIC_METHODS = {"GET", "HEAD", "POST", "OTHER"}
 
 
 def parse_numeric_pairs(text: str, allowed_keys: Sequence[str]) -> dict[str, int]:
@@ -124,6 +138,37 @@ def heap_sampler_summary_seen(log_text: str) -> bool:
         re.search(r"(?:^|\s)LUNIDEX_HEAP_SAMPLE_SUMMARY_[0-9]+-[0-9]+=", line)
         for line in log_text.splitlines()
     )
+
+
+def summarize_route_family_diagnostics(log_text: str, expected_run_id: str) -> Counter[str]:
+    """Count only allowlisted events for one validated diagnostic run id."""
+    counts: Counter[str] = Counter()
+    if not re.fullmatch(r"[0-9]+-[0-9]+", expected_run_id):
+        return counts
+
+    for line in log_text.splitlines():
+        marker_index = line.find(ROUTE_DIAGNOSTIC_PREFIX)
+        if marker_index < 0:
+            continue
+        fields = line[marker_index:].split()
+        if len(fields) != 4 or fields[0] != ROUTE_DIAGNOSTIC_PREFIX:
+            continue
+        run_name, run_separator, run_id = fields[1].partition("=")
+        family_name, family_separator, family = fields[2].partition("=")
+        method_name, method_separator, method = fields[3].partition("=")
+        if (
+            run_name == "run"
+            and run_separator
+            and run_id == expected_run_id
+            and family_name == "family"
+            and family_separator
+            and family in ROUTE_DIAGNOSTIC_FAMILIES
+            and method_name == "method"
+            and method_separator
+            and method in ROUTE_DIAGNOSTIC_METHODS
+        ):
+            counts[family] += 1
+    return counts
 
 
 def route_family(uri: object) -> str:
@@ -306,7 +351,7 @@ def report_container_processes() -> None:
             emit(f"{prefix}_{key.lower()}_kib", value if value is not None else "unavailable")
 
 
-def report_heap_sampler() -> None:
+def report_heap_sampler(expected_run_id: str) -> None:
     print("--- Optional heap sampler state (values redacted) ---")
     environment_json = run_command(
         ["docker", "inspect", "--format", "{{json .Config.Env}}", APP_CONTAINER]
@@ -331,8 +376,14 @@ def report_heap_sampler() -> None:
     )
     if app_log_text is None:
         emit("heap_sampler_summary_log_available", "false")
+        emit("route_family_diagnostic_log_available", "false")
     else:
         emit("heap_sampler_summary_seen_last_6h", str(heap_sampler_summary_seen(app_log_text)).lower())
+        route_counts = summarize_route_family_diagnostics(app_log_text, expected_run_id)
+        emit("route_family_diagnostic_log_available", str(bool(route_counts)).lower())
+        emit("app_route_family_diagnostic_event_count", sum(route_counts.values()))
+        for family in sorted(route_counts):
+            emit(f"app_route_family_{family}_count", route_counts[family])
 
 
 def report_caddy_access_logs() -> None:
@@ -352,11 +403,12 @@ def report_caddy_access_logs() -> None:
 
 
 def main() -> None:
+    expected_run_id = os.environ.get("EXPECTED_HEAP_SAMPLE_RUN_ID", "")
     details = container_details()
     if details is None:
         print("--- Production app container diagnostics ---")
         emit("app_container_available", "false")
-        report_heap_sampler()
+        report_heap_sampler(expected_run_id)
         report_caddy_access_logs()
         return
 
@@ -365,7 +417,7 @@ def main() -> None:
     emit("app_container_available", "true")
     report_cgroup_memory(container_cgroup_directory(container_id, host_pid))
     report_container_processes()
-    report_heap_sampler()
+    report_heap_sampler(expected_run_id)
     report_caddy_access_logs()
 
 

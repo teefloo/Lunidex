@@ -3,7 +3,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { proxy } from './proxy';
 
-afterEach(() => { vi.restoreAllMocks(); });
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.unstubAllEnvs();
+});
 
 describe('public localized proxy responses', () => {
   it.each(['en', 'fr', 'es', 'de', 'it', 'ja', 'ko', 'zh'] as const)(
@@ -63,6 +66,75 @@ describe('public localized proxy responses', () => {
 
     expect(response.status).toBe(404);
   });
+
+  it.each([
+    '/.config/aichat/config.yaml',
+    '/.claude/settings.local.json',
+    '/.env.production.local',
+    '/.env.txt',
+    '/.dockercfg',
+    '/config/parameters.yml',
+    '/fr/.env.production.local',
+  ])('returns a cacheable 404 for known secret/configuration probes at %s before rendering', async (path) => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch');
+
+    const response = await proxy(new NextRequest(`https://lunidex.test${path}`, {
+      headers: { accept: 'text/html' },
+    }));
+
+    expect(response.status).toBe(404);
+    expect(response.headers.get('Cache-Control')).toContain('s-maxage=3600');
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('does not treat the ACME well-known path as a scanner probe', async () => {
+    const response = await proxy(new NextRequest('https://lunidex.test/.well-known/acme-challenge/example-token'));
+
+    expect(response.status).toBe(308);
+    expect(response.headers.get('Cache-Control')).toBeNull();
+  });
+
+  it('logs only an allowlisted route family and method during the active heap diagnostic window', async () => {
+    vi.stubEnv('NODE_ENV', 'production');
+    vi.stubEnv('LUNIDEX_HEAP_SAMPLER_DIAGNOSTIC', 'enabled');
+    vi.stubEnv('LUNIDEX_HEAP_SAMPLER_EXPIRES_AT', '2000');
+    vi.stubEnv('LUNIDEX_HEAP_SAMPLER_RUN_ID', '1234-5');
+    vi.spyOn(Date, 'now').mockReturnValue(1_000_000);
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }));
+    const infoMock = vi.spyOn(console, 'info').mockImplementation(() => {});
+
+    const response = await proxy(new NextRequest(
+      'https://lunidex.test/en/tcg/cards/private-card-id?token=private-query',
+      { headers: { accept: 'text/html', 'x-private-header': 'private-header-value' } },
+    ));
+
+    expect(response.status).toBe(200);
+    expect(infoMock).toHaveBeenCalledOnce();
+    expect(infoMock).toHaveBeenCalledWith('LUNIDEX_ROUTE_FAMILY_V1 run=1234-5 family=localized_tcg method=GET');
+    const loggedValues = JSON.stringify(infoMock.mock.calls);
+    for (const sensitiveValue of ['private-card-id', 'private-query', 'private-header-value']) {
+      expect(loggedValues).not.toContain(sensitiveValue);
+    }
+  });
+
+  it.each([
+    { nodeEnv: 'test', enabled: 'enabled', expires: '2000', runId: '1234-5' },
+    { nodeEnv: 'production', enabled: 'enabled', expires: '1000', runId: '1234-5' },
+    { nodeEnv: 'production', enabled: 'enabled', expires: '2000', runId: 'invalid-run-id' },
+    { nodeEnv: 'production', enabled: 'disabled', expires: '2000', runId: '1234-5' },
+  ])('does not log route families outside a valid active diagnostic window', async ({ nodeEnv, enabled, expires, runId }) => {
+    vi.stubEnv('NODE_ENV', nodeEnv);
+    vi.stubEnv('LUNIDEX_HEAP_SAMPLER_DIAGNOSTIC', enabled);
+    vi.stubEnv('LUNIDEX_HEAP_SAMPLER_EXPIRES_AT', expires);
+    vi.stubEnv('LUNIDEX_HEAP_SAMPLER_RUN_ID', runId);
+    vi.spyOn(Date, 'now').mockReturnValue(1_000_000);
+    const infoMock = vi.spyOn(console, 'info').mockImplementation(() => {});
+
+    await proxy(new NextRequest('https://lunidex.test/fr/pokedex'));
+
+    expect(infoMock).not.toHaveBeenCalled();
+  });
+
   it('short-circuits automated Next prefetches before rendering the page', async () => {
     const fetchMock = vi.spyOn(globalThis, 'fetch');
 

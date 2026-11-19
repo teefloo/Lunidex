@@ -10,6 +10,7 @@ from audit_ovh_container_diagnostics import (
     parse_proc_status,
     route_family,
     summarize_caddy_access_logs,
+    summarize_route_family_diagnostics,
 )
 
 
@@ -84,6 +85,27 @@ class AuditOvhContainerDiagnosticsTests(unittest.TestCase):
             )
         )
         self.assertFalse(heap_sampler_summary_seen("ordinary startup log with no diagnostic marker"))
+
+    def test_route_family_diagnostic_counts_only_allowlisted_fields(self):
+        log_text = "\n".join(
+            [
+                "2026-11-19T12:00:00Z LUNIDEX_ROUTE_FAMILY_V1 run=1234-5 family=localized_tcg method=GET",
+                "2026-11-19T12:00:01Z LUNIDEX_ROUTE_FAMILY_V1 run=1234-5 family=scanner_probe method=HEAD",
+                "2026-11-19T12:00:02Z LUNIDEX_ROUTE_FAMILY_V1 run=1234-5 family=secret-path method=GET",
+                "2026-11-19T12:00:03Z LUNIDEX_ROUTE_FAMILY_V1 run=1234-5 family=localized_tcg method=DELETE",
+                "2026-11-19T12:00:04Z LUNIDEX_ROUTE_FAMILY_V1 run=2345-6 family=localized_tcg method=GET",
+                "unrelated log private-card-id /en/tcg/cards/private-card-id?token=private-query",
+            ]
+        )
+
+        counts = summarize_route_family_diagnostics(log_text, "1234-5")
+        summary = " ".join(f"{key}={value}" for key, value in sorted(counts.items()))
+
+        self.assertEqual(counts, Counter({"localized_tcg": 1, "scanner_probe": 1}))
+        self.assertEqual(summarize_route_family_diagnostics(log_text, "invalid-run-id"), Counter())
+        self.assertNotIn("private-card-id", summary)
+        self.assertNotIn("private-query", summary)
+        self.assertNotIn("secret-path", summary)
 
     def test_route_family_strips_query_and_dynamic_identifiers(self):
         self.assertEqual(

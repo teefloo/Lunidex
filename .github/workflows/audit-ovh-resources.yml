@@ -9,7 +9,7 @@ on:
         default: false
         type: boolean
       expected_heap_sample_run_id:
-        description: Optional run ID for retrieving one sanitized heap summary (digits-digits)
+        description: Optional run ID for the sanitized heap summary and matching route-family counts (digits-digits)
         required: false
         default: ''
         type: string
@@ -125,13 +125,20 @@ jobs:
           done
           REMOTE
 
-      - name: Inspect production cgroup memory and redacted Caddy traffic
+      - name: Inspect production memory and filter route-family logs by diagnostic run
         shell: bash
+        env:
+          EXPECTED_HEAP_SAMPLE_RUN_ID: ${{ inputs.expected_heap_sample_run_id }}
         run: |
           set -Eeuo pipefail
+          [[ -z "$EXPECTED_HEAP_SAMPLE_RUN_ID" || "$EXPECTED_HEAP_SAMPLE_RUN_ID" =~ ^[0-9]+-[0-9]+$ ]] || {
+            echo 'The expected diagnostic run identifier must be empty or contain only digits and one hyphen.' >&2
+            exit 78
+          }
           target="$OVH_DEPLOY_USER@$OVH_DEPLOY_HOST"
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
-          ssh "${ssh_args[@]}" "$target" 'python3 -' < scripts/deployment/audit_ovh_container_diagnostics.py
+          remote_command="EXPECTED_HEAP_SAMPLE_RUN_ID='$EXPECTED_HEAP_SAMPLE_RUN_ID' python3 -"
+          ssh "${ssh_args[@]}" "$target" "$remote_command" < scripts/deployment/audit_ovh_container_diagnostics.py
 
       - name: Retrieve one matching sanitized heap sample
         if: inputs.expected_heap_sample_run_id != ''
