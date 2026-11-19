@@ -29,6 +29,8 @@ jobs:
 
       - run: node --test scripts/deployment/validate-heap-sample-summary.test.mjs
 
+      - run: node --test scripts/deployment/production-memory-gate.test.mjs
+
       - run: npm run seo:check
 
       - run: npm run build
