@@ -13,10 +13,10 @@ describe('localized client navigation', () => {
     });
   });
 
-  it('preserves card ISR for documents and routes Flight requests through interception', async () => {
+  it('routes card documents through the dynamic page and Flight through interception', async () => {
     const rewrites = await nextConfig.rewrites?.();
     const beforeFiles = (rewrites && !Array.isArray(rewrites) ? rewrites.beforeFiles : undefined) ?? [];
-    const isrIndex = beforeFiles.findIndex((rewrite) =>
+    const cardIsrIndex = beforeFiles.findIndex((rewrite) =>
       'source' in rewrite
       && rewrite.source === '/:locale(en|fr|es|de|it|ja|ko|zh)/tcg/cards/:id'
       && rewrite.destination === '/:locale/tcg/cards/:id/cached/:tcgLanguage',
@@ -31,16 +31,9 @@ describe('localized client navigation', () => {
       && rewrite.source === '/:locale(en|fr|es|de|it|ja|ko|zh)/:path*',
     );
 
-    expect(isrIndex).toBeGreaterThanOrEqual(0);
-    expect(beforeFiles[isrIndex]).toMatchObject({
-      has: [
-        { type: 'header', key: 'x-primedex-static-localized-route', value: 'tcg-card-detail' },
-        { type: 'header', key: 'x-primedex-tcg-language', value: '(?<tcgLanguage>[^/]+)' },
-      ],
-      missing: [{ type: 'header', key: 'next-url' }],
-    });
+    expect(cardIsrIndex).toBe(-1);
 
-    expect(interceptedNavigationIndex).toBeGreaterThan(isrIndex);
+    expect(interceptedNavigationIndex).toBeGreaterThanOrEqual(0);
     expect(beforeFiles[interceptedNavigationIndex]).toMatchObject({
       has: [{ type: 'header', key: 'next-url' }],
     });

@@ -704,26 +704,6 @@ export async function proxy(request: NextRequest) {
       }
     }
 
-    // Serve every non-Flight card GET/HEAD through the locale-aware ISR route,
-    // even when a minimal client omits Accept. Otherwise those requests fall
-    // through to the request-rendered card route and repeat its root RSC render
-    // on every hit. Explicit Flight navigations/prefetches keep the intercepted
-    // detail modal below `(request-rendered)`.
-    const isCardDocumentRequest = !isFlightRequest(request)
-      && (request.method === 'GET' || request.method === 'HEAD');
-    const localizedCardId = isCardDocumentRequest
-      && segments.length === 4
-      && segments[1] === 'tcg'
-      && segments[2] === 'cards'
-      ? decodeResourceIdentifier(segments[3] ?? '').identifier
-      : null;
-    const staticTcgLanguage = localizedCardId
-      ? normalizeTCGCardLanguage(
-        request.nextUrl.searchParams.get('tcgLang'),
-        DEFAULT_TCG_CARD_LANGUAGE,
-      ) ?? DEFAULT_TCG_CARD_LANGUAGE
-      : null;
-
     // Forward the URL's locale as a request header so this exact render uses
     // it immediately. The route rewrite itself is declared in next.config.ts,
     // keeping the public URL separate from the physical route.
@@ -737,9 +717,6 @@ export async function proxy(request: NextRequest) {
       forwardedHeaders.set('x-primedex-static-localized-route', 'home');
     } else if (segments.length === 2 && segments[1] === 'pokedex') {
       forwardedHeaders.set('x-primedex-static-localized-route', 'pokedex');
-    } else if (localizedCardId && staticTcgLanguage) {
-      forwardedHeaders.set('x-primedex-static-localized-route', 'tcg-card-detail');
-      forwardedHeaders.set('x-primedex-tcg-language', staticTcgLanguage);
     }
 
     // The locale in the URL is authoritative for this render. Do not attach a

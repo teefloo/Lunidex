@@ -23,10 +23,7 @@ describe('public localized proxy responses', () => {
     },
   );
 
-  it.each([
-    { query: '', expectedLanguage: 'en' },
-    { query: '?tcgLang=fr', expectedLanguage: 'fr' },
-  ])('rewrites a full TCG card document to its locale-aware cached route ($expectedLanguage)', async ({ query, expectedLanguage }) => {
+  it.each(['', '?tcgLang=fr'])('forwards a full TCG card document to the dynamic detail route (%s)', async (query) => {
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }));
 
     const response = await proxy(new NextRequest(`https://lunidex.test/en/tcg/cards/lxd-oom-card-1${query}`, {
@@ -36,28 +33,31 @@ describe('public localized proxy responses', () => {
     expect(response.status).toBe(200);
     expect(response.headers.get('x-middleware-next')).toBe('1');
     expect(response.headers.get('x-middleware-rewrite')).toBeNull();
-    expect(response.headers.get('x-middleware-request-x-primedex-static-localized-route')).toBe('tcg-card-detail');
-    expect(response.headers.get('x-middleware-request-x-primedex-tcg-language')).toBe(expectedLanguage);
+    expect(response.headers.get('x-middleware-request-x-primedex-static-localized-route')).toBeNull();
+    expect(response.headers.get('x-middleware-request-x-primedex-tcg-language')).toBeNull();
+    expect(response.headers.get('x-middleware-request-x-primedex-lang')).toBe('en');
   });
 
-  it('routes non-Flight card requests without Accept through ISR too', async () => {
+  it('routes non-Flight card requests without Accept through the dynamic detail route', async () => {
     const response = await proxy(new NextRequest('https://lunidex.test/en/tcg/cards/lxd-oom-card-no-accept?tcgLang=ja'));
 
     expect(response.status).toBe(200);
     expect(response.headers.get('x-middleware-next')).toBe('1');
     expect(response.headers.get('x-middleware-rewrite')).toBeNull();
-    expect(response.headers.get('x-middleware-request-x-primedex-static-localized-route')).toBe('tcg-card-detail');
-    expect(response.headers.get('x-middleware-request-x-primedex-tcg-language')).toBe('ja');
+    expect(response.headers.get('x-middleware-request-x-primedex-static-localized-route')).toBeNull();
+    expect(response.headers.get('x-middleware-request-x-primedex-tcg-language')).toBeNull();
+    expect(response.headers.get('x-middleware-request-x-primedex-lang')).toBe('en');
   });
 
-  it('routes card HEAD requests without Accept through ISR', async () => {
+  it('routes card HEAD requests without Accept through the dynamic detail route', async () => {
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }));
     const response = await proxy(new NextRequest('https://lunidex.test/en/tcg/cards/lxd-oom-card-head', {
       method: 'HEAD',
     }));
 
     expect(response.status).toBe(200);
-    expect(response.headers.get('x-middleware-request-x-primedex-static-localized-route')).toBe('tcg-card-detail');
+    expect(response.headers.get('x-middleware-request-x-primedex-static-localized-route')).toBeNull();
+    expect(response.headers.get('x-middleware-request-x-primedex-lang')).toBe('en');
   });
 
   it('keeps TCG card client navigations on the existing intercepted route', async () => {
@@ -93,14 +93,15 @@ describe('public localized proxy responses', () => {
     },
   );
 
-  it('keeps automated card HTML documents crawlable through ISR', async () => {
+  it('keeps automated card HTML documents crawlable through the dynamic detail route', async () => {
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }));
     const response = await proxy(new NextRequest('https://lunidex.test/en/tcg/cards/lxd-oom-card-crawler-html', {
       headers: { accept: 'text/html', 'user-agent': 'Googlebot/2.1' },
     }));
 
     expect(response.status).toBe(200);
-    expect(response.headers.get('x-middleware-request-x-primedex-static-localized-route')).toBe('tcg-card-detail');
+    expect(response.headers.get('x-middleware-request-x-primedex-static-localized-route')).toBeNull();
+    expect(response.headers.get('x-middleware-request-x-primedex-lang')).toBe('en');
   });
 
   it('keeps localized Pokedex paths on the locale-aware static route and forwards returnCount', async () => {
