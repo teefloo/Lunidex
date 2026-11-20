@@ -68,10 +68,12 @@ report_helper_error() {
   local phase="$1"
   local helper_error_file="$2"
   local helper_exit="${3:-0}"
+  local classify_execution="${4:-false}"
   local category=''
   local launch_classification=''
   local helper_started='false'
-  local launch_json_pattern='^\{"helper_started":(true|false),"exit_code":125,"category":"(docker_[a-z_]+|helper_exit_125)"\}$'
+  local stderr_signature=''
+  local classified_exit=''
   category="$(sed -nE 's/^diagnostic_error_category=([a-z_]+)$/\1/p' "$helper_error_file" | head -n 1)"
   if grep -qx 'diagnostic_helper_started=true' "$helper_error_file"; then
     helper_started='true'
@@ -79,17 +81,17 @@ report_helper_error() {
   fi
   if [[ "$category" =~ ^(inspector_[a-z_]+|summary_validation_failed|diagnostic_phase_failed|invalid_diagnostic_configuration)$ ]]; then
     echo "${phase}_diagnostic_error_category=$category"
-  elif (( helper_exit == 125 )); then
-    launch_classification="$(node "$GITHUB_WORKSPACE/scripts/deployment/classify-isolated-docker-launch-error.mjs" "$helper_exit" <"$helper_error_file" 2>/dev/null || true)"
-    if [[ "$launch_classification" =~ $launch_json_pattern ]]; then
-      category="${BASH_REMATCH[2]}"
+  elif [[ "$classify_execution" == true ]] && (( helper_exit != 0 )); then
+    launch_classification="$(node "$GITHUB_WORKSPACE/scripts/deployment/classify-isolated-docker-launch-error.mjs" "$helper_exit" --shell <"$helper_error_file" 2>/dev/null || true)"
+    IFS=$'\t' read -r helper_started classified_exit category stderr_signature <<< "$launch_classification"
+    if [[ ( "$helper_started" == true || "$helper_started" == false ) && "$classified_exit" == "$helper_exit" && "$category" =~ ^(docker_[a-z_]+|helper_[a-z_]+)$ && ${#stderr_signature} -le 160 ]]; then
       if [[ "$helper_started" == true ]]; then
-        echo "${phase}_helper_failure_category=$category exit_code=125"
+        echo "${phase}_helper_failure_category=$category exit_code=$helper_exit stderr_signature=$stderr_signature"
       else
-        echo "${phase}_docker_launch_failure_category=$category exit_code=125"
+        echo "${phase}_docker_exec_failure_category=$category exit_code=$helper_exit stderr_signature=$stderr_signature"
       fi
     else
-      echo "${phase}_docker_launch_failure_category=unclassified exit_code=125"
+      echo "${phase}_docker_exec_failure_category=unclassified exit_code=$helper_exit stderr_signature=unavailable"
     fi
   elif [[ -s "$helper_error_file" ]]; then
     echo "${phase}_diagnostic_error_category=unclassified"
@@ -119,9 +121,9 @@ run_phase() {
   if ! docker run --detach \
     --name "$anchor" \
     --network "$INTERNAL_NETWORK" \
-    --cpus 0.05 \
-    --memory 64m \
-    --memory-swap 64m \
+    --cpus 0.25 \
+    --memory 256m \
+    --memory-swap 256m \
     --pids-limit 32 \
     --read-only \
     --tmpfs /tmp:rw,noexec,nosuid,size=8m \
@@ -214,25 +216,16 @@ run_phase() {
     resource_validation_exit=1
   fi
 
-  timeout 3_660s docker run --rm \
-    --network "container:$anchor" \
-    --cpus 0.25 \
-    --memory 128m \
-    --memory-swap 128m \
-    --pids-limit 64 \
-    --read-only \
-    --tmpfs /tmp:rw,noexec,nosuid,size=16m \
-    --cap-drop ALL \
-    --security-opt no-new-privileges:true \
-    --mount "type=bind,src=$GITHUB_WORKSPACE/scripts/deployment/isolated-tcg-rsc-load.mjs,dst=/app/server.js,readonly" \
-    --env NODE_OPTIONS= \
-    --env ISOLATED_TCG_PHASE="$phase" \
-    --env ISOLATED_TCG_DURATION_SECONDS="$DIAGNOSTIC_PHASE_SECONDS" \
-    --env ISOLATED_TCG_CONCURRENCY="$DIAGNOSTIC_CONCURRENCY" \
-    "$APP_IMAGE" node /app/server.js >"$helper_stdout_file" 2>"$helper_stderr_file" || helper_exit=$?
+  timeout 3_660s docker exec --interactive \
+    --env "ISOLATED_TCG_PHASE=$phase" \
+    --env "ISOLATED_TCG_DURATION_SECONDS=$DIAGNOSTIC_PHASE_SECONDS" \
+    --env "ISOLATED_TCG_CONCURRENCY=$DIAGNOSTIC_CONCURRENCY" \
+    "$anchor" node --input-type=module - \
+    <"$GITHUB_WORKSPACE/scripts/deployment/isolated-tcg-rsc-load.mjs" \
+    >"$helper_stdout_file" 2>"$helper_stderr_file" || helper_exit=$?
 
   summary="$(cat "$helper_stdout_file")"
-  report_helper_error "$phase" "$helper_stderr_file" "$helper_exit"
+  report_helper_error "$phase" "$helper_stderr_file" "$helper_exit" true
   if kill -0 "$resource_sampler_pid" 2>/dev/null; then
     kill -TERM "$resource_sampler_pid" 2>/dev/null || true
   fi

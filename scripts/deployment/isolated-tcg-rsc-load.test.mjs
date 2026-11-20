@@ -132,11 +132,11 @@ test('every selectable load profile has one bounded duration, concurrency, and p
 test('isolated network anchor uses the pinned image Node runtime without assuming sleep exists', () => {
   const phaseRunner = readFileSync(new URL('./run-isolated-tcg-rsc-phases.sh', import.meta.url), 'utf8');
 
-  assert.match(phaseRunner, /--memory 64m[\s\S]*?--memory-swap 64m/);
+  assert.match(phaseRunner, /--memory 256m[\s\S]*?--memory-swap 256m[\s\S]*?--pids-limit 32/);
   assert.match(phaseRunner, /--entrypoint node[\s\S]*?\$APP_IMAGE" -e 'setInterval\(\(\) => \{\}, 60000\)'/);
   assert.doesNotMatch(phaseRunner, /--entrypoint \/bin\/sleep/);
   assert.match(phaseRunner, /--cpus 1[\s\S]*?--memory 2176m[\s\S]*?--memory-swap 2176m[\s\S]*?--max-old-space-size=1408/);
-  assert.match(phaseRunner, /ISOLATED_TCG_CONCURRENCY="\$DIAGNOSTIC_CONCURRENCY"/);
+  assert.match(phaseRunner, /--env "ISOLATED_TCG_CONCURRENCY=\$DIAGNOSTIC_CONCURRENCY"/);
   assert.match(phaseRunner, /MIN_DURATION_SECONDS=30/);
 });
 
@@ -244,8 +244,9 @@ test('invalid phase parameters and missing initial inspector sample fail before 
   );
 
   const missingProfiler = spawnSync(process.execPath, [
-    'scripts/deployment/isolated-tcg-rsc-load.mjs',
+    '--input-type=module', '-'
   ], {
+    input: readFileSync(new URL('./isolated-tcg-rsc-load.mjs', import.meta.url), 'utf8'),
     encoding: 'utf8',
     env: {
       ...process.env,
