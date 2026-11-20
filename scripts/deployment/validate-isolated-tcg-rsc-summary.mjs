@@ -1,7 +1,7 @@
 import { validateOutput } from './isolated-tcg-rsc-load.mjs';
 
 const expectedPhase = process.argv[2];
-const MAX_LINE_BYTES = 16 * 1024;
+const MAX_LINE_BYTES = 64 * 1024;
 
 if (!['full', 'abort'].includes(expectedPhase)) {
   process.stderr.write('invalid_expected_phase\n');
@@ -37,4 +37,4 @@ if (!validateOutput(summary) || summary.phase !== expectedPhase) {
 }
 
 process.stdout.write(`${JSON.stringify(summary)}\n`);
-if (summary.statuses['2xx'] === 0) process.exitCode = 1;
+if (summary.phase === 'full' && summary.statuses['2xx'] === 0) process.exitCode = 1;

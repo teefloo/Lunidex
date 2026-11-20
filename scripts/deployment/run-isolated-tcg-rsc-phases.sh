@@ -2,11 +2,20 @@
 set -Eeuo pipefail
 
 readonly EXPECTED_IMAGE='ghcr.io/teefloo/lunidex:ca08758609fb5cfefafff6d5c2aaee31ddc56f63'
-readonly EXPECTED_DURATION_SECONDS=900
+readonly MIN_DURATION_SECONDS=30
+readonly MAX_DURATION_SECONDS=3600
+readonly MIN_CONCURRENCY=1
+readonly MAX_CONCURRENCY=32
 readonly CACHE_VOLUME='lunidex-isolated-rsc-cache'
 readonly INTERNAL_NETWORK='lunidex-isolated-rsc-internal'
+readonly DIAGNOSTIC_PHASE_SECONDS="${PHASE_SECONDS:-0}"
+readonly DIAGNOSTIC_CONCURRENCY="${ISOLATED_TCG_CONCURRENCY:-32}"
+readonly DIAGNOSTIC_PHASES="${ISOLATED_TCG_PHASES:-full,abort}"
 
-if [[ "${APP_IMAGE:-}" != "$EXPECTED_IMAGE" || "${PHASE_SECONDS:-}" != "$EXPECTED_DURATION_SECONDS" ]]; then
+if [[ "${APP_IMAGE:-}" != "$EXPECTED_IMAGE" || ! "$DIAGNOSTIC_PHASE_SECONDS" =~ ^[0-9]+$ || ! "$DIAGNOSTIC_CONCURRENCY" =~ ^[0-9]+$ ]] \
+  || (( DIAGNOSTIC_PHASE_SECONDS < MIN_DURATION_SECONDS || DIAGNOSTIC_PHASE_SECONDS > MAX_DURATION_SECONDS )) \
+  || (( DIAGNOSTIC_CONCURRENCY < MIN_CONCURRENCY || DIAGNOSTIC_CONCURRENCY > MAX_CONCURRENCY )) \
+  || [[ "$DIAGNOSTIC_PHASES" != full && "$DIAGNOSTIC_PHASES" != full,abort ]]; then
   echo 'diagnostic_configuration_not_pinned=true' >&2
   exit 78
 fi
@@ -16,12 +25,75 @@ remove_phase() {
   docker rm --force "lunidex-isolated-rsc-$phase-app" "lunidex-isolated-rsc-$phase-anchor" >/dev/null 2>&1 || true
 }
 
+report_container_state() {
+  local phase="$1"
+  local app="$2"
+  local state_json=''
+  local restart_count=''
+  local normalized=''
+
+  state_json="$(docker inspect --format '{{json .State}}' "$app" 2>/dev/null || true)"
+  if [[ -z "$state_json" ]]; then
+    echo "${phase}_container_state=unavailable"
+    return 1
+  fi
+  restart_count="$(docker inspect --format '{{.RestartCount}}' "$app" 2>/dev/null || true)"
+  if [[ ! "$restart_count" =~ ^[0-9]+$ ]]; then
+    echo "${phase}_container_state=unavailable"
+    return 1
+  fi
+
+  normalized="$(printf '%s\n' "$state_json" | node "$GITHUB_WORKSPACE/scripts/deployment/normalize-isolated-container-state.mjs" "$restart_count" 2>/dev/null || true)"
+  if [[ -z "$normalized" ]]; then
+    echo "${phase}_container_state=invalid"
+    return 1
+  fi
+  echo "${phase}_container_state=$normalized"
+  printf '%s\n' "$normalized" | bash "$GITHUB_WORKSPACE/scripts/deployment/isolated-container-state-healthy.sh"
+}
+
+report_node_logs() {
+  local phase="$1"
+  local app="$2"
+  local result=''
+  result="$(docker logs --tail 2000 "$app" 2>&1 | node "$GITHUB_WORKSPACE/scripts/deployment/classify-isolated-node-logs.mjs" 2>/dev/null || true)"
+  if [[ "$result" =~ ^\{\"fatal_category\":\"(none|v8_heap_oom|kernel_or_container_oom|uncaught_exception|node_fatal|abort_or_assertion)\", ]]; then
+    echo "${phase}_node_log_classification=$result"
+  else
+    echo "${phase}_node_log_classification=unavailable"
+  fi
+}
+
+report_helper_error() {
+  local phase="$1"
+  local helper_error_file="$2"
+  local category=''
+  category="$(sed -nE 's/^diagnostic_error_category=([a-z_]+)$/\1/p' "$helper_error_file" | head -n 1)"
+  if [[ "$category" =~ ^(inspector_[a-z_]+|summary_validation_failed|diagnostic_phase_failed|invalid_diagnostic_configuration)$ ]]; then
+    echo "${phase}_diagnostic_error_category=$category"
+  elif [[ -s "$helper_error_file" ]]; then
+    echo "${phase}_diagnostic_error_category=unclassified"
+  fi
+}
+
 run_phase() {
   local phase="$1"
   local anchor="lunidex-isolated-rsc-$phase-anchor"
   local app="lunidex-isolated-rsc-$phase-app"
+  local helper_stdout_file=''
+  local helper_stderr_file=''
+  local resources_stdout_file=''
+  local resources_stderr_file=''
+  local helper_exit=0
+  local validation_exit=0
+  local app_state_exit=0
+  local resource_validation_exit=0
+  local resource_sampler_exit=0
+  local resource_sampler_pid=''
+  local resource_stats_status=''
   local summary=''
-  local inspect_output=''
+  local validated_summary=''
+  local validated_resources=''
 
   remove_phase "$phase"
   if ! docker run --detach \
@@ -59,7 +131,7 @@ run_phase() {
     --env NEXT_TELEMETRY_DISABLED=1 \
     --env HOSTNAME=0.0.0.0 \
     --env PORT=3000 \
-    --env NODE_OPTIONS='--max-old-space-size=1024 --inspect=127.0.0.1:9229 --expose-gc' \
+    --env NODE_OPTIONS='--max-old-space-size=1408 --inspect=127.0.0.1:9229 --expose-gc' \
     --env SENTRY_DSN= \
     --env NEXT_PUBLIC_SENTRY_DSN= \
     --env NEXT_PUBLIC_POSTHOG_ENABLED=false \
@@ -94,18 +166,35 @@ run_phase() {
   done
   echo "${phase}_app_ready=$ready"
   if [[ "$ready" != true ]]; then
-    inspect_output="$(docker inspect --format 'running={{.State.Running}} oom={{.State.OOMKilled}} exit={{.State.ExitCode}}' "$app" 2>/dev/null || true)"
-    if [[ -n "$inspect_output" ]]; then
-      echo "${phase}_container_state=$inspect_output"
+    if report_container_state "$phase" "$app"; then
+      :
     else
-      echo "${phase}_container_state=unavailable"
+      app_state_exit=$?
     fi
+    report_node_logs "$phase" "$app"
     remove_phase "$phase"
     return 1
   fi
 
-  local helper_exit=0
-  summary="$(timeout 925s docker run --rm \
+  helper_stdout_file="$(mktemp "${RUNNER_TEMP:-/tmp}/lunidex-${phase}-stdout.XXXXXX")"
+  helper_stderr_file="$(mktemp "${RUNNER_TEMP:-/tmp}/lunidex-${phase}-stderr.XXXXXX")"
+  resources_stdout_file="$(mktemp "${RUNNER_TEMP:-/tmp}/lunidex-${phase}-resources.XXXXXX")"
+  resources_stderr_file="$(mktemp "${RUNNER_TEMP:-/tmp}/lunidex-${phase}-resources-stderr.XXXXXX")"
+  chmod 600 "$helper_stdout_file" "$helper_stderr_file" "$resources_stdout_file" "$resources_stderr_file"
+  node "$GITHUB_WORKSPACE/scripts/deployment/sample-isolated-container-resources.mjs" "$app" \
+    >"$resources_stdout_file" 2>"$resources_stderr_file" &
+  resource_sampler_pid=$!
+  for _ in $(seq 1 25); do
+    [[ -s "$resources_stdout_file" ]] && break
+    kill -0 "$resource_sampler_pid" 2>/dev/null || break
+    sleep 0.2
+  done
+  if [[ ! -s "$resources_stdout_file" ]]; then
+    echo "${phase}_container_resources_initial_sample=false"
+    resource_validation_exit=1
+  fi
+
+  timeout 3_660s docker run --rm \
     --network "container:$anchor" \
     --cpus 0.25 \
     --memory 128m \
@@ -118,32 +207,67 @@ run_phase() {
     --mount "type=bind,src=$GITHUB_WORKSPACE/scripts/deployment/isolated-tcg-rsc-load.mjs,dst=/tmp/diagnostic.mjs,readonly" \
     --env NODE_OPTIONS= \
     --env ISOLATED_TCG_PHASE="$phase" \
-    --env ISOLATED_TCG_DURATION_SECONDS="$PHASE_SECONDS" \
-    "$APP_IMAGE" node /tmp/diagnostic.mjs 2>/dev/null)" || helper_exit=$?
+    --env ISOLATED_TCG_DURATION_SECONDS="$DIAGNOSTIC_PHASE_SECONDS" \
+    --env ISOLATED_TCG_CONCURRENCY="$DIAGNOSTIC_CONCURRENCY" \
+    "$APP_IMAGE" node /tmp/diagnostic.mjs >"$helper_stdout_file" 2>"$helper_stderr_file" || helper_exit=$?
+
+  summary="$(cat "$helper_stdout_file")"
+  report_helper_error "$phase" "$helper_stderr_file"
+  if kill -0 "$resource_sampler_pid" 2>/dev/null; then
+    kill -TERM "$resource_sampler_pid" 2>/dev/null || true
+  fi
+  wait "$resource_sampler_pid" || resource_sampler_exit=$?
+  if validated_resources="$(node scripts/deployment/validate-isolated-container-resource-series.mjs <"$resources_stdout_file" 2>/dev/null)"; then
+    echo "${phase}_container_resources=$validated_resources"
+  else
+    resource_validation_exit=1
+    echo "${phase}_container_resources_valid=false"
+  fi
+  resource_stats_status="$(sed -nE 's/^container_stats_samples=([0-9]+) container_stats_errors=([0-9]+)$/samples=\1 errors=\2/p' "$resources_stderr_file" | head -n 1)"
+  if [[ "$resource_stats_status" =~ ^samples=[0-9]+\ errors=[0-9]+$ ]]; then
+    echo "${phase}_container_resources_status=$resource_stats_status"
+  else
+    resource_validation_exit=1
+    echo "${phase}_container_resources_status=unavailable"
+  fi
+  if (( resource_sampler_exit != 0 )); then
+    resource_validation_exit=1
+    echo "${phase}_container_resource_sampler_exit=$resource_sampler_exit"
+  fi
+  if report_container_state "$phase" "$app"; then
+    app_state_exit=0
+  else
+    app_state_exit=$?
+  fi
+  report_node_logs "$phase" "$app"
 
   if [[ -n "$summary" ]]; then
-    if ! printf '%s\n' "$summary" | node scripts/deployment/validate-isolated-tcg-rsc-summary.mjs "$phase"; then
-      echo "${phase}_summary_valid=false"
-      remove_phase "$phase"
-      return 1
+    validated_summary="$(printf '%s\n' "$summary" | node scripts/deployment/validate-isolated-tcg-rsc-summary.mjs "$phase" 2>"$helper_stderr_file")" || validation_exit=$?
+    if [[ -n "$validated_summary" ]]; then
+      echo "${phase}_summary=$validated_summary"
+    fi
+    if (( validation_exit != 0 )); then
+      report_helper_error "${phase}_validation" "$helper_stderr_file"
+      echo "${phase}_summary_valid=false validation_exit=$validation_exit"
     fi
   else
     echo "${phase}_summary_missing=true helper_exit=$helper_exit"
-    remove_phase "$phase"
+  fi
+
+  rm -f "$helper_stdout_file" "$helper_stderr_file" "$resources_stdout_file" "$resources_stderr_file"
+  remove_phase "$phase"
+
+  if (( helper_exit != 0 || validation_exit != 0 || app_state_exit != 0 || resource_validation_exit != 0 )); then
     return 1
   fi
-
-  inspect_output="$(docker inspect --format 'running={{.State.Running}} oom={{.State.OOMKilled}} exit={{.State.ExitCode}}' "$app" 2>/dev/null || true)"
-  if [[ -n "$inspect_output" ]]; then
-    echo "${phase}_container_state=$inspect_output"
-  else
-    echo "${phase}_container_state=unavailable"
+  if [[ -z "$validated_summary" ]]; then
+    return 1
   fi
-
-  remove_phase "$phase"
 }
 
 result=0
 run_phase full || result=1
-run_phase abort || result=1
+if [[ "$DIAGNOSTIC_PHASES" == full,abort ]]; then
+  run_phase abort || result=1
+fi
 exit "$result"

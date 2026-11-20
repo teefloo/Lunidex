@@ -3,9 +3,21 @@ name: Isolated TCG RSC abort diagnostic
 on:
   workflow_dispatch:
     inputs:
+      profile:
+        description: Bounded isolated test profile
+        required: true
+        default: smoke-30s-c1
+        type: choice
+        options:
+          - smoke-30s-c1
+          - progressive-60s-c4
+          - progressive-120s-c8
+          - progressive-300s-c16
+          - comparison-900s-c32
+          - soak-full-3600s-c32
       confirm_isolated_rsc_test:
         description: >-
-          Run an isolated 30-minute full-response/client-abort comparison on the standard ubuntu-latest runner. This repository is public, so standard GitHub-hosted runner minutes are free. The job times out after 35 minutes and runs only when manually dispatched with this confirmation enabled.
+          Run only the selected isolated profile. App data and production services are not used; warm-up allows one TCGdex tunnel. The 3600-second profile is full-response only and includes a 30-second idle recovery window. Standard runners for this public repository are free.
         required: true
         default: false
         type: boolean
@@ -20,31 +32,86 @@ concurrency:
 
 jobs:
   compare:
-    if: github.ref == 'refs/heads/master' && inputs.confirm_isolated_rsc_test
+    if: >-
+      (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/codex/fix-node-v8-oom-p0') &&
+      inputs.confirm_isolated_rsc_test
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 70
     env:
       APP_IMAGE: ghcr.io/teefloo/lunidex:ca08758609fb5cfefafff6d5c2aaee31ddc56f63
       CACHE_VOLUME: lunidex-isolated-rsc-cache
       INTERNAL_NETWORK: lunidex-isolated-rsc-internal
       WARM_CONTAINER: lunidex-isolated-rsc-warm
-      PHASE_SECONDS: '900'
+      DIAGNOSTIC_PROFILE: ${{ inputs.profile }}
     steps:
       - name: Check out the reviewed workflow revision
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
 
+      - name: Resolve bounded diagnostic profile
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          case "$DIAGNOSTIC_PROFILE" in
+            smoke-30s-c1)
+              phase_seconds=30
+              concurrency=1
+              phases=full,abort
+              ;;
+            progressive-60s-c4)
+              phase_seconds=60
+              concurrency=4
+              phases=full,abort
+              ;;
+            progressive-120s-c8)
+              phase_seconds=120
+              concurrency=8
+              phases=full,abort
+              ;;
+            progressive-300s-c16)
+              phase_seconds=300
+              concurrency=16
+              phases=full,abort
+              ;;
+            comparison-900s-c32)
+              phase_seconds=900
+              concurrency=32
+              phases=full,abort
+              ;;
+            soak-full-3600s-c32)
+              phase_seconds=3600
+              concurrency=32
+              phases=full
+              ;;
+            *)
+              echo 'diagnostic_profile_invalid=true' >&2
+              exit 78
+              ;;
+          esac
+          {
+            printf 'PHASE_SECONDS=%s\n' "$phase_seconds"
+            printf 'ISOLATED_TCG_CONCURRENCY=%s\n' "$concurrency"
+            printf 'ISOLATED_TCG_PHASES=%s\n' "$phases"
+          } >> "$GITHUB_ENV"
+          echo "diagnostic_profile=$DIAGNOSTIC_PROFILE"
+
       - name: Validate bounded diagnostic harness
         shell: bash
         run: |
           set -Eeuo pipefail
           node --check scripts/deployment/isolated-tcg-rsc-load.mjs
+          node --check scripts/deployment/classify-isolated-node-logs.mjs
+          node --check scripts/deployment/classify-isolated-node-logs.test.mjs
+          node --check scripts/deployment/normalize-isolated-container-state.mjs
+          node --check scripts/deployment/normalize-isolated-container-state.test.mjs
+          node --check scripts/deployment/normalize-isolated-container-stats.mjs
+          node --check scripts/deployment/normalize-isolated-container-stats.test.mjs
+          node --check scripts/deployment/sample-isolated-container-resources.mjs
+          node --check scripts/deployment/validate-isolated-container-resource-series.mjs
           node --check scripts/deployment/isolated-tcg-egress-proxy.mjs
           node --check scripts/deployment/validate-isolated-tcg-rsc-summary.mjs
           node --check scripts/deployment/validate-isolated-tcg-egress-summary.mjs
-          node --test scripts/deployment/isolated-tcg-rsc-load.test.mjs
-          node --test scripts/deployment/isolated-tcg-egress-proxy.test.mjs
           bash -n scripts/deployment/run-isolated-tcg-rsc-phases.sh
 
       - name: Authenticate to GHCR and pull the immutable production image
@@ -57,6 +124,29 @@ jobs:
           docker pull "$APP_IMAGE" >/dev/null
           docker logout ghcr.io >/dev/null
           unset GHCR_READ_TOKEN
+
+      - name: Test the diagnostic harness with the pinned Node 22 runtime
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          docker run --rm \
+            --network none \
+            --cpus 0.5 \
+            --memory 256m \
+            --memory-swap 256m \
+            --pids-limit 64 \
+            --read-only \
+            --tmpfs /tmp:rw,noexec,nosuid,size=16m \
+            --mount "type=bind,src=$GITHUB_WORKSPACE,dst=/workspace,readonly" \
+            --workdir /workspace \
+            --env NODE_OPTIONS= \
+            --env ISOLATED_DIAGNOSTIC_SKIP_SAMPLER_PROCESS_TEST=1 \
+            --entrypoint node \
+            "$APP_IMAGE" --test \
+              scripts/deployment/isolated-tcg-rsc-load.test.mjs \
+              scripts/deployment/classify-isolated-node-logs.test.mjs \
+              scripts/deployment/normalize-isolated-container-stats.test.mjs \
+              scripts/deployment/isolated-tcg-egress-proxy.test.mjs
 
       - name: Create ephemeral cache and internal-only test network
         shell: bash
@@ -108,7 +198,7 @@ jobs:
             --env NEXT_TELEMETRY_DISABLED=1 \
             --env HOSTNAME=0.0.0.0 \
             --env PORT=3000 \
-            --env NODE_OPTIONS='--max-old-space-size=1024 --use-env-proxy --inspect=127.0.0.1:9229 --expose-gc' \
+            --env NODE_OPTIONS='--max-old-space-size=1408 --use-env-proxy --inspect=127.0.0.1:9229 --expose-gc' \
             --env HTTPS_PROXY=http://tcg-egress-proxy:3128 \
             --env HTTP_PROXY=http://tcg-egress-proxy:3128 \
             --env https_proxy=http://tcg-egress-proxy:3128 \
@@ -192,6 +282,8 @@ jobs:
         run: |
           set -Eeuo pipefail
           APP_IMAGE="$APP_IMAGE" PHASE_SECONDS="$PHASE_SECONDS" \
+            ISOLATED_TCG_CONCURRENCY="$ISOLATED_TCG_CONCURRENCY" \
+            ISOLATED_TCG_PHASES="$ISOLATED_TCG_PHASES" \
             bash scripts/deployment/run-isolated-tcg-rsc-phases.sh
 
       - name: Remove diagnostic containers, network, and volume
