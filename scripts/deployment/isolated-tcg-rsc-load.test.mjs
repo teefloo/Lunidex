@@ -4,6 +4,7 @@ import { spawn, spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import {
   connectInspector,
+  DiagnosticError,
   DIAGNOSTIC_LIMITS,
   DIAGNOSTIC_ROUTE,
   DIAGNOSTIC_TARGETS,
@@ -81,7 +82,7 @@ function waitForInspector(child) {
   });
 }
 
-test('diagnostic target allowlist resolves only the fixed card, health, and home routes', async () => {
+test('diagnostic target allowlist resolves only the fixed card, Pokemon, health, and home routes', async () => {
   const cardRoute = new URL(DIAGNOSTIC_TARGETS['tcg-card']);
   assert.equal(cardRoute.origin, 'http://127.0.0.1:3000');
   assert.equal(cardRoute.pathname, '/en/tcg/cards/base1-4');
@@ -89,10 +90,12 @@ test('diagnostic target allowlist resolves only the fixed card, health, and home
   assert.equal(DIAGNOSTIC_ROUTE, DIAGNOSTIC_TARGETS['tcg-card']);
   assert.deepEqual(DIAGNOSTIC_TARGETS, {
     'tcg-card': DIAGNOSTIC_ROUTE,
+    'pokemon-detail': 'http://127.0.0.1:3000/en/pokemon/pikachu',
     healthz: 'http://127.0.0.1:3000/api/healthz',
     home: 'http://127.0.0.1:3000/en',
   });
   assert.equal(resolveDiagnosticTarget('tcg-card'), DIAGNOSTIC_ROUTE);
+  assert.equal(resolveDiagnosticTarget('pokemon-detail'), 'http://127.0.0.1:3000/en/pokemon/pikachu');
   assert.equal(resolveDiagnosticTarget('healthz'), 'http://127.0.0.1:3000/api/healthz');
   assert.equal(resolveDiagnosticTarget('home'), 'http://127.0.0.1:3000/en');
   assert.equal(resolveDiagnosticTarget('https://lunidex.app'), null);
@@ -123,7 +126,7 @@ test('diagnostic target allowlist resolves only the fixed card, health, and home
     return { bucket, summary: counts };
   }
 
-  for (const target of ['tcg-card', 'healthz', 'home']) {
+  for (const target of ['tcg-card', 'pokemon-detail', 'healthz', 'home']) {
     const { bucket, summary: counts } = requestFixture();
     let requestedUrl = '';
     await requestDiagnosticTarget({
@@ -170,7 +173,7 @@ test('workflow accurately describes free public standard runner usage and manual
   const phaseRunner = readFileSync(new URL('./run-isolated-tcg-rsc-phases.sh', import.meta.url), 'utf8');
 
   assert.match(workflow, /workflow_dispatch:/);
-  assert.match(workflow, /target:[\s\S]*?required: true[\s\S]*?default: tcg-card[\s\S]*?type: choice[\s\S]*?options:[\s\S]*?- tcg-card[\s\S]*?- healthz[\s\S]*?- home/);
+  assert.match(workflow, /target:[\s\S]*?required: true[\s\S]*?default: tcg-card[\s\S]*?type: choice[\s\S]*?options:[\s\S]*?- tcg-card[\s\S]*?- pokemon-detail[\s\S]*?- healthz[\s\S]*?- home/);
   assert.match(workflow, /ISOLATED_TCG_TARGET=/);
   assert.match(phaseRunner, /ISOLATED_TCG_TARGET=\$DIAGNOSTIC_TARGET/);
   assert.match(phaseRunner, /--env "ISOLATED_TCG_TARGET=\$DIAGNOSTIC_TARGET"/);
@@ -354,6 +357,42 @@ test('invalid phase parameters and missing initial inspector sample fail before 
   assert.equal(invalidTarget.status, 78);
   assert.equal(invalidTarget.stdout, '');
   assert.equal(invalidTarget.stderr, 'diagnostic_helper_started=true\ndiagnostic_error_category=invalid_diagnostic_configuration\n');
+});
+
+test('preserves bounded HTTP and memory evidence when Inspector is lost mid-phase', async () => {
+  const memory = { rss: 1000, heapTotal: 800, heapUsed: 600, external: 100, arrayBuffers: 80, heap_size_limit: 2000 };
+  const session = {
+    async command(_method, { expression }) {
+      if (expression.includes('process.argv[1]')) {
+        return { result: { value: { pid: 4242, executable: 'node', script: 'server.js' } } };
+      }
+      if (expression.includes('global.gc')) {
+        return { result: { value: { gc_available: true, raw: memory, post_gc: memory } } };
+      }
+      throw new DiagnosticError('inspector_socket_closed');
+    },
+    close() {},
+  };
+
+  const partial = await runPhase({
+    mode: 'full',
+    durationSeconds: 1,
+    concurrency: 1,
+    target: 'healthz',
+    connectInspectorImpl: async () => session,
+    fetchImpl: async () => new Response('{"ok":true}', { status: 200 }),
+    sampleIntervalMs: 1,
+    pauseImpl: async () => {},
+  });
+
+  assert.equal(partial.inspector.failure_category, 'inspector_socket_closed');
+  assert.equal(partial.memory_samples.length, 1);
+  assert.equal(partial.memory_samples[0].phase, 'baseline');
+  assert.equal(partial.attempts, 1);
+  assert.equal(partial.statuses['2xx'], 1);
+  assert.equal(partial.time_series.length, 1);
+  assert.deepEqual(partial.time_series[0].slice(0, 3), [0, 1, 1]);
+  assert.equal(validateOutput(partial), true);
 });
 
 test('phase runner rejects an invalid route target before any Docker operation', () => {

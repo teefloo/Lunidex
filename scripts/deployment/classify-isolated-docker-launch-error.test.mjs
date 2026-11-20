@@ -74,7 +74,7 @@ test('CLI never echoes raw Docker stderr or secrets', () => {
   });
 });
 
-test('runner uses bounded docker exec stdin without helper bind mounts or a helper docker run', () => {
+test('runner uses a bounded separate helper container with a read-only script mount', () => {
   const runner = readFileSync(new URL('./run-isolated-tcg-rsc-phases.sh', import.meta.url), 'utf8');
   const helper = readFileSync(new URL('./isolated-tcg-rsc-load.mjs', import.meta.url), 'utf8');
   const dockerfile = readFileSync(new URL('../../Dockerfile', import.meta.url), 'utf8');
@@ -82,15 +82,17 @@ test('runner uses bounded docker exec stdin without helper bind mounts or a help
   assert.match(runner, /--shell <"\$helper_error_file"/);
   assert.match(runner, /docker_exec_failure_category=/);
   assert.match(runner, /helper_failure_category=/);
-  const helperCommand = runner.slice(runner.indexOf('timeout 3660s docker exec'), runner.indexOf('summary="$(cat "$helper_stdout_file")'));
-  assert.match(helperCommand, /docker exec --interactive[\s\S]*"\$anchor" node --input-type=module -[\s\S]*<"\$GITHUB_WORKSPACE\/scripts\/deployment\/isolated-tcg-rsc-load\.mjs"/);
-  assert.doesNotMatch(helperCommand, /docker run|--mount/);
+  const helperCommand = runner.slice(runner.indexOf('timeout 3660s docker run'), runner.indexOf('summary="$(cat "$helper_stdout_file")'));
+  assert.match(helperCommand, /docker run --rm[\s\S]*--network "container:\$anchor"[\s\S]*--cpus 0\.25[\s\S]*--memory 128m[\s\S]*--memory-swap 128m[\s\S]*--pids-limit 64[\s\S]*--read-only/);
+  assert.match(helperCommand, /--mount "type=bind,src=\$GITHUB_WORKSPACE\/scripts\/deployment\/isolated-tcg-rsc-load\.mjs,dst=\/app\/isolated-diagnostic\.mjs,readonly"/);
+  assert.match(helperCommand, /--env NODE_OPTIONS=([\s\S]*?)--entrypoint node[\s\S]*"\$APP_IMAGE" \/app\/isolated-diagnostic\.mjs[\s\S]*>"\$helper_stdout_file" 2>"\$helper_stderr_file"/);
+  assert.doesNotMatch(helperCommand, /docker exec/);
   assert.match(runner, /--cpus 0\.25[\s\S]*?--memory 256m[\s\S]*?--memory-swap 256m[\s\S]*?--pids-limit 32/);
   assert.match(dockerfile, /COPY --from=builder --chown=nextjs:nodejs \/app\/\.next\/standalone \.\//);
   assert.match(dockerfile, /CMD \["node", "server\.js"\]/);
   assert.match(helper, /process\.argv\[1\] === '-'/);
   assert.match(helper, /diagnostic_helper_started=true/);
-  assert.ok([...runner.matchAll(/--network "container:\$anchor"/g)].length >= 2);
+  assert.ok([...runner.matchAll(/--network "container:\$anchor"/g)].length >= 3);
 
   for (const [stderr, expected] of [
     ['Error response from daemon: invalid mount configuration', 'false\t125\tdocker_exec_failed\tError response from daemon: invalid mount configuration'],

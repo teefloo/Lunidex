@@ -17,7 +17,7 @@ if [[ "${APP_IMAGE:-}" != "$EXPECTED_IMAGE" || ! "$DIAGNOSTIC_PHASE_SECONDS" =~ 
   || (( DIAGNOSTIC_PHASE_SECONDS < MIN_DURATION_SECONDS || DIAGNOSTIC_PHASE_SECONDS > MAX_DURATION_SECONDS )) \
   || (( DIAGNOSTIC_CONCURRENCY < MIN_CONCURRENCY || DIAGNOSTIC_CONCURRENCY > MAX_CONCURRENCY )) \
   || [[ "$DIAGNOSTIC_PHASES" != full && "$DIAGNOSTIC_PHASES" != full,abort ]] \
-  || [[ "$DIAGNOSTIC_TARGET" != tcg-card && "$DIAGNOSTIC_TARGET" != healthz && "$DIAGNOSTIC_TARGET" != home ]]; then
+  || [[ "$DIAGNOSTIC_TARGET" != tcg-card && "$DIAGNOSTIC_TARGET" != pokemon-detail && "$DIAGNOSTIC_TARGET" != healthz && "$DIAGNOSTIC_TARGET" != home ]]; then
   echo 'diagnostic_configuration_not_pinned=true' >&2
   exit 78
 fi
@@ -220,13 +220,24 @@ run_phase() {
     resource_validation_exit=1
   fi
 
-  timeout 3660s docker exec --interactive \
+  timeout 3660s docker run --rm \
+    --network "container:$anchor" \
+    --cpus 0.25 \
+    --memory 128m \
+    --memory-swap 128m \
+    --pids-limit 64 \
+    --read-only \
+    --tmpfs /tmp:rw,noexec,nosuid,size=16m \
+    --cap-drop ALL \
+    --security-opt no-new-privileges:true \
+    --mount "type=bind,src=$GITHUB_WORKSPACE/scripts/deployment/isolated-tcg-rsc-load.mjs,dst=/app/isolated-diagnostic.mjs,readonly" \
+    --env NODE_OPTIONS= \
     --env "ISOLATED_TCG_PHASE=$phase" \
     --env "ISOLATED_TCG_DURATION_SECONDS=$DIAGNOSTIC_PHASE_SECONDS" \
     --env "ISOLATED_TCG_CONCURRENCY=$DIAGNOSTIC_CONCURRENCY" \
     --env "ISOLATED_TCG_TARGET=$DIAGNOSTIC_TARGET" \
-    "$anchor" node --input-type=module - \
-    <"$GITHUB_WORKSPACE/scripts/deployment/isolated-tcg-rsc-load.mjs" \
+    --entrypoint node \
+    "$APP_IMAGE" /app/isolated-diagnostic.mjs \
     >"$helper_stdout_file" 2>"$helper_stderr_file" || helper_exit=$?
 
   summary="$(cat "$helper_stdout_file")"

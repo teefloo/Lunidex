@@ -97,4 +97,16 @@ test('the phase runner preserves the state gate result through final phase statu
   assert.match(runner, /if report_container_state "\$phase" "\$app"; then[\s\S]*?app_state_exit=\$\?/);
   assert.match(runner, /helper_exit != 0 \|\| validation_exit != 0 \|\| app_state_exit != 0/);
   assert.doesNotMatch(runner, /report_container_state "\$phase" "\$app" \|\| true/);
+
+  const helperInvocation = runner.indexOf('timeout 3660s docker run --rm');
+  const summaryCapture = runner.indexOf('summary="$(cat "$helper_stdout_file")');
+  const resourceValidation = runner.indexOf('validate-isolated-container-resource-series.mjs <"$resources_stdout_file"');
+  const containerState = runner.indexOf('if report_container_state "$phase" "$app"; then', helperInvocation);
+  const summaryValidation = runner.indexOf('validate-isolated-tcg-rsc-summary.mjs "$phase"');
+  assert.ok(helperInvocation >= 0 && summaryCapture > helperInvocation);
+  assert.match(runner, /2>"\$helper_stderr_file" \|\| helper_exit=\$\?/);
+  assert.ok(resourceValidation > helperInvocation && resourceValidation < summaryValidation);
+  assert.ok(containerState > helperInvocation && containerState < summaryValidation);
+  assert.ok(summaryValidation > summaryCapture);
+  assert.match(runner, /if \(\( helper_exit != 0 \|\| validation_exit != 0 \|\| app_state_exit != 0 \|\| resource_validation_exit != 0 \)\)/);
 });

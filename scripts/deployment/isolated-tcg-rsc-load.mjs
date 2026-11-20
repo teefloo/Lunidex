@@ -3,6 +3,7 @@ import { performance } from 'node:perf_hooks';
 
 export const DIAGNOSTIC_TARGETS = Object.freeze({
   'tcg-card': 'http://127.0.0.1:3000/en/tcg/cards/base1-4?tcgLang=en',
+  'pokemon-detail': 'http://127.0.0.1:3000/en/pokemon/pikachu',
   healthz: 'http://127.0.0.1:3000/api/healthz',
   home: 'http://127.0.0.1:3000/en',
 });
@@ -644,7 +645,18 @@ export async function requestDiagnosticTarget({ mode, target, summary, bucket, r
   return requestOnce(mode, summary, bucket, requestStartedAt, route, fetchImpl);
 }
 
-export async function runPhase({ mode, durationSeconds, concurrency = DIAGNOSTIC_LIMITS.concurrency, target = 'tcg-card', inspectorTargetsUrl = INSPECTOR_TARGETS }) {
+export async function runPhase({
+  mode,
+  durationSeconds,
+  concurrency = DIAGNOSTIC_LIMITS.concurrency,
+  target = 'tcg-card',
+  inspectorTargetsUrl = INSPECTOR_TARGETS,
+  connectInspectorImpl = connectInspector,
+  fetchImpl = fetch,
+  sampleIntervalMs = SAMPLE_INTERVAL_MS,
+  recoveryDelayMs = RECOVERY_WINDOW_SECONDS * 1_000,
+  pauseImpl = delay,
+}) {
   if (!['full', 'abort'].includes(mode)) throw new Error('invalid_phase');
   if (boundedInteger(durationSeconds, 1, MAX_DURATION_SECONDS) === null) throw new Error('invalid_duration');
   if (boundedInteger(concurrency, 1, DIAGNOSTIC_LIMITS.concurrency) === null) throw new Error('invalid_concurrency');
@@ -657,7 +669,7 @@ export async function runPhase({ mode, durationSeconds, concurrency = DIAGNOSTIC
   let inspector;
   let stopRequested = false;
   try {
-    inspector = await connectInspector({ targetsUrl: inspectorTargetsUrl });
+    inspector = await connectInspectorImpl({ targetsUrl: inspectorTargetsUrl });
     Object.assign(summary.inspector, await identifyInspectorTarget(inspector));
     summary.memory_samples.push(await sampleMemory(inspector, 0, { phase: 'baseline', collectGarbage: true }));
   } catch (error) {
@@ -666,17 +678,17 @@ export async function runPhase({ mode, durationSeconds, concurrency = DIAGNOSTIC
     fail('inspector_endpoint_unreachable');
   }
 
-  let nextSampleAt = startedAt + SAMPLE_INTERVAL_MS;
+  let nextSampleAt = startedAt + sampleIntervalMs;
   let nextAttempt = 0;
   const worker = async () => {
     while (!stopRequested && performance.now() < endAt && nextAttempt < maxAttempts) {
       const iterationStartedAt = performance.now();
       nextAttempt += 1;
       const bucket = addAttempt(summary, startedAt);
-      await requestDiagnosticTarget({ mode, target, summary, bucket, requestStartedAt: iterationStartedAt });
+      await requestDiagnosticTarget({ mode, target, summary, bucket, requestStartedAt: iterationStartedAt, fetchImpl });
 
       const remaining = DIAGNOSTIC_LIMITS.workerIntervalMs - (performance.now() - iterationStartedAt);
-      if (remaining > 0 && !stopRequested) await delay(remaining);
+      if (remaining > 0 && !stopRequested) await pauseImpl(remaining);
     }
   };
   const workers = Array.from({ length: concurrency }, () => worker());
@@ -694,9 +706,9 @@ export async function runPhase({ mode, durationSeconds, concurrency = DIAGNOSTIC
             : 'inspector_evaluation_failed';
           stopRequested = true;
         }
-        nextSampleAt = performance.now() + SAMPLE_INTERVAL_MS;
+        nextSampleAt = performance.now() + sampleIntervalMs;
       }
-      if (!stopRequested) await delay(Math.min(1_000, Math.max(1, endAt - performance.now())));
+      if (!stopRequested) await pauseImpl(Math.min(1_000, Math.max(1, endAt - performance.now())));
     }
     await Promise.all(workers);
 
@@ -704,7 +716,7 @@ export async function runPhase({ mode, durationSeconds, concurrency = DIAGNOSTIC
       try {
         const recoveryStart = nextSampleElapsedSeconds(summary, startedAt);
         summary.memory_samples.push(await sampleMemory(inspector, recoveryStart, { phase: 'recovery_start' }));
-        await delay(RECOVERY_WINDOW_SECONDS * 1_000);
+        await pauseImpl(recoveryDelayMs);
         const recoveryElapsed = nextSampleElapsedSeconds(summary, startedAt);
         summary.memory_samples.push(await sampleMemory(inspector, recoveryElapsed, { phase: 'recovery', collectGarbage: true }));
       } catch (error) {

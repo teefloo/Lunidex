@@ -22,11 +22,12 @@ on:
         type: choice
         options:
           - tcg-card
+          - pokemon-detail
           - healthz
           - home
       confirm_isolated_rsc_test:
         description: >-
-          Run only the selected isolated profile. App data and production services are not used; warm-up allows one TCGdex tunnel. The 3600-second profile is full-response only and includes a 30-second idle recovery window. Standard runners for this public repository are free.
+          Run only the selected isolated profile. App data and production services are not used; target-specific warm-up has fixed bounded upstream access, then all load phases have no egress. The 3600-second profile is full-response only and includes a 30-second idle recovery window. Standard runners for this public repository are free.
         required: true
         default: false
         type: boolean
@@ -100,7 +101,14 @@ jobs:
               ;;
           esac
           case "$DIAGNOSTIC_TARGET" in
-            tcg-card|healthz|home)
+            tcg-card)
+              egress_policy=tcg
+              ;;
+            pokemon-detail)
+              egress_policy=pokemon
+              ;;
+            healthz|home)
+              egress_policy=none
               ;;
             *)
               echo 'diagnostic_target_invalid=true' >&2
@@ -112,6 +120,7 @@ jobs:
             printf 'ISOLATED_TCG_CONCURRENCY=%s\n' "$concurrency"
             printf 'ISOLATED_TCG_PHASES=%s\n' "$phases"
             printf 'ISOLATED_TCG_TARGET=%s\n' "$DIAGNOSTIC_TARGET"
+            printf 'ISOLATED_EGRESS_POLICY=%s\n' "$egress_policy"
           } >> "$GITHUB_ENV"
           echo "diagnostic_profile=$DIAGNOSTIC_PROFILE"
           echo "diagnostic_target=$DIAGNOSTIC_TARGET"
@@ -121,6 +130,8 @@ jobs:
         run: |
           set -Eeuo pipefail
           node --check scripts/deployment/isolated-tcg-rsc-load.mjs
+          node --check scripts/deployment/warm-isolated-diagnostic-route.mjs
+          node --check scripts/deployment/validate-isolated-diagnostic-warmup.mjs
           node --check scripts/deployment/classify-isolated-node-logs.mjs
           node --check scripts/deployment/classify-isolated-node-logs.test.mjs
           node --check scripts/deployment/normalize-isolated-container-state.mjs
@@ -166,6 +177,7 @@ jobs:
             --entrypoint node \
             "$APP_IMAGE" --test \
               scripts/deployment/isolated-tcg-rsc-load.test.mjs \
+              scripts/deployment/warm-isolated-diagnostic-route.test.mjs \
               scripts/deployment/classify-isolated-node-logs.test.mjs \
               scripts/deployment/classify-isolated-docker-launch-error.test.mjs \
               scripts/deployment/normalize-isolated-container-stats.test.mjs \
@@ -178,32 +190,42 @@ jobs:
           docker network create --internal "$INTERNAL_NETWORK" >/dev/null
           docker volume create "$CACHE_VOLUME" >/dev/null
 
-      - name: Start a one-tunnel TCGdex egress proxy for cache warm-up
+      - name: Warm the selected fixed route, then remove all egress
         shell: bash
         run: |
           set -Eeuo pipefail
           proxy_name=lunidex-isolated-rsc-egress-proxy
-          docker run --detach \
-            --name "$proxy_name" \
-            --network bridge \
-            --cpus 0.05 \
-            --memory 32m \
-            --memory-swap 32m \
-            --pids-limit 32 \
-            --read-only \
-            --tmpfs /tmp:rw,noexec,nosuid,size=8m \
-            --cap-drop ALL \
-            --security-opt no-new-privileges:true \
-            --mount "type=bind,src=$GITHUB_WORKSPACE/scripts/deployment/isolated-tcg-egress-proxy.mjs,dst=/tmp/egress-proxy.mjs,readonly" \
-            --env NODE_OPTIONS= \
-            --entrypoint node \
-            "$APP_IMAGE" /tmp/egress-proxy.mjs >/dev/null
-          docker network connect --alias tcg-egress-proxy "$INTERNAL_NETWORK" "$proxy_name"
+          proxy_env_args=()
+          proxy_started=false
+          if [[ "$ISOLATED_EGRESS_POLICY" != none ]]; then
+            docker run --detach \
+              --name "$proxy_name" \
+              --network bridge \
+              --cpus 0.05 \
+              --memory 32m \
+              --memory-swap 32m \
+              --pids-limit 32 \
+              --read-only \
+              --tmpfs /tmp:rw,noexec,nosuid,size=8m \
+              --cap-drop ALL \
+              --security-opt no-new-privileges:true \
+              --mount "type=bind,src=$GITHUB_WORKSPACE/scripts/deployment/isolated-tcg-egress-proxy.mjs,dst=/tmp/egress-proxy.mjs,readonly" \
+              --env NODE_OPTIONS= \
+              --env "ISOLATED_EGRESS_POLICY=$ISOLATED_EGRESS_POLICY" \
+              --entrypoint node \
+              "$APP_IMAGE" /tmp/egress-proxy.mjs >/dev/null
+            docker network connect --alias tcg-egress-proxy "$INTERNAL_NETWORK" "$proxy_name"
+            proxy_env_args+=(
+              --env HTTPS_PROXY=http://tcg-egress-proxy:3128
+              --env HTTP_PROXY=http://tcg-egress-proxy:3128
+              --env https_proxy=http://tcg-egress-proxy:3128
+              --env http_proxy=http://tcg-egress-proxy:3128
+              --env NO_PROXY=127.0.0.1,localhost
+              --env no_proxy=127.0.0.1,localhost
+            )
+            proxy_started=true
+          fi
 
-      - name: Warm one fixed TCG card, then remove egress
-        shell: bash
-        run: |
-          set -Eeuo pipefail
           docker run --detach \
             --init \
             --name "$WARM_CONTAINER" \
@@ -222,12 +244,7 @@ jobs:
             --env HOSTNAME=0.0.0.0 \
             --env PORT=3000 \
             --env NODE_OPTIONS='--max-old-space-size=1408 --use-env-proxy --inspect=127.0.0.1:9229 --expose-gc' \
-            --env HTTPS_PROXY=http://tcg-egress-proxy:3128 \
-            --env HTTP_PROXY=http://tcg-egress-proxy:3128 \
-            --env https_proxy=http://tcg-egress-proxy:3128 \
-            --env http_proxy=http://tcg-egress-proxy:3128 \
-            --env NO_PROXY=127.0.0.1,localhost \
-            --env no_proxy=127.0.0.1,localhost \
+            "${proxy_env_args[@]}" \
             --env SENTRY_DSN= \
             --env NEXT_PUBLIC_SENTRY_DSN= \
             --env NEXT_PUBLIC_POSTHOG_ENABLED=false \
@@ -251,52 +268,31 @@ jobs:
             exit 1
           }
 
-          warmup_result="$(docker exec --env NODE_OPTIONS= "$WARM_CONTAINER" node -e '
-            (async () => {
-              try {
-                const response = await fetch("http://127.0.0.1:3000/en/tcg/cards/base1-4?tcgLang=en", {
-                  headers: { accept: "application/json", "accept-language": "en" },
-                  signal: AbortSignal.timeout(30000),
-                });
-                const bytes = (await response.arrayBuffer()).byteLength;
-                const contentType = response.headers.get("content-type") || "";
-                const result = { status: response.status, html: contentType.includes("text/html"), bytes };
-                process.stdout.write(JSON.stringify(result) + "\n");
-                if (response.status !== 200 || !result.html || bytes === 0) process.exitCode = 78;
-              } catch {
-                process.stderr.write("warmup_request_failed\n");
-                process.exitCode = 1;
-              }
-            })();
-          ' 2>/dev/null)" || {
-            echo 'warmup_card_request_failed=true'
+          warmup_result="$(timeout 130s docker exec --interactive \
+            --env NODE_OPTIONS= \
+            --env "ISOLATED_TCG_TARGET=$ISOLATED_TCG_TARGET" \
+            --env "ISOLATED_EGRESS_POLICY=$ISOLATED_EGRESS_POLICY" \
+            "$WARM_CONTAINER" node --input-type=module - \
+            < "$GITHUB_WORKSPACE/scripts/deployment/warm-isolated-diagnostic-route.mjs" 2>/dev/null)" || {
+            echo 'warmup_route_request_failed=true'
             exit 1
           }
-          printf '%s\n' "$warmup_result" | node -e '
-            let raw = "";
-            process.stdin.setEncoding("utf8");
-            process.stdin.on("data", (part) => { raw += part; });
-            process.stdin.on("end", () => {
-              try {
-                const value = JSON.parse(raw);
-                if (value.status !== 200 || value.html !== true || !Number.isSafeInteger(value.bytes) || value.bytes < 1) throw new Error();
-                process.stdout.write(JSON.stringify(value) + "\n");
-              } catch {
-                process.stderr.write("warmup_result_invalid\n");
-                process.exitCode = 78;
-              }
-            });
-          '
+          printf '%s\n' "$warmup_result" | node scripts/deployment/validate-isolated-diagnostic-warmup.mjs "$ISOLATED_TCG_TARGET"
 
           docker stop --time 2 "$WARM_CONTAINER" >/dev/null
-          docker stop --time 2 lunidex-isolated-rsc-egress-proxy >/dev/null
-          proxy_summary="$(docker logs lunidex-isolated-rsc-egress-proxy 2>/dev/null | tail -n 1)"
-          [[ -n "$proxy_summary" ]] || {
-            echo 'warmup_egress_summary_missing=true'
-            exit 1
-          }
-          printf '%s\n' "$proxy_summary" | node scripts/deployment/validate-isolated-tcg-egress-summary.mjs
-          docker rm --force "$WARM_CONTAINER" lunidex-isolated-rsc-egress-proxy >/dev/null
+          docker rm --force "$WARM_CONTAINER" >/dev/null
+          if [[ "$proxy_started" == true ]]; then
+            docker stop --time 2 "$proxy_name" >/dev/null
+            proxy_summary="$(docker logs "$proxy_name" 2>/dev/null | tail -n 1)"
+            [[ -n "$proxy_summary" ]] || {
+              echo 'warmup_egress_summary_missing=true'
+              exit 1
+            }
+            printf '%s\n' "$proxy_summary" | node scripts/deployment/validate-isolated-tcg-egress-summary.mjs "$ISOLATED_EGRESS_POLICY"
+            docker rm --force "$proxy_name" >/dev/null
+          else
+            echo 'warmup_egress_policy=none'
+          fi
           echo 'warmup_complete=true'
           echo 'test_network_egress=disabled'
 
