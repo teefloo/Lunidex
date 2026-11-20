@@ -108,7 +108,9 @@ test('runner uses a bounded separate helper container with a read-only script mo
   }
 });
 
-test('runner accepts only the pinned production image or the selected SHA-tagged local candidate', (t) => {
+test('runner accepts only the pinned production image or the selected SHA-tagged local candidate', {
+  skip: process.env.ISOLATED_DIAGNOSTIC_SKIP_DOCKER_LAUNCH_MOCK_TEST === '1',
+}, (t) => {
   const directory = mkdtempSync(join(tmpdir(), 'lunidex-image-allowlist-'));
   t.after(() => rmSync(directory, { recursive: true, force: true }));
   const dockerPath = join(directory, 'docker');

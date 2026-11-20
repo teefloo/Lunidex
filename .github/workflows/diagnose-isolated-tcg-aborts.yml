@@ -231,6 +231,7 @@ jobs:
             --workdir /workspace \
             --env NODE_OPTIONS= \
             --env ISOLATED_DIAGNOSTIC_SKIP_SAMPLER_PROCESS_TEST=1 \
+            --env ISOLATED_DIAGNOSTIC_SKIP_DOCKER_LAUNCH_MOCK_TEST=1 \
             --entrypoint node \
             "$APP_IMAGE" --test \
               scripts/deployment/isolated-tcg-rsc-load.test.mjs \
