@@ -74,7 +74,9 @@ report_helper_error() {
   local helper_started='false'
   local stderr_signature=''
   local classified_exit=''
+  local helper_stderr_without_start_marker=''
   category="$(sed -nE 's/^diagnostic_error_category=([a-z_]+)$/\1/p' "$helper_error_file" | head -n 1)"
+  helper_stderr_without_start_marker="$(sed '/^diagnostic_helper_started=true$/d' "$helper_error_file" | tr -d '\n' || true)"
   if grep -qx 'diagnostic_helper_started=true' "$helper_error_file"; then
     helper_started='true'
     echo "${phase}_helper_process_started=true"
@@ -93,7 +95,7 @@ report_helper_error() {
     else
       echo "${phase}_docker_exec_failure_category=unclassified exit_code=$helper_exit stderr_signature=unavailable"
     fi
-  elif [[ -s "$helper_error_file" ]]; then
+  elif [[ -n "$helper_stderr_without_start_marker" ]]; then
     echo "${phase}_diagnostic_error_category=unclassified"
   fi
 }

@@ -103,3 +103,18 @@ test('runner uses bounded docker exec stdin without helper bind mounts or a help
     assert.equal(result.stdout.trimEnd(), expected);
   }
 });
+
+test('a success startup marker alone is not reported as an unclassified stderr error', () => {
+  const runner = readFileSync(new URL('./run-isolated-tcg-rsc-phases.sh', import.meta.url), 'utf8');
+  assert.match(runner, /helper_stderr_without_start_marker="\$\(sed '\/\^diagnostic_helper_started=true\$\/d' "\$helper_error_file" \| tr -d '\\n' \|\| true\)"/);
+  assert.match(runner, /elif \[\[ -n "\$helper_stderr_without_start_marker" \]\]; then/);
+
+  const shell = 'remaining="$(printf "%s" "$1" | sed \'/^diagnostic_helper_started=true$/d\' | tr -d "\\n" || true)"; [[ -n "$remaining" ]] && printf "unclassified\\n"';
+  const markerOnly = spawnSync('bash', ['-c', shell, 'bash', 'diagnostic_helper_started=true\n'], { encoding: 'utf8' });
+  assert.equal(markerOnly.status, 1);
+  assert.equal(markerOnly.stdout, '');
+
+  const markerAndWarning = spawnSync('bash', ['-c', shell, 'bash', 'diagnostic_helper_started=true\nwarning detail\n'], { encoding: 'utf8' });
+  assert.equal(markerAndWarning.status, 0);
+  assert.equal(markerAndWarning.stdout, 'unclassified\n');
+});
