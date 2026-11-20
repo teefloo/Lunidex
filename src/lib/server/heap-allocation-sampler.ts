@@ -7,10 +7,12 @@ const ENABLED_ENV = 'LUNIDEX_HEAP_SAMPLER_DIAGNOSTIC';
 const EXPIRES_AT_ENV = 'LUNIDEX_HEAP_SAMPLER_EXPIRES_AT';
 const RUN_ID_ENV = 'LUNIDEX_HEAP_SAMPLER_RUN_ID';
 const SUMMARY_PREFIX = 'LUNIDEX_HEAP_SAMPLE_SUMMARY_';
+const MEMORY_POINT_PREFIX = 'LUNIDEX_HEAP_MEMORY_POINT_';
 const HEAP_LIMIT_TRIGGER_RATIO = 0.85;
 const MONITOR_INTERVAL_MS = 1_000;
 const MEMORY_SERIES_INTERVAL_MS = 15_000;
 const MAX_MEMORY_SERIES_POINTS = 60;
+const DIAGNOSTIC_WINDOW_DURATION_MS = 15 * 60_000;
 const SAMPLE_DURATION_MS = 25_000;
 const SAMPLE_INTERVAL_BYTES = 64 * 1024;
 const MAX_PROFILE_NODES = 50_000;
@@ -375,9 +377,11 @@ export function startHeapAllocationSampler(): void {
   let finalSummaryLogged = false;
   let allocationSummary: HeapSampleSummary | null = null;
   const monitors = new Set<ReturnType<typeof setInterval>>();
-  const startedAt = performance.now();
   const memorySeries: HeapMemorySeriesPoint[] = [];
   const runId = process.env[RUN_ID_ENV];
+  const expiresAtMs = Number(process.env[EXPIRES_AT_ENV]) * 1_000;
+  const diagnosticWindowStartedAtMs = expiresAtMs - DIAGNOSTIC_WINDOW_DURATION_MS;
+  let lastCapturedElapsedMs = -1;
   if (!runId || !/^\d+-\d+$/.test(runId)) return;
 
   const finishIfReady = (): void => {
@@ -412,14 +416,26 @@ export function startHeapAllocationSampler(): void {
 
   const captureMemoryPoint = (): void => {
     if (memorySeries.length >= MAX_MEMORY_SERIES_POINTS) return;
+    const nowMs = Date.now();
+    if (nowMs < diagnosticWindowStartedAtMs || nowMs >= expiresAtMs) return;
+    const elapsedMs = Math.floor((nowMs - diagnosticWindowStartedAtMs) / MEMORY_SERIES_INTERVAL_MS)
+      * MEMORY_SERIES_INTERVAL_MS;
+    if (elapsedMs < 0
+      || elapsedMs >= DIAGNOSTIC_WINDOW_DURATION_MS
+      || elapsedMs === lastCapturedElapsedMs) {
+      return;
+    }
+
     let memory: HeapMemorySnapshot;
     try {
       memory = readHeapMemorySnapshot();
     } catch {
       return;
     }
-    const elapsedMs = Math.max(0, Math.floor(performance.now() - startedAt));
-    memorySeries.push(makeMemorySeriesPoint(elapsedMs, memory));
+    const point = makeMemorySeriesPoint(elapsedMs, memory);
+    lastCapturedElapsedMs = elapsedMs;
+    memorySeries.push(point);
+    console.info(`${MEMORY_POINT_PREFIX}${runId}=${JSON.stringify(point)}`);
     logAllocationCheckpoint();
   };
 
