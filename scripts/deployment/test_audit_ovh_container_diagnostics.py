@@ -1,13 +1,21 @@
 import json
 import unittest
 from collections import Counter
+from contextlib import redirect_stdout
+from io import StringIO
+from pathlib import Path
+from unittest.mock import patch
 
 from audit_ovh_container_diagnostics import (
+    parse_dangling_images,
+    parse_docker_system_df,
+    parse_root_disk_free_kib,
     heap_sampler_status,
     heap_sampler_summary_seen,
     parse_host_node_processes,
     parse_numeric_pairs,
     parse_proc_status,
+    report_disk_resources,
     route_family,
     summarize_caddy_access_logs,
     summarize_route_family_diagnostics,
@@ -15,6 +23,159 @@ from audit_ovh_container_diagnostics import (
 
 
 class AuditOvhContainerDiagnosticsTests(unittest.TestCase):
+    def test_root_disk_parser_returns_only_root_available_blocks(self):
+        df_output = (
+            "Filesystem 1024-blocks Used Available Capacity Mounted on\n"
+            "/dev/private-root 1000000 750000 250000 75% /\n"
+            "/dev/private-opt 500000 400000 100000 80% /opt\n"
+        )
+
+        self.assertEqual(parse_root_disk_free_kib(df_output), 250000)
+        self.assertIsNone(parse_root_disk_free_kib("filesystem malformed\n/dev/root 10 9 x 90% /\n"))
+
+    def test_docker_system_df_parser_keeps_allowlisted_categories_and_numeric_totals(self):
+        docker_df = "\n".join(
+            [
+                json.dumps({
+                    "Type": "Images",
+                    "TotalCount": "8",
+                    "Active": "6",
+                    "Size": "12.34GB",
+                    "Reclaimable": "2.50GB (20%)",
+                }),
+                json.dumps({
+                    "Type": "Containers",
+                    "TotalCount": "4",
+                    "Active": "2",
+                    "Size": "1.5GiB",
+                    "Reclaimable": "512MiB (33%)",
+                }),
+                json.dumps({
+                    "Type": "Build Cache",
+                    "TotalCount": "42",
+                    "Active": "0",
+                    "Size": "4.25GB",
+                    "Reclaimable": "4.25GB (100%)",
+                }),
+                json.dumps({
+                    "Type": "Private data /mnt/secret",
+                    "TotalCount": 1,
+                    "Active": 0,
+                    "Size": "secret-size",
+                    "Reclaimable": "secret-reclaimable",
+                }),
+                "not-json private-volume-name",
+            ]
+        )
+
+        parsed = parse_docker_system_df(docker_df)
+        self.assertEqual(
+            parsed,
+            {
+                "images": {
+                    "total_count": 8,
+                    "active_count": 6,
+                    "size_bytes_estimate": 12_340_000_000,
+                    "reclaimable_bytes_estimate": 2_500_000_000,
+                },
+                "containers": {
+                    "total_count": 4,
+                    "active_count": 2,
+                    "size_bytes_estimate": 1_610_612_736,
+                    "reclaimable_bytes_estimate": 536_870_912,
+                },
+                "build_cache": {
+                    "total_count": 42,
+                    "active_count": 0,
+                    "size_bytes_estimate": 4_250_000_000,
+                    "reclaimable_bytes_estimate": 4_250_000_000,
+                },
+            },
+        )
+        self.assertNotIn("private", json.dumps(parsed))
+
+    def test_dangling_image_parser_aggregates_count_and_size_without_emitting_ids(self):
+        dangling_images = (
+            "a1b2c3d4e5f6|1.25GB\n"
+            "abcdef123456|250MB\n"
+            "not-an-image-id|999GB\n"
+            "0123456789ab|private-size\n"
+        )
+
+        self.assertEqual(
+            parse_dangling_images(dangling_images),
+            {"count": 3, "size_bytes_estimate": None},
+        )
+        self.assertEqual(
+            parse_dangling_images("a1b2c3d4e5f6|1.25GB\nabcdef123456|250MB\n"),
+            {"count": 2, "size_bytes_estimate": 1_500_000_000},
+        )
+
+    def test_disk_report_emits_only_aggregate_metrics_and_redacts_identifiers(self):
+        command_results = {
+            ("df", "-Pk", "/"): (
+                "Filesystem 1024-blocks Used Available Capacity Mounted on\n"
+                "/dev/private-root 1000000 750000 250000 75% /\n"
+            ),
+            ("docker", "system", "df", "--format", "json"): json.dumps({
+                "Type": "Images",
+                "TotalCount": 2,
+                "Active": 1,
+                "Size": "3.00GB",
+                "Reclaimable": "2.00GB (66%)",
+            }) + "\n" + json.dumps({
+                "Type": "Build Cache",
+                "TotalCount": 10,
+                "Active": 0,
+                "Size": "1.00GB",
+                "Reclaimable": "1.00GB (100%)",
+            }) + "\n" + json.dumps({
+                "Type": "private-volume-secret",
+                "TotalCount": 1,
+                "Active": 0,
+                "Size": "private-size-token",
+                "Reclaimable": "private-reclaimable-token",
+            }) + "\n",
+            ("docker", "image", "ls", "--filter", "dangling=true", "--format", "{{.ID}}|{{.Size}}"):
+                "a1b2c3d4e5f6|1.25GB\n",
+        }
+        invoked_commands = []
+
+        def fake_run_command(arguments, timeout=15):
+            invoked_commands.append(tuple(arguments))
+            return command_results.get(tuple(arguments))
+
+        output = StringIO()
+        with patch("audit_ovh_container_diagnostics.run_command", side_effect=fake_run_command):
+            with redirect_stdout(output):
+                report_disk_resources()
+
+        report = output.getvalue()
+        self.assertIn("root_fs_free_kib=250000", report)
+        self.assertIn("root_fs_free_bytes=256000000", report)
+        self.assertIn("docker_system_df_images_reclaimable_bytes_estimate=2000000000", report)
+        self.assertIn("docker_system_df_build_cache_reclaimable_bytes_estimate=1000000000", report)
+        self.assertIn("docker_dangling_images_count=1", report)
+        self.assertIn("docker_dangling_images_size_bytes_estimate=1250000000", report)
+        for sensitive_value in (
+            "/dev/private-root",
+            "a1b2c3d4e5f6",
+            "private-volume-secret",
+            "private-size-token",
+            "private-reclaimable-token",
+            "1.25GB",
+        ):
+            self.assertNotIn(sensitive_value, report)
+        self.assertTrue(all("prune" not in argument for command in invoked_commands for argument in command))
+
+    def test_resource_audit_workflow_invokes_the_redacted_disk_report(self):
+        repo_root = Path(__file__).resolve().parents[2]
+        workflow = (repo_root / ".github/workflows/audit-ovh-resources.yml").read_text()
+
+        self.assertIn("name: Inspect production memory, disk usage, and route-family logs by diagnostic run", workflow)
+        self.assertIn("< scripts/deployment/audit_ovh_container_diagnostics.py", workflow)
+        self.assertIn("python3 -m unittest discover -s scripts/deployment -p 'test_audit_ovh_container_diagnostics.py'", workflow)
+
     def test_cgroup_parsers_keep_only_selected_numeric_fields(self):
         events = parse_numeric_pairs(
             "low 0\nhigh 2\noom_kill 1\nsecret_field 99\nmalformed value\n",

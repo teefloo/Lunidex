@@ -73,8 +73,6 @@ jobs:
           ps -eo pid,pcpu,rss,comm --sort=-pcpu | head -n 8 || true
           printf '%s\n' '--- RAM ---'
           free -h
-          printf '%s\n' '--- Disk ---'
-          df -h / /opt
           printf '%s\n' '--- Swap ---'
           swapon --show || true
           printf '%s\n' '--- Containers (no environment values) ---'
@@ -125,7 +123,7 @@ jobs:
           done
           REMOTE
 
-      - name: Inspect production memory and filter route-family logs by diagnostic run
+      - name: Inspect production memory, disk usage, and route-family logs by diagnostic run
         shell: bash
         env:
           EXPECTED_HEAP_SAMPLE_RUN_ID: ${{ inputs.expected_heap_sample_run_id }}
