@@ -1,9 +1,10 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import {
   collectHeapSample,
   sanitizeHeapMemorySnapshot,
   shouldTriggerHeapSample,
+  startHeapAllocationSampler,
   summarizeHeapProfile,
 } from './heap-allocation-sampler';
 
@@ -79,6 +80,7 @@ describe('heap allocation sampler summaries', () => {
         { frames: [{ functionName: 'loadCatalog', sourceFile: 'catalog.js', line: 41, column: 15 }], sampledBytes: 75 },
       ],
       memory: MEMORY_SNAPSHOT,
+      memorySeries: [],
     });
     expect(JSON.stringify(summary)).not.toContain('/srv/lunidex');
     expect(JSON.stringify(summary)).not.toContain('private@example.com');
@@ -133,6 +135,39 @@ describe('heap allocation sampler summaries', () => {
     expect(JSON.stringify(summary)).not.toContain('must-not-log');
   });
 
+  it('keeps a 60-point memory series and the largest allocation frames under the log limit', () => {
+    const memorySeries = Array.from({ length: 60 }, (_, index) => [
+      (index + 1) * 15_000,
+      Number.MAX_SAFE_INTEGER,
+      Number.MAX_SAFE_INTEGER,
+      Number.MAX_SAFE_INTEGER,
+      Number.MAX_SAFE_INTEGER,
+      Number.MAX_SAFE_INTEGER,
+      Number.MAX_SAFE_INTEGER,
+    ] as const);
+    const summary = summarizeHeapProfile({
+      head: {
+        callFrame: { functionName: '(root)', url: '', lineNumber: 0 },
+        selfSize: 0,
+        children: Array.from({ length: 20 }, (_, index) => ({
+          callFrame: {
+            functionName: `f${index}${'x'.repeat(78)}`,
+            url: `file:///srv/lunidex/${'s'.repeat(108)}${index}.js`,
+            lineNumber: index,
+            columnNumber: index,
+          },
+          selfSize: 100_000 - index,
+          children: [],
+        })),
+      },
+    }, MEMORY_SNAPSHOT, memorySeries);
+    const json = JSON.stringify(summary);
+
+    expect(summary.memorySeries).toEqual(memorySeries);
+    expect(summary.frames.length).toBeGreaterThan(0);
+    expect(json.length).toBeLessThanOrEqual(15_000);
+  });
+
   it('sanitizes the snapshot to six non-negative integer counters', () => {
     expect(sanitizeHeapMemorySnapshot({
       rss: 1_000,
@@ -180,6 +215,7 @@ describe('heap allocation sampler summaries', () => {
     expect(Object.keys(summary.memory).sort()).toEqual([
       'arrayBuffers', 'external', 'heapLimit', 'heapTotal', 'heapUsed', 'rss',
     ]);
+    expect(summary.memorySeries).toEqual([]);
     for (const value of Object.values(summary.memory)) {
       expect(Number.isSafeInteger(value)).toBe(true);
       expect(value).toBeGreaterThanOrEqual(0);
@@ -204,5 +240,39 @@ describe('heap allocation sampler summaries', () => {
     expect(JSON.stringify(summary).length).toBeLessThanOrEqual(15_000);
     expect(JSON.stringify(summary)).not.toContain('heap-sampler-test-payload');
     expect(allocations).toHaveLength(4_000);
+  });
+
+  it('logs one exact-run time series during the opt-in diagnostic window', async () => {
+    vi.useFakeTimers({ now: new Date('2026-11-20T00:00:00.000Z') });
+    vi.stubEnv('NODE_ENV', 'production');
+    vi.stubEnv('NEXT_RUNTIME', 'nodejs');
+    vi.stubEnv('LUNIDEX_HEAP_SAMPLER_DIAGNOSTIC', 'enabled');
+    vi.stubEnv('LUNIDEX_HEAP_SAMPLER_RUN_ID', '123456789-1');
+    vi.stubEnv(
+      'LUNIDEX_HEAP_SAMPLER_EXPIRES_AT',
+      String(Math.floor(Date.now() / 1_000) + 901),
+    );
+    const log = vi.spyOn(console, 'info').mockImplementation(() => undefined);
+
+    try {
+      startHeapAllocationSampler();
+      await vi.advanceTimersByTimeAsync(15 * 60_000);
+
+      expect(log).toHaveBeenCalledOnce();
+      const line = String(log.mock.calls[0]?.[0]);
+      expect(line.startsWith('LUNIDEX_HEAP_SAMPLE_SUMMARY_123456789-1=')).toBe(true);
+      expect(line.length).toBeLessThanOrEqual(16_384);
+      const summary = JSON.parse(line.slice(line.indexOf('=') + 1)) as {
+        memorySeries: Array<readonly number[]>;
+      };
+      expect(summary.memorySeries).toHaveLength(60);
+      expect(summary.memorySeries[0]?.[0]).toBe(0);
+      expect(summary.memorySeries.at(-1)?.[0]).toBe(59 * 15_000);
+      expect(summary.memorySeries.every((point) => point.length === 7)).toBe(true);
+    } finally {
+      log.mockRestore();
+      vi.useRealTimers();
+      vi.unstubAllEnvs();
+    }
   });
 });

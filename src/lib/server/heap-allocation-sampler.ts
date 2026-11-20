@@ -9,6 +9,8 @@ const RUN_ID_ENV = 'LUNIDEX_HEAP_SAMPLER_RUN_ID';
 const SUMMARY_PREFIX = 'LUNIDEX_HEAP_SAMPLE_SUMMARY_';
 const HEAP_LIMIT_TRIGGER_RATIO = 0.85;
 const MONITOR_INTERVAL_MS = 1_000;
+const MEMORY_SERIES_INTERVAL_MS = 15_000;
+const MAX_MEMORY_SERIES_POINTS = 60;
 const SAMPLE_DURATION_MS = 25_000;
 const SAMPLE_INTERVAL_BYTES = 64 * 1024;
 const MAX_PROFILE_NODES = 50_000;
@@ -45,10 +47,22 @@ export interface HeapMemorySnapshot {
   heapLimit: number;
 }
 
+/** Compact tuple order: elapsed milliseconds, then the six HeapMemorySnapshot fields. */
+export type HeapMemorySeriesPoint = readonly [
+  elapsedMs: number,
+  rss: number,
+  heapTotal: number,
+  heapUsed: number,
+  external: number,
+  arrayBuffers: number,
+  heapLimit: number,
+];
+
 export interface HeapSampleSummary {
   frames: HeapSampleFrame[];
   stacks: HeapSampleStack[];
   memory: HeapMemorySnapshot;
+  memorySeries: HeapMemorySeriesPoint[];
 }
 
 interface RawProfileNode {
@@ -92,6 +106,26 @@ export function readHeapMemorySnapshot(): HeapMemorySnapshot {
   const usage = process.memoryUsage();
   const heapLimit = getHeapStatistics().heap_size_limit;
   return sanitizeHeapMemorySnapshot({ ...usage, heapLimit });
+}
+
+function makeMemorySeriesPoint(
+  elapsedMs: number,
+  memory: HeapMemorySnapshot,
+): HeapMemorySeriesPoint {
+  return [
+    safeMemoryByteCount(elapsedMs),
+    memory.rss,
+    memory.heapTotal,
+    memory.heapUsed,
+    memory.external,
+    memory.arrayBuffers,
+    memory.heapLimit,
+  ];
+}
+
+function memoryFromSeriesPoint(point: HeapMemorySeriesPoint): HeapMemorySnapshot {
+  const [, rss, heapTotal, heapUsed, external, arrayBuffers, heapLimit] = point;
+  return { rss, heapTotal, heapUsed, external, arrayBuffers, heapLimit };
 }
 
 export function shouldTriggerHeapSample(memory: HeapMemorySnapshot): boolean {
@@ -196,8 +230,10 @@ function addSampledStack(
 }
 
 function fitSummaryToLogLimit(summary: HeapSampleSummary): HeapSampleSummary {
+  const frames = [...summary.frames];
   const stacks = summary.stacks.map((stack) => ({ ...stack, frames: [...stack.frames] }));
-  let json = JSON.stringify({ frames: summary.frames, stacks, memory: summary.memory });
+  const memorySeries = summary.memorySeries.map((point) => [...point] as HeapMemorySeriesPoint);
+  let json = JSON.stringify({ frames, stacks, memory: summary.memory, memorySeries });
 
   while (json.length > MAX_SUMMARY_JSON_LENGTH && stacks.length > 0) {
     let index = stacks.length - 1;
@@ -210,21 +246,29 @@ function fitSummaryToLogLimit(summary: HeapSampleSummary): HeapSampleSummary {
     } else {
       stacks.pop();
     }
-    json = JSON.stringify({ frames: summary.frames, stacks, memory: summary.memory });
+    json = JSON.stringify({ frames, stacks, memory: summary.memory, memorySeries });
   }
 
-  return { frames: summary.frames, stacks, memory: summary.memory };
+  // Memory history is the primary diagnostic output. Only trim the lower-ranked
+  // allocation frames if unusually long sanitized names still exceed the cap.
+  while (json.length > MAX_SUMMARY_JSON_LENGTH && frames.length > 0) {
+    frames.pop();
+    json = JSON.stringify({ frames, stacks, memory: summary.memory, memorySeries });
+  }
+
+  return { frames, stacks, memory: summary.memory, memorySeries };
 }
 
 /** Reduce the inspector profile to bounded, non-sensitive frames and stacks. */
 export function summarizeHeapProfile(
   profileValue: unknown,
   memorySnapshot: HeapMemorySnapshot = readHeapMemorySnapshot(),
+  memorySeries: HeapMemorySeriesPoint[] = [],
 ): HeapSampleSummary {
   const memory = sanitizeHeapMemorySnapshot(memorySnapshot);
   const profile = asRecord(profileValue);
   const root = asRecord(profile?.head) as RawProfileNode | null;
-  if (!root) return { frames: [], stacks: [], memory };
+  if (!root) return { frames: [], stacks: [], memory, memorySeries };
 
   const totals = new Map<string, MutableHeapSampleFrame>();
   const stackTotals = new Map<string, MutableHeapSampleStack>();
@@ -281,6 +325,7 @@ export function summarizeHeapProfile(
       .slice(0, MAX_SUMMARY_STACKS)
       .map(({ frames, sampledBytes }) => ({ frames, sampledBytes })),
     memory,
+    memorySeries,
   };
 
   return fitSummaryToLogLimit(summary);
@@ -323,13 +368,84 @@ function logSafeSummary(summary: HeapSampleSummary, runId: string): void {
 export function startHeapAllocationSampler(): void {
   if (!diagnosticWindowIsOpen()) return;
 
-  let triggered = false;
+  let allocationTriggered = false;
+  let allocationPending = false;
+  let samplingClosed = false;
+  let allocationCheckpointLogged = false;
+  let finalSummaryLogged = false;
+  let allocationSummary: HeapSampleSummary | null = null;
+  const monitors = new Set<ReturnType<typeof setInterval>>();
+  const startedAt = performance.now();
+  const memorySeries: HeapMemorySeriesPoint[] = [];
   const runId = process.env[RUN_ID_ENV];
   if (!runId || !/^\d+-\d+$/.test(runId)) return;
-  const monitor = setInterval(() => {
-    if (triggered) return;
+
+  const finishIfReady = (): void => {
+    if (!samplingClosed || allocationPending || finalSummaryLogged) return;
+    finalSummaryLogged = true;
+
+    let summary: HeapSampleSummary;
+    if (allocationSummary) {
+      summary = { ...allocationSummary, memorySeries };
+    } else {
+      const lastPoint = memorySeries.at(-1);
+      let memory: HeapMemorySnapshot;
+      try {
+        memory = lastPoint ? memoryFromSeriesPoint(lastPoint) : readHeapMemorySnapshot();
+      } catch {
+        memory = sanitizeHeapMemorySnapshot({});
+      }
+      summary = { frames: [], stacks: [], memory, memorySeries };
+    }
+
+    logSafeSummary(fitSummaryToLogLimit(summary), runId);
+  };
+
+  const logAllocationCheckpoint = (): void => {
+    if (allocationCheckpointLogged || samplingClosed || !allocationSummary || memorySeries.length === 0) return;
+    allocationCheckpointLogged = true;
+    logSafeSummary(fitSummaryToLogLimit({
+      ...allocationSummary,
+      memorySeries: [...memorySeries],
+    }), runId);
+  };
+
+  const captureMemoryPoint = (): void => {
+    if (memorySeries.length >= MAX_MEMORY_SERIES_POINTS) return;
+    let memory: HeapMemorySnapshot;
+    try {
+      memory = readHeapMemorySnapshot();
+    } catch {
+      return;
+    }
+    const elapsedMs = Math.max(0, Math.floor(performance.now() - startedAt));
+    memorySeries.push(makeMemorySeriesPoint(elapsedMs, memory));
+    logAllocationCheckpoint();
+  };
+
+  const closeSamplingWindow = (): void => {
+    if (samplingClosed) return;
+    samplingClosed = true;
+    for (const monitor of monitors) clearInterval(monitor);
+    finishIfReady();
+  };
+
+  const memoryMonitor = setInterval(() => {
     if (!diagnosticWindowIsOpen()) {
-      clearInterval(monitor);
+      closeSamplingWindow();
+      return;
+    }
+    captureMemoryPoint();
+    if (memorySeries.length >= MAX_MEMORY_SERIES_POINTS) closeSamplingWindow();
+  }, MEMORY_SERIES_INTERVAL_MS);
+  monitors.add(memoryMonitor);
+  memoryMonitor.unref();
+  captureMemoryPoint();
+
+  const allocationMonitor = setInterval(() => {
+    if (allocationTriggered) return;
+    if (!diagnosticWindowIsOpen()) {
+      closeSamplingWindow();
       return;
     }
 
@@ -337,17 +453,31 @@ export function startHeapAllocationSampler(): void {
     try {
       memory = readHeapMemorySnapshot();
     } catch {
-      clearInterval(monitor);
+      clearInterval(allocationMonitor);
       return;
     }
     if (!shouldTriggerHeapSample(memory)) return;
 
-    triggered = true;
-    clearInterval(monitor);
+    allocationTriggered = true;
+    allocationPending = true;
+    clearInterval(allocationMonitor);
     void collectHeapSample().then(
-      (summary) => logSafeSummary(summary, runId),
-      () => logSafeSummary({ frames: [], stacks: [], memory: readHeapMemorySnapshot() }, runId),
-    );
+      (summary) => { allocationSummary = summary; },
+      () => {
+        let fallbackMemory: HeapMemorySnapshot;
+        try {
+          fallbackMemory = readHeapMemorySnapshot();
+        } catch {
+          fallbackMemory = sanitizeHeapMemorySnapshot({});
+        }
+        allocationSummary = { frames: [], stacks: [], memory: fallbackMemory, memorySeries: [] };
+      },
+    ).finally(() => {
+      allocationPending = false;
+      logAllocationCheckpoint();
+      finishIfReady();
+    });
   }, MONITOR_INTERVAL_MS);
-  monitor.unref();
+  monitors.add(allocationMonitor);
+  allocationMonitor.unref();
 }

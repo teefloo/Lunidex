@@ -5,6 +5,9 @@ const MAX_INPUT_LENGTH = 16_384;
 const MAX_FRAMES = 20;
 const MAX_STACKS = 10;
 const MAX_STACK_FRAMES = 8;
+const MAX_MEMORY_SERIES_POINTS = 60;
+const MAX_MEMORY_SERIES_ELAPSED_MS = 15 * 60 * 1_000;
+const MEMORY_SERIES_TUPLE_LENGTH = 7;
 const MAX_FUNCTION_NAME_LENGTH = 80;
 const MAX_SOURCE_FILE_LENGTH = 120;
 const FRAME_KEYS = ['functionName', 'line', 'column', 'sampledBytes', 'sourceFile'];
@@ -50,7 +53,9 @@ export function normalizeHeapSampleSummaryLine(line, expectedRunId) {
     && hasOnlyKeys(parsed, ['frames', 'stacks']);
   const hasMemorySchema = parsed && typeof parsed === 'object' && !Array.isArray(parsed)
     && hasOnlyKeys(parsed, ['frames', 'stacks', 'memory']);
-  if (!hasLegacySchema && !hasMemorySchema) return null;
+  const hasMemorySeriesSchema = parsed && typeof parsed === 'object' && !Array.isArray(parsed)
+    && hasOnlyKeys(parsed, ['frames', 'stacks', 'memory', 'memorySeries']);
+  if (!hasLegacySchema && !hasMemorySchema && !hasMemorySeriesSchema) return null;
 
   if (!Array.isArray(parsed.frames)
     || parsed.frames.length > MAX_FRAMES
@@ -60,7 +65,7 @@ export function normalizeHeapSampleSummaryLine(line, expectedRunId) {
   }
 
   let memory;
-  if (hasMemorySchema) {
+  if (hasMemorySchema || hasMemorySeriesSchema) {
     if (!parsed.memory || typeof parsed.memory !== 'object' || Array.isArray(parsed.memory)
       || !hasOnlyKeys(parsed.memory, MEMORY_KEYS)) {
       return null;
@@ -73,11 +78,28 @@ export function normalizeHeapSampleSummaryLine(line, expectedRunId) {
     }
   }
 
-  /*
-   * The legacy exact schema remains readable so an already-emitted bounded
-   * sample can be retrieved after deployment. Every new sampler summary uses
-   * the current schema with the numeric memory snapshot.
-   */
+  let memorySeries;
+  if (hasMemorySeriesSchema) {
+    if (!Array.isArray(parsed.memorySeries)
+      || parsed.memorySeries.length === 0
+      || parsed.memorySeries.length > MAX_MEMORY_SERIES_POINTS) {
+      return null;
+    }
+
+    memorySeries = [];
+    let previousElapsedMs = -1;
+    for (const point of parsed.memorySeries) {
+      if (!Array.isArray(point) || point.length !== MEMORY_SERIES_TUPLE_LENGTH) return null;
+      if (point.some((value) => !Number.isSafeInteger(value) || value < 0)) return null;
+      const elapsedMs = point[0];
+      if (elapsedMs <= previousElapsedMs || elapsedMs > MAX_MEMORY_SERIES_ELAPSED_MS) return null;
+      previousElapsedMs = elapsedMs;
+      memorySeries.push([...point]);
+    }
+  }
+
+  // Keep both older exact schemas readable for summaries already in Docker logs.
+  // Current summaries add the numeric process snapshot and bounded time series.
 
   const frames = [];
   for (const frame of parsed.frames) {
@@ -139,6 +161,7 @@ export function normalizeHeapSampleSummaryLine(line, expectedRunId) {
 
   const normalized = { frames, stacks };
   if (memory) normalized.memory = memory;
+  if (memorySeries) normalized.memorySeries = memorySeries;
   return `${expectedPrefix}${JSON.stringify(normalized)}`;
 }
 
