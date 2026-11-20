@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-readonly EXPECTED_IMAGE='ghcr.io/teefloo/lunidex:ca08758609fb5cfefafff6d5c2aaee31ddc56f63'
+readonly EXPECTED_PRODUCTION_IMAGE='ghcr.io/teefloo/lunidex:ca08758609fb5cfefafff6d5c2aaee31ddc56f63'
+readonly DIAGNOSTIC_IMAGE_MODE="${ISOLATED_DIAGNOSTIC_IMAGE_MODE:-production}"
+readonly DIAGNOSTIC_GITHUB_SHA="${GITHUB_SHA:-}"
+readonly EXPECTED_CANDIDATE_IMAGE="lunidex-oom-candidate:$DIAGNOSTIC_GITHUB_SHA"
 readonly MIN_DURATION_SECONDS=30
 readonly MAX_DURATION_SECONDS=3600
 readonly MIN_CONCURRENCY=1
@@ -13,7 +16,26 @@ readonly DIAGNOSTIC_CONCURRENCY="${ISOLATED_TCG_CONCURRENCY:-32}"
 readonly DIAGNOSTIC_PHASES="${ISOLATED_TCG_PHASES:-full,abort}"
 readonly DIAGNOSTIC_TARGET="${ISOLATED_TCG_TARGET:-tcg-card}"
 
-if [[ "${APP_IMAGE:-}" != "$EXPECTED_IMAGE" || ! "$DIAGNOSTIC_PHASE_SECONDS" =~ ^[0-9]+$ || ! "$DIAGNOSTIC_CONCURRENCY" =~ ^[0-9]+$ ]] \
+case "$DIAGNOSTIC_IMAGE_MODE" in
+  production)
+    if [[ "${APP_IMAGE:-}" != "$EXPECTED_PRODUCTION_IMAGE" ]]; then
+      echo 'diagnostic_image_not_allowlisted=true' >&2
+      exit 78
+    fi
+    ;;
+  source-candidate)
+    if [[ ! "$DIAGNOSTIC_GITHUB_SHA" =~ ^[0-9a-f]{40}$ || "${APP_IMAGE:-}" != "$EXPECTED_CANDIDATE_IMAGE" ]]; then
+      echo 'diagnostic_image_not_allowlisted=true' >&2
+      exit 78
+    fi
+    ;;
+  *)
+    echo 'diagnostic_image_mode_invalid=true' >&2
+    exit 78
+    ;;
+esac
+
+if [[ ! "$DIAGNOSTIC_PHASE_SECONDS" =~ ^[0-9]+$ || ! "$DIAGNOSTIC_CONCURRENCY" =~ ^[0-9]+$ ]] \
   || (( DIAGNOSTIC_PHASE_SECONDS < MIN_DURATION_SECONDS || DIAGNOSTIC_PHASE_SECONDS > MAX_DURATION_SECONDS )) \
   || (( DIAGNOSTIC_CONCURRENCY < MIN_CONCURRENCY || DIAGNOSTIC_CONCURRENCY > MAX_CONCURRENCY )) \
   || [[ "$DIAGNOSTIC_PHASES" != full && "$DIAGNOSTIC_PHASES" != full,abort ]] \

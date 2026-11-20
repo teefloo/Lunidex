@@ -154,6 +154,14 @@ interface ProvidersProps {
   initialTranslationsPartial?: boolean;
 }
 
+const BROWSER_QUERY_GC_TIME_MS = 60 * 60 * 1_000;
+
+// A finite SSR gcTime keeps each request's QueryClient alive via its timer;
+// retain TanStack's Infinity default on the server and one hour in browsers.
+export function queryGcTimeForRuntime(isServer: boolean): number {
+  return isServer ? Infinity : BROWSER_QUERY_GC_TIME_MS;
+}
+
 function DeferredInitialLanguageBundle({
   enabled,
   language,
@@ -191,7 +199,7 @@ export default function Providers({
     defaultOptions: {
       queries: {
         staleTime: 10 * 60 * 1000,
-        gcTime: 60 * 60 * 1000,
+        gcTime: queryGcTimeForRuntime(typeof window === 'undefined'),
         retry: 1,
         refetchOnWindowFocus: false,
         // Respect each query's staleTime on reconnect. Re-fetching fresh data

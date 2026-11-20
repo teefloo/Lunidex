@@ -1,7 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { chmodSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { delimiter, join } from 'node:path';
+import { tmpdir } from 'node:os';
 import { classifyDockerLaunchError, sanitizeStderrSignature } from './classify-isolated-docker-launch-error.mjs';
 
 test('maps Docker exec stderr signatures to allowlisted categories only', () => {
@@ -103,6 +105,64 @@ test('runner uses a bounded separate helper container with a read-only script mo
     ], { input: stderr, encoding: 'utf8' });
     assert.equal(result.status, 0);
     assert.equal(result.stdout.trimEnd(), expected);
+  }
+});
+
+test('runner accepts only the pinned production image or the selected SHA-tagged local candidate', (t) => {
+  const directory = mkdtempSync(join(tmpdir(), 'lunidex-image-allowlist-'));
+  t.after(() => rmSync(directory, { recursive: true, force: true }));
+  const dockerPath = join(directory, 'docker');
+  const dockerCallsPath = join(directory, 'docker-calls');
+  writeFileSync(dockerPath, '#!/bin/sh\nprintf called >> "$DOCKER_CALLS"\nif [ "$1" = run ]; then exit 1; fi\nexit 0\n');
+  chmodSync(dockerPath, 0o700);
+
+  const productionImage = 'ghcr.io/teefloo/lunidex:ca08758609fb5cfefafff6d5c2aaee31ddc56f63';
+  const commit = 'a'.repeat(40);
+  const candidateImage = `lunidex-oom-candidate:${commit}`;
+  const run = ({ mode, image, sha = commit } = {}) => spawnSync('bash', [
+    'scripts/deployment/run-isolated-tcg-rsc-phases.sh',
+  ], {
+    encoding: 'utf8',
+    env: {
+      ...process.env,
+      PATH: `${directory}${delimiter}${process.env.PATH}`,
+      DOCKER_CALLS: dockerCallsPath,
+      APP_IMAGE: image,
+      GITHUB_SHA: sha,
+      PHASE_SECONDS: '30',
+      ISOLATED_TCG_CONCURRENCY: '1',
+      ISOLATED_TCG_PHASES: 'full',
+      ...(mode === undefined ? {} : { ISOLATED_DIAGNOSTIC_IMAGE_MODE: mode }),
+    },
+  });
+
+  const defaultProduction = run({ image: productionImage });
+  assert.equal(defaultProduction.status, 1);
+  assert.match(defaultProduction.stdout, /full_network_anchor_start_failed=true/);
+  assert.equal(defaultProduction.stderr, '');
+  assert.equal(existsSync(dockerCallsPath), true);
+
+  rmSync(dockerCallsPath, { force: true });
+  const selectedCandidate = run({ mode: 'source-candidate', image: candidateImage });
+  assert.equal(selectedCandidate.status, 1);
+  assert.match(selectedCandidate.stdout, /full_network_anchor_start_failed=true/);
+  assert.equal(selectedCandidate.stderr, '');
+  assert.equal(existsSync(dockerCallsPath), true);
+
+  const invalidConfigurations = [
+    { mode: 'unknown', image: productionImage },
+    { mode: 'production', image: candidateImage },
+    { mode: 'source-candidate', image: productionImage },
+    { mode: 'source-candidate', image: candidateImage, sha: 'not-a-git-sha' },
+    { mode: 'source-candidate', image: 'lunidex-oom-candidate:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb' },
+  ];
+  for (const configuration of invalidConfigurations) {
+    rmSync(dockerCallsPath, { force: true });
+    const result = run(configuration);
+    assert.equal(result.status, 78);
+    assert.equal(result.stdout, '');
+    assert.match(result.stderr, /diagnostic_(?:image_mode_invalid|image_not_allowlisted)=true/);
+    assert.equal(existsSync(dockerCallsPath), false);
   }
 });
 

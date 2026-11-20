@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { act, createElement, useContext, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
+import { useQueryClient } from '@tanstack/react-query';
 import { createInstance } from 'i18next';
 import { MotionConfigContext } from 'framer-motion';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -27,17 +28,24 @@ vi.mock('@/lib/i18n', () => ({
   persistLanguageCookie: vi.fn(),
 }));
 
-import Providers from './providers';
+import Providers, { queryGcTimeForRuntime } from './providers';
 
 describe('shared provider lifetime', () => {
   afterEach(() => vi.clearAllMocks());
+
+  it('uses a request-releasable server cache and retains the browser cache for one hour', () => {
+    expect(queryGcTimeForRuntime(true)).toBe(Infinity);
+    expect(queryGcTimeForRuntime(false)).toBe(60 * 60 * 1_000);
+  });
 
   it('preserves mounted children when entering and leaving a motion route', async () => {
     (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
     const mounted = vi.fn();
     const unmounted = vi.fn();
+    let browserGcTime: unknown;
     function Probe() {
       const config = useContext(MotionConfigContext);
+      browserGcTime = useQueryClient().getDefaultOptions().queries?.gcTime;
       useEffect(() => { mounted(); return () => { unmounted(); }; }, []);
       return createElement('output', { 'data-reduced-motion': config.reducedMotion });
     }
@@ -52,6 +60,7 @@ describe('shared provider lifetime', () => {
       state.pathname = '/fr/team';
       await act(async () => { root.render(tree()); await new Promise(resolve => setTimeout(resolve, 30)); });
       expect(mounted).toHaveBeenCalledTimes(1);
+      expect(browserGcTime).toBe(60 * 60 * 1_000);
       expect(container.querySelector('output')?.dataset.reducedMotion).toBe('user');
       state.pathname = '/fr/pokedex';
       await act(async () => { root.render(tree()); });

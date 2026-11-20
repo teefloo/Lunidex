@@ -3,6 +3,14 @@ name: Isolated TCG RSC abort diagnostic
 on:
   workflow_dispatch:
     inputs:
+      image:
+        description: Select the immutable production image or a local source build
+        required: true
+        default: production
+        type: choice
+        options:
+          - production
+          - source-candidate
       profile:
         description: Bounded isolated test profile
         required: true
@@ -46,12 +54,13 @@ jobs:
       (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/codex/fix-node-v8-oom-p0') &&
       inputs.confirm_isolated_rsc_test
     runs-on: ubuntu-latest
-    timeout-minutes: 70
+    timeout-minutes: 110
     env:
-      APP_IMAGE: ghcr.io/teefloo/lunidex:ca08758609fb5cfefafff6d5c2aaee31ddc56f63
+      PRODUCTION_IMAGE: ghcr.io/teefloo/lunidex:ca08758609fb5cfefafff6d5c2aaee31ddc56f63
       CACHE_VOLUME: lunidex-isolated-rsc-cache
       INTERNAL_NETWORK: lunidex-isolated-rsc-internal
       WARM_CONTAINER: lunidex-isolated-rsc-warm
+      ISOLATED_DIAGNOSTIC_IMAGE_MODE: ${{ inputs.image }}
       DIAGNOSTIC_PROFILE: ${{ inputs.profile }}
       DIAGNOSTIC_TARGET: ${{ inputs.target }}
     steps:
@@ -59,6 +68,53 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
+
+      - name: Select allowlisted diagnostic image
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          case "$ISOLATED_DIAGNOSTIC_IMAGE_MODE" in
+            production)
+              app_image="$PRODUCTION_IMAGE"
+              ;;
+            source-candidate)
+              [[ "$GITHUB_SHA" =~ ^[0-9a-f]{40}$ ]] || {
+                echo 'candidate_image_tag_invalid=true' >&2
+                exit 78
+              }
+              app_image="lunidex-oom-candidate:$GITHUB_SHA"
+              ;;
+            *)
+              echo 'diagnostic_image_mode_invalid=true' >&2
+              exit 78
+              ;;
+          esac
+          printf 'APP_IMAGE=%s\n' "$app_image" >> "$GITHUB_ENV"
+
+      - name: Build source candidate locally with public diagnostic values
+        if: inputs.image == 'source-candidate'
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          [[ "$APP_IMAGE" == "lunidex-oom-candidate:$GITHUB_SHA" ]] || {
+            echo 'candidate_image_tag_invalid=true' >&2
+            exit 78
+          }
+          docker build --file Dockerfile --tag "$APP_IMAGE" \
+            --build-arg NEXT_DEPLOYMENT_ID=isolated-diagnostic \
+            --build-arg NEXT_PUBLIC_NEON_AUTH_URL=https://auth.example.invalid \
+            --build-arg 'NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN=' \
+            --build-arg 'NEXT_PUBLIC_POSTHOG_HOST=' \
+            --build-arg NEXT_PUBLIC_POSTHOG_ENABLED=false \
+            --build-arg NEXT_PUBLIC_POSTHOG_ENVIRONMENT=isolated-diagnostic \
+            --build-arg NEXT_PUBLIC_APP_RELEASE=isolated-diagnostic \
+            --build-arg NEXT_PUBLIC_POSTHOG_REPLAY_SAMPLE_RATE=0 \
+            --build-arg 'NEXT_PUBLIC_SENTRY_DSN=' \
+            --build-arg NEXT_PUBLIC_SENTRY_ENVIRONMENT=isolated-diagnostic \
+            --build-arg NEXT_PUBLIC_SENTRY_RELEASE=isolated-diagnostic \
+            --build-arg 'NEXT_PUBLIC_GOOGLE_VERIFICATION=' \
+            --build-arg 'NEXT_PUBLIC_VAPID_PUBLIC_KEY=' \
+            .
 
       - name: Resolve bounded diagnostic profile
         shell: bash
@@ -148,13 +204,14 @@ jobs:
           bash -n scripts/deployment/run-isolated-tcg-rsc-phases.sh
 
       - name: Authenticate to GHCR and pull the immutable production image
+        if: inputs.image == 'production'
         shell: bash
         env:
           GHCR_READ_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -Eeuo pipefail
           printf '%s' "$GHCR_READ_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin >/dev/null
-          docker pull "$APP_IMAGE" >/dev/null
+          docker pull "$PRODUCTION_IMAGE" >/dev/null
           docker logout ghcr.io >/dev/null
           unset GHCR_READ_TOKEN
 
@@ -301,6 +358,7 @@ jobs:
         run: |
           set -Eeuo pipefail
           APP_IMAGE="$APP_IMAGE" PHASE_SECONDS="$PHASE_SECONDS" \
+            ISOLATED_DIAGNOSTIC_IMAGE_MODE="$ISOLATED_DIAGNOSTIC_IMAGE_MODE" \
             ISOLATED_TCG_CONCURRENCY="$ISOLATED_TCG_CONCURRENCY" \
             ISOLATED_TCG_PHASES="$ISOLATED_TCG_PHASES" \
             ISOLATED_TCG_TARGET="$ISOLATED_TCG_TARGET" \

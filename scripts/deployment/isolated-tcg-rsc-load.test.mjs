@@ -171,15 +171,37 @@ test('environment proxy support is enabled for warm-up only', () => {
 test('workflow accurately describes free public standard runner usage and manual bounds', () => {
   const workflow = readFileSync(new URL('../../.github/workflows/diagnose-isolated-tcg-aborts.yml', import.meta.url), 'utf8');
   const phaseRunner = readFileSync(new URL('./run-isolated-tcg-rsc-phases.sh', import.meta.url), 'utf8');
+  const dockerfile = readFileSync(new URL('../../Dockerfile', import.meta.url), 'utf8');
 
   assert.match(workflow, /workflow_dispatch:/);
+  assert.match(workflow, /image:[\s\S]*?default: production[\s\S]*?options:[\s\S]*?- production[\s\S]*?- source-candidate/);
+  assert.match(workflow, /ISOLATED_DIAGNOSTIC_IMAGE_MODE: \$\{\{ inputs\.image \}\}/);
+  const jobEnvironment = workflow.split('jobs:\n  compare:')[1]?.split('    steps:')[0];
+  assert.ok(jobEnvironment);
+  assert.match(jobEnvironment, /PRODUCTION_IMAGE: ghcr\.io\/teefloo\/lunidex:ca08758609fb5cfefafff6d5c2aaee31ddc56f63/);
+  assert.doesNotMatch(jobEnvironment, /APP_IMAGE:/);
+  const imageSelection = workflow.split('- name: Select allowlisted diagnostic image')[1]?.split('- name: Build source candidate')[0];
+  assert.ok(imageSelection);
+  assert.match(imageSelection, /case "\$ISOLATED_DIAGNOSTIC_IMAGE_MODE" in[\s\S]*?production\)[\s\S]*?app_image="\$PRODUCTION_IMAGE"[\s\S]*?source-candidate\)[\s\S]*?app_image="lunidex-oom-candidate:\$GITHUB_SHA"[\s\S]*?printf 'APP_IMAGE=%s\\n' "\$app_image" >> "\$GITHUB_ENV"/);
+  const candidateBuild = workflow.split('- name: Build source candidate locally with public diagnostic values')[1]?.split('- name: Resolve bounded diagnostic profile')[0];
+  assert.ok(candidateBuild);
+  assert.match(candidateBuild, /if: inputs\.image == 'source-candidate'/);
+  assert.match(candidateBuild, /docker build --file Dockerfile --tag "\$APP_IMAGE"/);
+  assert.match(candidateBuild, /NEXT_PUBLIC_NEON_AUTH_URL=https:\/\/auth\.example\.invalid/);
+  assert.match(candidateBuild, /NEXT_PUBLIC_POSTHOG_ENABLED=false/);
+  assert.match(candidateBuild, /NEXT_PUBLIC_SENTRY_DSN='/);
+  assert.match(candidateBuild, /NEXT_PUBLIC_VAPID_PUBLIC_KEY='/);
+  assert.doesNotMatch(candidateBuild, /--secret|SENTRY_AUTH_TOKEN|NEON_DATABASE_URL|docker push/);
+  assert.match(workflow, /if: inputs\.image == 'production'[\s\S]*?docker pull "\$PRODUCTION_IMAGE"/);
+  assert.doesNotMatch(workflow, /docker push/);
+  assert.match(dockerfile, /FROM node:22\.23\.4-bookworm-slim AS base/);
   assert.match(workflow, /target:[\s\S]*?required: true[\s\S]*?default: tcg-card[\s\S]*?type: choice[\s\S]*?options:[\s\S]*?- tcg-card[\s\S]*?- pokemon-detail[\s\S]*?- healthz[\s\S]*?- home/);
   assert.match(workflow, /ISOLATED_TCG_TARGET=/);
   assert.match(phaseRunner, /ISOLATED_TCG_TARGET=\$DIAGNOSTIC_TARGET/);
   assert.match(phaseRunner, /--env "ISOLATED_TCG_TARGET=\$DIAGNOSTIC_TARGET"/);
   assert.match(workflow, /required: true[\s\S]*?default: false[\s\S]*?type: boolean/);
   assert.match(workflow, /runs-on: ubuntu-latest/);
-  assert.match(workflow, /timeout-minutes: 70/);
+  assert.match(workflow, /timeout-minutes: 110/);
   assert.match(workflow, /standard runners for this public repository are free/i);
   assert.match(workflow, /github\.ref == 'refs\/heads\/codex\/fix-node-v8-oom-p0'/);
   assert.match(phaseRunner, /timeout 3660s/);
