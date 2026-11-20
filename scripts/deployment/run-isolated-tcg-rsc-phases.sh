@@ -216,7 +216,7 @@ run_phase() {
     resource_validation_exit=1
   fi
 
-  timeout 3_660s docker exec --interactive \
+  timeout 3660s docker exec --interactive \
     --env "ISOLATED_TCG_PHASE=$phase" \
     --env "ISOLATED_TCG_DURATION_SECONDS=$DIAGNOSTIC_PHASE_SECONDS" \
     --env "ISOLATED_TCG_CONCURRENCY=$DIAGNOSTIC_CONCURRENCY" \
