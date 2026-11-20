@@ -14,6 +14,7 @@ import re
 import subprocess
 import time
 from collections import Counter
+from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from pathlib import Path
 from typing import Sequence
 
@@ -22,6 +23,24 @@ APP_CONTAINER = "lunidex-production-app"
 CADDY_CONTAINER = "lunidex-caddy"
 LOCALES = {"en", "fr", "es", "de", "it", "ja", "ko", "zh"}
 ACCESS_LOG_PREFIX = "http.log.access"
+DOCKER_DF_CATEGORIES = {
+    "Images": "images",
+    "Containers": "containers",
+    "Local Volumes": "local_volumes",
+    "Build Cache": "build_cache",
+}
+DOCKER_SIZE_UNITS = {
+    "B": 1,
+    "KB": 1_000,
+    "MB": 1_000_000,
+    "GB": 1_000_000_000,
+    "TB": 1_000_000_000_000,
+    "KIB": 1_024,
+    "MIB": 1_048_576,
+    "GIB": 1_073_741_824,
+    "TIB": 1_099_511_627_776,
+}
+MAX_STORAGE_BYTES = (1 << 63) - 1
 
 CGROUP_EVENT_KEYS = (
     "low",
@@ -107,6 +126,104 @@ def parse_proc_status(text: str) -> dict[str, str]:
         if numeric and numeric[0].isdigit():
             parsed[key] = numeric[0]
     return parsed
+
+
+def parse_root_disk_free_kib(text: str) -> int | None:
+    """Parse only the available 1K blocks for the exact root mount."""
+    for line in text.splitlines()[1:]:
+        fields = line.split()
+        if len(fields) < 6 or fields[-1] != "/":
+            continue
+        available_kib = fields[-3]
+        if available_kib.isdigit():
+            return int(available_kib)
+    return None
+
+
+def parse_docker_size_bytes_estimate(value: object) -> int | None:
+    """Convert Docker's rounded human-readable size into an explicitly estimated byte count."""
+    if not isinstance(value, str):
+        return None
+    match = re.fullmatch(
+        r"\s*([0-9]+(?:\.[0-9]+)?)\s*(B|kB|KB|MB|GB|TB|KiB|MiB|GiB|TiB)"
+        r"\s*(?:\([0-9]+(?:\.[0-9]+)?%\))?\s*",
+        value,
+        flags=re.IGNORECASE,
+    )
+    if not match:
+        return None
+    try:
+        amount = Decimal(match.group(1))
+    except InvalidOperation:
+        return None
+    multiplier = DOCKER_SIZE_UNITS.get(match.group(2).upper())
+    if multiplier is None or not amount.is_finite() or amount < 0:
+        return None
+    byte_count = int((amount * multiplier).to_integral_value(rounding=ROUND_HALF_UP))
+    return byte_count if byte_count <= MAX_STORAGE_BYTES else None
+
+
+def parse_nonnegative_count(value: object) -> int | None:
+    if type(value) is int and value >= 0:
+        return value
+    if isinstance(value, str) and value.isdigit():
+        return int(value)
+    return None
+
+
+def parse_docker_system_df(text: str) -> dict[str, dict[str, int]]:
+    """Parse Docker JSON rows and retain only allowlisted categories and numeric aggregates."""
+    parsed: dict[str, dict[str, int]] = {}
+    for line in text.splitlines():
+        try:
+            record = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(record, dict):
+            continue
+        category = DOCKER_DF_CATEGORIES.get(record.get("Type"))
+        total_count = parse_nonnegative_count(record.get("TotalCount"))
+        active_count = parse_nonnegative_count(record.get("Active"))
+        size_bytes = parse_docker_size_bytes_estimate(record.get("Size"))
+        reclaimable_bytes = parse_docker_size_bytes_estimate(record.get("Reclaimable"))
+        if (
+            category is None
+            or total_count is None
+            or active_count is None
+            or size_bytes is None
+            or reclaimable_bytes is None
+        ):
+            continue
+        parsed[category] = {
+            "total_count": total_count,
+            "active_count": active_count,
+            "size_bytes_estimate": size_bytes,
+            "reclaimable_bytes_estimate": reclaimable_bytes,
+        }
+    return parsed
+
+
+def parse_dangling_images(text: str) -> dict[str, int | None]:
+    """Count dangling image IDs and estimate their total size without retaining any ID."""
+    image_ids: set[str] = set()
+    total_size_bytes = 0
+    all_sizes_available = True
+    for line in text.splitlines():
+        image_id, separator, size = line.partition("|")
+        if not separator or not re.fullmatch(r"(?:sha256:)?[a-f0-9]{12,64}", image_id):
+            continue
+        if image_id in image_ids:
+            continue
+        image_ids.add(image_id)
+        size_bytes = parse_docker_size_bytes_estimate(size)
+        if size_bytes is None:
+            all_sizes_available = False
+        else:
+            total_size_bytes += size_bytes
+    return {
+        "count": len(image_ids),
+        "size_bytes_estimate": total_size_bytes if all_sizes_available else None,
+    }
 
 
 def heap_sampler_status(environment: Sequence[str], now: int | None = None) -> dict[str, str]:
@@ -271,6 +388,63 @@ def emit(name: str, value: object) -> None:
     print(f"{name}={value}")
 
 
+def report_disk_resources() -> None:
+    """Report root free space and Docker reclaimable totals without printing raw output."""
+    print("--- Root and Docker disk storage (read-only aggregates) ---")
+    df_output = run_command(["df", "-Pk", "/"])
+    root_free_kib = parse_root_disk_free_kib(df_output or "")
+    emit("root_fs_free_available", str(root_free_kib is not None).lower())
+    emit("root_fs_free_kib", root_free_kib if root_free_kib is not None else "unavailable")
+    emit(
+        "root_fs_free_bytes",
+        root_free_kib * 1_024 if root_free_kib is not None else "unavailable",
+    )
+
+    docker_df_output = run_command(
+        ["docker", "system", "df", "--format", "json"]
+    )
+    docker_usage = parse_docker_system_df(docker_df_output or "")
+    emit("docker_system_df_available", str(docker_df_output is not None).lower())
+    for category in ("images", "containers", "local_volumes", "build_cache"):
+        values = docker_usage.get(category)
+        emit(f"docker_system_df_{category}_available", str(values is not None).lower())
+        for metric in (
+            "total_count",
+            "active_count",
+            "size_bytes_estimate",
+            "reclaimable_bytes_estimate",
+        ):
+            emit(
+                f"docker_system_df_{category}_{metric}",
+                values.get(metric, "unavailable") if values is not None else "unavailable",
+            )
+
+    dangling_output = run_command(
+        [
+            "docker",
+            "image",
+            "ls",
+            "--filter",
+            "dangling=true",
+            "--format",
+            "{{.ID}}|{{.Size}}",
+        ]
+    )
+    emit("docker_dangling_images_available", str(dangling_output is not None).lower())
+    if dangling_output is None:
+        emit("docker_dangling_images_count", "unavailable")
+        emit("docker_dangling_images_size_bytes_estimate", "unavailable")
+        return
+
+    dangling = parse_dangling_images(dangling_output)
+    emit("docker_dangling_images_count", dangling["count"])
+    size_bytes = dangling["size_bytes_estimate"]
+    emit(
+        "docker_dangling_images_size_bytes_estimate",
+        size_bytes if size_bytes is not None else "unavailable",
+    )
+
+
 def container_details() -> tuple[str, int] | None:
     details = run_command(
         ["docker", "inspect", "--format", "{{.Id}} {{.State.Pid}}", APP_CONTAINER]
@@ -422,6 +596,7 @@ def report_caddy_access_logs() -> None:
 
 def main() -> None:
     expected_run_id = os.environ.get("EXPECTED_HEAP_SAMPLE_RUN_ID", "")
+    report_disk_resources()
     details = container_details()
     if details is None:
         print("--- Production app container diagnostics ---")
