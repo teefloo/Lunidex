@@ -16,13 +16,14 @@ on:
           - comparison-900s-c32
           - soak-full-3600s-c32
       target:
-        description: Fixed local route to compare against the TCG card page
+        description: Select a fixed local route for the isolated comparison
         required: true
         default: tcg-card
         type: choice
         options:
           - tcg-card
           - healthz
+          - home
       confirm_isolated_rsc_test:
         description: >-
           Run only the selected isolated profile. App data and production services are not used; warm-up allows one TCGdex tunnel. The 3600-second profile is full-response only and includes a 30-second idle recovery window. Standard runners for this public repository are free.
@@ -99,7 +100,7 @@ jobs:
               ;;
           esac
           case "$DIAGNOSTIC_TARGET" in
-            tcg-card|healthz)
+            tcg-card|healthz|home)
               ;;
             *)
               echo 'diagnostic_target_invalid=true' >&2

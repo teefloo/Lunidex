@@ -17,7 +17,7 @@ if [[ "${APP_IMAGE:-}" != "$EXPECTED_IMAGE" || ! "$DIAGNOSTIC_PHASE_SECONDS" =~ 
   || (( DIAGNOSTIC_PHASE_SECONDS < MIN_DURATION_SECONDS || DIAGNOSTIC_PHASE_SECONDS > MAX_DURATION_SECONDS )) \
   || (( DIAGNOSTIC_CONCURRENCY < MIN_CONCURRENCY || DIAGNOSTIC_CONCURRENCY > MAX_CONCURRENCY )) \
   || [[ "$DIAGNOSTIC_PHASES" != full && "$DIAGNOSTIC_PHASES" != full,abort ]] \
-  || [[ "$DIAGNOSTIC_TARGET" != tcg-card && "$DIAGNOSTIC_TARGET" != healthz ]]; then
+  || [[ "$DIAGNOSTIC_TARGET" != tcg-card && "$DIAGNOSTIC_TARGET" != healthz && "$DIAGNOSTIC_TARGET" != home ]]; then
   echo 'diagnostic_configuration_not_pinned=true' >&2
   exit 78
 fi

@@ -81,7 +81,7 @@ function waitForInspector(child) {
   });
 }
 
-test('diagnostic target allowlist resolves only the fixed card and health routes', async () => {
+test('diagnostic target allowlist resolves only the fixed card, health, and home routes', async () => {
   const cardRoute = new URL(DIAGNOSTIC_TARGETS['tcg-card']);
   assert.equal(cardRoute.origin, 'http://127.0.0.1:3000');
   assert.equal(cardRoute.pathname, '/en/tcg/cards/base1-4');
@@ -90,9 +90,11 @@ test('diagnostic target allowlist resolves only the fixed card and health routes
   assert.deepEqual(DIAGNOSTIC_TARGETS, {
     'tcg-card': DIAGNOSTIC_ROUTE,
     healthz: 'http://127.0.0.1:3000/api/healthz',
+    home: 'http://127.0.0.1:3000/en',
   });
   assert.equal(resolveDiagnosticTarget('tcg-card'), DIAGNOSTIC_ROUTE);
   assert.equal(resolveDiagnosticTarget('healthz'), 'http://127.0.0.1:3000/api/healthz');
+  assert.equal(resolveDiagnosticTarget('home'), 'http://127.0.0.1:3000/en');
   assert.equal(resolveDiagnosticTarget('https://lunidex.app'), null);
 
   function requestFixture() {
@@ -121,7 +123,7 @@ test('diagnostic target allowlist resolves only the fixed card and health routes
     return { bucket, summary: counts };
   }
 
-  for (const target of ['tcg-card', 'healthz']) {
+  for (const target of ['tcg-card', 'healthz', 'home']) {
     const { bucket, summary: counts } = requestFixture();
     let requestedUrl = '';
     await requestDiagnosticTarget({
@@ -168,7 +170,7 @@ test('workflow accurately describes free public standard runner usage and manual
   const phaseRunner = readFileSync(new URL('./run-isolated-tcg-rsc-phases.sh', import.meta.url), 'utf8');
 
   assert.match(workflow, /workflow_dispatch:/);
-  assert.match(workflow, /target:[\s\S]*?required: true[\s\S]*?default: tcg-card[\s\S]*?type: choice[\s\S]*?options:[\s\S]*?- tcg-card[\s\S]*?- healthz/);
+  assert.match(workflow, /target:[\s\S]*?required: true[\s\S]*?default: tcg-card[\s\S]*?type: choice[\s\S]*?options:[\s\S]*?- tcg-card[\s\S]*?- healthz[\s\S]*?- home/);
   assert.match(workflow, /ISOLATED_TCG_TARGET=/);
   assert.match(phaseRunner, /ISOLATED_TCG_TARGET=\$DIAGNOSTIC_TARGET/);
   assert.match(phaseRunner, /--env "ISOLATED_TCG_TARGET=\$DIAGNOSTIC_TARGET"/);
@@ -230,6 +232,7 @@ test('accepts bounded full and client-abort summaries with the measured app iden
 
   assert.equal(validateOutput(summary()), true);
   assert.equal(validateOutput(summary({ route_target: 'healthz' })), true);
+  assert.equal(validateOutput(summary({ route_target: 'home' })), true);
   assert.equal(validateOutput(summary({
     duration_seconds: 30,
     worker_concurrency: 1,

@@ -4,6 +4,7 @@ import { performance } from 'node:perf_hooks';
 export const DIAGNOSTIC_TARGETS = Object.freeze({
   'tcg-card': 'http://127.0.0.1:3000/en/tcg/cards/base1-4?tcgLang=en',
   healthz: 'http://127.0.0.1:3000/api/healthz',
+  home: 'http://127.0.0.1:3000/en',
 });
 export const DIAGNOSTIC_ROUTE = DIAGNOSTIC_TARGETS['tcg-card'];
 export function resolveDiagnosticTarget(target) {
