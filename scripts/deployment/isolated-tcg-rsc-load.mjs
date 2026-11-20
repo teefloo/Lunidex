@@ -1,8 +1,14 @@
 import { setTimeout as delay } from 'node:timers/promises';
 import { performance } from 'node:perf_hooks';
 
-export const DIAGNOSTIC_ROUTE = 'http://127.0.0.1:3000/en/tcg/cards/base1-4?tcgLang=en';
-const ROUTE = DIAGNOSTIC_ROUTE;
+export const DIAGNOSTIC_TARGETS = Object.freeze({
+  'tcg-card': 'http://127.0.0.1:3000/en/tcg/cards/base1-4?tcgLang=en',
+  healthz: 'http://127.0.0.1:3000/api/healthz',
+});
+export const DIAGNOSTIC_ROUTE = DIAGNOSTIC_TARGETS['tcg-card'];
+export function resolveDiagnosticTarget(target) {
+  return Object.hasOwn(DIAGNOSTIC_TARGETS, target) ? DIAGNOSTIC_TARGETS[target] : null;
+}
 const INSPECTOR_TARGETS = 'http://127.0.0.1:9229/json/list';
 export const DIAGNOSTIC_LIMITS = Object.freeze({
   durationSeconds: 3_600,
@@ -92,9 +98,10 @@ function createTimeBucket(elapsedBucketSeconds) {
   };
 }
 
-function emptySummary(phase, durationSeconds, concurrency, maxAttempts) {
+function emptySummary(phase, durationSeconds, concurrency, maxAttempts, target) {
   return {
     phase,
+    route_target: target,
     duration_seconds: durationSeconds,
     elapsed_seconds: 0,
     worker_concurrency: concurrency,
@@ -178,6 +185,7 @@ function addStatus(summary, bucket, status) {
 
 const SUMMARY_KEYS = [
   'phase',
+  'route_target',
   'duration_seconds',
   'elapsed_seconds',
   'worker_concurrency',
@@ -206,6 +214,7 @@ const MEMORY_VALUE_KEYS = ['rss', 'heapTotal', 'heapUsed', 'external', 'arrayBuf
 export function validateOutput(summary) {
   if (!summary || !['full', 'abort'].includes(summary.phase)) return false;
   if (Object.keys(summary).some((key) => !SUMMARY_KEYS.includes(key))) return false;
+  if (!Object.hasOwn(DIAGNOSTIC_TARGETS, summary.route_target)) return false;
   if (boundedInteger(summary.worker_concurrency, 1, DIAGNOSTIC_LIMITS.concurrency) === null) return false;
   if (summary.worker_interval_ms !== DIAGNOSTIC_LIMITS.workerIntervalMs) return false;
   if (summary.abort_after_ms !== DIAGNOSTIC_LIMITS.abortAfterMs) return false;
@@ -499,7 +508,7 @@ export async function sampleMemory(session, elapsedSeconds, { phase = 'load', co
   return sample;
 }
 
-async function requestAbort(summary, bucket, requestStartedAt) {
+async function requestAbort(summary, bucket, requestStartedAt, route, fetchImpl) {
   const controller = new AbortController();
   let reader;
   let didAbort = false;
@@ -514,7 +523,7 @@ async function requestAbort(summary, bucket, requestStartedAt) {
   }, DIAGNOSTIC_LIMITS.abortAfterMs);
 
   try {
-    const response = await fetch(ROUTE, {
+    const response = await fetchImpl(route, {
       method: 'GET',
       headers: { accept: 'application/json', 'accept-language': 'en' },
       signal: controller.signal,
@@ -572,14 +581,14 @@ async function requestAbort(summary, bucket, requestStartedAt) {
   }
 }
 
-async function requestFull(summary, bucket) {
+async function requestFull(summary, bucket, route, fetchImpl) {
   const controller = new AbortController();
   let reader;
   let headersReceived = false;
   let responseBytes = 0;
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   try {
-    const response = await fetch(ROUTE, {
+    const response = await fetchImpl(route, {
       method: 'GET',
       headers: { accept: 'application/json', 'accept-language': 'en' },
       signal: controller.signal,
@@ -623,18 +632,25 @@ async function requestFull(summary, bucket) {
   }
 }
 
-async function requestOnce(mode, summary, bucket, requestStartedAt) {
-  if (mode === 'abort') return requestAbort(summary, bucket, requestStartedAt);
-  return requestFull(summary, bucket);
+async function requestOnce(mode, summary, bucket, requestStartedAt, route, fetchImpl) {
+  if (mode === 'abort') return requestAbort(summary, bucket, requestStartedAt, route, fetchImpl);
+  return requestFull(summary, bucket, route, fetchImpl);
 }
 
-export async function runPhase({ mode, durationSeconds, concurrency = DIAGNOSTIC_LIMITS.concurrency, inspectorTargetsUrl = INSPECTOR_TARGETS }) {
+export async function requestDiagnosticTarget({ mode, target, summary, bucket, requestStartedAt, fetchImpl = fetch }) {
+  const route = resolveDiagnosticTarget(target);
+  if (!route) throw new Error('invalid_target');
+  return requestOnce(mode, summary, bucket, requestStartedAt, route, fetchImpl);
+}
+
+export async function runPhase({ mode, durationSeconds, concurrency = DIAGNOSTIC_LIMITS.concurrency, target = 'tcg-card', inspectorTargetsUrl = INSPECTOR_TARGETS }) {
   if (!['full', 'abort'].includes(mode)) throw new Error('invalid_phase');
   if (boundedInteger(durationSeconds, 1, MAX_DURATION_SECONDS) === null) throw new Error('invalid_duration');
   if (boundedInteger(concurrency, 1, DIAGNOSTIC_LIMITS.concurrency) === null) throw new Error('invalid_concurrency');
+  if (resolveDiagnosticTarget(target) === null) throw new Error('invalid_target');
 
   const maxAttempts = concurrency * Math.ceil((durationSeconds * 1_000) / DIAGNOSTIC_LIMITS.workerIntervalMs);
-  const summary = emptySummary(mode, durationSeconds, concurrency, maxAttempts);
+  const summary = emptySummary(mode, durationSeconds, concurrency, maxAttempts, target);
   const startedAt = performance.now();
   const endAt = startedAt + durationSeconds * 1_000;
   let inspector;
@@ -656,7 +672,7 @@ export async function runPhase({ mode, durationSeconds, concurrency = DIAGNOSTIC
       const iterationStartedAt = performance.now();
       nextAttempt += 1;
       const bucket = addAttempt(summary, startedAt);
-      await requestOnce(mode, summary, bucket, iterationStartedAt);
+      await requestDiagnosticTarget({ mode, target, summary, bucket, requestStartedAt: iterationStartedAt });
 
       const remaining = DIAGNOSTIC_LIMITS.workerIntervalMs - (performance.now() - iterationStartedAt);
       if (remaining > 0 && !stopRequested) await delay(remaining);
@@ -727,11 +743,13 @@ async function main() {
   const mode = process.env.ISOLATED_TCG_PHASE;
   const durationSeconds = Number(process.env.ISOLATED_TCG_DURATION_SECONDS ?? '900');
   const concurrency = Number(process.env.ISOLATED_TCG_CONCURRENCY ?? String(DIAGNOSTIC_LIMITS.concurrency));
+  const target = process.env.ISOLATED_TCG_TARGET ?? 'tcg-card';
   const inspectorTargetsUrl = process.env.ISOLATED_TCG_INSPECTOR_TARGETS_URL ?? INSPECTOR_TARGETS;
   if (
     !['full', 'abort'].includes(mode)
     || boundedInteger(durationSeconds, 1, MAX_DURATION_SECONDS) === null
     || boundedInteger(concurrency, 1, DIAGNOSTIC_LIMITS.concurrency) === null
+    || resolveDiagnosticTarget(target) === null
   ) {
     process.stderr.write('diagnostic_error_category=invalid_diagnostic_configuration\n');
     process.exitCode = 78;
@@ -739,7 +757,7 @@ async function main() {
   }
 
   try {
-    const summary = await runPhase({ mode, durationSeconds, concurrency, inspectorTargetsUrl });
+    const summary = await runPhase({ mode, durationSeconds, concurrency, target, inspectorTargetsUrl });
     process.stdout.write(`${JSON.stringify(summary)}\n`);
     if (summary.inspector.failure_category !== null) process.exitCode = 1;
   } catch (error) {

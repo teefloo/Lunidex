@@ -11,11 +11,13 @@ readonly INTERNAL_NETWORK='lunidex-isolated-rsc-internal'
 readonly DIAGNOSTIC_PHASE_SECONDS="${PHASE_SECONDS:-0}"
 readonly DIAGNOSTIC_CONCURRENCY="${ISOLATED_TCG_CONCURRENCY:-32}"
 readonly DIAGNOSTIC_PHASES="${ISOLATED_TCG_PHASES:-full,abort}"
+readonly DIAGNOSTIC_TARGET="${ISOLATED_TCG_TARGET:-tcg-card}"
 
 if [[ "${APP_IMAGE:-}" != "$EXPECTED_IMAGE" || ! "$DIAGNOSTIC_PHASE_SECONDS" =~ ^[0-9]+$ || ! "$DIAGNOSTIC_CONCURRENCY" =~ ^[0-9]+$ ]] \
   || (( DIAGNOSTIC_PHASE_SECONDS < MIN_DURATION_SECONDS || DIAGNOSTIC_PHASE_SECONDS > MAX_DURATION_SECONDS )) \
   || (( DIAGNOSTIC_CONCURRENCY < MIN_CONCURRENCY || DIAGNOSTIC_CONCURRENCY > MAX_CONCURRENCY )) \
-  || [[ "$DIAGNOSTIC_PHASES" != full && "$DIAGNOSTIC_PHASES" != full,abort ]]; then
+  || [[ "$DIAGNOSTIC_PHASES" != full && "$DIAGNOSTIC_PHASES" != full,abort ]] \
+  || [[ "$DIAGNOSTIC_TARGET" != tcg-card && "$DIAGNOSTIC_TARGET" != healthz ]]; then
   echo 'diagnostic_configuration_not_pinned=true' >&2
   exit 78
 fi
@@ -222,6 +224,7 @@ run_phase() {
     --env "ISOLATED_TCG_PHASE=$phase" \
     --env "ISOLATED_TCG_DURATION_SECONDS=$DIAGNOSTIC_PHASE_SECONDS" \
     --env "ISOLATED_TCG_CONCURRENCY=$DIAGNOSTIC_CONCURRENCY" \
+    --env "ISOLATED_TCG_TARGET=$DIAGNOSTIC_TARGET" \
     "$anchor" node --input-type=module - \
     <"$GITHUB_WORKSPACE/scripts/deployment/isolated-tcg-rsc-load.mjs" \
     >"$helper_stdout_file" 2>"$helper_stderr_file" || helper_exit=$?

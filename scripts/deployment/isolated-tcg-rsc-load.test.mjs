@@ -6,7 +6,10 @@ import {
   connectInspector,
   DIAGNOSTIC_LIMITS,
   DIAGNOSTIC_ROUTE,
+  DIAGNOSTIC_TARGETS,
   identifyInspectorTarget,
+  requestDiagnosticTarget,
+  resolveDiagnosticTarget,
   runPhase,
   sampleMemory,
   validateOutput,
@@ -18,6 +21,7 @@ function summary(overrides = {}) {
   const postGcMemory = { rss: 950, heapTotal: 500, heapUsed: 250, external: 90, arrayBuffers: 70, heap_size_limit: 2000 };
   return {
     phase: 'full',
+    route_target: 'tcg-card',
     duration_seconds: durationSeconds,
     elapsed_seconds: durationSeconds + 30,
     worker_concurrency: 32,
@@ -77,11 +81,75 @@ function waitForInspector(child) {
   });
 }
 
-test('diagnostic route is fixed to loopback and one known card', () => {
-  const route = new URL(DIAGNOSTIC_ROUTE);
-  assert.equal(route.origin, 'http://127.0.0.1:3000');
-  assert.equal(route.pathname, '/en/tcg/cards/base1-4');
-  assert.deepEqual([...route.searchParams.entries()], [['tcgLang', 'en']]);
+test('diagnostic target allowlist resolves only the fixed card and health routes', async () => {
+  const cardRoute = new URL(DIAGNOSTIC_TARGETS['tcg-card']);
+  assert.equal(cardRoute.origin, 'http://127.0.0.1:3000');
+  assert.equal(cardRoute.pathname, '/en/tcg/cards/base1-4');
+  assert.deepEqual([...cardRoute.searchParams.entries()], [['tcgLang', 'en']]);
+  assert.equal(DIAGNOSTIC_ROUTE, DIAGNOSTIC_TARGETS['tcg-card']);
+  assert.deepEqual(DIAGNOSTIC_TARGETS, {
+    'tcg-card': DIAGNOSTIC_ROUTE,
+    healthz: 'http://127.0.0.1:3000/api/healthz',
+  });
+  assert.equal(resolveDiagnosticTarget('tcg-card'), DIAGNOSTIC_ROUTE);
+  assert.equal(resolveDiagnosticTarget('healthz'), 'http://127.0.0.1:3000/api/healthz');
+  assert.equal(resolveDiagnosticTarget('https://lunidex.app'), null);
+
+  function requestFixture() {
+    const bucket = {
+      statuses: { '2xx': 0, '3xx': 0, '4xx': 0, '5xx': 0, other: 0 },
+      server_errors: 0,
+      completed_responses: 0,
+      responses_limited: 0,
+      request_errors: 0,
+      network_errors: 0,
+      timeout_errors: 0,
+      read_errors: 0,
+    };
+    const counts = {
+      statuses: { '2xx': 0, '3xx': 0, '4xx': 0, '5xx': 0, other: 0 },
+      server_errors: 0,
+      completed_responses: 0,
+      responses_limited: 0,
+      request_errors: 0,
+      network_errors: 0,
+      timeout_errors: 0,
+      read_errors: 0,
+      response_bytes: 0,
+      oversized_responses: 0,
+    };
+    return { bucket, summary: counts };
+  }
+
+  for (const target of ['tcg-card', 'healthz']) {
+    const { bucket, summary: counts } = requestFixture();
+    let requestedUrl = '';
+    await requestDiagnosticTarget({
+      mode: 'full',
+      target,
+      summary: counts,
+      bucket,
+      requestStartedAt: 0,
+      fetchImpl: async (url) => {
+        requestedUrl = url;
+        return new Response('{"ok":true}', { status: 200 });
+      },
+    });
+    assert.equal(requestedUrl, DIAGNOSTIC_TARGETS[target]);
+    assert.equal(counts.completed_responses, 1);
+  }
+
+  const { bucket, summary: counts } = requestFixture();
+  let fetchCalled = false;
+  await assert.rejects(requestDiagnosticTarget({
+    mode: 'full',
+    target: 'not-allowlisted',
+    summary: counts,
+    bucket,
+    requestStartedAt: 0,
+    fetchImpl: async () => { fetchCalled = true; return new Response(); },
+  }), /invalid_target/);
+  assert.equal(fetchCalled, false);
 });
 
 test('environment proxy support is enabled for warm-up only', () => {
@@ -100,6 +168,10 @@ test('workflow accurately describes free public standard runner usage and manual
   const phaseRunner = readFileSync(new URL('./run-isolated-tcg-rsc-phases.sh', import.meta.url), 'utf8');
 
   assert.match(workflow, /workflow_dispatch:/);
+  assert.match(workflow, /target:[\s\S]*?required: true[\s\S]*?default: tcg-card[\s\S]*?type: choice[\s\S]*?options:[\s\S]*?- tcg-card[\s\S]*?- healthz/);
+  assert.match(workflow, /ISOLATED_TCG_TARGET=/);
+  assert.match(phaseRunner, /ISOLATED_TCG_TARGET=\$DIAGNOSTIC_TARGET/);
+  assert.match(phaseRunner, /--env "ISOLATED_TCG_TARGET=\$DIAGNOSTIC_TARGET"/);
   assert.match(workflow, /required: true[\s\S]*?default: false[\s\S]*?type: boolean/);
   assert.match(workflow, /runs-on: ubuntu-latest/);
   assert.match(workflow, /timeout-minutes: 70/);
@@ -157,6 +229,7 @@ test('accepts bounded full and client-abort summaries with the measured app iden
   });
 
   assert.equal(validateOutput(summary()), true);
+  assert.equal(validateOutput(summary({ route_target: 'healthz' })), true);
   assert.equal(validateOutput(summary({
     duration_seconds: 30,
     worker_concurrency: 1,
@@ -226,6 +299,7 @@ test('rejects unbounded, inconsistent, and private summary fields', () => {
   assert.equal(validateOutput(summary({ time_series: [] })), false);
   assert.equal(validateOutput(summary({ time_series_fields: ['raw'] })), false);
   assert.equal(validateOutput(summary({ inspector: { ...summary().inspector, failure_category: 'raw error' } })), false);
+  assert.equal(validateOutput(summary({ route_target: 'https://lunidex.app' })), false);
 });
 
 test('abort phase requires intentional cancellations and full phase rejects abort counters', () => {
@@ -237,6 +311,7 @@ test('invalid phase parameters and missing initial inspector sample fail before 
   await assert.rejects(runPhase({ mode: 'arbitrary', durationSeconds: 1 }), /invalid_phase/);
   await assert.rejects(runPhase({ mode: 'full', durationSeconds: 3601 }), /invalid_duration/);
   await assert.rejects(runPhase({ mode: 'full', durationSeconds: 1, concurrency: 33 }), /invalid_concurrency/);
+  await assert.rejects(runPhase({ mode: 'full', durationSeconds: 1, target: 'not-allowlisted' }), /invalid_target/);
 
   await assert.rejects(
     runPhase({ mode: 'full', durationSeconds: 1, inspectorTargetsUrl: 'http://127.0.0.1:1/json/list' }),
@@ -259,6 +334,41 @@ test('invalid phase parameters and missing initial inspector sample fail before 
   assert.equal(missingProfiler.status, 1);
   assert.equal(missingProfiler.stdout, '');
   assert.equal(missingProfiler.stderr, 'diagnostic_helper_started=true\ndiagnostic_error_category=inspector_endpoint_unreachable\n');
+
+  const invalidTarget = spawnSync(process.execPath, [
+    '--input-type=module', '-'
+  ], {
+    input: readFileSync(new URL('./isolated-tcg-rsc-load.mjs', import.meta.url), 'utf8'),
+    encoding: 'utf8',
+    env: {
+      ...process.env,
+      ISOLATED_TCG_PHASE: 'full',
+      ISOLATED_TCG_DURATION_SECONDS: '30',
+      ISOLATED_TCG_CONCURRENCY: '1',
+      ISOLATED_TCG_TARGET: 'not-allowlisted',
+    },
+  });
+  assert.equal(invalidTarget.status, 78);
+  assert.equal(invalidTarget.stdout, '');
+  assert.equal(invalidTarget.stderr, 'diagnostic_helper_started=true\ndiagnostic_error_category=invalid_diagnostic_configuration\n');
+});
+
+test('phase runner rejects an invalid route target before any Docker operation', () => {
+  const result = spawnSync('bash', ['scripts/deployment/run-isolated-tcg-rsc-phases.sh'], {
+    encoding: 'utf8',
+    env: {
+      ...process.env,
+      APP_IMAGE: 'ghcr.io/teefloo/lunidex:ca08758609fb5cfefafff6d5c2aaee31ddc56f63',
+      PHASE_SECONDS: '30',
+      ISOLATED_TCG_CONCURRENCY: '1',
+      ISOLATED_TCG_PHASES: 'full',
+      ISOLATED_TCG_TARGET: 'https://lunidex.app',
+    },
+  });
+
+  assert.equal(result.status, 78);
+  assert.equal(result.stdout, '');
+  assert.equal(result.stderr, 'diagnostic_configuration_not_pinned=true\n');
 });
 
 test('live Inspector smoke test measures the actual child Node process with baseline GC', async (t) => {

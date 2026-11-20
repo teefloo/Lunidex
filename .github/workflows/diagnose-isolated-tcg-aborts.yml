@@ -15,6 +15,14 @@ on:
           - progressive-300s-c16
           - comparison-900s-c32
           - soak-full-3600s-c32
+      target:
+        description: Fixed local route to compare against the TCG card page
+        required: true
+        default: tcg-card
+        type: choice
+        options:
+          - tcg-card
+          - healthz
       confirm_isolated_rsc_test:
         description: >-
           Run only the selected isolated profile. App data and production services are not used; warm-up allows one TCGdex tunnel. The 3600-second profile is full-response only and includes a 30-second idle recovery window. Standard runners for this public repository are free.
@@ -43,6 +51,7 @@ jobs:
       INTERNAL_NETWORK: lunidex-isolated-rsc-internal
       WARM_CONTAINER: lunidex-isolated-rsc-warm
       DIAGNOSTIC_PROFILE: ${{ inputs.profile }}
+      DIAGNOSTIC_TARGET: ${{ inputs.target }}
     steps:
       - name: Check out the reviewed workflow revision
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -89,12 +98,22 @@ jobs:
               exit 78
               ;;
           esac
+          case "$DIAGNOSTIC_TARGET" in
+            tcg-card|healthz)
+              ;;
+            *)
+              echo 'diagnostic_target_invalid=true' >&2
+              exit 78
+              ;;
+          esac
           {
             printf 'PHASE_SECONDS=%s\n' "$phase_seconds"
             printf 'ISOLATED_TCG_CONCURRENCY=%s\n' "$concurrency"
             printf 'ISOLATED_TCG_PHASES=%s\n' "$phases"
+            printf 'ISOLATED_TCG_TARGET=%s\n' "$DIAGNOSTIC_TARGET"
           } >> "$GITHUB_ENV"
           echo "diagnostic_profile=$DIAGNOSTIC_PROFILE"
+          echo "diagnostic_target=$DIAGNOSTIC_TARGET"
 
       - name: Validate bounded diagnostic harness
         shell: bash
@@ -287,6 +306,7 @@ jobs:
           APP_IMAGE="$APP_IMAGE" PHASE_SECONDS="$PHASE_SECONDS" \
             ISOLATED_TCG_CONCURRENCY="$ISOLATED_TCG_CONCURRENCY" \
             ISOLATED_TCG_PHASES="$ISOLATED_TCG_PHASES" \
+            ISOLATED_TCG_TARGET="$ISOLATED_TCG_TARGET" \
             bash scripts/deployment/run-isolated-tcg-rsc-phases.sh
 
       - name: Remove diagnostic containers, network, and volume
