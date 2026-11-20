@@ -54,11 +54,15 @@ test('CLI never echoes raw Docker stderr or secrets', () => {
 test('runner emits safe launch classification and mounts the helper outside tmpfs', () => {
   const runner = readFileSync(new URL('./run-isolated-tcg-rsc-phases.sh', import.meta.url), 'utf8');
   const helper = readFileSync(new URL('./isolated-tcg-rsc-load.mjs', import.meta.url), 'utf8');
+  const dockerfile = readFileSync(new URL('../../Dockerfile', import.meta.url), 'utf8');
   assert.match(runner, /classify-isolated-docker-launch-error\.mjs/);
   assert.match(runner, /docker_launch_failure_category=/);
   assert.match(runner, /helper_failure_category=/);
-  assert.match(runner, /dst=\/app\/\.diagnostic\.mjs,readonly/);
-  assert.doesNotMatch(runner, /dst=\/tmp\/diagnostic\.mjs/);
+  assert.match(runner, /dst=\/app\/server\.js,readonly/);
+  assert.match(runner, /"\$APP_IMAGE" node \/app\/server\.js/);
+  assert.doesNotMatch(runner, /dst=\/tmp\/diagnostic\.mjs|dst=\/app\/\.diagnostic\.mjs/);
+  assert.match(dockerfile, /COPY --from=builder --chown=nextjs:nodejs \/app\/\.next\/standalone \.\//);
+  assert.match(dockerfile, /CMD \["node", "server\.js"\]/);
   assert.match(helper, /diagnostic_helper_started=true/);
   assert.ok([...runner.matchAll(/--network "container:\$anchor"/g)].length >= 2);
 

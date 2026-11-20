@@ -224,12 +224,12 @@ run_phase() {
     --tmpfs /tmp:rw,noexec,nosuid,size=16m \
     --cap-drop ALL \
     --security-opt no-new-privileges:true \
-    --mount "type=bind,src=$GITHUB_WORKSPACE/scripts/deployment/isolated-tcg-rsc-load.mjs,dst=/app/.diagnostic.mjs,readonly" \
+    --mount "type=bind,src=$GITHUB_WORKSPACE/scripts/deployment/isolated-tcg-rsc-load.mjs,dst=/app/server.js,readonly" \
     --env NODE_OPTIONS= \
     --env ISOLATED_TCG_PHASE="$phase" \
     --env ISOLATED_TCG_DURATION_SECONDS="$DIAGNOSTIC_PHASE_SECONDS" \
     --env ISOLATED_TCG_CONCURRENCY="$DIAGNOSTIC_CONCURRENCY" \
-    "$APP_IMAGE" node /app/.diagnostic.mjs >"$helper_stdout_file" 2>"$helper_stderr_file" || helper_exit=$?
+    "$APP_IMAGE" node /app/server.js >"$helper_stdout_file" 2>"$helper_stderr_file" || helper_exit=$?
 
   summary="$(cat "$helper_stdout_file")"
   report_helper_error "$phase" "$helper_stderr_file" "$helper_exit"
