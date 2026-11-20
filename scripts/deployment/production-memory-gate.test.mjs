@@ -57,10 +57,10 @@ test('unknown deployment state fails closed', () => {
   assert.equal(result.stdout, '');
 });
 
-test('deploy mode prunes only dangling images older than seven days after pull and before the disk guard', () => {
+test('deploy mode prunes only dangling images after pull and before the disk guard', () => {
   const workflow = readFileSync(deploymentWorkflowPath, 'utf8');
   const bootstrapName = 'Bootstrap the isolated production root through Docker';
-  const pruneName = 'Prune old dangling images for production deploys';
+  const pruneName = 'Prune dangling images for production deploys';
   const deployName = 'Deploy or privately preflight the production image';
   const bootstrapStart = workflow.indexOf(`- name: ${bootstrapName}`);
   const pruneStart = workflow.indexOf(`- name: ${pruneName}`);
@@ -72,10 +72,11 @@ test('deploy mode prunes only dangling images older than seven days after pull a
   assert.ok(bootstrapStart >= 0 && candidatePull > bootstrapStart);
   assert.ok(candidatePull < pruneStart && pruneStart < deployStart && deployStart < deployGuard);
   assert.match(pruneStep, /^        if: inputs\.deployment_mode == 'deploy'$/m);
-  assert.match(pruneStep, /docker image prune --force --filter dangling=true --filter until=168h/);
+  assert.match(pruneStep, /docker image prune --force --filter dangling=true/);
+  assert.doesNotMatch(pruneStep, /until=|--all|\s-a\b/);
   assert.match(pruneStep, />\/dev\/null 2>&1/);
-  assert.match(pruneStep, /old_dangling_images_pruned=true/);
-  assert.match(pruneStep, /old_dangling_images_pruned=false/);
+  assert.match(pruneStep, /dangling_images_pruned=true/);
+  assert.match(pruneStep, /dangling_images_pruned=false/);
   assert.doesNotMatch(pruneStep, /docker system prune|docker container prune|docker volume prune|docker image prune[^\n]*(?:--all|\s-a\b)/);
   assert.doesNotMatch(pruneStep, /Deleted Images|sha256:|IMAGE ID/);
   assert.equal((pruneStep.match(/docker image prune/g) ?? []).length, 1);
