@@ -386,10 +386,10 @@ jobs:
           [[ "$HEAP_SAMPLING_RUN_ID" =~ ^[0-9]+-[0-9]+$ ]]
           expected_prefix="LUNIDEX_HEAP_SAMPLE_SUMMARY_${HEAP_SAMPLING_RUN_ID}="
           remote_command="EXPECTED_SUMMARY_PREFIX='$expected_prefix' bash -s"
-          safe_summary_line="$(timeout 620s ssh "${ssh_args[@]}" "$target" "$remote_command" <<'REMOTE'
+          safe_summary_line="$(timeout 980s ssh "${ssh_args[@]}" "$target" "$remote_command" <<'REMOTE'
           set -Eeuo pipefail
           [[ "${EXPECTED_SUMMARY_PREFIX:-}" =~ ^LUNIDEX_HEAP_SAMPLE_SUMMARY_[0-9]+-[0-9]+=$ ]]
-          for ((attempt = 0; attempt < 60; attempt += 1)); do
+          for ((attempt = 0; attempt < 95; attempt += 1)); do
             safe_summary="$(docker logs --since 20m --tail 5000 lunidex-production-app 2>/dev/null \
               | awk -v prefix="$EXPECTED_SUMMARY_PREFIX" 'length($0) <= 16384 && index($0, prefix) == 1 { summary = $0 } END { if (summary != "") print summary }' \
               || true)"

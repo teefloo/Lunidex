@@ -112,3 +112,35 @@ test('requires exactly six non-negative safe integer memory counters', () => {
   assert.equal(normalizeHeapSampleSummaryLine(lineWithMemory({ ...SAFE_MEMORY, heapLimit: Number.MAX_SAFE_INTEGER + 1 }), runId), null);
   assert.equal(normalizeHeapSampleSummaryLine(lineWithMemory(null), runId), null);
 });
+
+test('accepts only a bounded, ordered relative memory series with exact numeric tuples', () => {
+  const runId = '123456789-1';
+  const prefix = `${HEAP_SAMPLE_SUMMARY_PREFIX}${runId}=`;
+  const series = Array.from({ length: 60 }, (_, index) => [
+    (index + 1) * 15_000,
+    1024 + index,
+    768 + index,
+    512 + index,
+    128 + index,
+    64 + index,
+    2048,
+  ]);
+  const lineWithSeries = (memorySeries) => `${prefix}${JSON.stringify({
+    frames: [],
+    stacks: [],
+    memory: SAFE_MEMORY,
+    memorySeries,
+  })}`;
+  const validLine = lineWithSeries(series);
+
+  assert.equal(normalizeHeapSampleSummaryLine(validLine, runId), validLine);
+  assert.equal(normalizeHeapSampleSummaryLine(lineWithSeries([]), runId), null);
+  assert.equal(normalizeHeapSampleSummaryLine(lineWithSeries([...series, series.at(-1)]), runId), null);
+  assert.equal(normalizeHeapSampleSummaryLine(lineWithSeries([[15_000, 1, 2, 3, 4, 5]]), runId), null);
+  assert.equal(normalizeHeapSampleSummaryLine(lineWithSeries([[15_000, 1, 2, 3, -4, 5, 6]]), runId), null);
+  assert.equal(normalizeHeapSampleSummaryLine(lineWithSeries([[15_000, 1, 2, 3, 4, 5, Number.MAX_SAFE_INTEGER + 1]]), runId), null);
+  assert.equal(normalizeHeapSampleSummaryLine(lineWithSeries([[15_000, 1, 2, 3, 4, 5, 6], [15_000, 1, 2, 3, 4, 5, 6]]), runId), null);
+  assert.equal(normalizeHeapSampleSummaryLine(lineWithSeries([[900_001, 1, 2, 3, 4, 5, 6]]), runId), null);
+  assert.equal(normalizeHeapSampleSummaryLine(lineWithSeries([{ elapsedMs: 15_000, rss: 1 }]), runId), null);
+  assert.equal(normalizeHeapSampleSummaryLine(`${prefix}${'x'.repeat(16_384)}`, runId), null);
+});
