@@ -296,21 +296,6 @@ const nextConfig: NextConfig = {
       // They match physical paths, so remove the public locale prefix first.
       beforeFiles: [
         {
-          // Full card documents use the static locale tree and encode the
-          // normalized TCG language in an internal path segment for ISR.
-          source: '/:locale(en|fr|es|de|it|ja|ko|zh)/tcg/cards/:id',
-          destination: '/:locale/tcg/cards/:id/cached/:tcgLanguage',
-          has: [
-            { type: 'header', key: 'x-primedex-static-localized-route', value: 'tcg-card-detail' },
-            { type: 'header', key: 'x-primedex-tcg-language', value: '(?<tcgLanguage>[^/]+)' },
-          ],
-          // The Node Proxy adapter strips Next's internal Flight headers before
-          // calling user code. A client navigation still carries `next-url` when
-          // the adapter restores the headers for rewrites, so it must not be
-          // routed through the full-page ISR route above the intercepted route.
-          missing: [{ type: 'header', key: 'next-url' }],
-        },
-        {
           // Proxy cannot distinguish an RSC card navigation from a document
           // request after the adapter strips its Flight marker. Use Next's
           // restored `next-url` signal to unprefix the card path so the
