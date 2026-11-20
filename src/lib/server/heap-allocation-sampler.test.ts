@@ -258,8 +258,18 @@ describe('heap allocation sampler summaries', () => {
       startHeapAllocationSampler();
       await vi.advanceTimersByTimeAsync(15 * 60_000);
 
-      expect(log).toHaveBeenCalledOnce();
-      const line = String(log.mock.calls[0]?.[0]);
+      const loggedLines = log.mock.calls.map(([line]) => String(line));
+      const pointLines = loggedLines.filter((line) => line.startsWith('LUNIDEX_HEAP_MEMORY_POINT_123456789-1='));
+      const summaryLines = loggedLines.filter((line) => line.startsWith('LUNIDEX_HEAP_SAMPLE_SUMMARY_123456789-1='));
+
+      expect(pointLines).toHaveLength(60);
+      expect(summaryLines).toHaveLength(1);
+      for (const pointLine of pointLines) {
+        expect(pointLine.length).toBeLessThanOrEqual(512);
+        expect(pointLine).toMatch(/^LUNIDEX_HEAP_MEMORY_POINT_123456789-1=\[[0-9]+,[0-9]+,[0-9]+,[0-9]+,[0-9]+,[0-9]+,[0-9]+\]$/);
+      }
+
+      const line = summaryLines[0]!;
       expect(line.startsWith('LUNIDEX_HEAP_SAMPLE_SUMMARY_123456789-1=')).toBe(true);
       expect(line.length).toBeLessThanOrEqual(16_384);
       const summary = JSON.parse(line.slice(line.indexOf('=') + 1)) as {
@@ -269,6 +279,51 @@ describe('heap allocation sampler summaries', () => {
       expect(summary.memorySeries[0]?.[0]).toBe(0);
       expect(summary.memorySeries.at(-1)?.[0]).toBe(59 * 15_000);
       expect(summary.memorySeries.every((point) => point.length === 7)).toBe(true);
+    } finally {
+      log.mockRestore();
+      vi.useRealTimers();
+      vi.unstubAllEnvs();
+    }
+  });
+
+  it('uses absolute window slots so restarted processes can be safely deduplicated', async () => {
+    vi.useFakeTimers({ now: new Date('2026-11-20T00:00:00.000Z') });
+    vi.stubEnv('NODE_ENV', 'production');
+    vi.stubEnv('NEXT_RUNTIME', 'nodejs');
+    vi.stubEnv('LUNIDEX_HEAP_SAMPLER_DIAGNOSTIC', 'enabled');
+    vi.stubEnv('LUNIDEX_HEAP_SAMPLER_RUN_ID', '123456789-2');
+    vi.stubEnv('NEON_DATABASE_URL', 'postgresql://user:synthetic-secret@example.invalid/db');
+    vi.stubEnv('RESEND_API_KEY', 're_test_synthetic_secret');
+    vi.stubEnv(
+      'LUNIDEX_HEAP_SAMPLER_EXPIRES_AT',
+      String(Math.floor(Date.now() / 1_000) + 900),
+    );
+    const log = vi.spyOn(console, 'info').mockImplementation(() => undefined);
+
+    try {
+      startHeapAllocationSampler();
+      await vi.advanceTimersByTimeAsync(40_000);
+      expect(Date.now()).toBe(new Date('2026-11-20T00:00:40.000Z').getTime());
+      vi.clearAllTimers(); // Simulate the Node process being OOM-killed and restarted.
+      vi.setSystemTime(new Date('2026-11-20T00:00:40.000Z'));
+
+      startHeapAllocationSampler();
+      await vi.advanceTimersByTimeAsync(30_000);
+
+      const pointLines = log.mock.calls
+        .map(([line]) => String(line))
+        .filter((line) => line.startsWith('LUNIDEX_HEAP_MEMORY_POINT_123456789-2='));
+      const elapsedSlots = pointLines.map((line) => {
+        const tupleStart = line.indexOf('=') + 1;
+        return Number(JSON.parse(line.slice(tupleStart))[0]);
+      });
+
+      expect(elapsedSlots).toEqual([0, 15_000, 30_000, 30_000, 45_000, 60_000]);
+      expect(pointLines.join('\n')).not.toContain('LUNIDEX_HEAP_SAMPLER_EXPIRES_AT');
+      expect(pointLines.join('\n')).not.toContain('NEXT_RUNTIME');
+      expect(pointLines.join('\n')).not.toContain('synthetic-secret');
+      expect(pointLines.join('\n')).not.toContain('re_test_synthetic_secret');
+      expect(pointLines.every((line) => line.length <= 512)).toBe(true);
     } finally {
       log.mockRestore();
       vi.useRealTimers();
