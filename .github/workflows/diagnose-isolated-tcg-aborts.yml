@@ -107,6 +107,8 @@ jobs:
           node --check scripts/deployment/normalize-isolated-container-state.test.mjs
           node --check scripts/deployment/normalize-isolated-container-stats.mjs
           node --check scripts/deployment/normalize-isolated-container-stats.test.mjs
+          node --check scripts/deployment/classify-isolated-docker-launch-error.mjs
+          node --check scripts/deployment/classify-isolated-docker-launch-error.test.mjs
           node --check scripts/deployment/sample-isolated-container-resources.mjs
           node --check scripts/deployment/validate-isolated-container-resource-series.mjs
           node --check scripts/deployment/isolated-tcg-egress-proxy.mjs
@@ -145,6 +147,7 @@ jobs:
             "$APP_IMAGE" --test \
               scripts/deployment/isolated-tcg-rsc-load.test.mjs \
               scripts/deployment/classify-isolated-node-logs.test.mjs \
+              scripts/deployment/classify-isolated-docker-launch-error.test.mjs \
               scripts/deployment/normalize-isolated-container-stats.test.mjs \
               scripts/deployment/isolated-tcg-egress-proxy.test.mjs
 

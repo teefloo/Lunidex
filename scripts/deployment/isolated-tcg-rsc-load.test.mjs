@@ -257,7 +257,7 @@ test('invalid phase parameters and missing initial inspector sample fail before 
   });
   assert.equal(missingProfiler.status, 1);
   assert.equal(missingProfiler.stdout, '');
-  assert.equal(missingProfiler.stderr, 'diagnostic_error_category=inspector_endpoint_unreachable\n');
+  assert.equal(missingProfiler.stderr, 'diagnostic_helper_started=true\ndiagnostic_error_category=inspector_endpoint_unreachable\n');
 });
 
 test('live Inspector smoke test measures the actual child Node process with baseline GC', async (t) => {

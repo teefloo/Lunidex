@@ -67,10 +67,30 @@ report_node_logs() {
 report_helper_error() {
   local phase="$1"
   local helper_error_file="$2"
+  local helper_exit="${3:-0}"
   local category=''
+  local launch_classification=''
+  local helper_started='false'
+  local launch_json_pattern='^\{"helper_started":(true|false),"exit_code":125,"category":"(docker_[a-z_]+|helper_exit_125)"\}$'
   category="$(sed -nE 's/^diagnostic_error_category=([a-z_]+)$/\1/p' "$helper_error_file" | head -n 1)"
+  if grep -qx 'diagnostic_helper_started=true' "$helper_error_file"; then
+    helper_started='true'
+    echo "${phase}_helper_process_started=true"
+  fi
   if [[ "$category" =~ ^(inspector_[a-z_]+|summary_validation_failed|diagnostic_phase_failed|invalid_diagnostic_configuration)$ ]]; then
     echo "${phase}_diagnostic_error_category=$category"
+  elif (( helper_exit == 125 )); then
+    launch_classification="$(node "$GITHUB_WORKSPACE/scripts/deployment/classify-isolated-docker-launch-error.mjs" "$helper_exit" <"$helper_error_file" 2>/dev/null || true)"
+    if [[ "$launch_classification" =~ $launch_json_pattern ]]; then
+      category="${BASH_REMATCH[2]}"
+      if [[ "$helper_started" == true ]]; then
+        echo "${phase}_helper_failure_category=$category exit_code=125"
+      else
+        echo "${phase}_docker_launch_failure_category=$category exit_code=125"
+      fi
+    else
+      echo "${phase}_docker_launch_failure_category=unclassified exit_code=125"
+    fi
   elif [[ -s "$helper_error_file" ]]; then
     echo "${phase}_diagnostic_error_category=unclassified"
   fi
@@ -204,15 +224,15 @@ run_phase() {
     --tmpfs /tmp:rw,noexec,nosuid,size=16m \
     --cap-drop ALL \
     --security-opt no-new-privileges:true \
-    --mount "type=bind,src=$GITHUB_WORKSPACE/scripts/deployment/isolated-tcg-rsc-load.mjs,dst=/tmp/diagnostic.mjs,readonly" \
+    --mount "type=bind,src=$GITHUB_WORKSPACE/scripts/deployment/isolated-tcg-rsc-load.mjs,dst=/app/.diagnostic.mjs,readonly" \
     --env NODE_OPTIONS= \
     --env ISOLATED_TCG_PHASE="$phase" \
     --env ISOLATED_TCG_DURATION_SECONDS="$DIAGNOSTIC_PHASE_SECONDS" \
     --env ISOLATED_TCG_CONCURRENCY="$DIAGNOSTIC_CONCURRENCY" \
-    "$APP_IMAGE" node /tmp/diagnostic.mjs >"$helper_stdout_file" 2>"$helper_stderr_file" || helper_exit=$?
+    "$APP_IMAGE" node /app/.diagnostic.mjs >"$helper_stdout_file" 2>"$helper_stderr_file" || helper_exit=$?
 
   summary="$(cat "$helper_stdout_file")"
-  report_helper_error "$phase" "$helper_stderr_file"
+  report_helper_error "$phase" "$helper_stderr_file" "$helper_exit"
   if kill -0 "$resource_sampler_pid" 2>/dev/null; then
     kill -TERM "$resource_sampler_pid" 2>/dev/null || true
   fi
@@ -247,7 +267,7 @@ run_phase() {
       echo "${phase}_summary=$validated_summary"
     fi
     if (( validation_exit != 0 )); then
-      report_helper_error "${phase}_validation" "$helper_stderr_file"
+      report_helper_error "${phase}_validation" "$helper_stderr_file" "$validation_exit"
       echo "${phase}_summary_valid=false validation_exit=$validation_exit"
     fi
   else
