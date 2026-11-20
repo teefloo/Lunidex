@@ -312,14 +312,14 @@ jobs:
           remote_command="set -Eeuo pipefail; umask 077; bootstrap_file='$bootstrap_script'; export DOCKER_CONFIG=\$(mktemp -d /tmp/lunidex-production-bootstrap-docker.XXXXXX); trap 'rm -f \"\$bootstrap_file\"; rm -rf \"\$DOCKER_CONFIG\"' EXIT; if ! docker info >/dev/null 2>&1; then echo 'lunidex-deploy must have access to the Docker daemon to prepare the production directory.' >&2; exit 77; fi; docker login ghcr.io --username teefloo --password-stdin; image='$image'; docker pull \"\$image\"; target_uid=\$(id -u); target_gid=\$(id -g); docker run --rm --network none --read-only --userns=host --user 0:0 --cap-drop ALL --cap-add CHOWN --cap-add DAC_OVERRIDE --mount type=bind,source=/opt,target=/host/opt --mount type=bind,source=\$bootstrap_file,target=/bootstrap-production-directories.mjs,readonly --env BOOTSTRAP_ROOT=/host/opt/lunidex-production --env BOOTSTRAP_UID=\$target_uid --env BOOTSTRAP_GID=\$target_gid --entrypoint node \"\$image\" /bootstrap-production-directories.mjs"
           printf '%s' "$GITHUB_TOKEN" | ssh "${ssh_args[@]}" "$target" "$remote_command"
 
-      - name: Prune old dangling images for production deploys
+      - name: Prune dangling images for production deploys
         if: inputs.deployment_mode == 'deploy'
         shell: bash
         run: |
           set -Eeuo pipefail
           target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=10 -o ServerAliveInterval=5 -o ServerAliveCountMax=4)
-          remote_command="set -Eeuo pipefail; if docker image prune --force --filter dangling=true --filter until=168h >/dev/null 2>&1; then printf '%s\\n' 'old_dangling_images_pruned=true'; else printf '%s\\n' 'old_dangling_images_pruned=false' >&2; exit 1; fi"
+          remote_command="set -Eeuo pipefail; if docker image prune --force --filter dangling=true >/dev/null 2>&1; then printf '%s\\n' 'dangling_images_pruned=true'; else printf '%s\\n' 'dangling_images_pruned=false' >&2; exit 1; fi"
           timeout 90s ssh "${ssh_args[@]}" "$target" "$remote_command"
 
       - name: Transfer isolated production files and environment
