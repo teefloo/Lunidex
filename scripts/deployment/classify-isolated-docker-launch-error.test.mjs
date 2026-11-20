@@ -82,7 +82,7 @@ test('runner uses bounded docker exec stdin without helper bind mounts or a help
   assert.match(runner, /--shell <"\$helper_error_file"/);
   assert.match(runner, /docker_exec_failure_category=/);
   assert.match(runner, /helper_failure_category=/);
-  const helperCommand = runner.slice(runner.indexOf('timeout 3_660s docker exec'), runner.indexOf('summary="$(cat "$helper_stdout_file")'));
+  const helperCommand = runner.slice(runner.indexOf('timeout 3660s docker exec'), runner.indexOf('summary="$(cat "$helper_stdout_file")'));
   assert.match(helperCommand, /docker exec --interactive[\s\S]*"\$anchor" node --input-type=module -[\s\S]*<"\$GITHUB_WORKSPACE\/scripts\/deployment\/isolated-tcg-rsc-load\.mjs"/);
   assert.doesNotMatch(helperCommand, /docker run|--mount/);
   assert.match(runner, /--cpus 0\.25[\s\S]*?--memory 256m[\s\S]*?--memory-swap 256m[\s\S]*?--pids-limit 32/);

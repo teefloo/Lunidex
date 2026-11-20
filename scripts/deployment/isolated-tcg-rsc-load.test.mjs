@@ -105,7 +105,7 @@ test('workflow accurately describes free public standard runner usage and manual
   assert.match(workflow, /timeout-minutes: 70/);
   assert.match(workflow, /standard runners for this public repository are free/i);
   assert.match(workflow, /github\.ref == 'refs\/heads\/codex\/fix-node-v8-oom-p0'/);
-  assert.match(phaseRunner, /timeout 3_660s/);
+  assert.match(phaseRunner, /timeout 3660s/);
   assert.doesNotMatch(workflow, /\$0\.21|can consume up to \d+ Linux runner minutes/i);
 });
 
