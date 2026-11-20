@@ -1,0 +1,210 @@
+name: Isolated TCG RSC abort diagnostic
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_isolated_rsc_test:
+        description: >-
+          Run an isolated 30-minute full-response/client-abort comparison on the standard ubuntu-latest runner. This repository is public, so standard GitHub-hosted runner minutes are free. The job times out after 35 minutes and runs only when manually dispatched with this confirmation enabled.
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+  packages: read
+
+concurrency:
+  group: isolated-tcg-rsc-diagnostic
+  cancel-in-progress: false
+
+jobs:
+  compare:
+    if: github.ref == 'refs/heads/master' && inputs.confirm_isolated_rsc_test
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      APP_IMAGE: ghcr.io/teefloo/lunidex:ca08758609fb5cfefafff6d5c2aaee31ddc56f63
+      CACHE_VOLUME: lunidex-isolated-rsc-cache
+      INTERNAL_NETWORK: lunidex-isolated-rsc-internal
+      WARM_CONTAINER: lunidex-isolated-rsc-warm
+      PHASE_SECONDS: '900'
+    steps:
+      - name: Check out the reviewed workflow revision
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Validate bounded diagnostic harness
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --check scripts/deployment/isolated-tcg-rsc-load.mjs
+          node --check scripts/deployment/isolated-tcg-egress-proxy.mjs
+          node --check scripts/deployment/validate-isolated-tcg-rsc-summary.mjs
+          node --check scripts/deployment/validate-isolated-tcg-egress-summary.mjs
+          node --test scripts/deployment/isolated-tcg-rsc-load.test.mjs
+          node --test scripts/deployment/isolated-tcg-egress-proxy.test.mjs
+          bash -n scripts/deployment/run-isolated-tcg-rsc-phases.sh
+
+      - name: Authenticate to GHCR and pull the immutable production image
+        shell: bash
+        env:
+          GHCR_READ_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -Eeuo pipefail
+          printf '%s' "$GHCR_READ_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin >/dev/null
+          docker pull "$APP_IMAGE" >/dev/null
+          docker logout ghcr.io >/dev/null
+          unset GHCR_READ_TOKEN
+
+      - name: Create ephemeral cache and internal-only test network
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          docker network create --internal "$INTERNAL_NETWORK" >/dev/null
+          docker volume create "$CACHE_VOLUME" >/dev/null
+
+      - name: Start a one-tunnel TCGdex egress proxy for cache warm-up
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          proxy_name=lunidex-isolated-rsc-egress-proxy
+          docker run --detach \
+            --name "$proxy_name" \
+            --network bridge \
+            --cpus 0.05 \
+            --memory 32m \
+            --memory-swap 32m \
+            --pids-limit 32 \
+            --read-only \
+            --tmpfs /tmp:rw,noexec,nosuid,size=8m \
+            --cap-drop ALL \
+            --security-opt no-new-privileges:true \
+            --mount "type=bind,src=$GITHUB_WORKSPACE/scripts/deployment/isolated-tcg-egress-proxy.mjs,dst=/tmp/egress-proxy.mjs,readonly" \
+            --env NODE_OPTIONS= \
+            --entrypoint node \
+            "$APP_IMAGE" /tmp/egress-proxy.mjs >/dev/null
+          docker network connect --alias tcg-egress-proxy "$INTERNAL_NETWORK" "$proxy_name"
+
+      - name: Warm one fixed TCG card, then remove egress
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          docker run --detach \
+            --init \
+            --name "$WARM_CONTAINER" \
+            --network "$INTERNAL_NETWORK" \
+            --cpus 1 \
+            --memory 2176m \
+            --memory-swap 2176m \
+            --pids-limit 256 \
+            --read-only \
+            --tmpfs /tmp:rw,noexec,nosuid,size=64m \
+            --cap-drop ALL \
+            --security-opt no-new-privileges:true \
+            --mount "type=volume,source=$CACHE_VOLUME,target=/app/.next/cache" \
+            --env NODE_ENV=production \
+            --env NEXT_TELEMETRY_DISABLED=1 \
+            --env HOSTNAME=0.0.0.0 \
+            --env PORT=3000 \
+            --env NODE_OPTIONS='--max-old-space-size=1024 --use-env-proxy --inspect=127.0.0.1:9229 --expose-gc' \
+            --env HTTPS_PROXY=http://tcg-egress-proxy:3128 \
+            --env HTTP_PROXY=http://tcg-egress-proxy:3128 \
+            --env https_proxy=http://tcg-egress-proxy:3128 \
+            --env http_proxy=http://tcg-egress-proxy:3128 \
+            --env NO_PROXY=127.0.0.1,localhost \
+            --env no_proxy=127.0.0.1,localhost \
+            --env SENTRY_DSN= \
+            --env NEXT_PUBLIC_SENTRY_DSN= \
+            --env NEXT_PUBLIC_POSTHOG_ENABLED=false \
+            "$APP_IMAGE" >/dev/null
+
+          ready=false
+          for attempt in $(seq 1 90); do
+            if docker exec --env NODE_OPTIONS= "$WARM_CONTAINER" node -e \
+              'fetch("http://127.0.0.1:3000/api/healthz", { signal: AbortSignal.timeout(2000) }).then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))' \
+              >/dev/null 2>&1; then
+              ready=true
+              break
+            fi
+            if [[ "$(docker inspect --format '{{.State.Running}}' "$WARM_CONTAINER" 2>/dev/null || true)" != true ]]; then
+              break
+            fi
+            sleep 2
+          done
+          [[ "$ready" == true ]] || {
+            echo 'warmup_app_not_ready=true'
+            exit 1
+          }
+
+          warmup_result="$(docker exec --env NODE_OPTIONS= "$WARM_CONTAINER" node -e '
+            (async () => {
+              try {
+                const response = await fetch("http://127.0.0.1:3000/en/tcg/cards/base1-4?tcgLang=en", {
+                  headers: { accept: "application/json", "accept-language": "en" },
+                  signal: AbortSignal.timeout(30000),
+                });
+                const bytes = (await response.arrayBuffer()).byteLength;
+                const contentType = response.headers.get("content-type") || "";
+                const result = { status: response.status, html: contentType.includes("text/html"), bytes };
+                process.stdout.write(JSON.stringify(result) + "\n");
+                if (response.status !== 200 || !result.html || bytes === 0) process.exitCode = 78;
+              } catch {
+                process.stderr.write("warmup_request_failed\n");
+                process.exitCode = 1;
+              }
+            })();
+          ' 2>/dev/null)" || {
+            echo 'warmup_card_request_failed=true'
+            exit 1
+          }
+          printf '%s\n' "$warmup_result" | node -e '
+            let raw = "";
+            process.stdin.setEncoding("utf8");
+            process.stdin.on("data", (part) => { raw += part; });
+            process.stdin.on("end", () => {
+              try {
+                const value = JSON.parse(raw);
+                if (value.status !== 200 || value.html !== true || !Number.isSafeInteger(value.bytes) || value.bytes < 1) throw new Error();
+                process.stdout.write(JSON.stringify(value) + "\n");
+              } catch {
+                process.stderr.write("warmup_result_invalid\n");
+                process.exitCode = 78;
+              }
+            });
+          '
+
+          docker stop --time 2 "$WARM_CONTAINER" >/dev/null
+          docker stop --time 2 lunidex-isolated-rsc-egress-proxy >/dev/null
+          proxy_summary="$(docker logs lunidex-isolated-rsc-egress-proxy 2>/dev/null | tail -n 1)"
+          [[ -n "$proxy_summary" ]] || {
+            echo 'warmup_egress_summary_missing=true'
+            exit 1
+          }
+          printf '%s\n' "$proxy_summary" | node scripts/deployment/validate-isolated-tcg-egress-summary.mjs
+          docker rm --force "$WARM_CONTAINER" lunidex-isolated-rsc-egress-proxy >/dev/null
+          echo 'warmup_complete=true'
+          echo 'test_network_egress=disabled'
+
+      - name: Run full-response and client-abort phases with egress disabled
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          APP_IMAGE="$APP_IMAGE" PHASE_SECONDS="$PHASE_SECONDS" \
+            bash scripts/deployment/run-isolated-tcg-rsc-phases.sh
+
+      - name: Remove diagnostic containers, network, and volume
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          docker rm --force \
+            "$WARM_CONTAINER" \
+            lunidex-isolated-rsc-egress-proxy \
+            lunidex-isolated-rsc-full-app lunidex-isolated-rsc-full-anchor \
+            lunidex-isolated-rsc-abort-app lunidex-isolated-rsc-abort-anchor >/dev/null 2>&1
+          docker network rm "$INTERNAL_NETWORK" >/dev/null 2>&1
+          docker volume rm "$CACHE_VOLUME" >/dev/null 2>&1
+          docker logout ghcr.io >/dev/null 2>&1
+          echo 'diagnostic_resources_removed=true'
