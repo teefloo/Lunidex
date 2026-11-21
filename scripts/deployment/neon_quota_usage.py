@@ -52,7 +52,7 @@ def assess_usage(
     api_key_present: bool,
     api_error: str | None = None,
 ) -> tuple[dict[str, Any], int]:
-    """Return a safe summary and exit code: 0=below alert, 1=90%+, 2=incomplete."""
+    """Return a safe summary and exit code: 0=below alert, 1=alert, 2=incomplete."""
     if not api_key_present:
         return ({"status": "INCOMPLETE", "reason": "NEON_API_KEY is not configured"}, 2)
     if api_error:
@@ -83,7 +83,7 @@ def assess_usage(
         "egress_percent": round(egress_bytes / FREE_EGRESS_BYTES * 100, 1),
         "egress_alerts": egress_alerts,
         "quota_reset_at": str(project.get("quota_reset_at") or "unavailable"),
-    }, 1 if max(compute_alerts + egress_alerts, default=0) >= 90 else 0)
+    }, 1 if compute_alerts or egress_alerts else 0)
 
 
 def fetch_project(api_key: str, project_id: str) -> Mapping[str, Any]:
