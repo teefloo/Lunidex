@@ -9,6 +9,7 @@ import os
 import re
 import sys
 from collections.abc import Mapping
+from http.client import HTTPException
 from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
@@ -98,8 +99,10 @@ def fetch_project(api_key: str, project_id: str) -> Mapping[str, Any]:
             payload = json.load(response)
     except HTTPError as error:
         raise RuntimeError(f"Neon API returned HTTP {error.code}") from None
-    except URLError:
+    except (URLError, TimeoutError, OSError, HTTPException):
         raise RuntimeError("Neon API request failed before a response was received") from None
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        raise RuntimeError("Neon API returned invalid JSON") from None
     if not isinstance(payload, Mapping):
         raise RuntimeError("Neon API returned an invalid JSON object")
     return payload

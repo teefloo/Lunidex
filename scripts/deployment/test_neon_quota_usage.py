@@ -1,7 +1,10 @@
+import io
 import math
+import os
 import unittest
+from unittest.mock import patch
 
-from neon_quota_usage import assess_usage
+from neon_quota_usage import EXPECTED_PROJECT_ID, assess_usage, fetch_project, main
 
 
 def project_payload(**overrides):
@@ -77,6 +80,35 @@ class NeonQuotaUsageTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 2)
         self.assertEqual(report["status"], "INCOMPLETE")
+
+    def test_invalid_json_returns_generic_error_and_main_reports_incomplete(self):
+        with patch("neon_quota_usage.urlopen", return_value=io.BytesIO(b"not-json")):
+            with self.assertRaisesRegex(RuntimeError, "Neon API returned invalid JSON"):
+                fetch_project("sensitive-test-key", EXPECTED_PROJECT_ID)
+
+        with patch.dict(os.environ, {"NEON_API_KEY": "sensitive-test-key", "NEON_PROJECT_ID": EXPECTED_PROJECT_ID}):
+            with patch("neon_quota_usage.urlopen", return_value=io.BytesIO(b"not-json")):
+                with patch("neon_quota_usage._write_summary") as write_summary:
+                    exit_code = main()
+
+        self.assertEqual(exit_code, 2)
+        report = write_summary.call_args.args[0]
+        self.assertEqual(report["status"], "INCOMPLETE")
+        self.assertEqual(report["reason"], "Neon API returned invalid JSON")
+
+    def test_timeout_returns_incomplete_without_exposing_exception_details(self):
+        with patch.dict(os.environ, {"NEON_API_KEY": "sensitive-test-key", "NEON_PROJECT_ID": EXPECTED_PROJECT_ID}):
+            with patch("neon_quota_usage.urlopen", side_effect=TimeoutError("sensitive timeout detail")):
+                with patch("neon_quota_usage._write_summary") as write_summary:
+                    with patch("builtins.print") as print_mock:
+                        exit_code = main()
+
+        self.assertEqual(exit_code, 2)
+        report = write_summary.call_args.args[0]
+        self.assertEqual(report["status"], "INCOMPLETE")
+        self.assertIn("request failed", report["reason"])
+        self.assertNotIn("sensitive", report["reason"])
+        print_mock.assert_not_called()
 
 
 if __name__ == "__main__":
