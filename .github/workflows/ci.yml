@@ -34,6 +34,9 @@ jobs:
       - name: Verify OVH audit diagnostics and stability reports
         run: python3 -m unittest discover -s scripts/deployment -p 'test_*ovh*.py'
 
+      - name: Verify Neon quota threshold reporting
+        run: python3 -m unittest discover -s scripts/deployment -p 'test_neon_quota_usage.py'
+
       - name: Verify isolated heap diagnostic under Node 22
         run: >-
           node --test

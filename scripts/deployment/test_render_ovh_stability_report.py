@@ -74,6 +74,17 @@ class RenderOvhStabilityReportTests(unittest.TestCase):
         self.assertIn("V8 heap OOM signature", report)
         self.assertIn("cgroup_oom_kill is 1", report)
 
+    def test_neon_auth_402_does_not_hide_a_healthy_ovh_memory_verdict(self):
+        report, status = build_report(
+            healthy_audit(auth_session_status="402", audit_result="failure")
+        )
+
+        self.assertEqual(status, 1)
+        self.assertIn("**OVH memory verdict: GO**", report)
+        self.assertIn("**Neon Auth verdict: NO-GO**", report)
+        self.assertIn("Neon Auth session endpoint returned HTTP 402", report)
+        self.assertNotIn("**OVH memory NO-GO reasons:**", report)
+
     def test_missing_metrics_and_skipped_run_are_incomplete(self):
         report, status = build_report(
             {
