@@ -31,6 +31,17 @@ jobs:
 
       - run: node --test scripts/deployment/production-memory-gate.test.mjs
 
+      - name: Verify isolated heap diagnostic under Node 22
+        run: >-
+          node --test
+          scripts/deployment/isolated-tcg-rsc-load.test.mjs
+          scripts/deployment/classify-isolated-node-logs.test.mjs
+          scripts/deployment/normalize-isolated-container-state.test.mjs
+          scripts/deployment/normalize-isolated-container-stats.test.mjs
+          scripts/deployment/classify-isolated-docker-launch-error.test.mjs
+          scripts/deployment/isolated-tcg-egress-proxy.test.mjs
+          scripts/deployment/warm-isolated-diagnostic-route.test.mjs
+
       - run: node --test scripts/patch-next-control-flow-errors.test.mjs
 
       - run: npm run seo:check

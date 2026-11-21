@@ -3,9 +3,39 @@ name: Isolated TCG RSC abort diagnostic
 on:
   workflow_dispatch:
     inputs:
+      image:
+        description: Select the immutable production image or a local source build
+        required: true
+        default: production
+        type: choice
+        options:
+          - production
+          - source-candidate
+      profile:
+        description: Bounded isolated test profile
+        required: true
+        default: smoke-30s-c1
+        type: choice
+        options:
+          - smoke-30s-c1
+          - progressive-60s-c4
+          - progressive-120s-c8
+          - progressive-300s-c16
+          - comparison-900s-c32
+          - soak-full-3600s-c32
+      target:
+        description: Select a fixed local route for the isolated comparison
+        required: true
+        default: tcg-card
+        type: choice
+        options:
+          - tcg-card
+          - pokemon-detail
+          - healthz
+          - home
       confirm_isolated_rsc_test:
         description: >-
-          Run an isolated 30-minute full-response/client-abort comparison on the standard ubuntu-latest runner. This repository is public, so standard GitHub-hosted runner minutes are free. The job times out after 35 minutes and runs only when manually dispatched with this confirmation enabled.
+          Run only the selected isolated profile. App data and production services are not used; target-specific warm-up has fixed bounded upstream access, then all load phases have no egress. The 3600-second profile is full-response only and includes a 30-second idle recovery window. Standard runners for this public repository are free.
         required: true
         default: false
         type: boolean
@@ -20,43 +50,196 @@ concurrency:
 
 jobs:
   compare:
-    if: github.ref == 'refs/heads/master' && inputs.confirm_isolated_rsc_test
+    if: >-
+      (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/codex/fix-node-v8-oom-p0') &&
+      inputs.confirm_isolated_rsc_test
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 110
     env:
-      APP_IMAGE: ghcr.io/teefloo/lunidex:ca08758609fb5cfefafff6d5c2aaee31ddc56f63
+      PRODUCTION_IMAGE: ghcr.io/teefloo/lunidex:ca08758609fb5cfefafff6d5c2aaee31ddc56f63
       CACHE_VOLUME: lunidex-isolated-rsc-cache
       INTERNAL_NETWORK: lunidex-isolated-rsc-internal
       WARM_CONTAINER: lunidex-isolated-rsc-warm
-      PHASE_SECONDS: '900'
+      ISOLATED_DIAGNOSTIC_IMAGE_MODE: ${{ inputs.image }}
+      DIAGNOSTIC_PROFILE: ${{ inputs.profile }}
+      DIAGNOSTIC_TARGET: ${{ inputs.target }}
     steps:
       - name: Check out the reviewed workflow revision
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
 
+      - name: Select allowlisted diagnostic image
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          case "$ISOLATED_DIAGNOSTIC_IMAGE_MODE" in
+            production)
+              app_image="$PRODUCTION_IMAGE"
+              ;;
+            source-candidate)
+              [[ "$GITHUB_SHA" =~ ^[0-9a-f]{40}$ ]] || {
+                echo 'candidate_image_tag_invalid=true' >&2
+                exit 78
+              }
+              app_image="lunidex-oom-candidate:$GITHUB_SHA"
+              ;;
+            *)
+              echo 'diagnostic_image_mode_invalid=true' >&2
+              exit 78
+              ;;
+          esac
+          printf 'APP_IMAGE=%s\n' "$app_image" >> "$GITHUB_ENV"
+
+      - name: Build source candidate locally with public diagnostic values
+        if: inputs.image == 'source-candidate'
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          [[ "$APP_IMAGE" == "lunidex-oom-candidate:$GITHUB_SHA" ]] || {
+            echo 'candidate_image_tag_invalid=true' >&2
+            exit 78
+          }
+          docker build --file Dockerfile --tag "$APP_IMAGE" \
+            --build-arg NEXT_DEPLOYMENT_ID=isolated-diagnostic \
+            --build-arg NEXT_PUBLIC_NEON_AUTH_URL=https://auth.example.invalid \
+            --build-arg 'NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN=' \
+            --build-arg 'NEXT_PUBLIC_POSTHOG_HOST=' \
+            --build-arg NEXT_PUBLIC_POSTHOG_ENABLED=false \
+            --build-arg NEXT_PUBLIC_POSTHOG_ENVIRONMENT=isolated-diagnostic \
+            --build-arg NEXT_PUBLIC_APP_RELEASE=isolated-diagnostic \
+            --build-arg NEXT_PUBLIC_POSTHOG_REPLAY_SAMPLE_RATE=0 \
+            --build-arg 'NEXT_PUBLIC_SENTRY_DSN=' \
+            --build-arg NEXT_PUBLIC_SENTRY_ENVIRONMENT=isolated-diagnostic \
+            --build-arg NEXT_PUBLIC_SENTRY_RELEASE=isolated-diagnostic \
+            --build-arg 'NEXT_PUBLIC_GOOGLE_VERIFICATION=' \
+            --build-arg 'NEXT_PUBLIC_VAPID_PUBLIC_KEY=' \
+            .
+
+      - name: Resolve bounded diagnostic profile
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          case "$DIAGNOSTIC_PROFILE" in
+            smoke-30s-c1)
+              phase_seconds=30
+              concurrency=1
+              phases=full,abort
+              ;;
+            progressive-60s-c4)
+              phase_seconds=60
+              concurrency=4
+              phases=full,abort
+              ;;
+            progressive-120s-c8)
+              phase_seconds=120
+              concurrency=8
+              phases=full,abort
+              ;;
+            progressive-300s-c16)
+              phase_seconds=300
+              concurrency=16
+              phases=full,abort
+              ;;
+            comparison-900s-c32)
+              phase_seconds=900
+              concurrency=32
+              phases=full,abort
+              ;;
+            soak-full-3600s-c32)
+              phase_seconds=3600
+              concurrency=32
+              phases=full
+              ;;
+            *)
+              echo 'diagnostic_profile_invalid=true' >&2
+              exit 78
+              ;;
+          esac
+          case "$DIAGNOSTIC_TARGET" in
+            tcg-card)
+              egress_policy=tcg
+              ;;
+            pokemon-detail)
+              egress_policy=pokemon
+              ;;
+            healthz|home)
+              egress_policy=none
+              ;;
+            *)
+              echo 'diagnostic_target_invalid=true' >&2
+              exit 78
+              ;;
+          esac
+          {
+            printf 'PHASE_SECONDS=%s\n' "$phase_seconds"
+            printf 'ISOLATED_TCG_CONCURRENCY=%s\n' "$concurrency"
+            printf 'ISOLATED_TCG_PHASES=%s\n' "$phases"
+            printf 'ISOLATED_TCG_TARGET=%s\n' "$DIAGNOSTIC_TARGET"
+            printf 'ISOLATED_EGRESS_POLICY=%s\n' "$egress_policy"
+          } >> "$GITHUB_ENV"
+          echo "diagnostic_profile=$DIAGNOSTIC_PROFILE"
+          echo "diagnostic_target=$DIAGNOSTIC_TARGET"
+
       - name: Validate bounded diagnostic harness
         shell: bash
         run: |
           set -Eeuo pipefail
           node --check scripts/deployment/isolated-tcg-rsc-load.mjs
+          node --check scripts/deployment/warm-isolated-diagnostic-route.mjs
+          node --check scripts/deployment/validate-isolated-diagnostic-warmup.mjs
+          node --check scripts/deployment/classify-isolated-node-logs.mjs
+          node --check scripts/deployment/classify-isolated-node-logs.test.mjs
+          node --check scripts/deployment/normalize-isolated-container-state.mjs
+          node --check scripts/deployment/normalize-isolated-container-state.test.mjs
+          node --check scripts/deployment/normalize-isolated-container-stats.mjs
+          node --check scripts/deployment/normalize-isolated-container-stats.test.mjs
+          node --check scripts/deployment/classify-isolated-docker-launch-error.mjs
+          node --check scripts/deployment/classify-isolated-docker-launch-error.test.mjs
+          node --check scripts/deployment/sample-isolated-container-resources.mjs
+          node --check scripts/deployment/validate-isolated-container-resource-series.mjs
           node --check scripts/deployment/isolated-tcg-egress-proxy.mjs
           node --check scripts/deployment/validate-isolated-tcg-rsc-summary.mjs
           node --check scripts/deployment/validate-isolated-tcg-egress-summary.mjs
-          node --test scripts/deployment/isolated-tcg-rsc-load.test.mjs
-          node --test scripts/deployment/isolated-tcg-egress-proxy.test.mjs
           bash -n scripts/deployment/run-isolated-tcg-rsc-phases.sh
 
       - name: Authenticate to GHCR and pull the immutable production image
+        if: inputs.image == 'production'
         shell: bash
         env:
           GHCR_READ_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -Eeuo pipefail
           printf '%s' "$GHCR_READ_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin >/dev/null
-          docker pull "$APP_IMAGE" >/dev/null
+          docker pull "$PRODUCTION_IMAGE" >/dev/null
           docker logout ghcr.io >/dev/null
           unset GHCR_READ_TOKEN
+
+      - name: Test the diagnostic harness with the pinned Node 22 runtime
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          docker run --rm \
+            --network none \
+            --cpus 0.5 \
+            --memory 256m \
+            --memory-swap 256m \
+            --pids-limit 64 \
+            --read-only \
+            --tmpfs /tmp:rw,noexec,nosuid,size=16m \
+            --mount "type=bind,src=$GITHUB_WORKSPACE,dst=/workspace,readonly" \
+            --workdir /workspace \
+            --env NODE_OPTIONS= \
+            --env ISOLATED_DIAGNOSTIC_SKIP_SAMPLER_PROCESS_TEST=1 \
+            --env ISOLATED_DIAGNOSTIC_SKIP_DOCKER_LAUNCH_MOCK_TEST=1 \
+            --entrypoint node \
+            "$APP_IMAGE" --test \
+              scripts/deployment/isolated-tcg-rsc-load.test.mjs \
+              scripts/deployment/warm-isolated-diagnostic-route.test.mjs \
+              scripts/deployment/classify-isolated-node-logs.test.mjs \
+              scripts/deployment/classify-isolated-docker-launch-error.test.mjs \
+              scripts/deployment/normalize-isolated-container-stats.test.mjs \
+              scripts/deployment/isolated-tcg-egress-proxy.test.mjs
 
       - name: Create ephemeral cache and internal-only test network
         shell: bash
@@ -65,32 +248,42 @@ jobs:
           docker network create --internal "$INTERNAL_NETWORK" >/dev/null
           docker volume create "$CACHE_VOLUME" >/dev/null
 
-      - name: Start a one-tunnel TCGdex egress proxy for cache warm-up
+      - name: Warm the selected fixed route, then remove all egress
         shell: bash
         run: |
           set -Eeuo pipefail
           proxy_name=lunidex-isolated-rsc-egress-proxy
-          docker run --detach \
-            --name "$proxy_name" \
-            --network bridge \
-            --cpus 0.05 \
-            --memory 32m \
-            --memory-swap 32m \
-            --pids-limit 32 \
-            --read-only \
-            --tmpfs /tmp:rw,noexec,nosuid,size=8m \
-            --cap-drop ALL \
-            --security-opt no-new-privileges:true \
-            --mount "type=bind,src=$GITHUB_WORKSPACE/scripts/deployment/isolated-tcg-egress-proxy.mjs,dst=/tmp/egress-proxy.mjs,readonly" \
-            --env NODE_OPTIONS= \
-            --entrypoint node \
-            "$APP_IMAGE" /tmp/egress-proxy.mjs >/dev/null
-          docker network connect --alias tcg-egress-proxy "$INTERNAL_NETWORK" "$proxy_name"
+          proxy_env_args=()
+          proxy_started=false
+          if [[ "$ISOLATED_EGRESS_POLICY" != none ]]; then
+            docker run --detach \
+              --name "$proxy_name" \
+              --network bridge \
+              --cpus 0.05 \
+              --memory 32m \
+              --memory-swap 32m \
+              --pids-limit 32 \
+              --read-only \
+              --tmpfs /tmp:rw,noexec,nosuid,size=8m \
+              --cap-drop ALL \
+              --security-opt no-new-privileges:true \
+              --mount "type=bind,src=$GITHUB_WORKSPACE/scripts/deployment/isolated-tcg-egress-proxy.mjs,dst=/tmp/egress-proxy.mjs,readonly" \
+              --env NODE_OPTIONS= \
+              --env "ISOLATED_EGRESS_POLICY=$ISOLATED_EGRESS_POLICY" \
+              --entrypoint node \
+              "$APP_IMAGE" /tmp/egress-proxy.mjs >/dev/null
+            docker network connect --alias tcg-egress-proxy "$INTERNAL_NETWORK" "$proxy_name"
+            proxy_env_args+=(
+              --env HTTPS_PROXY=http://tcg-egress-proxy:3128
+              --env HTTP_PROXY=http://tcg-egress-proxy:3128
+              --env https_proxy=http://tcg-egress-proxy:3128
+              --env http_proxy=http://tcg-egress-proxy:3128
+              --env NO_PROXY=127.0.0.1,localhost
+              --env no_proxy=127.0.0.1,localhost
+            )
+            proxy_started=true
+          fi
 
-      - name: Warm one fixed TCG card, then remove egress
-        shell: bash
-        run: |
-          set -Eeuo pipefail
           docker run --detach \
             --init \
             --name "$WARM_CONTAINER" \
@@ -108,13 +301,8 @@ jobs:
             --env NEXT_TELEMETRY_DISABLED=1 \
             --env HOSTNAME=0.0.0.0 \
             --env PORT=3000 \
-            --env NODE_OPTIONS='--max-old-space-size=1024 --use-env-proxy --inspect=127.0.0.1:9229 --expose-gc' \
-            --env HTTPS_PROXY=http://tcg-egress-proxy:3128 \
-            --env HTTP_PROXY=http://tcg-egress-proxy:3128 \
-            --env https_proxy=http://tcg-egress-proxy:3128 \
-            --env http_proxy=http://tcg-egress-proxy:3128 \
-            --env NO_PROXY=127.0.0.1,localhost \
-            --env no_proxy=127.0.0.1,localhost \
+            --env NODE_OPTIONS='--max-old-space-size=1408 --use-env-proxy --inspect=127.0.0.1:9229 --expose-gc' \
+            "${proxy_env_args[@]}" \
             --env SENTRY_DSN= \
             --env NEXT_PUBLIC_SENTRY_DSN= \
             --env NEXT_PUBLIC_POSTHOG_ENABLED=false \
@@ -138,52 +326,31 @@ jobs:
             exit 1
           }
 
-          warmup_result="$(docker exec --env NODE_OPTIONS= "$WARM_CONTAINER" node -e '
-            (async () => {
-              try {
-                const response = await fetch("http://127.0.0.1:3000/en/tcg/cards/base1-4?tcgLang=en", {
-                  headers: { accept: "application/json", "accept-language": "en" },
-                  signal: AbortSignal.timeout(30000),
-                });
-                const bytes = (await response.arrayBuffer()).byteLength;
-                const contentType = response.headers.get("content-type") || "";
-                const result = { status: response.status, html: contentType.includes("text/html"), bytes };
-                process.stdout.write(JSON.stringify(result) + "\n");
-                if (response.status !== 200 || !result.html || bytes === 0) process.exitCode = 78;
-              } catch {
-                process.stderr.write("warmup_request_failed\n");
-                process.exitCode = 1;
-              }
-            })();
-          ' 2>/dev/null)" || {
-            echo 'warmup_card_request_failed=true'
+          warmup_result="$(timeout 130s docker exec --interactive \
+            --env NODE_OPTIONS= \
+            --env "ISOLATED_TCG_TARGET=$ISOLATED_TCG_TARGET" \
+            --env "ISOLATED_EGRESS_POLICY=$ISOLATED_EGRESS_POLICY" \
+            "$WARM_CONTAINER" node --input-type=module - \
+            < "$GITHUB_WORKSPACE/scripts/deployment/warm-isolated-diagnostic-route.mjs" 2>/dev/null)" || {
+            echo 'warmup_route_request_failed=true'
             exit 1
           }
-          printf '%s\n' "$warmup_result" | node -e '
-            let raw = "";
-            process.stdin.setEncoding("utf8");
-            process.stdin.on("data", (part) => { raw += part; });
-            process.stdin.on("end", () => {
-              try {
-                const value = JSON.parse(raw);
-                if (value.status !== 200 || value.html !== true || !Number.isSafeInteger(value.bytes) || value.bytes < 1) throw new Error();
-                process.stdout.write(JSON.stringify(value) + "\n");
-              } catch {
-                process.stderr.write("warmup_result_invalid\n");
-                process.exitCode = 78;
-              }
-            });
-          '
+          printf '%s\n' "$warmup_result" | node scripts/deployment/validate-isolated-diagnostic-warmup.mjs "$ISOLATED_TCG_TARGET"
 
           docker stop --time 2 "$WARM_CONTAINER" >/dev/null
-          docker stop --time 2 lunidex-isolated-rsc-egress-proxy >/dev/null
-          proxy_summary="$(docker logs lunidex-isolated-rsc-egress-proxy 2>/dev/null | tail -n 1)"
-          [[ -n "$proxy_summary" ]] || {
-            echo 'warmup_egress_summary_missing=true'
-            exit 1
-          }
-          printf '%s\n' "$proxy_summary" | node scripts/deployment/validate-isolated-tcg-egress-summary.mjs
-          docker rm --force "$WARM_CONTAINER" lunidex-isolated-rsc-egress-proxy >/dev/null
+          docker rm --force "$WARM_CONTAINER" >/dev/null
+          if [[ "$proxy_started" == true ]]; then
+            docker stop --time 2 "$proxy_name" >/dev/null
+            proxy_summary="$(docker logs "$proxy_name" 2>/dev/null | tail -n 1)"
+            [[ -n "$proxy_summary" ]] || {
+              echo 'warmup_egress_summary_missing=true'
+              exit 1
+            }
+            printf '%s\n' "$proxy_summary" | node scripts/deployment/validate-isolated-tcg-egress-summary.mjs "$ISOLATED_EGRESS_POLICY"
+            docker rm --force "$proxy_name" >/dev/null
+          else
+            echo 'warmup_egress_policy=none'
+          fi
           echo 'warmup_complete=true'
           echo 'test_network_egress=disabled'
 
@@ -192,6 +359,10 @@ jobs:
         run: |
           set -Eeuo pipefail
           APP_IMAGE="$APP_IMAGE" PHASE_SECONDS="$PHASE_SECONDS" \
+            ISOLATED_DIAGNOSTIC_IMAGE_MODE="$ISOLATED_DIAGNOSTIC_IMAGE_MODE" \
+            ISOLATED_TCG_CONCURRENCY="$ISOLATED_TCG_CONCURRENCY" \
+            ISOLATED_TCG_PHASES="$ISOLATED_TCG_PHASES" \
+            ISOLATED_TCG_TARGET="$ISOLATED_TCG_TARGET" \
             bash scripts/deployment/run-isolated-tcg-rsc-phases.sh
 
       - name: Remove diagnostic containers, network, and volume
