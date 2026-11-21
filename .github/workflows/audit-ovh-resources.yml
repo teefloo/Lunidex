@@ -1,6 +1,16 @@
 name: Audit OVH VPS resources
+run-name: OVH stability audit ${{ github.event.schedule || 'manual' }}
 
 on:
+  schedule:
+    # Temporary 2026 audits (UTC). The date gate below is required because GitHub cron has no year field.
+    - cron: '6 19 21 11 *'
+    - cron: '6 13 22 11 *'
+    - cron: '6 13 23 11 *'
+    # Read-only watchdogs report a missing or incomplete scheduled audit 15 minutes later.
+    - cron: '21 19 21 11 *'
+    - cron: '21 13 22 11 *'
+    - cron: '21 13 23 11 *'
   workflow_dispatch:
     inputs:
       confirm_read_only_inspection:
@@ -8,6 +18,16 @@ on:
         required: true
         default: false
         type: boolean
+      manual_audit_slot:
+        description: Select the missed scheduled slot when manually replacing an audit
+        required: false
+        default: adhoc
+        type: choice
+        options:
+          - adhoc
+          - 2026-11-21-19-06-utc
+          - 2026-11-22-13-06-utc
+          - 2026-11-23-13-06-utc
       expected_heap_sample_run_id:
         description: Optional run ID for the sanitized heap summary, memory series, and matching route-family counts (digits-digits)
         required: false
@@ -24,17 +44,84 @@ concurrency:
 jobs:
   inspect:
     if: >-
-      (github.ref == 'refs/heads/codex/ovh-vps-migration' || github.ref == 'refs/heads/master') &&
-      inputs.confirm_read_only_inspection
+      (
+        github.event_name == 'workflow_dispatch' &&
+        (github.ref == 'refs/heads/codex/ovh-vps-migration' || github.ref == 'refs/heads/master') &&
+        inputs.confirm_read_only_inspection
+      ) || (
+        github.event_name == 'schedule' &&
+        github.ref == 'refs/heads/master' &&
+        startsWith(github.run_started_at, '2026-11-') &&
+        (
+          (github.event.schedule == '6 19 21 11 *' && startsWith(github.run_started_at, '2026-11-21')) ||
+          (github.event.schedule == '6 13 22 11 *' && startsWith(github.run_started_at, '2026-11-22')) ||
+          (github.event.schedule == '6 13 23 11 *' && startsWith(github.run_started_at, '2026-11-23'))
+        )
+      )
     runs-on: ubuntu-latest
     timeout-minutes: 5
     environment: ovh-preproduction
+    outputs:
+      audit_slot: ${{ steps.slot.outputs.audit_slot }}
+      container_status: ${{ steps.host.outputs.audit_container_status }}
+      container_health: ${{ steps.host.outputs.audit_container_health }}
+      container_started_at: ${{ steps.host.outputs.audit_container_started_at }}
+      restart_count: ${{ steps.host.outputs.audit_restart_count }}
+      container_oom_killed: ${{ steps.host.outputs.audit_container_oom_killed }}
+      log_capture_available: ${{ steps.host.outputs.audit_log_capture_available }}
+      v8_heap_oom: ${{ steps.host.outputs.audit_v8_heap_oom }}
+      node_fatal: ${{ steps.host.outputs.audit_node_fatal }}
+      docker_cpu_pct: ${{ steps.host.outputs.audit_docker_cpu_pct }}
+      host_ram_available_bytes: ${{ steps.host.outputs.audit_host_ram_available_bytes }}
+      root_fs_free_bytes: ${{ steps.host.outputs.audit_root_fs_free_bytes }}
+      cgroup_current_bytes: ${{ steps.diagnostics.outputs.app_cgroup_memory_current_bytes }}
+      cgroup_peak_bytes: ${{ steps.diagnostics.outputs.app_cgroup_memory_peak_bytes }}
+      cgroup_oom: ${{ steps.diagnostics.outputs.app_cgroup_memory_event_oom }}
+      cgroup_oom_kill: ${{ steps.diagnostics.outputs.app_cgroup_memory_event_oom_kill }}
+      cgroup_oom_group_kill: ${{ steps.diagnostics.outputs.app_cgroup_memory_event_oom_group_kill }}
+      node_rss_kib: ${{ steps.diagnostics.outputs.app_host_runtime_1_vmrss_kib }}
+      node_cpu_pct: ${{ steps.diagnostics.outputs.app_host_runtime_1_cpu_pct }}
+      caddy_access_logs_available: ${{ steps.diagnostics.outputs.caddy_access_logs_available }}
+      healthz_status: ${{ steps.https.outputs.healthz_status }}
+      home_status: ${{ steps.https.outputs.home_status }}
+      tcg_status: ${{ steps.https.outputs.tcg_status }}
+      manifest_status: ${{ steps.https.outputs.manifest_status }}
+      service_worker_status: ${{ steps.https.outputs.service_worker_status }}
+      auth_session_status: ${{ steps.https.outputs.auth_session_status }}
+      profile_status: ${{ steps.https.outputs.profile_status }}
+      tls_verify_result: ${{ steps.https.outputs.tls_verify_result }}
     env:
       OVH_DEPLOY_HOST: ${{ vars.OVH_DEPLOY_HOST }}
       OVH_DEPLOY_USER: ${{ vars.OVH_DEPLOY_USER }}
       OVH_DEPLOY_KNOWN_HOSTS: ${{ vars.OVH_DEPLOY_KNOWN_HOSTS }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Validate scheduled audit slot
+        id: slot
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_SCHEDULE: ${{ github.event.schedule }}
+          MANUAL_AUDIT_SLOT: ${{ inputs.manual_audit_slot || 'adhoc' }}
+          RUN_STARTED_AT: ${{ github.run_started_at }}
+        run: |
+          set -Eeuo pipefail
+          slot="$MANUAL_AUDIT_SLOT"
+          if [[ "$EVENT_NAME" == schedule ]]; then
+            case "$EVENT_SCHEDULE:$RUN_STARTED_AT" in
+              '6 19 21 11 *:2026-11-21'*) slot='2026-11-21-19-06-utc' ;;
+              '6 13 22 11 *:2026-11-22'*) slot='2026-11-22-13-06-utc' ;;
+              '6 13 23 11 *:2026-11-23'*) slot='2026-11-23-13-06-utc' ;;
+              *) echo 'Scheduled audit slot did not match its allowlisted UTC date.' >&2; exit 78 ;;
+            esac
+          else
+            case "$slot" in
+              adhoc|2026-11-21-19-06-utc|2026-11-22-13-06-utc|2026-11-23-13-06-utc) ;;
+              *) echo 'Manual audit slot is not allowlisted.' >&2; exit 78 ;;
+            esac
+          fi
+          printf 'audit_slot=%s\n' "$slot" >> "$GITHUB_OUTPUT"
 
       - name: Validate redacted resource diagnostics
         shell: bash
@@ -58,12 +145,13 @@ jobs:
           chmod 0600 "$HOME/.ssh/ovh_deploy" "$HOME/.ssh/known_hosts"
 
       - name: Inspect host and container resources without changing services
+        id: host
         shell: bash
         run: |
           set -Eeuo pipefail
           target="$OVH_DEPLOY_USER@$OVH_DEPLOY_HOST"
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
-          ssh "${ssh_args[@]}" "$target" 'bash -s' <<'REMOTE'
+          host_output="$(ssh "${ssh_args[@]}" "$target" 'bash -s' <<'REMOTE'
           set -Eeuo pipefail
           printf '%s\n' '--- Host load and uptime ---'
           uptime
@@ -79,7 +167,17 @@ jobs:
           docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}'
           docker stats --no-stream --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.MemPerc}}'
           printf '%s\n' '--- Production container lifecycle (no environment values) ---'
-          docker inspect --format 'status={{.State.Status}} restarts={{.RestartCount}} restart_policy={{.HostConfig.RestartPolicy.Name}} nano_cpus={{.HostConfig.NanoCpus}} cpu_period={{.HostConfig.CpuPeriod}} oom_killed={{.State.OOMKilled}} exit_code={{.State.ExitCode}} started_at={{.State.StartedAt}} finished_at={{.State.FinishedAt}} error={{.State.Error}}' lunidex-production-app 2>/dev/null || true
+          docker inspect --format 'status={{.State.Status}} restarts={{.RestartCount}} restart_policy={{.HostConfig.RestartPolicy.Name}} nano_cpus={{.HostConfig.NanoCpus}} cpu_period={{.HostConfig.CpuPeriod}} oom_killed={{.State.OOMKilled}} exit_code={{.State.ExitCode}} started_at={{.State.StartedAt}} finished_at={{.State.FinishedAt}} error={{.State.Error}}' lunidex-production-app
+          printf 'audit_container_status=%s\n' "$(docker inspect --format '{{.State.Status}}' lunidex-production-app)"
+          printf 'audit_container_health=%s\n' "$(docker inspect --format '{{if .State.Health}}{{.State.Health.Status}}{{else}}unavailable{{end}}' lunidex-production-app)"
+          printf 'audit_container_started_at=%s\n' "$(docker inspect --format '{{.State.StartedAt}}' lunidex-production-app)"
+          printf 'audit_restart_count=%s\n' "$(docker inspect --format '{{.RestartCount}}' lunidex-production-app)"
+          printf 'audit_container_oom_killed=%s\n' "$(docker inspect --format '{{.State.OOMKilled}}' lunidex-production-app)"
+          printf 'audit_docker_cpu_pct=%s\n' "$(docker stats --no-stream --format '{{.CPUPerc}}' lunidex-production-app | tr -d '%')"
+          host_ram_available_bytes="$(free -b | awk '$1 == "Mem:" { print $7 }')"
+          printf 'audit_host_ram_available_bytes=%s\n' "$host_ram_available_bytes"
+          root_fs_free_bytes="$(df -Pk / | awk 'NR == 2 { printf "%.0f", $4 * 1024 }')"
+          printf 'audit_root_fs_free_bytes=%s\n' "$root_fs_free_bytes"
           printf '%s\n' '--- Recent production healthcheck results ---'
           docker inspect --format '{{range .State.Health.Log}}{{printf "%s exit=%d output=%q\n" .Start .ExitCode .Output}}{{end}}' lunidex-production-app 2>/dev/null | tail -n 10 || true
           printf '%s\n' '--- Production container events (last 6 hours) ---'
@@ -94,8 +192,10 @@ jobs:
           printf '%s\n' '--- Production log signatures (raw log lines suppressed) ---'
           if production_logs="$(docker logs --since 6h --tail 2000 lunidex-production-app 2>&1)"; then
             printf '%s\n' 'log_capture_available=true'
+            printf '%s\n' 'audit_log_capture_available=true'
           else
             printf '%s\n' 'log_capture_available=false'
+            printf '%s\n' 'audit_log_capture_available=false'
           fi
           classify_log_signature() {
             local label="$1" pattern="$2" matched=false
@@ -104,8 +204,8 @@ jobs:
             fi
             printf '%s=%s\n' "$label" "$matched"
           }
-          classify_log_signature v8_heap_oom 'JavaScript heap out of memory|Ineffective mark-compacts near heap limit|Reached heap limit|Allocation failed - JavaScript heap out of memory'
-          classify_log_signature node_fatal 'FATAL ERROR:|Fatal process out of memory|node::Abort\('
+          classify_log_signature audit_v8_heap_oom 'JavaScript heap out of memory|Ineffective mark-compacts near heap limit|Reached heap limit|Allocation failed - JavaScript heap out of memory'
+          classify_log_signature audit_node_fatal 'FATAL ERROR:|Fatal process out of memory|node::Abort\('
           classify_log_signature assertion_or_abort 'Assertion failed|AssertionError|SIGABRT|Aborted \(core dumped\)|abort\(\) called|Check failed:'
           classify_log_signature uncaught_or_unhandled 'uncaughtException|uncaught exception|unhandledRejection|unhandled promise rejection|UnhandledPromiseRejection|ERR_UNHANDLED_REJECTION'
           unset production_logs
@@ -122,8 +222,18 @@ jobs:
             systemctl is-active "$timer" 2>/dev/null || true
           done
           REMOTE
+          )"
+          printf '%s\n' "$host_output"
+          while IFS='=' read -r name value; do
+            case "$name" in
+              audit_container_status|audit_container_health|audit_container_started_at|audit_restart_count|audit_container_oom_killed|audit_log_capture_available|audit_v8_heap_oom|audit_node_fatal|audit_docker_cpu_pct|audit_host_ram_available_bytes|audit_root_fs_free_bytes)
+                printf '%s=%s\n' "$name" "$value" >> "$GITHUB_OUTPUT"
+                ;;
+            esac
+          done <<< "$host_output"
 
       - name: Inspect production memory, disk usage, and route-family logs by diagnostic run
+        id: diagnostics
         shell: bash
         env:
           EXPECTED_HEAP_SAMPLE_RUN_ID: ${{ inputs.expected_heap_sample_run_id }}
@@ -136,7 +246,40 @@ jobs:
           target="$OVH_DEPLOY_USER@$OVH_DEPLOY_HOST"
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
           remote_command="EXPECTED_HEAP_SAMPLE_RUN_ID='$EXPECTED_HEAP_SAMPLE_RUN_ID' python3 -"
-          ssh "${ssh_args[@]}" "$target" "$remote_command" < scripts/deployment/audit_ovh_container_diagnostics.py
+          diagnostics_output="$(ssh "${ssh_args[@]}" "$target" "$remote_command" < scripts/deployment/audit_ovh_container_diagnostics.py)"
+          printf '%s\n' "$diagnostics_output"
+          while IFS='=' read -r name value; do
+            case "$name" in
+              app_cgroup_memory_current_bytes|app_cgroup_memory_peak_bytes|app_cgroup_memory_event_oom|app_cgroup_memory_event_oom_kill|app_cgroup_memory_event_oom_group_kill|app_host_runtime_1_vmrss_kib|app_host_runtime_1_cpu_pct|caddy_access_logs_available)
+                printf '%s=%s\n' "$name" "$value" >> "$GITHUB_OUTPUT"
+                ;;
+            esac
+          done <<< "$diagnostics_output"
+
+      - name: Probe essential production HTTPS routes
+        id: https
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          probe() {
+            local name="$1" path="$2" expected="$3" response status duration tls
+            response="$(curl --max-time 20 --silent --show-error --output /dev/null \
+              --write-out '%{http_code}|%{time_total}|%{ssl_verify_result}' \
+              "https://lunidex.app${path}")"
+            IFS='|' read -r status duration tls <<< "$response"
+            printf '%s status=%s duration=%ss tls_verify_result=%s expected=%s\n' \
+              "$name" "$status" "$duration" "$tls" "$expected"
+            printf '%s_status=%s\n' "$name" "$status" >> "$GITHUB_OUTPUT"
+            printf 'tls_verify_result=%s\n' "$tls" >> "$GITHUB_OUTPUT"
+            [[ "$status" == "$expected" && "$tls" == 0 ]]
+          }
+          probe healthz /api/healthz 200
+          probe home /en 200
+          probe tcg /en/tcg 200
+          probe manifest /manifest.webmanifest 200
+          probe service_worker /sw.js 200
+          probe auth_session /api/auth/get-session 200
+          probe profile /api/profile 401
 
       - name: Retrieve one matching sanitized heap sample
         if: inputs.expected_heap_sample_run_id != ''
@@ -199,3 +342,141 @@ jobs:
         if: always()
         shell: bash
         run: rm -f "$HOME/.ssh/ovh_deploy"
+
+  report:
+    if: >-
+      always() &&
+      (
+        github.event_name == 'workflow_dispatch' ||
+        (
+          github.event_name == 'schedule' &&
+          startsWith(github.run_started_at, '2026-') &&
+          (
+            github.event.schedule == '6 19 21 11 *' ||
+            github.event.schedule == '6 13 22 11 *' ||
+            github.event.schedule == '6 13 23 11 *'
+          )
+        )
+      )
+    needs: [inspect]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Report audit status and T+1 comparison
+        shell: bash
+        env:
+          AUDIT_RESULT: ${{ needs.inspect.result }}
+          AUDIT_SLOT: ${{ needs.inspect.outputs.audit_slot }}
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_SCHEDULE: ${{ github.event.schedule }}
+          RUN_STARTED_AT: ${{ github.run_started_at }}
+          CONFIRM_READ_ONLY_INSPECTION: ${{ inputs.confirm_read_only_inspection }}
+          MANUAL_AUDIT_SLOT: ${{ inputs.manual_audit_slot || 'adhoc' }}
+          CONTAINER_STATUS: ${{ needs.inspect.outputs.container_status }}
+          CONTAINER_HEALTH: ${{ needs.inspect.outputs.container_health }}
+          CONTAINER_STARTED_AT: ${{ needs.inspect.outputs.container_started_at }}
+          RESTART_COUNT: ${{ needs.inspect.outputs.restart_count }}
+          CONTAINER_OOM_KILLED: ${{ needs.inspect.outputs.container_oom_killed }}
+          LOG_CAPTURE_AVAILABLE: ${{ needs.inspect.outputs.log_capture_available }}
+          V8_HEAP_OOM: ${{ needs.inspect.outputs.v8_heap_oom }}
+          NODE_FATAL: ${{ needs.inspect.outputs.node_fatal }}
+          DOCKER_CPU_PCT: ${{ needs.inspect.outputs.docker_cpu_pct }}
+          HOST_RAM_AVAILABLE_BYTES: ${{ needs.inspect.outputs.host_ram_available_bytes }}
+          ROOT_FS_FREE_BYTES: ${{ needs.inspect.outputs.root_fs_free_bytes }}
+          CGROUP_CURRENT_BYTES: ${{ needs.inspect.outputs.cgroup_current_bytes }}
+          CGROUP_PEAK_BYTES: ${{ needs.inspect.outputs.cgroup_peak_bytes }}
+          CGROUP_OOM: ${{ needs.inspect.outputs.cgroup_oom }}
+          CGROUP_OOM_KILL: ${{ needs.inspect.outputs.cgroup_oom_kill }}
+          CGROUP_OOM_GROUP_KILL: ${{ needs.inspect.outputs.cgroup_oom_group_kill }}
+          NODE_RSS_KIB: ${{ needs.inspect.outputs.node_rss_kib }}
+          NODE_CPU_PCT: ${{ needs.inspect.outputs.node_cpu_pct }}
+          CADDY_ACCESS_LOGS_AVAILABLE: ${{ needs.inspect.outputs.caddy_access_logs_available }}
+          HEALTHZ_STATUS: ${{ needs.inspect.outputs.healthz_status }}
+          HOME_STATUS: ${{ needs.inspect.outputs.home_status }}
+          TCG_STATUS: ${{ needs.inspect.outputs.tcg_status }}
+          MANIFEST_STATUS: ${{ needs.inspect.outputs.manifest_status }}
+          SERVICE_WORKER_STATUS: ${{ needs.inspect.outputs.service_worker_status }}
+          AUTH_SESSION_STATUS: ${{ needs.inspect.outputs.auth_session_status }}
+          PROFILE_STATUS: ${{ needs.inspect.outputs.profile_status }}
+          TLS_VERIFY_RESULT: ${{ needs.inspect.outputs.tls_verify_result }}
+        run: python3 scripts/deployment/render_ovh_stability_report.py
+
+  watchdog:
+    if: >-
+      github.event_name == 'schedule' &&
+      github.ref == 'refs/heads/master' &&
+      startsWith(github.run_started_at, '2026-') &&
+      (
+        github.event.schedule == '21 19 21 11 *' ||
+        github.event.schedule == '21 13 22 11 *' ||
+        github.event.schedule == '21 13 23 11 *'
+      )
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+    steps:
+      - name: Report missing, failed, or incomplete scheduled audit
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_SCHEDULE: ${{ github.event.schedule }}
+          RUN_STARTED_AT: ${{ github.run_started_at }}
+          CURRENT_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -Eeuo pipefail
+          case "$EVENT_SCHEDULE" in
+            '21 19 21 11 *') slot='2026-11-21-19-06-utc'; target_start='2026-11-21T19:06:00Z'; target_end='2026-11-21T19:21:00Z'; target_date='2026-11-21' ;;
+            '21 13 22 11 *') slot='2026-11-22-13-06-utc'; target_start='2026-11-22T13:06:00Z'; target_end='2026-11-22T13:21:00Z'; target_date='2026-11-22' ;;
+            '21 13 23 11 *') slot='2026-11-23-13-06-utc'; target_start='2026-11-23T13:06:00Z'; target_end='2026-11-23T13:21:00Z'; target_date='2026-11-23' ;;
+            *) echo 'INCOMPLETE: watchdog schedule is not allowlisted.' >> "$GITHUB_STEP_SUMMARY"; exit 1 ;;
+          esac
+          watchdog_delayed=false
+          if [[ ! "$RUN_STARTED_AT" == "$target_date"* ]]; then watchdog_delayed=true; fi
+          if ! runs_json="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/audit-ovh-resources.yml/runs" \
+            -f event=schedule -f branch=master -F per_page=100 2>/dev/null)"; then
+            echo "INCOMPLETE: could not read Actions run history for $slot." >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          if ! matching_runs="$(jq -c --arg start "$target_start" --arg end "$target_end" --arg current "$CURRENT_RUN_ID" '
+            [.workflow_runs[]
+              | select((.id | tostring) != $current)
+              | select(.created_at >= $start and .created_at < $end)]
+            | sort_by(.created_at)
+          ' <<< "$runs_json")"; then
+            echo "INCOMPLETE: Actions run history could not be parsed for $slot." >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          run_count="$(jq 'length' <<< "$matching_runs")"
+          run_status="$(jq -r '.[0].status // "missing"' <<< "$matching_runs")"
+          run_conclusion="$(jq -r '.[0].conclusion // "pending"' <<< "$matching_runs")"
+          run_url="$(jq -r '.[0].html_url // "unavailable"' <<< "$matching_runs")"
+          {
+            echo "## Scheduled audit watchdog: $slot"
+            echo
+            if [[ "$watchdog_delayed" == true ]]; then
+              echo "**DELAYED:** watchdog started at $RUN_STARTED_AT instead of the expected UTC date $target_date; it is still checking the original audit window."
+            fi
+            if [[ "$run_count" == 0 ]]; then
+              echo '**MISSED:** no scheduled audit run was created within 15 minutes of its UTC slot.'
+              echo 'This watchdog checks only the scheduled event; a manual replacement does not erase the missed-schedule result.'
+              echo 'Run the workflow manually with `confirm_read_only_inspection=true` and select this slot.'
+            elif [[ "$run_count" != 1 ]]; then
+              echo "**INCOMPLETE:** expected one scheduled audit run; found $run_count. Review each run before treating this slot as covered."
+            elif [[ "$run_status" == completed && "$run_conclusion" == success ]]; then
+              echo "**COMPLETE:** scheduled audit succeeded: [$run_url]($run_url)."
+            elif [[ "$run_status" == completed ]]; then
+              echo "**FAILED:** scheduled audit concluded `$run_conclusion`: [$run_url]($run_url)."
+            else
+              echo "**INCOMPLETE:** scheduled audit is `$run_status` with conclusion `$run_conclusion`: [$run_url]($run_url)."
+            fi
+            echo
+            echo 'GitHub scheduled events may be delayed or missed; a missing watchdog run must also be treated as unverified and checked manually.'
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [[ "$run_count" == 1 && "$run_status" == completed && "$run_conclusion" == success ]]; then
+            exit 0
+          fi
+          exit 1
