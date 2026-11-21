@@ -31,6 +31,9 @@ jobs:
 
       - run: node --test scripts/deployment/production-memory-gate.test.mjs
 
+      - name: Verify OVH audit diagnostics and stability reports
+        run: python3 -m unittest discover -s scripts/deployment -p 'test_*ovh*.py'
+
       - name: Verify isolated heap diagnostic under Node 22
         run: >-
           node --test
