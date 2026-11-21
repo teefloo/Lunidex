@@ -7,6 +7,8 @@ import os
 import sys
 from collections.abc import Mapping
 
+from ovh_audit_schedule import resolve_audit_slot
+
 
 REFERENCE_RUN_ID = "44912208340"
 REFERENCE_CAPTURED_AT = "2026-11-21T14:06:45Z"
@@ -27,17 +29,6 @@ REFERENCE = {
     "docker_cpu_pct": 42.93,
     "node_cpu_pct": 42.9,
     "root_fs_free_bytes": 17_762_816_000,
-}
-ALLOWED_SLOTS = {
-    "2026-11-21-19-06-utc",
-    "2026-11-22-13-06-utc",
-    "2026-11-23-13-06-utc",
-    "adhoc",
-}
-SCHEDULE_SLOTS = {
-    "6 19 21 11 *": ("2026-11-21", "2026-11-21-19-06-utc"),
-    "6 13 22 11 *": ("2026-11-22", "2026-11-22-13-06-utc"),
-    "6 13 23 11 *": ("2026-11-23", "2026-11-23-13-06-utc"),
 }
 HTTPS_EXPECTED = {
     "healthz_status": "200",
@@ -79,27 +70,16 @@ def _missing(values: Mapping[str, str], key: str) -> bool:
 
 
 def _slot(values: Mapping[str, str]) -> tuple[str, str | None]:
-    event_name = values.get("event_name", "")
-    if event_name == "schedule":
-        schedule = values.get("event_schedule", "")
-        expected = SCHEDULE_SLOTS.get(schedule)
-        run_started_at = values.get("run_started_at", "")
-        if expected is None:
-            return "invalid-schedule", "schedule expression is not allowlisted"
-        expected_date, slot = expected
-        if not run_started_at.startswith(expected_date):
-            return slot, f"scheduled event ran outside its allowlisted UTC date ({expected_date})"
-        return slot, None
-
-    manual_slot = values.get("manual_audit_slot", "adhoc") or "adhoc"
-    if manual_slot not in ALLOWED_SLOTS:
-        return "invalid-manual-slot", "manual audit slot is not allowlisted"
-    if manual_slot != "adhoc":
-        expected_date = manual_slot[:10]
-        run_started_at = values.get("run_started_at", "")
-        if not run_started_at.startswith(expected_date):
-            return manual_slot, f"manual replacement ran outside its allowlisted UTC date ({expected_date})"
-    return manual_slot, None
+    resolution = resolve_audit_slot(
+        event_name=values.get("event_name", ""),
+        event_schedule=values.get("event_schedule", ""),
+        manual_slot=values.get("manual_audit_slot", "adhoc") or "adhoc",
+        utc_date=values.get("audit_utc_date", ""),
+    )
+    date_valid_output = values.get("audit_date_valid", "").strip().lower()
+    if date_valid_output == "false" and not resolution.error:
+        return resolution.slot, values.get("audit_date_error", "") or "runner UTC date did not pass validation"
+    return resolution.slot, resolution.error
 
 
 def build_report(values: Mapping[str, str]) -> tuple[str, int]:
@@ -118,7 +98,7 @@ def build_report(values: Mapping[str, str]) -> tuple[str, int]:
         elif audit_result == "skipped":
             incomplete.append("inspection job was skipped; no audit result exists")
         elif audit_result == "failure":
-            reasons.append("inspection job failed before all audit steps completed")
+            incomplete.append("inspection job failed before all audit steps completed")
         else:
             incomplete.append(f"inspection job result is {audit_result}")
 
@@ -194,6 +174,7 @@ def build_report(values: Mapping[str, str]) -> tuple[str, int]:
         "",
         f"**Verdict: {verdict}**",
         f"Audit job: `{audit_result}`. Reference: T+1 run [{REFERENCE_RUN_ID}](https://github.com/teefloo/Lunidex/actions/runs/{REFERENCE_RUN_ID}) captured {REFERENCE_CAPTURED_AT}.",
+        f"Audit UTC date: `{values.get('audit_utc_date', 'unavailable') or 'unavailable'}`.",
         "",
         "| Metric | T+1 reference | Current audit |",
         "|---|---:|---:|",
@@ -232,8 +213,13 @@ def build_report(values: Mapping[str, str]) -> tuple[str, int]:
     return "\n".join(lines), exit_code
 
 
+def normalize_environment(values: Mapping[str, str]) -> dict[str, str]:
+    """Normalize GitHub's uppercase step environment names for report keys."""
+    return {key.lower(): value for key, value in values.items()}
+
+
 def main() -> int:
-    report, exit_code = build_report(os.environ)
+    report, exit_code = build_report(normalize_environment(os.environ))
     summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
     if summary_path:
         with open(summary_path, "a", encoding="utf-8") as summary_file:

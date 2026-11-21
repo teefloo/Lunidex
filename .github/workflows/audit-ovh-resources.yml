@@ -51,11 +51,10 @@ jobs:
       ) || (
         github.event_name == 'schedule' &&
         github.ref == 'refs/heads/master' &&
-        startsWith(github.run_started_at, '2026-11-') &&
         (
-          (github.event.schedule == '6 19 21 11 *' && startsWith(github.run_started_at, '2026-11-21')) ||
-          (github.event.schedule == '6 13 22 11 *' && startsWith(github.run_started_at, '2026-11-22')) ||
-          (github.event.schedule == '6 13 23 11 *' && startsWith(github.run_started_at, '2026-11-23'))
+          github.event.schedule == '6 19 21 11 *' ||
+          github.event.schedule == '6 13 22 11 *' ||
+          github.event.schedule == '6 13 23 11 *'
         )
       )
     runs-on: ubuntu-latest
@@ -63,6 +62,9 @@ jobs:
     environment: ovh-preproduction
     outputs:
       audit_slot: ${{ steps.slot.outputs.audit_slot }}
+      audit_utc_date: ${{ steps.slot.outputs.audit_utc_date }}
+      audit_date_valid: ${{ steps.slot.outputs.audit_date_valid }}
+      audit_date_error: ${{ steps.slot.outputs.audit_date_error }}
       container_status: ${{ steps.host.outputs.audit_container_status }}
       container_health: ${{ steps.host.outputs.audit_container_health }}
       container_started_at: ${{ steps.host.outputs.audit_container_started_at }}
@@ -97,42 +99,40 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: Validate scheduled audit slot
+      - name: Validate audit slot against runner UTC date
         id: slot
         shell: bash
         env:
           EVENT_NAME: ${{ github.event_name }}
           EVENT_SCHEDULE: ${{ github.event.schedule }}
           MANUAL_AUDIT_SLOT: ${{ inputs.manual_audit_slot || 'adhoc' }}
-          RUN_STARTED_AT: ${{ github.run_started_at }}
         run: |
           set -Eeuo pipefail
-          slot="$MANUAL_AUDIT_SLOT"
-          if [[ "$EVENT_NAME" == schedule ]]; then
-            case "$EVENT_SCHEDULE:$RUN_STARTED_AT" in
-              '6 19 21 11 *:2026-11-21'*) slot='2026-11-21-19-06-utc' ;;
-              '6 13 22 11 *:2026-11-22'*) slot='2026-11-22-13-06-utc' ;;
-              '6 13 23 11 *:2026-11-23'*) slot='2026-11-23-13-06-utc' ;;
-              *) echo 'Scheduled audit slot did not match its allowlisted UTC date.' >&2; exit 78 ;;
-            esac
-          else
-            case "$slot" in
-              adhoc|2026-11-21-19-06-utc|2026-11-22-13-06-utc|2026-11-23-13-06-utc) ;;
-              *) echo 'Manual audit slot is not allowlisted.' >&2; exit 78 ;;
-            esac
+          RUNNER_UTC_DATE="$(date -u +%F)"
+          resolution="$(EVENT_NAME="$EVENT_NAME" \
+            EVENT_SCHEDULE="$EVENT_SCHEDULE" \
+            MANUAL_AUDIT_SLOT="$MANUAL_AUDIT_SLOT" \
+            RUNNER_UTC_DATE="$RUNNER_UTC_DATE" \
+            python3 scripts/deployment/resolve_ovh_audit_slot.py)"
+          printf '%s\n' "$resolution" | tee -a "$GITHUB_OUTPUT"
+          date_valid="$(awk -F= '$1 == "audit_date_valid" { print $2 }' <<< "$resolution")"
+          if [[ "$date_valid" != true ]]; then
+            echo 'The slot/date check failed; SSH and HTTPS inspection steps will be skipped.'
           fi
-          printf 'audit_slot=%s\n' "$slot" >> "$GITHUB_OUTPUT"
 
       - name: Validate redacted resource diagnostics
         shell: bash
         run: python3 -m unittest discover -s scripts/deployment -p 'test_audit_ovh_container_diagnostics.py'
 
       - name: Configure the pinned SSH connection
+        if: steps.slot.outputs.audit_date_valid == 'true'
         shell: bash
         env:
           OVH_DEPLOY_SSH_KEY: ${{ secrets.OVH_DEPLOY_SSH_KEY }}
+          AUDIT_UTC_DATE: ${{ steps.slot.outputs.audit_utc_date }}
         run: |
           set -Eeuo pipefail
+          printf 'Audit UTC date: %s\n' "$AUDIT_UTC_DATE"
           : "${OVH_DEPLOY_HOST:?Configure the OVH host in ovh-preproduction}"
           : "${OVH_DEPLOY_USER:?Configure the OVH user in ovh-preproduction}"
           : "${OVH_DEPLOY_KNOWN_HOSTS:?Configure the verified OVH host key}"
@@ -145,10 +145,14 @@ jobs:
           chmod 0600 "$HOME/.ssh/ovh_deploy" "$HOME/.ssh/known_hosts"
 
       - name: Inspect host and container resources without changing services
+        if: steps.slot.outputs.audit_date_valid == 'true'
         id: host
         shell: bash
+        env:
+          AUDIT_UTC_DATE: ${{ steps.slot.outputs.audit_utc_date }}
         run: |
           set -Eeuo pipefail
+          printf 'Audit UTC date: %s\n' "$AUDIT_UTC_DATE"
           target="$OVH_DEPLOY_USER@$OVH_DEPLOY_HOST"
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
           host_output="$(ssh "${ssh_args[@]}" "$target" 'bash -s' <<'REMOTE'
@@ -233,12 +237,15 @@ jobs:
           done <<< "$host_output"
 
       - name: Inspect production memory, disk usage, and route-family logs by diagnostic run
+        if: steps.slot.outputs.audit_date_valid == 'true'
         id: diagnostics
         shell: bash
         env:
           EXPECTED_HEAP_SAMPLE_RUN_ID: ${{ inputs.expected_heap_sample_run_id }}
+          AUDIT_UTC_DATE: ${{ steps.slot.outputs.audit_utc_date }}
         run: |
           set -Eeuo pipefail
+          printf 'Audit UTC date: %s\n' "$AUDIT_UTC_DATE"
           [[ -z "$EXPECTED_HEAP_SAMPLE_RUN_ID" || "$EXPECTED_HEAP_SAMPLE_RUN_ID" =~ ^[0-9]+-[0-9]+$ ]] || {
             echo 'The expected diagnostic run identifier must be empty or contain only digits and one hyphen.' >&2
             exit 78
@@ -257,10 +264,14 @@ jobs:
           done <<< "$diagnostics_output"
 
       - name: Probe essential production HTTPS routes
+        if: steps.slot.outputs.audit_date_valid == 'true'
         id: https
         shell: bash
+        env:
+          AUDIT_UTC_DATE: ${{ steps.slot.outputs.audit_utc_date }}
         run: |
           set -Eeuo pipefail
+          printf 'Audit UTC date: %s\n' "$AUDIT_UTC_DATE"
           probe() {
             local name="$1" path="$2" expected="$3" response status duration tls
             response="$(curl --max-time 20 --silent --show-error --output /dev/null \
@@ -282,13 +293,15 @@ jobs:
           probe profile /api/profile 401
 
       - name: Retrieve one matching sanitized heap sample
-        if: inputs.expected_heap_sample_run_id != ''
+        if: inputs.expected_heap_sample_run_id != '' && steps.slot.outputs.audit_date_valid == 'true'
         continue-on-error: true
         shell: bash
         env:
           EXPECTED_HEAP_SAMPLE_RUN_ID: ${{ inputs.expected_heap_sample_run_id }}
+          AUDIT_UTC_DATE: ${{ steps.slot.outputs.audit_utc_date }}
         run: |
           set -Eeuo pipefail
+          printf 'Audit UTC date: %s\n' "$AUDIT_UTC_DATE"
           [[ "$EXPECTED_HEAP_SAMPLE_RUN_ID" =~ ^[0-9]+-[0-9]+$ ]] || {
             echo 'The expected heap sample run ID must contain only digits and one hyphen.' >&2
             exit 78
@@ -313,12 +326,14 @@ jobs:
           printf '%s\n' "$safe_summary" | node scripts/deployment/validate-heap-sample-summary.mjs "$EXPECTED_HEAP_SAMPLE_RUN_ID"
 
       - name: Retrieve restart-safe memory points for the exact diagnostic run
-        if: inputs.expected_heap_sample_run_id != ''
+        if: inputs.expected_heap_sample_run_id != '' && steps.slot.outputs.audit_date_valid == 'true'
         shell: bash
         env:
           EXPECTED_HEAP_SAMPLE_RUN_ID: ${{ inputs.expected_heap_sample_run_id }}
+          AUDIT_UTC_DATE: ${{ steps.slot.outputs.audit_utc_date }}
         run: |
           set -Eeuo pipefail
+          printf 'Audit UTC date: %s\n' "$AUDIT_UTC_DATE"
           [[ "$EXPECTED_HEAP_SAMPLE_RUN_ID" =~ ^[0-9]+-[0-9]+$ ]] || {
             echo 'The expected heap sample run ID must contain only digits and one hyphen.' >&2
             exit 78
@@ -350,7 +365,6 @@ jobs:
         github.event_name == 'workflow_dispatch' ||
         (
           github.event_name == 'schedule' &&
-          startsWith(github.run_started_at, '2026-') &&
           (
             github.event.schedule == '6 19 21 11 *' ||
             github.event.schedule == '6 13 22 11 *' ||
@@ -370,9 +384,11 @@ jobs:
         env:
           AUDIT_RESULT: ${{ needs.inspect.result }}
           AUDIT_SLOT: ${{ needs.inspect.outputs.audit_slot }}
+          INSPECT_AUDIT_UTC_DATE: ${{ needs.inspect.outputs.audit_utc_date }}
+          AUDIT_DATE_VALID: ${{ needs.inspect.outputs.audit_date_valid }}
+          AUDIT_DATE_ERROR: ${{ needs.inspect.outputs.audit_date_error }}
           EVENT_NAME: ${{ github.event_name }}
           EVENT_SCHEDULE: ${{ github.event.schedule }}
-          RUN_STARTED_AT: ${{ github.run_started_at }}
           CONFIRM_READ_ONLY_INSPECTION: ${{ inputs.confirm_read_only_inspection }}
           MANUAL_AUDIT_SLOT: ${{ inputs.manual_audit_slot || 'adhoc' }}
           CONTAINER_STATUS: ${{ needs.inspect.outputs.container_status }}
@@ -402,13 +418,18 @@ jobs:
           AUTH_SESSION_STATUS: ${{ needs.inspect.outputs.auth_session_status }}
           PROFILE_STATUS: ${{ needs.inspect.outputs.profile_status }}
           TLS_VERIFY_RESULT: ${{ needs.inspect.outputs.tls_verify_result }}
-        run: python3 scripts/deployment/render_ovh_stability_report.py
+        run: |
+          set -Eeuo pipefail
+          report_runner_utc_date="$(date -u +%F)"
+          audit_utc_date="${INSPECT_AUDIT_UTC_DATE:-$report_runner_utc_date}"
+          AUDIT_UTC_DATE="$audit_utc_date" \
+            REPORT_RUNNER_UTC_DATE="$report_runner_utc_date" \
+            python3 scripts/deployment/render_ovh_stability_report.py
 
   watchdog:
     if: >-
       github.event_name == 'schedule' &&
       github.ref == 'refs/heads/master' &&
-      startsWith(github.run_started_at, '2026-') &&
       (
         github.event.schedule == '21 19 21 11 *' ||
         github.event.schedule == '21 13 22 11 *' ||
@@ -418,65 +439,32 @@ jobs:
     timeout-minutes: 5
     permissions:
       actions: read
+      contents: read
     steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
       - name: Report missing, failed, or incomplete scheduled audit
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
           EVENT_SCHEDULE: ${{ github.event.schedule }}
-          RUN_STARTED_AT: ${{ github.run_started_at }}
           CURRENT_RUN_ID: ${{ github.run_id }}
         run: |
           set -Eeuo pipefail
-          case "$EVENT_SCHEDULE" in
-            '21 19 21 11 *') slot='2026-11-21-19-06-utc'; target_start='2026-11-21T19:06:00Z'; target_end='2026-11-21T19:21:00Z'; target_date='2026-11-21' ;;
-            '21 13 22 11 *') slot='2026-11-22-13-06-utc'; target_start='2026-11-22T13:06:00Z'; target_end='2026-11-22T13:21:00Z'; target_date='2026-11-22' ;;
-            '21 13 23 11 *') slot='2026-11-23-13-06-utc'; target_start='2026-11-23T13:06:00Z'; target_end='2026-11-23T13:21:00Z'; target_date='2026-11-23' ;;
-            *) echo 'INCOMPLETE: watchdog schedule is not allowlisted.' >> "$GITHUB_STEP_SUMMARY"; exit 1 ;;
-          esac
-          watchdog_delayed=false
-          if [[ ! "$RUN_STARTED_AT" == "$target_date"* ]]; then watchdog_delayed=true; fi
-          if ! runs_json="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/audit-ovh-resources.yml/runs" \
+          RUNNER_UTC_DATE="$(date -u +%F)"
+          if ! runs_json="$(gh api --method GET \
+            "repos/${GITHUB_REPOSITORY}/actions/workflows/audit-ovh-resources.yml/runs" \
             -f event=schedule -f branch=master -F per_page=100 2>/dev/null)"; then
-            echo "INCOMPLETE: could not read Actions run history for $slot." >> "$GITHUB_STEP_SUMMARY"
+            {
+              echo '## Scheduled audit watchdog'
+              echo
+              echo '**INCOMPLETE:** could not read Actions run history for the allowlisted slot.'
+            } >> "$GITHUB_STEP_SUMMARY"
             exit 1
           fi
-          if ! matching_runs="$(jq -c --arg start "$target_start" --arg end "$target_end" --arg current "$CURRENT_RUN_ID" '
-            [.workflow_runs[]
-              | select((.id | tostring) != $current)
-              | select(.created_at >= $start and .created_at < $end)]
-            | sort_by(.created_at)
-          ' <<< "$runs_json")"; then
-            echo "INCOMPLETE: Actions run history could not be parsed for $slot." >> "$GITHUB_STEP_SUMMARY"
-            exit 1
-          fi
-          run_count="$(jq 'length' <<< "$matching_runs")"
-          run_status="$(jq -r '.[0].status // "missing"' <<< "$matching_runs")"
-          run_conclusion="$(jq -r '.[0].conclusion // "pending"' <<< "$matching_runs")"
-          run_url="$(jq -r '.[0].html_url // "unavailable"' <<< "$matching_runs")"
-          {
-            echo "## Scheduled audit watchdog: $slot"
-            echo
-            if [[ "$watchdog_delayed" == true ]]; then
-              echo "**DELAYED:** watchdog started at $RUN_STARTED_AT instead of the expected UTC date $target_date; it is still checking the original audit window."
-            fi
-            if [[ "$run_count" == 0 ]]; then
-              echo '**MISSED:** no scheduled audit run was created within 15 minutes of its UTC slot.'
-              echo 'This watchdog checks only the scheduled event; a manual replacement does not erase the missed-schedule result.'
-              echo 'Run the workflow manually with `confirm_read_only_inspection=true` and select this slot.'
-            elif [[ "$run_count" != 1 ]]; then
-              echo "**INCOMPLETE:** expected one scheduled audit run; found $run_count. Review each run before treating this slot as covered."
-            elif [[ "$run_status" == completed && "$run_conclusion" == success ]]; then
-              echo "**COMPLETE:** scheduled audit succeeded: [$run_url]($run_url)."
-            elif [[ "$run_status" == completed ]]; then
-              echo "**FAILED:** scheduled audit concluded `$run_conclusion`: [$run_url]($run_url)."
-            else
-              echo "**INCOMPLETE:** scheduled audit is `$run_status` with conclusion `$run_conclusion`: [$run_url]($run_url)."
-            fi
-            echo
-            echo 'GitHub scheduled events may be delayed or missed; a missing watchdog run must also be treated as unverified and checked manually.'
-          } >> "$GITHUB_STEP_SUMMARY"
-          if [[ "$run_count" == 1 && "$run_status" == completed && "$run_conclusion" == success ]]; then
-            exit 0
-          fi
-          exit 1
+          printf '%s\n' "$runs_json" \
+            | EVENT_SCHEDULE="$EVENT_SCHEDULE" \
+              RUNNER_UTC_DATE="$RUNNER_UTC_DATE" \
+              CURRENT_RUN_ID="$CURRENT_RUN_ID" \
+              python3 scripts/deployment/ovh_audit_schedule.py \
+            >> "$GITHUB_STEP_SUMMARY"

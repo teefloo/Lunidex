@@ -1,7 +1,7 @@
 import unittest
 from pathlib import Path
 
-from render_ovh_stability_report import build_report
+from render_ovh_stability_report import build_report, normalize_environment
 
 
 def healthy_audit(**overrides):
@@ -9,7 +9,8 @@ def healthy_audit(**overrides):
         "audit_result": "success",
         "event_name": "schedule",
         "event_schedule": "6 13 23 11 *",
-        "run_started_at": "2026-11-23T13:06:45Z",
+        "audit_utc_date": "2026-11-23",
+        "audit_date_valid": "true",
         "manual_audit_slot": "adhoc",
         "confirm_read_only_inspection": "false",
         "container_started_at": "2026-11-21T13:06:14.823655053Z",
@@ -117,20 +118,20 @@ class RenderOvhStabilityReportTests(unittest.TestCase):
         self.assertIn("V8 OOM log classification is missing or unavailable", report)
         self.assertNotIn("**NO-GO reasons:**", report)
 
-    def test_year_or_date_mismatch_is_incomplete(self):
+    def test_wrong_year_or_date_is_incomplete(self):
         report, status = build_report(
-            healthy_audit(run_started_at="2027-11-23T13:06:45Z")
+            healthy_audit(audit_utc_date="2027-11-23", audit_date_valid="false")
         )
 
         self.assertEqual(status, 2)
-        self.assertIn("outside its allowlisted UTC date", report)
+        self.assertIn("expected UTC date 2026-11-23", report)
 
     def test_manual_recovery_slot_is_reported(self):
         report, status = build_report(
             healthy_audit(
                 event_name="workflow_dispatch",
                 event_schedule="",
-                run_started_at="2026-11-22T13:06:45Z",
+                audit_utc_date="2026-11-22",
                 manual_audit_slot="2026-11-22-13-06-utc",
                 confirm_read_only_inspection="true",
             )
@@ -144,14 +145,47 @@ class RenderOvhStabilityReportTests(unittest.TestCase):
             healthy_audit(
                 event_name="workflow_dispatch",
                 event_schedule="",
-                run_started_at="2026-11-24T13:06:45Z",
+                audit_utc_date="2026-11-24",
                 manual_audit_slot="2026-11-22-13-06-utc",
                 confirm_read_only_inspection="true",
             )
         )
 
         self.assertEqual(status, 2)
-        self.assertIn("manual replacement ran outside its allowlisted UTC date", report)
+        self.assertIn("manual recovery expected UTC date 2026-11-22", report)
+
+    def test_missing_audit_date_or_failed_inspection_is_incomplete_never_go(self):
+        report, status = build_report(
+            healthy_audit(audit_utc_date="", audit_result="failure")
+        )
+
+        self.assertEqual(status, 2)
+        self.assertIn("**Verdict: INCOMPLETE**", report)
+        self.assertNotIn("**Verdict: GO**", report)
+        self.assertIn("runner UTC date is missing or invalid", report)
+
+    def test_manual_dispatch_without_confirmation_cannot_be_go(self):
+        report, status = build_report(
+            {
+                "audit_result": "skipped",
+                "event_name": "workflow_dispatch",
+                "audit_utc_date": "2026-11-21",
+                "manual_audit_slot": "adhoc",
+                "confirm_read_only_inspection": "false",
+            }
+        )
+
+        self.assertEqual(status, 2)
+        self.assertIn("**Verdict: INCOMPLETE**", report)
+        self.assertNotIn("**Verdict: GO**", report)
+
+    def test_github_step_environment_names_are_normalized(self):
+        values = {key.upper(): value for key, value in healthy_audit().items()}
+        report, status = build_report(normalize_environment(values))
+
+        self.assertEqual(status, 0)
+        self.assertIn("**Verdict: GO**", report)
+        self.assertIn("Audit UTC date: `2026-11-23`", report)
 
     def test_workflow_keeps_manual_confirmation_and_read_only_permissions(self):
         repo_root = Path(__file__).resolve().parents[2]
@@ -171,13 +205,13 @@ class RenderOvhStabilityReportTests(unittest.TestCase):
         self.assertIn("actions: read", workflow)
         self.assertNotIn("contents: write", workflow)
         self.assertIn("github.event.schedule == '6 13 23 11 *'", workflow)
-        self.assertIn("startsWith(github.run_started_at, '2026-11-23')", workflow)
+        self.assertNotIn("github.run_started_at", workflow)
+        self.assertIn("date -u +%F", workflow)
+        self.assertIn("--method GET", workflow)
+        self.assertIn("audit_utc_date", workflow)
         self.assertIn("Probe essential production HTTPS routes", workflow)
         self.assertIn("Report missing, failed, or incomplete scheduled audit", workflow)
         self.assertIn("actions: read", workflow)
-        watchdog = workflow.split("  watchdog:", maxsplit=1)[1]
-        self.assertIn("startsWith(github.run_started_at, '2026-')", watchdog)
-        self.assertNotIn("startsWith(github.run_started_at, '2026-11-21')", watchdog)
 
 
 if __name__ == "__main__":
