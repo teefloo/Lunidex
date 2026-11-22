@@ -131,7 +131,35 @@ class RenderOvhStabilityReportTests(unittest.TestCase):
 
         self.assertEqual(status, 1)
         self.assertIn("**OVH memory verdict: NO-GO**", report)
-        self.assertIn("cgroup current increase exceeds the measured inactive_file/cache increase", report)
+        self.assertIn("cgroup outside inactive_file exceeds 125% of the T+1 reference", report)
+
+    def test_t48_remainder_over_limit_is_no_go_even_when_total_is_under_limit(self):
+        report, status = build_report(
+            healthy_audit(
+                cgroup_current_bytes="900000000",
+                cgroup_anon_bytes="500000000",
+                cgroup_file_bytes="350000000",
+                cgroup_inactive_file_bytes="100000000",
+                node_rss_kib="625580",
+            )
+        )
+
+        self.assertLess(900_000_000, int(754_720_768 * 1.25))
+        self.assertGreater(800_000_000, int((754_720_768 - 167_886_848) * 1.25))
+        self.assertEqual(status, 1)
+        self.assertIn("**OVH memory verdict: NO-GO**", report)
+        self.assertIn("cgroup outside inactive_file exceeds 125% of the T+1 reference", report)
+        self.assertIn("this cgroup remainder is not a heap measurement", report)
+
+    def test_t48_invalid_current_or_cache_metrics_are_incomplete_not_go(self):
+        report, status = build_report(
+            healthy_audit(cgroup_current_bytes="800000000", cgroup_inactive_file_bytes="900000000")
+        )
+
+        self.assertEqual(status, 2)
+        self.assertIn("**OVH memory verdict: INCOMPLETE**", report)
+        self.assertIn("cgroup current and inactive_file are missing or inconsistent", report)
+        self.assertNotIn("**Verdict: GO**", report)
 
     def test_oom_signature_is_no_go(self):
         report, status = build_report(

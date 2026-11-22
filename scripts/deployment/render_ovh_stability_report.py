@@ -122,12 +122,17 @@ def _missing(values: Mapping[str, str], key: str) -> bool:
     return values.get(key, "").strip().lower() in {"", "unavailable"}
 
 
-def show_cgroup_without_inactive_file(values: Mapping[str, str]) -> str:
+def cgroup_without_inactive_file(values: Mapping[str, str]) -> int | None:
     current = _numeric(values, "cgroup_current_bytes", integer=True)
     inactive_file = _numeric(values, "cgroup_inactive_file_bytes", integer=True)
     if current is None or inactive_file is None or current < inactive_file:
-        return "unavailable"
-    return str(current - inactive_file)
+        return None
+    return current - inactive_file
+
+
+def show_cgroup_without_inactive_file(values: Mapping[str, str]) -> str:
+    value = cgroup_without_inactive_file(values)
+    return str(value) if value is not None else "unavailable"
 
 
 def _slot(values: Mapping[str, str]) -> tuple[str, str | None]:
@@ -227,29 +232,26 @@ def build_report(values: Mapping[str, str]) -> tuple[str, int]:
 
     is_final = slot == "2026-11-23-13-06-utc"
     rss = _numeric(values, "node_rss_kib", integer=True)
-    cgroup_current = _numeric(values, "cgroup_current_bytes", integer=True)
     cgroup_anon = _numeric(values, "cgroup_anon_bytes", integer=True)
-    cgroup_inactive_file = _numeric(values, "cgroup_inactive_file_bytes", integer=True)
     if is_final:
         # A 25% ceiling flags sustained process/anonymous-memory growth even without OOMs.
         if rss is not None and rss > int(REFERENCE["node_rss_kib"] * 1.25):
             memory_reasons.append("T+48 Node RSS exceeds 125% of the T+1 reference")
         if cgroup_anon is not None and cgroup_anon > int(REFERENCE["cgroup_anon_bytes"] * 1.25):
             memory_reasons.append("T+48 cgroup anonymous memory exceeds 125% of the T+1 reference")
-        if cgroup_current is not None and cgroup_current > int(REFERENCE["cgroup_current_bytes"] * 1.25):
-            if cgroup_inactive_file is None:
-                memory_incomplete.append("T+48 cgroup increase cannot be compared with inactive_file cache growth")
-            else:
-                cgroup_growth = cgroup_current - int(REFERENCE["cgroup_current_bytes"])
-                inactive_file_growth = max(
-                    0,
-                    cgroup_inactive_file - int(REFERENCE["cgroup_inactive_file_bytes"]),
-                )
-                if cgroup_growth > inactive_file_growth:
-                    memory_reasons.append(
-                        "T+48 cgroup current increase exceeds the measured inactive_file/cache increase; "
-                        "the remaining increase is unexplained"
-                    )
+        cgroup_excluding_inactive_file = cgroup_without_inactive_file(values)
+        if cgroup_excluding_inactive_file is None:
+            memory_incomplete.append(
+                "T+48 cgroup current and inactive_file are missing or inconsistent; "
+                "the cgroup remainder cannot be compared"
+            )
+        elif cgroup_excluding_inactive_file > int(
+            (REFERENCE["cgroup_current_bytes"] - REFERENCE["cgroup_inactive_file_bytes"]) * 1.25
+        ):
+            memory_reasons.append(
+                "T+48 cgroup outside inactive_file exceeds 125% of the T+1 reference; "
+                "this cgroup remainder is not a heap measurement"
+            )
 
     def classify(reasons: list[str], incomplete: list[str]) -> str:
         if reasons:
@@ -365,7 +367,7 @@ def build_report(values: Mapping[str, str]) -> tuple[str, int]:
         lines.extend(
             [
                 "",
-                "T+48 memory gate: OVH memory GO requires Node RSS and cgroup anonymous memory each to remain at or below 125% of the T+1 reference, zero cgroup max/OOM events, and healthy Docker status. If cgroup current rises above 125%, its increase must be accounted for by measured inactive_file/cache growth; otherwise the memory verdict is NO-GO. Neon Auth and HTTPS are reported independently.",
+                "T+48 memory gate: OVH memory GO requires Node RSS, cgroup anonymous memory, and cgroup current outside inactive_file each to remain at or below 125% of their T+1 references, zero cgroup max/OOM events, and healthy Docker status. Missing or inconsistent cgroup/current cache metrics make memory INCOMPLETE. The cgroup remainder is not a heap measurement. Neon Auth and HTTPS are reported independently.",
                 "**Temporary schedule cleanup required:** remove the 2026 audit and watchdog cron entries in a follow-up PR after this report. No write permission is granted to this workflow.",
             ]
         )
