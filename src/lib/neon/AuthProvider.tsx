@@ -134,33 +134,9 @@ type ResetPasswordInput = { newPassword: string; token: string };
 const AUTH_ACTION_TIMEOUT_MS = 15_000;
 const AUTH_SESSION_TIMEOUT_MS = 5_000;
 const AUTH_SDK_TIMEOUT_MS = 8_000;
-// The server revalidates every protected request independently. A 15-minute
-// client refresh leaves Neon’s default 5-minute scale-to-zero window between
-// idle refreshes while focus/visibility and explicit auth changes stay eager.
-const AUTH_SESSION_REFRESH_INTERVAL_MS = 15 * 60_000;
+const AUTH_SESSION_REFRESH_INTERVAL_MS = 5 * 60_000;
 const AUTH_SESSION_RETRY_INITIAL_MS = 1_000;
 const AUTH_SESSION_RETRY_MAX_MS = 30_000;
-const AUTH_SESSION_QUOTA_RETRY_INITIAL_MS = 15 * 60_000;
-const AUTH_SESSION_QUOTA_RETRY_MAX_MS = 6 * 60 * 60_000;
-
-class AuthSessionHttpError extends Error {
-  constructor(
-    message: string,
-    readonly status: number,
-    readonly code: string | null,
-  ) {
-    super(message);
-    this.name = 'AuthSessionHttpError';
-  }
-}
-
-function authErrorCode(error: unknown, depth = 0): string | null {
-  if (depth > 3 || typeof error !== 'object' || error === null) return null;
-  const candidate = error as { code?: unknown; cause?: unknown; error?: unknown };
-  if (typeof candidate.code === 'string') return candidate.code;
-  return authErrorCode(candidate.cause, depth + 1)
-    ?? authErrorCode(candidate.error, depth + 1);
-}
 
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
   return new Promise<T>((resolve, reject) => {
@@ -241,7 +217,7 @@ async function requestAuthSession(): Promise<{ data: SessionData }> {
     const message = normalizeError(result)?.message
       ?? response.statusText
       ?? 'Authentication session request failed.';
-    throw new AuthSessionHttpError(message, response.status, authErrorCode(result));
+    throw new Error(message);
   }
 
   return { data: result as SessionData };
@@ -548,19 +524,8 @@ function useClientSession(): { data: SessionData; isPending: boolean; status: 'c
     let refreshPromise: Promise<void> | null = null;
     let retryTimer: number | null = null;
     let retryDelayMs = AUTH_SESSION_RETRY_INITIAL_MS;
-    let quotaRetryDelayMs = AUTH_SESSION_QUOTA_RETRY_INITIAL_MS;
-    let quotaCooldownUntil = 0;
 
-    const refresh = (showPending = false, force = false): Promise<void> => {
-      if (!force && quotaCooldownUntil > Date.now()) return Promise.resolve();
-      if (force) {
-        quotaCooldownUntil = 0;
-        quotaRetryDelayMs = AUTH_SESSION_QUOTA_RETRY_INITIAL_MS;
-        if (retryTimer !== null) {
-          window.clearTimeout(retryTimer);
-          retryTimer = null;
-        }
-      }
+    const refresh = (showPending = false): Promise<void> => {
       if (showPending) setState((current) => current.data === null
         ? { ...current, isPending: true, status: 'checking' }
         : current);
@@ -572,19 +537,17 @@ function useClientSession(): { data: SessionData; isPending: boolean; status: 'c
           if (active) {
             setState({ data: result.data, isPending: false, status: 'resolved' });
             retryDelayMs = AUTH_SESSION_RETRY_INITIAL_MS;
-            quotaRetryDelayMs = AUTH_SESSION_QUOTA_RETRY_INITIAL_MS;
-            quotaCooldownUntil = 0;
             if (retryTimer !== null) {
               window.clearTimeout(retryTimer);
               retryTimer = null;
             }
           }
-        } catch (error) {
+        } catch {
           if (active) {
             setState((current) => current.data === null
               ? { data: null, isPending: false, status: 'unavailable' }
               : { data: current.data, isPending: false, status: 'resolved' });
-            scheduleRetry(isQuotaExceededError(error));
+            scheduleRetry();
           }
         } finally {
           refreshPromise = null;
@@ -594,20 +557,12 @@ function useClientSession(): { data: SessionData; isPending: boolean; status: 'c
       return refreshPromise;
     };
 
-    const scheduleRetry = (quotaExceeded = false) => {
+    const scheduleRetry = () => {
       if (retryTimer !== null) return;
-      const delay = quotaExceeded ? quotaRetryDelayMs : retryDelayMs;
-      if (quotaExceeded) {
-        quotaRetryDelayMs = Math.min(quotaRetryDelayMs * 2, AUTH_SESSION_QUOTA_RETRY_MAX_MS);
-        retryDelayMs = AUTH_SESSION_RETRY_INITIAL_MS;
-        quotaCooldownUntil = Date.now() + delay;
-      } else {
-        quotaCooldownUntil = 0;
-        retryDelayMs = Math.min(retryDelayMs * 2, AUTH_SESSION_RETRY_MAX_MS);
-      }
+      const delay = retryDelayMs;
+      retryDelayMs = Math.min(retryDelayMs * 2, AUTH_SESSION_RETRY_MAX_MS);
       retryTimer = window.setTimeout(() => {
         retryTimer = null;
-        quotaCooldownUntil = 0;
         void refresh();
       }, delay);
     };
@@ -616,7 +571,7 @@ function useClientSession(): { data: SessionData; isPending: boolean; status: 'c
     const refreshWhenVisible = () => {
       if (document.visibilityState === 'visible') void refresh();
     };
-    const refreshOnAuthChange = () => void refresh(true, true);
+    const refreshOnAuthChange = () => void refresh(true);
     window.addEventListener('focus', refreshWhenVisible);
     document.addEventListener('visibilitychange', refreshWhenVisible);
     window.addEventListener('primedex:auth-changed', refreshOnAuthChange);

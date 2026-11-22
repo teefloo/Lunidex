@@ -43,7 +43,6 @@ const signedInResponse = () => response(200, {
 describe('AuthProvider session refresh', () => {
   let container: HTMLDivElement;
   let root: Root;
-  let fakeTimers = false;
 
   beforeEach(() => {
     (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -56,8 +55,6 @@ describe('AuthProvider session refresh', () => {
   afterEach(() => {
     act(() => root.unmount());
     container.remove();
-    if (fakeTimers) vi.useRealTimers();
-    fakeTimers = false;
     vi.unstubAllGlobals();
     vi.clearAllMocks();
   });
@@ -65,75 +62,9 @@ describe('AuthProvider session refresh', () => {
   async function renderProvider() {
     await act(async () => {
       root.render(createElement(AuthProvider, null, createElement(AuthProbe)));
-      if (fakeTimers) await vi.advanceTimersByTimeAsync(0);
-      else await new Promise((resolve) => setTimeout(resolve, 0));
-    });
-  }
-
-  it('backs off Neon quota failures and suppresses automatic refreshes until recovery is due', async () => {
-    fakeTimers = true;
-    vi.useFakeTimers();
-    const fetchMock = vi.fn()
-      .mockResolvedValueOnce(response(402, { code: 'GENERIC_QUOTA_EXCEEDED' }))
-      .mockResolvedValueOnce(signedInResponse());
-    vi.stubGlobal('fetch', fetchMock);
-
-    await renderProvider();
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(container.querySelector('output')?.dataset.sessionStatus).toBe('unavailable');
-
-    await act(async () => {
-      window.dispatchEvent(new Event('focus'));
-      document.dispatchEvent(new Event('visibilitychange'));
-      await vi.advanceTimersByTimeAsync(15 * 60_000 - 1);
-    });
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(1);
-      await Promise.resolve();
-    });
-    expect(fetchMock).toHaveBeenCalledTimes(2);
-    expect(container.querySelector('output')?.dataset.sessionStatus).toBe('resolved');
-    expect(container.querySelector('output')?.dataset.user).toBe('test-user');
-  });
-
-  it('allows an explicit retry to bypass a quota cooldown', async () => {
-    const fetchMock = vi.fn()
-      .mockResolvedValueOnce(response(402, { code: 'GENERIC_QUOTA_EXCEEDED' }))
-      .mockResolvedValueOnce(signedInResponse());
-    vi.stubGlobal('fetch', fetchMock);
-
-    await renderProvider();
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    await act(async () => {
-      container.querySelector('button')?.click();
       await new Promise((resolve) => setTimeout(resolve, 0));
     });
-
-    expect(fetchMock).toHaveBeenCalledTimes(2);
-    expect(container.querySelector('output')?.dataset.sessionStatus).toBe('resolved');
-  });
-
-  it('keeps a short retry for transient non-quota failures', async () => {
-    fakeTimers = true;
-    vi.useFakeTimers();
-    const fetchMock = vi.fn()
-      .mockResolvedValueOnce(response(502, { error: 'Temporary auth service outage' }))
-      .mockResolvedValueOnce(signedInResponse());
-    vi.stubGlobal('fetch', fetchMock);
-
-    await renderProvider();
-    await act(async () => { await vi.advanceTimersByTimeAsync(999); });
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(1);
-      await Promise.resolve();
-    });
-    expect(fetchMock).toHaveBeenCalledTimes(2);
-    expect(container.querySelector('output')?.dataset.user).toBe('test-user');
-  });
+  }
 
   it('keeps an authenticated user when a refresh temporarily fails', async () => {
     const fetchMock = vi.fn()

@@ -30,12 +30,13 @@ REFERENCE = {
     "node_cpu_pct": 42.9,
     "root_fs_free_bytes": 17_762_816_000,
 }
-PUBLIC_HTTPS_EXPECTED = {
+HTTPS_EXPECTED = {
     "healthz_status": "200",
     "home_status": "200",
     "tcg_status": "200",
     "manifest_status": "200",
     "service_worker_status": "200",
+    "auth_session_status": "200",
     "profile_status": "401",
     "tls_verify_result": "0",
 }
@@ -86,77 +87,67 @@ def build_report(values: Mapping[str, str]) -> tuple[str, int]:
     slot, slot_error = _slot(values)
     audit_result = values.get("audit_result", "unknown")
     confirmation = values.get("confirm_read_only_inspection", "false").lower() == "true"
-    memory_reasons: list[str] = []
-    memory_incomplete: list[str] = []
-    auth_reasons: list[str] = []
-    auth_incomplete: list[str] = []
-    https_reasons: list[str] = []
-    https_incomplete: list[str] = []
-    overall_reasons: list[str] = []
-    overall_incomplete: list[str] = []
+    reasons: list[str] = []
+    incomplete: list[str] = []
 
     if slot_error:
-        overall_incomplete.append(slot_error)
+        incomplete.append(slot_error)
     if audit_result != "success":
         if audit_result == "skipped" and values.get("event_name") == "workflow_dispatch" and not confirmation:
-            overall_incomplete.append("manual dispatch omitted the required read-only confirmation")
+            incomplete.append("manual dispatch omitted the required read-only confirmation")
         elif audit_result == "skipped":
-            overall_incomplete.append("inspection job was skipped; no audit result exists")
+            incomplete.append("inspection job was skipped; no audit result exists")
         elif audit_result == "failure":
-            overall_incomplete.append("inspection job failed before all audit steps completed")
+            incomplete.append("inspection job failed before all audit steps completed")
         else:
-            overall_incomplete.append(f"inspection job result is {audit_result}")
+            incomplete.append(f"inspection job result is {audit_result}")
 
     for key in REQUIRED_NUMERIC:
         if _numeric(values, key, integer=key not in {"docker_cpu_pct", "node_cpu_pct"}) is None:
-            memory_incomplete.append(f"{key} is missing or unavailable")
+            incomplete.append(f"{key} is missing or unavailable")
 
     started_at = values.get("container_started_at", "")
     if not started_at:
-        memory_incomplete.append("container start time is missing")
+        incomplete.append("container start time is missing")
     elif started_at != REFERENCE["container_started_at"]:
-        memory_reasons.append("container start time differs from the T+1 reference")
+        reasons.append("container start time differs from the T+1 reference")
 
     if _missing(values, "container_status"):
-        memory_incomplete.append("container status is missing")
+        incomplete.append("container status is missing")
     elif values.get("container_status") != "running":
-        memory_reasons.append("production container is not running")
+        reasons.append("production container is not running")
     if _missing(values, "container_health"):
-        memory_incomplete.append("Docker health status is missing")
+        incomplete.append("Docker health status is missing")
     elif values.get("container_health") != "healthy":
-        memory_reasons.append("Docker health is not healthy")
+        reasons.append("Docker health is not healthy")
     if _numeric(values, "restart_count", integer=True) != 0:
         if _numeric(values, "restart_count", integer=True) is not None:
-            memory_reasons.append("container has restarted since deployment")
+            reasons.append("container has restarted since deployment")
     if values.get("container_oom_killed", "").lower() not in {"true", "false"}:
-        memory_incomplete.append("Docker OOM-killed state is missing")
+        incomplete.append("Docker OOM-killed state is missing")
     elif values.get("container_oom_killed", "").lower() == "true":
-        memory_reasons.append("Docker reports the production container was OOM-killed")
+        reasons.append("Docker reports the production container was OOM-killed")
     log_capture_available = values.get("log_capture_available", "").lower() == "true"
     if not log_capture_available:
-        memory_incomplete.append("recent production logs could not be captured; V8 and Node error classifications are unverified")
+        incomplete.append("recent production logs could not be captured; V8 and Node error classifications are unverified")
     else:
         if values.get("v8_heap_oom", "").lower() not in {"true", "false"}:
-            memory_incomplete.append("V8 OOM log classification is missing or unavailable")
+            incomplete.append("V8 OOM log classification is missing or unavailable")
         elif values.get("v8_heap_oom", "").lower() == "true":
-            memory_reasons.append("a V8 heap OOM signature was found in recent logs")
+            reasons.append("a V8 heap OOM signature was found in recent logs")
         if values.get("node_fatal", "").lower() not in {"true", "false"}:
-            memory_incomplete.append("Node fatal log classification is missing or unavailable")
+            incomplete.append("Node fatal log classification is missing or unavailable")
         elif values.get("node_fatal", "").lower() == "true":
-            memory_reasons.append("a Node fatal error signature was found in recent logs")
+            reasons.append("a Node fatal error signature was found in recent logs")
     for key in ("cgroup_oom", "cgroup_oom_kill", "cgroup_oom_group_kill"):
         value = _numeric(values, key, integer=True)
         if value is not None and value != 0:
-            memory_reasons.append(f"{key} is {int(value)}")
-    for key, expected in PUBLIC_HTTPS_EXPECTED.items():
+            reasons.append(f"{key} is {int(value)}")
+    for key, expected in HTTPS_EXPECTED.items():
         if _missing(values, key):
-            https_incomplete.append(f"HTTPS probe {key} is missing")
+            incomplete.append(f"HTTPS probe {key} is missing")
         elif values.get(key) != expected:
-            https_reasons.append(f"HTTPS probe {key} returned {values.get(key, 'missing')} (expected {expected})")
-    if _missing(values, "auth_session_status"):
-        auth_incomplete.append("Neon Auth session probe is missing")
-    elif values.get("auth_session_status") != "200":
-        auth_reasons.append(f"Neon Auth session endpoint returned HTTP {values.get('auth_session_status')}")
+            reasons.append(f"HTTPS probe {key} returned {values.get(key, 'missing')} (expected {expected})")
 
     is_final = slot == "2026-11-23-13-06-utc"
     rss = _numeric(values, "node_rss_kib", integer=True)
@@ -164,35 +155,16 @@ def build_report(values: Mapping[str, str]) -> tuple[str, int]:
     if is_final:
         # A 25% ceiling gives room for normal load variance while flagging sustained growth.
         if rss is not None and rss > int(REFERENCE["node_rss_kib"] * 1.25):
-            memory_reasons.append("T+48 Node RSS exceeds 125% of the T+1 reference")
+            reasons.append("T+48 Node RSS exceeds 125% of the T+1 reference")
         if cgroup_current is not None and cgroup_current > int(REFERENCE["cgroup_current_bytes"] * 1.25):
-            memory_reasons.append("T+48 cgroup memory exceeds 125% of the T+1 reference")
+            reasons.append("T+48 cgroup memory exceeds 125% of the T+1 reference")
 
-    def classify(reasons: list[str], incomplete: list[str]) -> str:
-        if reasons:
-            return "NO-GO"
-        if incomplete:
-            return "INCOMPLETE"
-        return "GO"
-
-    memory_verdict = classify(memory_reasons, memory_incomplete)
-    auth_verdict = classify(auth_reasons, auth_incomplete)
-    https_verdict = classify(https_reasons, https_incomplete)
-    if memory_reasons:
-        overall_reasons.extend(f"OVH memory: {reason}" for reason in memory_reasons)
-    if auth_reasons:
-        overall_reasons.extend(f"Neon Auth: {reason}" for reason in auth_reasons)
-    if https_reasons:
-        overall_reasons.extend(f"HTTPS: {reason}" for reason in https_reasons)
-    if memory_incomplete:
-        overall_incomplete.extend(f"OVH memory: {reason}" for reason in memory_incomplete)
-    if auth_incomplete:
-        overall_incomplete.extend(f"Neon Auth: {reason}" for reason in auth_incomplete)
-    if https_incomplete:
-        overall_incomplete.extend(f"HTTPS: {reason}" for reason in https_incomplete)
-
-    verdict = classify(overall_reasons, overall_incomplete)
-    exit_code = {"GO": 0, "NO-GO": 1, "INCOMPLETE": 2}[verdict]
+    if reasons:
+        verdict, exit_code = "NO-GO", 1
+    elif incomplete:
+        verdict, exit_code = "INCOMPLETE", 2
+    else:
+        verdict, exit_code = "GO", 0
 
     def show(key: str) -> str:
         return values.get(key, "unavailable") or "unavailable"
@@ -201,9 +173,6 @@ def build_report(values: Mapping[str, str]) -> tuple[str, int]:
         f"## OVH stability audit: {slot}",
         "",
         f"**Verdict: {verdict}**",
-        f"**OVH memory verdict: {memory_verdict}**",
-        f"**Neon Auth verdict: {auth_verdict}**",
-        f"**Public HTTPS verdict: {https_verdict}**",
         f"Audit job: `{audit_result}`. Reference: T+1 run [{REFERENCE_RUN_ID}](https://github.com/teefloo/Lunidex/actions/runs/{REFERENCE_RUN_ID}) captured {REFERENCE_CAPTURED_AT}.",
         f"Audit UTC date: `{values.get('audit_utc_date', 'unavailable') or 'unavailable'}`.",
         "",
@@ -228,27 +197,15 @@ def build_report(values: Mapping[str, str]) -> tuple[str, int]:
     ]
     if values.get("caddy_access_logs_available", "").lower() != "true":
         lines.extend(["**Observability note:** Caddy access logs are unavailable; this audit cannot calculate an HTTP 5xx rate.", ""])
-    if memory_incomplete:
-        lines.append("**OVH memory incomplete:** " + "; ".join(memory_incomplete) + ".")
-    if memory_reasons:
-        lines.append("**OVH memory NO-GO reasons:** " + "; ".join(memory_reasons) + ".")
-    if auth_incomplete:
-        lines.append("**Neon Auth incomplete:** " + "; ".join(auth_incomplete) + ".")
-    if auth_reasons:
-        lines.append("**Neon Auth NO-GO reasons:** " + "; ".join(auth_reasons) + ".")
-    if https_incomplete:
-        lines.append("**HTTPS incomplete:** " + "; ".join(https_incomplete) + ".")
-    if https_reasons:
-        lines.append("**HTTPS NO-GO reasons:** " + "; ".join(https_reasons) + ".")
-    if overall_incomplete:
-        lines.append("**Overall incomplete:** " + "; ".join(overall_incomplete) + ".")
-    if overall_reasons:
-        lines.append("**Overall NO-GO reasons:** " + "; ".join(overall_reasons) + ".")
+    if incomplete:
+        lines.append("**Incomplete:** " + "; ".join(incomplete) + ".")
+    if reasons:
+        lines.append("**NO-GO reasons:** " + "; ".join(reasons) + ".")
     if is_final:
         lines.extend(
             [
                 "",
-                "T+48 memory gate: OVH memory GO requires Node RSS and cgroup current memory each to remain at or below 125% of the T+1 reference, in addition to zero restarts/OOMs and healthy Docker status. Neon Auth and HTTPS are reported independently.",
+                "T+48 memory gate: GO requires Node RSS and cgroup current memory each to remain at or below 125% of the T+1 reference, in addition to zero restarts/OOMs and healthy HTTPS probes.",
                 "**Temporary schedule cleanup required:** remove the 2026 audit and watchdog cron entries in a follow-up PR after this report. No write permission is granted to this workflow.",
             ]
         )
