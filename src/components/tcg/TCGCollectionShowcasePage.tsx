@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
@@ -29,18 +29,9 @@ export function TCGCollectionShowcasePage({ token }: TCGCollectionShowcasePagePr
     queryKey: ['tcg', 'showcase', token, page],
     queryFn: ({ signal }) => getTCGShowcasePage(token, page, signal),
     staleTime: 0,
-    refetchInterval: 30_000,
     refetchOnWindowFocus: true,
     retry: false,
   });
-
-  useEffect(() => {
-    const refreshOnFocus = () => { if (document.visibilityState === 'visible') void refetch(); };
-    document.addEventListener('visibilitychange', refreshOnFocus);
-    return () => {
-      document.removeEventListener('visibilitychange', refreshOnFocus);
-    };
-  }, [refetch]);
 
   const hasNoCards = result?.totalCards === 0;
   const failed = isError && error instanceof Error && error.message.includes('404');

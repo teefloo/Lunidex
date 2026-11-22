@@ -124,6 +124,13 @@ function mapUser(user: {
 type ConnectedAuthClient = NonNullable<ReturnType<typeof getNeonAuthClient>>;
 type SessionData = Awaited<ReturnType<ConnectedAuthClient['getSession']>>['data'];
 
+function getSessionExpiryTime(data: SessionData): number | null {
+  const expiresAt = data?.session?.expiresAt;
+  if (!expiresAt) return null;
+  const timestamp = new Date(expiresAt).getTime();
+  return Number.isFinite(timestamp) ? timestamp : null;
+}
+
 type AuthActionResponse = { error?: unknown; data?: unknown };
 type SignInInput = { email: string; password: string; callbackURL?: string };
 type SignUpInput = SignInInput & { name: string };
@@ -134,9 +141,12 @@ type ResetPasswordInput = { newPassword: string; token: string };
 const AUTH_ACTION_TIMEOUT_MS = 15_000;
 const AUTH_SESSION_TIMEOUT_MS = 5_000;
 const AUTH_SDK_TIMEOUT_MS = 8_000;
-const AUTH_SESSION_REFRESH_INTERVAL_MS = 5 * 60_000;
 const AUTH_SESSION_RETRY_INITIAL_MS = 1_000;
 const AUTH_SESSION_RETRY_MAX_MS = 30_000;
+const AUTH_SESSION_RETRY_MAX_ATTEMPTS = 3;
+const AUTH_SESSION_REFRESH_BEFORE_EXPIRY_MS = 60_000;
+const AUTH_SESSION_EVENT_DEDUPE_MS = 250;
+const AUTH_SESSION_MAX_TIMER_MS = 2_147_000_000;
 
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
   return new Promise<T>((resolve, reject) => {
@@ -523,9 +533,60 @@ function useClientSession(): { data: SessionData; isPending: boolean; status: 'c
     let active = true;
     let refreshPromise: Promise<void> | null = null;
     let retryTimer: number | null = null;
+    let expiryTimer: number | null = null;
     let retryDelayMs = AUTH_SESSION_RETRY_INITIAL_MS;
+    let retryAttempts = 0;
+    let lastForegroundEventAt = 0;
+    let latestSession: SessionData = null;
+    let expiryRefreshAttemptedFor: number | null = null;
 
-    const refresh = (showPending = false): Promise<void> => {
+    const clearRetryTimer = () => {
+      if (retryTimer === null) return;
+      window.clearTimeout(retryTimer);
+      retryTimer = null;
+    };
+
+    const clearExpiryTimer = () => {
+      if (expiryTimer === null) return;
+      window.clearTimeout(expiryTimer);
+      expiryTimer = null;
+    };
+
+    const scheduleSessionExpiryRefresh = (data: SessionData) => {
+      clearExpiryTimer();
+      const expiresAt = getSessionExpiryTime(data);
+      if (expiresAt === null) {
+        expiryRefreshAttemptedFor = null;
+        return;
+      }
+      if (document.visibilityState !== 'visible' || expiresAt <= Date.now()) return;
+
+      const refreshAlreadyAttempted = expiryRefreshAttemptedFor === expiresAt;
+      const targetTime = refreshAlreadyAttempted
+        ? expiresAt
+        : Math.max(Date.now(), expiresAt - AUTH_SESSION_REFRESH_BEFORE_EXPIRY_MS);
+      const delay = Math.min(Math.max(0, targetTime - Date.now()), AUTH_SESSION_MAX_TIMER_MS);
+
+      expiryTimer = window.setTimeout(() => {
+        expiryTimer = null;
+        if (!active || document.visibilityState !== 'visible') return;
+        if (Date.now() < targetTime) {
+          scheduleSessionExpiryRefresh(data);
+          return;
+        }
+        if (!refreshAlreadyAttempted) expiryRefreshAttemptedFor = expiresAt;
+        void refresh(false, true);
+      }, delay);
+    };
+
+    const refresh = (showPending = false, resetRetryBudget = false): Promise<void> => {
+      if (!active || document.visibilityState !== 'visible') return Promise.resolve();
+
+      if (resetRetryBudget) {
+        retryAttempts = 0;
+        retryDelayMs = AUTH_SESSION_RETRY_INITIAL_MS;
+        clearRetryTimer();
+      }
       if (showPending) setState((current) => current.data === null
         ? { ...current, isPending: true, status: 'checking' }
         : current);
@@ -535,18 +596,19 @@ function useClientSession(): { data: SessionData; isPending: boolean; status: 'c
         try {
           const result = await requestAuthSession();
           if (active) {
+            latestSession = result.data;
             setState({ data: result.data, isPending: false, status: 'resolved' });
+            retryAttempts = 0;
             retryDelayMs = AUTH_SESSION_RETRY_INITIAL_MS;
-            if (retryTimer !== null) {
-              window.clearTimeout(retryTimer);
-              retryTimer = null;
-            }
+            clearRetryTimer();
+            scheduleSessionExpiryRefresh(result.data);
           }
         } catch {
           if (active) {
             setState((current) => current.data === null
               ? { data: null, isPending: false, status: 'unavailable' }
               : { data: current.data, isPending: false, status: 'resolved' });
+            scheduleSessionExpiryRefresh(latestSession);
             scheduleRetry();
           }
         } finally {
@@ -558,31 +620,52 @@ function useClientSession(): { data: SessionData; isPending: boolean; status: 'c
     };
 
     const scheduleRetry = () => {
-      if (retryTimer !== null) return;
+      if (retryTimer !== null || retryAttempts >= AUTH_SESSION_RETRY_MAX_ATTEMPTS
+        || !active || document.visibilityState !== 'visible') return;
       const delay = retryDelayMs;
+      retryAttempts += 1;
       retryDelayMs = Math.min(retryDelayMs * 2, AUTH_SESSION_RETRY_MAX_MS);
       retryTimer = window.setTimeout(() => {
         retryTimer = null;
-        void refresh();
+        if (active && document.visibilityState === 'visible') void refresh();
       }, delay);
     };
 
-    void refresh();
     const refreshWhenVisible = () => {
-      if (document.visibilityState === 'visible') void refresh();
+      if (document.visibilityState !== 'visible') return;
+      const now = Date.now();
+      if (lastForegroundEventAt > 0 && now - lastForegroundEventAt < AUTH_SESSION_EVENT_DEDUPE_MS) return;
+      lastForegroundEventAt = now;
+      void refresh(false, true);
     };
-    const refreshOnAuthChange = () => void refresh(true);
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        refreshWhenVisible();
+        return;
+      }
+      clearRetryTimer();
+      clearExpiryTimer();
+    };
+
+    const refreshOnAuthChange = () => {
+      if (document.visibilityState === 'visible') lastForegroundEventAt = Date.now();
+      void refresh(true, true);
+    };
+
+    if (document.visibilityState === 'visible') void refresh(false, true);
     window.addEventListener('focus', refreshWhenVisible);
-    document.addEventListener('visibilitychange', refreshWhenVisible);
+    window.addEventListener('online', refreshWhenVisible);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('primedex:auth-changed', refreshOnAuthChange);
-    const intervalId = window.setInterval(refreshWhenVisible, AUTH_SESSION_REFRESH_INTERVAL_MS);
     return () => {
       active = false;
       window.removeEventListener('focus', refreshWhenVisible);
-      document.removeEventListener('visibilitychange', refreshWhenVisible);
+      window.removeEventListener('online', refreshWhenVisible);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('primedex:auth-changed', refreshOnAuthChange);
-      window.clearInterval(intervalId);
-      if (retryTimer !== null) window.clearTimeout(retryTimer);
+      clearRetryTimer();
+      clearExpiryTimer();
     };
   }, []);
 
