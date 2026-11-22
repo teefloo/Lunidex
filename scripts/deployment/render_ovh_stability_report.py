@@ -22,6 +22,12 @@ REFERENCE = {
     "node_fatal": False,
     "cgroup_current_bytes": 754_720_768,
     "cgroup_peak_bytes": 778_629_120,
+    "cgroup_anon_bytes": 567_111_680,
+    "cgroup_file_bytes": 168_394_752,
+    "cgroup_inactive_file_bytes": 167_886_848,
+    "cgroup_slab_bytes": 6_031_056,
+    "cgroup_kernel_bytes": 19_214_336,
+    "cgroup_event_max": 0,
     "cgroup_oom": 0,
     "cgroup_oom_kill": 0,
     "cgroup_oom_group_kill": 0,
@@ -30,6 +36,48 @@ REFERENCE = {
     "node_cpu_pct": 42.9,
     "root_fs_free_bytes": 17_762_816_000,
 }
+MEMORY_HISTORY = (
+    {
+        "label": "T+1",
+        "captured_at": "2026-11-21T14:06:51Z",
+        "run_id": "44912208340",
+        "node_rss_kib": 625_580,
+        "cgroup_current_bytes": 754_720_768,
+        "cgroup_anon_bytes": 567_111_680,
+        "cgroup_file_bytes": 168_394_752,
+        "cgroup_inactive_file_bytes": 167_886_848,
+    },
+    {
+        "label": "T+9",
+        "captured_at": "2026-11-21T22:13:31Z",
+        "run_id": "44955592498",
+        "node_rss_kib": 986_920,
+        "cgroup_current_bytes": 1_668_022_272,
+        "cgroup_anon_bytes": 929_988_608,
+        "cgroup_file_bytes": 695_971_840,
+        "cgroup_inactive_file_bytes": 694_792_192,
+    },
+    {
+        "label": "T+24 catch-up (2h39 late)",
+        "captured_at": "2026-11-22T15:45:38Z",
+        "run_id": "45040040090",
+        "node_rss_kib": 1_165_308,
+        "cgroup_current_bytes": 2_197_082_112,
+        "cgroup_anon_bytes": 1_112_657_920,
+        "cgroup_file_bytes": 1_014_181_888,
+        "cgroup_inactive_file_bytes": 983_101_440,
+    },
+    {
+        "label": "T+24 follow-up",
+        "captured_at": "2026-11-22T16:01:05Z",
+        "run_id": "45041417570",
+        "node_rss_kib": 1_186_432,
+        "cgroup_current_bytes": 2_206_162_944,
+        "cgroup_anon_bytes": 1_134_288_896,
+        "cgroup_file_bytes": 1_001_369_600,
+        "cgroup_inactive_file_bytes": 970_244_096,
+    },
+)
 PUBLIC_HTTPS_EXPECTED = {
     "healthz_status": "200",
     "home_status": "200",
@@ -49,7 +97,13 @@ REQUIRED_NUMERIC = (
     "cgroup_oom",
     "cgroup_oom_kill",
     "cgroup_oom_group_kill",
+    "cgroup_event_max",
     "node_rss_kib",
+    "cgroup_anon_bytes",
+    "cgroup_file_bytes",
+    "cgroup_inactive_file_bytes",
+    "cgroup_slab_bytes",
+    "cgroup_kernel_bytes",
     "node_cpu_pct",
 )
 
@@ -66,6 +120,14 @@ def _numeric(values: Mapping[str, str], key: str, *, integer: bool = False) -> i
 
 def _missing(values: Mapping[str, str], key: str) -> bool:
     return values.get(key, "").strip().lower() in {"", "unavailable"}
+
+
+def show_cgroup_without_inactive_file(values: Mapping[str, str]) -> str:
+    current = _numeric(values, "cgroup_current_bytes", integer=True)
+    inactive_file = _numeric(values, "cgroup_inactive_file_bytes", integer=True)
+    if current is None or inactive_file is None or current < inactive_file:
+        return "unavailable"
+    return str(current - inactive_file)
 
 
 def _slot(values: Mapping[str, str]) -> tuple[str, str | None]:
@@ -110,6 +172,8 @@ def build_report(values: Mapping[str, str]) -> tuple[str, int]:
     for key in REQUIRED_NUMERIC:
         if _numeric(values, key, integer=key not in {"docker_cpu_pct", "node_cpu_pct"}) is None:
             memory_incomplete.append(f"{key} is missing or unavailable")
+    if _missing(values, "audit_captured_at"):
+        memory_incomplete.append("memory capture UTC timestamp is missing")
 
     started_at = values.get("container_started_at", "")
     if not started_at:
@@ -144,10 +208,13 @@ def build_report(values: Mapping[str, str]) -> tuple[str, int]:
             memory_incomplete.append("Node fatal log classification is missing or unavailable")
         elif values.get("node_fatal", "").lower() == "true":
             memory_reasons.append("a Node fatal error signature was found in recent logs")
-    for key in ("cgroup_oom", "cgroup_oom_kill", "cgroup_oom_group_kill"):
+    for key in ("cgroup_event_max", "cgroup_oom", "cgroup_oom_kill", "cgroup_oom_group_kill"):
         value = _numeric(values, key, integer=True)
         if value is not None and value != 0:
-            memory_reasons.append(f"{key} is {int(value)}")
+            if key == "cgroup_event_max":
+                memory_reasons.append(f"cgroup memory.events max pressure count is {int(value)}")
+            else:
+                memory_reasons.append(f"{key} is {int(value)}")
     for key, expected in PUBLIC_HTTPS_EXPECTED.items():
         if _missing(values, key):
             https_incomplete.append(f"HTTPS probe {key} is missing")
@@ -161,12 +228,28 @@ def build_report(values: Mapping[str, str]) -> tuple[str, int]:
     is_final = slot == "2026-11-23-13-06-utc"
     rss = _numeric(values, "node_rss_kib", integer=True)
     cgroup_current = _numeric(values, "cgroup_current_bytes", integer=True)
+    cgroup_anon = _numeric(values, "cgroup_anon_bytes", integer=True)
+    cgroup_inactive_file = _numeric(values, "cgroup_inactive_file_bytes", integer=True)
     if is_final:
-        # A 25% ceiling gives room for normal load variance while flagging sustained growth.
+        # A 25% ceiling flags sustained process/anonymous-memory growth even without OOMs.
         if rss is not None and rss > int(REFERENCE["node_rss_kib"] * 1.25):
             memory_reasons.append("T+48 Node RSS exceeds 125% of the T+1 reference")
+        if cgroup_anon is not None and cgroup_anon > int(REFERENCE["cgroup_anon_bytes"] * 1.25):
+            memory_reasons.append("T+48 cgroup anonymous memory exceeds 125% of the T+1 reference")
         if cgroup_current is not None and cgroup_current > int(REFERENCE["cgroup_current_bytes"] * 1.25):
-            memory_reasons.append("T+48 cgroup memory exceeds 125% of the T+1 reference")
+            if cgroup_inactive_file is None:
+                memory_incomplete.append("T+48 cgroup increase cannot be compared with inactive_file cache growth")
+            else:
+                cgroup_growth = cgroup_current - int(REFERENCE["cgroup_current_bytes"])
+                inactive_file_growth = max(
+                    0,
+                    cgroup_inactive_file - int(REFERENCE["cgroup_inactive_file_bytes"]),
+                )
+                if cgroup_growth > inactive_file_growth:
+                    memory_reasons.append(
+                        "T+48 cgroup current increase exceeds the measured inactive_file/cache increase; "
+                        "the remaining increase is unexplained"
+                    )
 
     def classify(reasons: list[str], incomplete: list[str]) -> str:
         if reasons:
@@ -206,6 +289,7 @@ def build_report(values: Mapping[str, str]) -> tuple[str, int]:
         f"**Public HTTPS verdict: {https_verdict}**",
         f"Audit job: `{audit_result}`. Reference: T+1 run [{REFERENCE_RUN_ID}](https://github.com/teefloo/Lunidex/actions/runs/{REFERENCE_RUN_ID}) captured {REFERENCE_CAPTURED_AT}.",
         f"Audit UTC date: `{values.get('audit_utc_date', 'unavailable') or 'unavailable'}`.",
+        f"Memory capture UTC: `{values.get('audit_captured_at', 'unavailable') or 'unavailable'}`.",
         "",
         "| Metric | T+1 reference | Current audit |",
         "|---|---:|---:|",
@@ -216,7 +300,11 @@ def build_report(values: Mapping[str, str]) -> tuple[str, int]:
         f"| Recent log capture | true | {show('log_capture_available')} |",
         f"| V8 / Node fatal signature | false / false | {show('v8_heap_oom')} / {show('node_fatal')} |",
         f"| Cgroup current / peak | {REFERENCE['cgroup_current_bytes']} / {REFERENCE['cgroup_peak_bytes']} B | {show('cgroup_current_bytes')} / {show('cgroup_peak_bytes')} B |",
-        f"| Cgroup OOM / OOM-kill / group kill | 0 / 0 / 0 | {show('cgroup_oom')} / {show('cgroup_oom_kill')} / {show('cgroup_oom_group_kill')} |",
+        f"| Cgroup hors inactive_file (pas le heap) | {REFERENCE['cgroup_current_bytes'] - REFERENCE['cgroup_inactive_file_bytes']} B | {show_cgroup_without_inactive_file(values)} B |",
+        f"| Cgroup anon (not V8 heap) | {REFERENCE['cgroup_anon_bytes']} B | {show('cgroup_anon_bytes')} B |",
+        f"| Cgroup file / inactive_file cache | {REFERENCE['cgroup_file_bytes']} / {REFERENCE['cgroup_inactive_file_bytes']} B | {show('cgroup_file_bytes')} / {show('cgroup_inactive_file_bytes')} B |",
+        f"| Cgroup kernel / slab | {REFERENCE['cgroup_kernel_bytes']} / {REFERENCE['cgroup_slab_bytes']} B | {show('cgroup_kernel_bytes')} / {show('cgroup_slab_bytes')} B |",
+        f"| Cgroup memory.events max / oom / oom-kill / group-kill | {REFERENCE['cgroup_event_max']} / 0 / 0 / 0 | {show('cgroup_event_max')} / {show('cgroup_oom')} / {show('cgroup_oom_kill')} / {show('cgroup_oom_group_kill')} |",
         f"| Node RSS | {REFERENCE['node_rss_kib']} KiB | {show('node_rss_kib')} KiB |",
         f"| CPU (Docker / Node) | {REFERENCE['docker_cpu_pct']}% / {REFERENCE['node_cpu_pct']}% | {show('docker_cpu_pct')}% / {show('node_cpu_pct')}% |",
         f"| Host RAM available | ~2.6 GiB | {show('host_ram_available_bytes')} B |",
@@ -226,6 +314,35 @@ def build_report(values: Mapping[str, str]) -> tuple[str, int]:
         f"| HTTPS: auth session / unauthenticated profile / TLS verification | 200 / 401 / 0 | {show('auth_session_status')} / {show('profile_status')} / {show('tls_verify_result')} |",
         "",
     ]
+    lines.extend(
+        [
+            "### Memory trend snapshots",
+            "",
+            "| Capture UTC | Sample | Run | Node RSS (KiB) | cgroup current (B) | anon (B) | file (B) | inactive_file (B) | cgroup hors inactive_file (pas le heap) (B) |",
+            "|---|---|---|---:|---:|---:|---:|---:|---:|",
+        ]
+    )
+    for sample in MEMORY_HISTORY:
+        lines.append(
+            f"| {sample['captured_at']} | {sample['label']} | "
+            f"[{sample['run_id']}](https://github.com/teefloo/Lunidex/actions/runs/{sample['run_id']}) | "
+            f"{sample['node_rss_kib']} | {sample['cgroup_current_bytes']} | {sample['cgroup_anon_bytes']} | "
+            f"{sample['cgroup_file_bytes']} | {sample['cgroup_inactive_file_bytes']} | "
+            f"{sample['cgroup_current_bytes'] - sample['cgroup_inactive_file_bytes']} |"
+        )
+    lines.append(
+        f"| {values.get('audit_captured_at', 'unavailable') or 'unavailable'} | Current audit | current | "
+        f"{show('node_rss_kib')} | {show('cgroup_current_bytes')} | {show('cgroup_anon_bytes')} | "
+        f"{show('cgroup_file_bytes')} | {show('cgroup_inactive_file_bytes')} | "
+        f"{show_cgroup_without_inactive_file(values)} |"
+    )
+    lines.extend(
+        [
+            "",
+            "`anon` is cgroup anonymous memory, not a V8 heap measurement. `inactive_file` is shown separately as file-cache memory. `cgroup hors inactive_file` is only the cgroup total excluding this file-cache category; it is not Node RSS or a V8 heap size. These are point-in-time samples, not continuous profiling.",
+            "",
+        ]
+    )
     if values.get("caddy_access_logs_available", "").lower() != "true":
         lines.extend(["**Observability note:** Caddy access logs are unavailable; this audit cannot calculate an HTTP 5xx rate.", ""])
     if memory_incomplete:
@@ -248,7 +365,7 @@ def build_report(values: Mapping[str, str]) -> tuple[str, int]:
         lines.extend(
             [
                 "",
-                "T+48 memory gate: OVH memory GO requires Node RSS and cgroup current memory each to remain at or below 125% of the T+1 reference, in addition to zero restarts/OOMs and healthy Docker status. Neon Auth and HTTPS are reported independently.",
+                "T+48 memory gate: OVH memory GO requires Node RSS and cgroup anonymous memory each to remain at or below 125% of the T+1 reference, zero cgroup max/OOM events, and healthy Docker status. If cgroup current rises above 125%, its increase must be accounted for by measured inactive_file/cache growth; otherwise the memory verdict is NO-GO. Neon Auth and HTTPS are reported independently.",
                 "**Temporary schedule cleanup required:** remove the 2026 audit and watchdog cron entries in a follow-up PR after this report. No write permission is granted to this workflow.",
             ]
         )
