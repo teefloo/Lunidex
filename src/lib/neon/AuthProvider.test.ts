@@ -214,8 +214,10 @@ describe('AuthProvider session refresh', () => {
     expect(container.querySelector('output')?.dataset.user).toBe('');
   });
 
-  it('bounds automatic retries and recovers on a later online event', async () => {
+  it('bounds automatic retries and recovers on a later online event after transient failures', async () => {
     const timers = captureWindowTimers();
+    let now = Date.now();
+    vi.spyOn(Date, 'now').mockImplementation(() => now);
     const fetchMock = vi.fn()
       .mockRejectedValueOnce(new TypeError('fetch failed'))
       .mockRejectedValueOnce(new TypeError('fetch failed'))
@@ -232,6 +234,7 @@ describe('AuthProvider session refresh', () => {
       const timer = timers.find((candidate) => candidate.delay === delay);
       expect(timer).toBeDefined();
       await act(async () => {
+        now += delay;
         timer?.callback();
         await Promise.resolve();
         await Promise.resolve();
@@ -241,8 +244,7 @@ describe('AuthProvider session refresh', () => {
     expect(fetchMock).toHaveBeenCalledTimes(4);
     expect(timers).toHaveLength(3);
 
-    const retryStartedAt = Date.now();
-    vi.spyOn(Date, 'now').mockReturnValue(retryStartedAt + 251);
+    now += 251;
     await act(async () => {
       window.dispatchEvent(new Event('online'));
       await Promise.resolve();
@@ -251,6 +253,150 @@ describe('AuthProvider session refresh', () => {
 
     expect(fetchMock).toHaveBeenCalledTimes(5);
     expect(container.querySelector('output')?.dataset.sessionStatus).toBe('resolved');
+  });
+
+  it('shares a three-retry budget across quota and transient failures without event polling', async () => {
+    const timers = captureWindowTimers();
+    let now = Date.now();
+    vi.spyOn(Date, 'now').mockImplementation(() => now);
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(response(402, { code: 'GENERIC_QUOTA_EXCEEDED' }))
+      .mockResolvedValueOnce(response(502, { error: 'Temporary auth service outage' }))
+      .mockResolvedValueOnce(response(402, { code: 'GENERIC_QUOTA_EXCEEDED' }))
+      .mockResolvedValueOnce(response(402, { code: 'GENERIC_QUOTA_EXCEEDED' }))
+      .mockResolvedValueOnce(signedInResponse());
+    vi.stubGlobal('fetch', fetchMock);
+
+    await renderProvider();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(timers.map((timer) => timer.delay)).toEqual([15 * 60_000]);
+
+    await act(async () => {
+      window.dispatchEvent(new Event('focus'));
+      window.dispatchEvent(new Event('online'));
+      document.dispatchEvent(new Event('visibilitychange'));
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    await act(async () => {
+      now += timers[0]?.delay ?? 0;
+      timers[0]?.callback();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    const transientRetry = timers.find((timer) => timer.delay === 1_000);
+    expect(transientRetry).toBeDefined();
+
+    await act(async () => {
+      now += transientRetry?.delay ?? 0;
+      transientRetry?.callback();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+    const secondQuotaRetry = timers.find((timer) => timer.delay === 30 * 60_000);
+    expect(secondQuotaRetry).toBeDefined();
+
+    await act(async () => {
+      now += secondQuotaRetry?.delay ?? 0;
+      secondQuotaRetry?.callback();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(4);
+    expect(timers).toHaveLength(3);
+
+    await act(async () => {
+      window.dispatchEvent(new Event('focus'));
+      window.dispatchEvent(new Event('online'));
+      document.dispatchEvent(new Event('visibilitychange'));
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(4);
+
+    await act(async () => {
+      container.querySelector<HTMLButtonElement>('button')?.click();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(5);
+    expect(container.querySelector('output')?.dataset.sessionStatus).toBe('resolved');
+  });
+
+  it('preserves a quota cooldown when the tab is hidden and restored', async () => {
+    const timers = captureWindowTimers();
+    let now = Date.now();
+    vi.spyOn(Date, 'now').mockImplementation(() => now);
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(response(402, { code: 'GENERIC_QUOTA_EXCEEDED' }))
+      .mockResolvedValueOnce(response(200, null));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await renderProvider();
+    expect(timers[0]?.delay).toBe(15 * 60_000);
+
+    Object.defineProperty(document, 'visibilityState', { configurable: true, value: 'hidden' });
+    await act(async () => {
+      document.dispatchEvent(new Event('visibilitychange'));
+      await Promise.resolve();
+    });
+    now += 60_000;
+    Object.defineProperty(document, 'visibilityState', { configurable: true, value: 'visible' });
+    await act(async () => {
+      document.dispatchEvent(new Event('visibilitychange'));
+      window.dispatchEvent(new Event('focus'));
+      window.dispatchEvent(new Event('online'));
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(timers.some((timer) => timer.delay === 14 * 60_000)).toBe(true);
+
+    const resumedCooldown = timers.find((timer) => timer.delay === 14 * 60_000);
+    await act(async () => {
+      now += resumedCooldown?.delay ?? 0;
+      resumedCooldown?.callback();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not let a session expiry event bypass an active quota cooldown', async () => {
+    const timers = captureWindowTimers();
+    const expiresAt = Date.now() + 60 * 60_000;
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(signedInResponse(new Date(expiresAt).toISOString()))
+      .mockResolvedValueOnce(response(402, { code: 'GENERIC_QUOTA_EXCEEDED' }))
+      .mockResolvedValueOnce(signedInResponse());
+    vi.stubGlobal('fetch', fetchMock);
+
+    await renderProvider();
+    const preExpiryRefresh = timers.find((timer) => Math.abs(timer.delay - 59 * 60_000) < 250);
+    expect(preExpiryRefresh).toBeDefined();
+
+    vi.spyOn(Date, 'now').mockReturnValue(expiresAt - 60_000);
+    await act(async () => {
+      preExpiryRefresh?.callback();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(timers.some((timer) => timer.delay === 15 * 60_000)).toBe(true);
+
+    const expiryTimer = timers.find((timer) => timer.delay === 60_000);
+    expect(expiryTimer).toBeDefined();
+    vi.spyOn(Date, 'now').mockReturnValue(expiresAt);
+    await act(async () => {
+      expiryTimer?.callback();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
   it('refreshes immediately after sign-out so the local session is cleared', async () => {
