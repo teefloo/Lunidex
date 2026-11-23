@@ -200,6 +200,8 @@ export interface PrimeDexStore {
   removeTCGCollectionCard: (collectionKey: string, cardId: string) => void;
   transferTCGCollectionCards: (sourceCollectionKey: string, targetCollectionKey: string) => boolean;
   setTCGCollectionVariantQuantity: (collectionKey: string, cardId: string, variant: import('@/lib/tcg-collections').TCGCollectionVariant, quantity: number) => void;
+  addTCGCollectionVariantQuantities: (collectionKey: string, additions: Array<{ cardId: string; variant: import('@/lib/tcg-collections').TCGPhysicalVariant; quantity: number }>) => boolean;
+  restoreTCGCollectionVariantQuantities: (collectionKey: string, changes: Array<{ cardId: string; variant: import('@/lib/tcg-collections').TCGPhysicalVariant; expectedQuantity: number; previousQuantity: number }>, collectionWasRegistered: boolean) => boolean;
   adjustTCGCollectionVariantQuantity: (collectionKey: string, cardId: string, variant: import('@/lib/tcg-collections').TCGCollectionVariant, delta: number) => void;
   qualifyTCGCollectionCardVariant: (collectionKey: string, cardId: string, variant: import('@/lib/tcg-collections').TCGPhysicalVariant) => void;
   toggleTCGCollectionCard: (collectionKey: string, cardId: string) => void;
@@ -920,6 +922,96 @@ export const usePrimeDexStore = create<PrimeDexStore>()(
           tcgCollectionModelVersion: TCG_COLLECTION_MODEL_VERSION,
         };
       }),
+      addTCGCollectionVariantQuantities: (collectionKey, additions) => {
+        if (!isValidTCGCollectionKey(collectionKey) || !Array.isArray(additions) || additions.length === 0) return false;
+        const state = get();
+        const seen = new Set<string>();
+        let requestedCopies = 0;
+        for (const addition of additions) {
+          if (!addition || (addition.variant !== 'normal' && addition.variant !== 'reverse' && addition.variant !== 'holo')
+            || !Number.isInteger(addition.quantity) || addition.quantity <= 0
+            || !getTCGCollectionCardIdentity(collectionKey, addition.cardId, addition.variant)) return false;
+          const identity = `${addition.cardId.trim().toLowerCase()}\u001f${addition.variant}`;
+          if (seen.has(identity)) return false;
+          seen.add(identity);
+          const existingQuantity = getTCGCollectionCardQuantity(collectionKey, addition.cardId, addition.variant, state.tcgCollectionCards);
+          if (existingQuantity + addition.quantity > MAX_TCG_COLLECTION_PHYSICAL_CARDS) return false;
+          requestedCopies += addition.quantity;
+        }
+        if (countPhysicalTCGCards(state.tcgCollectionCards, state.tcgLegacyOwnedCards) + requestedCopies > MAX_TCG_COLLECTION_PHYSICAL_CARDS) return false;
+
+        let collectionCards = state.tcgCollectionCards;
+        for (const addition of additions) {
+          const currentQuantity = getTCGCollectionCardQuantity(collectionKey, addition.cardId, addition.variant, collectionCards);
+          collectionCards = setTCGCollectionVariantQuantity(
+            collectionKey,
+            addition.cardId,
+            addition.variant,
+            currentQuantity + addition.quantity,
+            collectionCards,
+          );
+        }
+        const collectionHasCards = getTCGCollectionCardOwnerships(collectionKey, collectionCards).length > 0;
+        set({
+          tcgCollections: state.tcgCollections.includes(collectionKey) ? state.tcgCollections : [...state.tcgCollections, collectionKey],
+          tcgActiveCollections: collectionHasCards
+            ? state.tcgActiveCollections.includes(collectionKey) ? state.tcgActiveCollections : [...state.tcgActiveCollections, collectionKey]
+            : state.tcgActiveCollections.filter((key) => key !== collectionKey),
+          tcgCollectionCards: collectionCards,
+          // Preserve legacy copies. Bulk adds are additional copies and do not
+          // silently attribute an older language-less ownership to this set.
+          tcgLegacyOwnedCards: state.tcgLegacyOwnedCards,
+          tcgOwnedCards: deriveTCGOwnedCardIds(collectionCards, state.tcgLegacyOwnedCards),
+          tcgCollectionModelVersion: TCG_COLLECTION_MODEL_VERSION,
+        });
+        const saved = get().tcgCollectionCards;
+        return additions.every((addition) => (
+          getTCGCollectionCardQuantity(collectionKey, addition.cardId, addition.variant, saved)
+          === getTCGCollectionCardQuantity(collectionKey, addition.cardId, addition.variant, state.tcgCollectionCards) + addition.quantity
+        ));
+      },
+      restoreTCGCollectionVariantQuantities: (collectionKey, changes, collectionWasRegistered) => {
+        if (!isValidTCGCollectionKey(collectionKey) || !Array.isArray(changes) || changes.length === 0) return false;
+        const state = get();
+        const seen = new Set<string>();
+        for (const change of changes) {
+          if (!change || (change.variant !== 'normal' && change.variant !== 'reverse' && change.variant !== 'holo')
+            || !Number.isInteger(change.expectedQuantity) || !Number.isInteger(change.previousQuantity)
+            || change.previousQuantity < 0 || change.previousQuantity > change.expectedQuantity
+            || !getTCGCollectionCardIdentity(collectionKey, change.cardId, change.variant)) return false;
+          const identity = `${change.cardId.trim().toLowerCase()}\u001f${change.variant}`;
+          if (seen.has(identity)) return false;
+          seen.add(identity);
+          if (getTCGCollectionCardQuantity(collectionKey, change.cardId, change.variant, state.tcgCollectionCards) !== change.expectedQuantity) return false;
+        }
+
+        let collectionCards = state.tcgCollectionCards;
+        for (const change of changes) {
+          collectionCards = setTCGCollectionVariantQuantity(
+            collectionKey,
+            change.cardId,
+            change.variant,
+            change.previousQuantity,
+            collectionCards,
+          );
+        }
+        const collectionHasCards = getTCGCollectionCardOwnerships(collectionKey, collectionCards).length > 0;
+        set({
+          tcgCollections: collectionHasCards || collectionWasRegistered
+            ? state.tcgCollections.includes(collectionKey) ? state.tcgCollections : [...state.tcgCollections, collectionKey]
+            : state.tcgCollections.filter((key) => key !== collectionKey),
+          tcgActiveCollections: collectionHasCards
+            ? state.tcgActiveCollections.includes(collectionKey) ? state.tcgActiveCollections : [...state.tcgActiveCollections, collectionKey]
+            : state.tcgActiveCollections.filter((key) => key !== collectionKey),
+          tcgCollectionCards: collectionCards,
+          tcgOwnedCards: deriveTCGOwnedCardIds(collectionCards, state.tcgLegacyOwnedCards),
+          tcgCollectionModelVersion: TCG_COLLECTION_MODEL_VERSION,
+        });
+        const saved = get().tcgCollectionCards;
+        return changes.every((change) => (
+          getTCGCollectionCardQuantity(collectionKey, change.cardId, change.variant, saved) === change.previousQuantity
+        ));
+      },
       adjustTCGCollectionVariantQuantity: (collectionKey, cardId, variant, delta) => set((state) => {
         if (!isValidTCGCollectionKey(collectionKey) || typeof cardId !== 'string' || !Number.isInteger(delta)) return state;
         const currentQuantity = getTCGCollectionCardQuantity(collectionKey, cardId, variant, state.tcgCollectionCards);

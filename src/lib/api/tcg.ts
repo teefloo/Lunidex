@@ -35,6 +35,7 @@ import {
   getCardMarketValue,
   getTCGValueInCurrency,
   toCollectionCard,
+  type TCGCollectionValueGroup,
   type TCGCollectionValuation,
   type TCGOwnedVariant,
   type TCGCollectionValuationResult,
@@ -1306,7 +1307,7 @@ export const fetchCollectionValue = async (
   const maxUniqueCards = Math.max(1, Math.floor(options.maxUniqueCards ?? TCG_COLLECTION_VALUATION_MAX_UNIQUE_CARDS));
   const uniqueIds = [...new Set(ownedVariants.map((entry) => entry.cardId))].slice(0, maxUniqueCards);
   if (uniqueIds.length === 0) {
-    return { groups: [], ownedCount: 0, pricedCount: 0, unpricedCount: 0, bySet: {}, topCards: [] };
+    return { groups: [], ownedCount: 0, pricedCount: 0, unpricedCount: 0, unavailableCount: 0, bySet: {}, topCards: [] };
   }
 
   const fetchCard = options.fetchCard ?? ((cardId: string, cardLanguage: string, cardSignal: AbortSignal) => (
@@ -1338,6 +1339,7 @@ export const fetchCollectionValue = async (
   const collectionCards = fullCards.map((card) => toCollectionCard(card, undefined, displayCurrency));
   const valuation = aggregateCollectionValueWithVariants(collectionCards, ownedVariants, displayCurrency);
   const ownedCount = ownedVariants.reduce((sum, entry) => sum + entry.quantity, 0);
+  const unavailableCount = Math.max(0, ownedCount - valuation.ownedCount);
   const collectionCardsById = new Map(collectionCards.map((card) => [card.id, card]));
   const topCandidates: TCGCollectionValuedCard[] = [];
   for (const ownership of ownedVariants) {
@@ -1358,9 +1360,11 @@ export const fetchCollectionValue = async (
 
   return {
     ...valuation,
-    // A missing detail response is still an owned physical card without a price.
+    // Keep unavailable detail responses visible in total coverage without
+    // claiming that TCGdex confirmed the absence of a quote.
     ownedCount,
-    unpricedCount: Math.max(0, ownedCount - valuation.pricedCount),
+    unpricedCount: valuation.unpricedCount,
+    unavailableCount,
     topCards,
   };
 };
@@ -1393,7 +1397,7 @@ export const fetchCustomCollectionValue = async (
 
   const languageEntries = [...ownedByLanguage.entries()];
   if (languageEntries.length === 0) {
-    return { groups: [], ownedCount: 0, pricedCount: 0, unpricedCount: 0 };
+    return { groups: [], ownedCount: 0, pricedCount: 0, unpricedCount: 0, unavailableCount: 0 };
   }
 
   // Share the existing valuation concurrency budget across language groups.
@@ -1412,29 +1416,48 @@ export const fetchCustomCollectionValue = async (
     ),
   );
 
-  const totalsByCurrency = new Map<string, { total: number; count: number }>();
+  const totalsBySource = new Map<string, TCGCollectionValueGroup>();
   let pricedCount = 0;
+  let unpricedCount = 0;
+  let unavailableCount = 0;
   for (const valuation of valuations) {
     pricedCount += valuation.pricedCount;
+    unpricedCount += valuation.unpricedCount ?? 0;
+    unavailableCount += valuation.unavailableCount ?? 0;
     for (const group of valuation.groups) {
-      const existing = totalsByCurrency.get(group.currency);
-      totalsByCurrency.set(group.currency, {
+      const key = `${group.currency}\u001f${group.provider ?? ''}`;
+      const existing = totalsBySource.get(key);
+      const oldestPriceAt = [existing?.oldestPriceAt, group.oldestPriceAt]
+        .filter((value): value is string => Boolean(value))
+        .sort()[0];
+      const newestPriceAt = [existing?.newestPriceAt, group.newestPriceAt]
+        .filter((value): value is string => Boolean(value))
+        .sort()
+        .at(-1);
+      totalsBySource.set(key, {
+        currency: group.currency,
+        provider: group.provider,
         total: (existing?.total ?? 0) + group.total,
         count: (existing?.count ?? 0) + group.count,
+        ...(oldestPriceAt ? { oldestPriceAt } : {}),
+        ...(newestPriceAt ? { newestPriceAt } : {}),
+        staleCount: (existing?.staleCount ?? 0) + (group.staleCount ?? 0),
+        missingTimestampCount: (existing?.missingTimestampCount ?? 0) + (group.missingTimestampCount ?? 0),
       });
     }
   }
 
-  const groups = [...totalsByCurrency.entries()]
-    .map(([currency, value]) => ({ currency, total: Math.round(value.total * 100) / 100, count: value.count }))
+  const groups = [...totalsBySource.values()]
+    .map((group) => ({ ...group, total: Math.round(group.total * 100) / 100 }))
     .sort((left, right) => right.total - left.total || left.currency.localeCompare(right.currency));
 
   return {
     groups,
     ownedCount: requestedOwnedCount,
     pricedCount,
-    // Include any cards omitted by per-language ID and physical-copy safety caps.
-    unpricedCount: Math.max(0, requestedOwnedCount - pricedCount),
+    unpricedCount,
+    // Include cards omitted by per-language ID and physical-copy safety caps.
+    unavailableCount: Math.max(unavailableCount, requestedOwnedCount - pricedCount - unpricedCount),
   };
 };
 

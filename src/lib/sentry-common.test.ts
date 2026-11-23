@@ -31,6 +31,16 @@ describe('Sentry event scrubbing', () => {
     expect(event.breadcrumbs?.[0]?.data?.url).toBe('/api/profile');
   });
 
+  it('redacts unlisted collection tokens from URLs sent to Sentry', () => {
+    const token = 'A'.repeat(43);
+    const event = scrubSentryEvent({
+      request: { url: `https://lunidex.app/fr/tcg/showcase/${token}` },
+    });
+
+    expect(event.request?.url).toBe('https://lunidex.app/fr/tcg/showcase/[token]');
+    expect(event.request?.url).not.toContain(token);
+  });
+
   it('scrubs feedback contact fields and URL parameters', () => {
     const event = scrubSentryFeedback({
       contexts: {

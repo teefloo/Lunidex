@@ -46,6 +46,7 @@ import { TCGCustomCollectionFormDialog } from './TCGCustomCollectionFormDialog';
 import { TCGCustomCollectionAddPanel } from './TCGCustomCollectionAddPanel';
 import { getTCGCustomCollectionSortableId, TCGCustomCollectionBinderPage, type TCGCustomCollectionBinderCardDetail, type TCGCustomCollectionCardMove } from './TCGCustomCollectionBinderPage';
 import { TCGPageTabs } from './TCGPageTabs';
+import { TCGCustomCollectionSharePanel } from './TCGCustomCollectionSharePanel';
 
 interface TCGCustomCollectionDetailProps {
   collectionId: string;
@@ -413,6 +414,13 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
               </div>
             </header>
 
+            <TCGCustomCollectionSharePanel
+              collectionId={collectionId}
+              signedIn={Boolean(user)}
+              canManage={Boolean(user) && syncStatus === 'ready'}
+              authLoading={authLoading}
+            />
+
             <section className="rounded-sm border border-primary/20 bg-gradient-to-br from-primary/10 via-card/40 to-card/20 p-5" aria-labelledby="custom-collection-value-title" aria-busy={ownedPhysicalCount > 0 && valuationQuery.isPending}>
               <h2 id="custom-collection-value-title" className="text-[11px] font-black uppercase tracking-[0.12em] text-foreground/70">
                 {t('tcg.custom_collections.estimated_value')}
@@ -431,31 +439,50 @@ export function TCGCustomCollectionDetail({ collectionId }: TCGCustomCollectionD
                 </div>
               ) : valuationQuery.data?.groups.length ? (
                 <>
-                  <p className="mt-3 break-words text-2xl font-black tabular-nums text-primary">
-                    {valuationQuery.data.groups.map((group) => formatCustomCollectionCurrency({ currency: group.currency, amount: group.total }, interfaceLanguage)).join(' · ')}
+                  <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                    {valuationQuery.data.groups.map((group) => (
+                      <article key={`${group.currency}:${group.provider ?? 'unknown'}`} className="min-w-0 rounded-sm border border-primary/15 bg-primary/5 px-3 py-2">
+                        <p className="break-words text-2xl font-black tabular-nums text-primary">
+                          {formatCustomCollectionCurrency({ currency: group.currency, amount: group.total }, interfaceLanguage)}
+                        </p>
+                        <p className="text-[10px] font-black uppercase tracking-[0.08em] text-foreground/55">
+                          {group.provider === 'cardmarket' ? 'Cardmarket' : group.provider === 'tcgplayer' ? 'TCGplayer' : t('tcg.market_price')}
+                          {' · '}{t('tcg.custom_collections.value_priced_copies', { count: group.count })}
+                        </p>
+                        {group.oldestPriceAt && group.newestPriceAt ? (
+                          <p className="mt-1 text-[10px] text-foreground/50">
+                            {t('tcg.custom_collections.value_source_period', {
+                              from: new Intl.DateTimeFormat(interfaceLanguage, { dateStyle: 'medium', timeZone: 'UTC' }).format(new Date(group.oldestPriceAt)),
+                              to: new Intl.DateTimeFormat(interfaceLanguage, { dateStyle: 'medium', timeZone: 'UTC' }).format(new Date(group.newestPriceAt)),
+                            })}
+                          </p>
+                        ) : (
+                          <p className="mt-1 text-[10px] text-foreground/50">{t('tcg.market_provider_timestamp_unavailable')}</p>
+                        )}
+                        {(group.staleCount ?? 0) > 0 && <p className="mt-1 text-[10px] font-bold text-amber-700 dark:text-amber-200/80">{t('tcg.custom_collections.value_stale_copies', { count: group.staleCount })}</p>}
+                        {(group.missingTimestampCount ?? 0) > 0 && <p className="mt-1 text-[10px] text-foreground/50">{t('tcg.custom_collections.value_missing_dates', { count: group.missingTimestampCount })}</p>}
+                      </article>
+                    ))}
+                  </div>
+                  <p className="mt-2 text-[11px] font-bold text-foreground/55" aria-live="polite">
+                    {t('tcg.custom_collections.value_coverage', { priced: valuationQuery.data.pricedCount, owned: valuationQuery.data.ownedCount })}
                   </p>
-                  <p className="mt-1 text-[11px] font-bold text-foreground/55" aria-live="polite">
-                    {t('tcg.collection_value_coverage', { priced: valuationQuery.data.pricedCount, owned: valuationQuery.data.ownedCount })}
-                  </p>
-                  {(valuationQuery.data.unpricedCount ?? 0) > 0 && (
-                    <p className="mt-1 text-[11px] font-bold text-amber-700 dark:text-amber-200/80">
-                      {t('tcg.collection_value_partial', { count: valuationQuery.data.unpricedCount })}
-                    </p>
-                  )}
+                  {(valuationQuery.data.unpricedCount ?? 0) > 0 && <p className="mt-1 text-[11px] font-bold text-amber-700 dark:text-amber-200/80">{t('tcg.custom_collections.value_unpriced', { count: valuationQuery.data.unpricedCount })}</p>}
+                  {(valuationQuery.data.unavailableCount ?? 0) > 0 && <p className="mt-1 text-[11px] text-foreground/50">{t('tcg.custom_collections.value_unknown_copies', { count: valuationQuery.data.unavailableCount })}</p>}
                 </>
               ) : (
                 <>
-                  <p className="mt-3 text-sm font-bold text-foreground/55">{t('tcg.collection_value_unavailable')}</p>
+                  <p className="mt-3 text-sm font-bold text-foreground/55">{t('tcg.custom_collections.value_unavailable')}</p>
                   <p className="mt-1 text-[11px] font-bold text-foreground/55">
-                    {t('tcg.collection_value_coverage', { priced: valuationQuery.data?.pricedCount ?? 0, owned: valuationQuery.data?.ownedCount ?? ownedPhysicalCount })}
+                    {t('tcg.custom_collections.value_coverage', { priced: valuationQuery.data?.pricedCount ?? 0, owned: valuationQuery.data?.ownedCount ?? ownedPhysicalCount })}
                   </p>
-                  {(valuationQuery.data?.unpricedCount ?? ownedPhysicalCount) > 0 && (
-                    <p className="mt-1 text-[11px] font-bold text-amber-700 dark:text-amber-200/80">
-                      {t('tcg.collection_value_partial', { count: valuationQuery.data?.unpricedCount ?? ownedPhysicalCount })}
-                    </p>
-                  )}
+                  {(valuationQuery.data?.unpricedCount ?? 0) > 0 && <p className="mt-1 text-[11px] font-bold text-amber-700 dark:text-amber-200/80">{t('tcg.custom_collections.value_unpriced', { count: valuationQuery.data.unpricedCount })}</p>}
+                  {(valuationQuery.data?.unavailableCount ?? ownedPhysicalCount) > 0 && <p className="mt-1 text-[11px] text-foreground/50">{t('tcg.custom_collections.value_unknown_copies', { count: valuationQuery.data?.unavailableCount ?? ownedPhysicalCount })}</p>}
                 </>
               )}
+              <p className="mt-3 text-[10px] leading-5 text-foreground/45">{t('tcg.custom_collections.value_market_only')}</p>
+              <p className="mt-1 text-[10px] leading-5 text-foreground/45">{t('tcg.custom_collections.value_no_trend')}</p>
+              <p className="mt-1 text-[10px] leading-5 text-foreground/45">{t('tcg.custom_collections.value_method')}</p>
             </section>
 
             <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:items-end">

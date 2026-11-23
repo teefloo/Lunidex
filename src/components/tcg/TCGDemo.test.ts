@@ -34,7 +34,7 @@ vi.mock('@/hooks/useLocaleHref', () => ({ useClientLanguage: () => 'en', useLoca
 vi.mock('next/navigation', () => ({ useRouter: () => ({ push: vi.fn(), replace: vi.fn(), back: vi.fn() }), usePathname: () => '/en/tcg/start', useSearchParams: () => new URLSearchParams(mocks.search) }));
 vi.mock('next/link', () => ({ default: ({ children, href, className }: AnchorHTMLAttributes<HTMLAnchorElement>) => createElement('a', { href, className }, children) }));
 vi.mock('next/dynamic', () => ({ default: () => ({ initialMode, onOpenChange }: { initialMode?: string; onOpenChange?: (open: boolean) => void }) => initialMode ? createElement('div', { role: 'dialog', 'data-mode': initialMode }, createElement('button', { onClick: () => onOpenChange?.(false) }, 'Close signup')) : null }));
-vi.mock('@tanstack/react-query', () => ({ useQuery: (options: { queryKey: readonly unknown[]; queryFn?: (context?: { signal?: AbortSignal }) => Promise<unknown>; enabled?: boolean; retry?: boolean }) => {
+vi.mock('@tanstack/react-query', () => ({ useQueryClient: () => ({ getQueryData: () => undefined }), useQueries: () => [], useQuery: (options: { queryKey: readonly unknown[]; queryFn?: (context?: { signal?: AbortSignal }) => Promise<unknown>; enabled?: boolean; retry?: boolean }) => {
   mocks.queryOptions.push(options);
   mocks.queryEnabled.push(Boolean(options.enabled));
   mocks.queryRetry.push(options.retry);

@@ -172,12 +172,40 @@ describe('TCG physical variant pricing', () => {
       { cardId: 'base1-001', variant: 'reverse', quantity: 3 },
       { cardId: 'base1-002', variant: 'holo', quantity: 1 },
     ]);
-    expect(result.groups).toEqual([{ currency: 'USD', total: 13, count: 5 }]);
+    expect(result.groups).toEqual([{ currency: 'USD', total: 13, count: 5, provider: 'tcgplayer', staleCount: 0, missingTimestampCount: 5 }]);
     expect(result.ownedCount).toBe(6);
     expect(result.pricedCount).toBe(5);
     expect(result.unpricedCount).toBe(1);
-    expect(result.bySet.base1.groups[0]).toEqual({ currency: 'USD', total: 13, count: 5 });
+    expect(result.bySet.base1.groups[0]).toEqual({ currency: 'USD', total: 13, count: 5, provider: 'tcgplayer' });
     expect(result.bySet.base1.ownedCount).toBe(6);
+  });
+
+  it('groups a source period and marks stale and missing source timestamps', () => {
+    const dated = toCollectionCard({
+      ...baseCard,
+      pricing: { cardmarket: { unit: 'EUR', trend: 4, updated: '2026-10-01T00:00:00.000Z' } },
+    });
+    const undated = toCollectionCard({
+      ...baseCard,
+      id: 'base1-002',
+      localId: '002',
+      pricing: { cardmarket: { unit: 'EUR', trend: 2 } },
+    });
+    const result = aggregateCollectionValueWithVariants([dated, undated], [
+      { cardId: dated.id, variant: 'normal', quantity: 1 },
+      { cardId: undated.id, variant: 'normal', quantity: 1 },
+    ], 'EUR', new Date('2026-11-19T00:00:00.000Z'));
+
+    expect(result.groups).toEqual([{
+      currency: 'EUR',
+      total: 6,
+      count: 2,
+      provider: 'cardmarket',
+      oldestPriceAt: '2026-10-01T00:00:00.000Z',
+      newestPriceAt: '2026-10-01T00:00:00.000Z',
+      staleCount: 1,
+      missingTimestampCount: 1,
+    }]);
   });
 
   it('summarizes the theoretical full-set value independently from owned quantities', () => {
@@ -212,7 +240,7 @@ describe('TCG physical variant pricing', () => {
       { cardId: card.id, variant: 'unspecified', quantity: 2 },
       { cardId: card.id, variant: 'normal', quantity: 1 },
     ]);
-    expect(result.groups).toEqual([{ currency: 'EUR', total: 6, count: 3 }]);
+    expect(result.groups).toEqual([{ currency: 'EUR', total: 6, count: 3, provider: 'cardmarket', staleCount: 0, missingTimestampCount: 3 }]);
     expect(result.ownedCount).toBe(3);
     expect(result.pricedCount).toBe(3);
     expect(result.unpricedCount).toBe(0);
@@ -236,7 +264,7 @@ describe('TCG physical variant pricing', () => {
       { cardId: card.id, variant: 'unspecified', quantity: 1 },
     ], 'EUR');
 
-    expect(result.groups).toEqual([{ currency: 'EUR', total: 25.53, count: 1 }]);
+    expect(result.groups).toEqual([{ currency: 'EUR', total: 25.53, count: 1, provider: 'cardmarket', staleCount: 0, missingTimestampCount: 1 }]);
     expect(result.pricedCount).toBe(1);
     expect(result.unpricedCount).toBe(0);
   });
@@ -253,7 +281,7 @@ describe('TCG physical variant pricing', () => {
       { cardId: card.id, variant: 'normal', quantity: 1 },
       { cardId: card.id, variant: 'holo', quantity: 1 },
     ]);
-    expect(result.groups).toEqual([{ currency: 'USD', total: 2, count: 1 }]);
+    expect(result.groups).toEqual([{ currency: 'USD', total: 2, count: 1, provider: 'tcgplayer', staleCount: 0, missingTimestampCount: 1 }]);
     expect(result.unpricedCount).toBe(1);
   });
 
@@ -304,7 +332,7 @@ describe('TCG physical variant pricing', () => {
       { cardId: card.id, variant: 'unspecified', quantity: 2 },
       { cardId: card.id, variant: 'normal', quantity: 1 },
     ]);
-    expect(result.groups).toEqual([{ currency: 'USD', total: 3.5, count: 2 }]);
+    expect(result.groups).toEqual([{ currency: 'USD', total: 3.5, count: 2, provider: 'tcgplayer', staleCount: 0, missingTimestampCount: 2 }]);
     expect(result.ownedCount).toBe(3);
     expect(result.pricedCount).toBe(2);
     expect(result.unpricedCount).toBe(1);
@@ -323,7 +351,7 @@ describe('TCG physical variant pricing', () => {
       { cardId: eurCard.id, variant: 'normal', quantity: 2 },
       { cardId: eurCard.id, variant: 'reverse', quantity: 1 },
     ], 'EUR');
-    expect(eur.groups).toEqual([{ currency: 'EUR', total: 2.5, count: 2 }]);
+    expect(eur.groups).toEqual([{ currency: 'EUR', total: 2.5, count: 2, provider: 'cardmarket', staleCount: 0, missingTimestampCount: 2 }]);
     expect(eur.pricedCount).toBe(2);
     expect(eur.unpricedCount).toBe(1);
 
@@ -332,7 +360,7 @@ describe('TCG physical variant pricing', () => {
       { cardId: usdCard.id, variant: 'normal', quantity: 2 },
       { cardId: usdCard.id, variant: 'reverse', quantity: 1 },
     ], 'USD');
-    expect(usd.groups).toEqual([{ currency: 'USD', total: 8, count: 3 }]);
+    expect(usd.groups).toEqual([{ currency: 'USD', total: 8, count: 3, provider: 'tcgplayer', staleCount: 0, missingTimestampCount: 3 }]);
     expect(usd.pricedCount).toBe(3);
     expect(usd.unpricedCount).toBe(0);
   });

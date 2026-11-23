@@ -76,6 +76,62 @@ describe('web TCG collection store', () => {
     setSyncAccessStatus('checking');
   });
 
+  it('applies explicit bulk finish additions atomically and preserves legacy copies', () => {
+    setSyncAccessStatus('ready');
+    resetCollectionState(['base1-002']);
+    const store = usePrimeDexStore.getState();
+    const collection = encodeTCGCollectionKey('en', 'base1')!;
+    store.setTCGCollectionVariantQuantity(collection, 'base1-001', 'normal', 2);
+    const legacyBefore = [...usePrimeDexStore.getState().tcgLegacyOwnedCards];
+    const physicalBefore = store.getTCGPhysicalCardCount();
+
+    expect(store.addTCGCollectionVariantQuantities(collection, [
+      { cardId: 'base1-001', variant: 'reverse', quantity: 2 },
+      { cardId: 'base1-002', variant: 'holo', quantity: 1 },
+    ])).toBe(true);
+
+    expect(getTCGCollectionCardQuantity(collection, 'base1-001', 'normal', usePrimeDexStore.getState().tcgCollectionCards)).toBe(2);
+    expect(getTCGCollectionCardQuantity(collection, 'base1-001', 'reverse', usePrimeDexStore.getState().tcgCollectionCards)).toBe(2);
+    expect(getTCGCollectionCardQuantity(collection, 'base1-002', 'holo', usePrimeDexStore.getState().tcgCollectionCards)).toBe(1);
+    expect(usePrimeDexStore.getState().tcgLegacyOwnedCards).toEqual(legacyBefore);
+    expect(store.getTCGPhysicalCardCount()).toBe(physicalBefore + 3);
+
+    expect(store.restoreTCGCollectionVariantQuantities(collection, [
+      { cardId: 'base1-001', variant: 'reverse', expectedQuantity: 2, previousQuantity: 0 },
+      { cardId: 'base1-002', variant: 'holo', expectedQuantity: 1, previousQuantity: 0 },
+    ], true)).toBe(true);
+    expect(getTCGCollectionCardQuantity(collection, 'base1-001', 'normal', usePrimeDexStore.getState().tcgCollectionCards)).toBe(2);
+    expect(getTCGCollectionCardQuantity(collection, 'base1-001', 'reverse', usePrimeDexStore.getState().tcgCollectionCards)).toBe(0);
+    expect(usePrimeDexStore.getState().tcgLegacyOwnedCards).toEqual(legacyBefore);
+    expect(store.getTCGPhysicalCardCount()).toBe(physicalBefore);
+
+    const cardsAfterSuccess = [...usePrimeDexStore.getState().tcgCollectionCards];
+    expect(store.addTCGCollectionVariantQuantities(collection, [
+      { cardId: 'base1-003', variant: 'normal', quantity: 1 },
+      { cardId: 'base1-003', variant: 'normal', quantity: 1 },
+    ])).toBe(false);
+    expect(usePrimeDexStore.getState().tcgCollectionCards).toEqual(cardsAfterSuccess);
+    setSyncAccessStatus('checking');
+  });
+
+  it('rejects bulk additions that exceed the physical-copy limit without partial writes', () => {
+    setSyncAccessStatus('ready');
+    resetCollectionState();
+    const collection = encodeTCGCollectionKey('en', 'base1')!;
+    usePrimeDexStore.setState({
+      tcgCollectionCards: [`${collection}|base1-001|normal|10000`],
+      tcgCollections: [collection],
+      tcgActiveCollections: [collection],
+      tcgOwnedCards: ['base1-001'],
+    });
+    const cardsBefore = [...usePrimeDexStore.getState().tcgCollectionCards];
+    expect(usePrimeDexStore.getState().addTCGCollectionVariantQuantities(collection, [
+      { cardId: 'base1-002', variant: 'normal', quantity: 1 },
+    ])).toBe(false);
+    expect(usePrimeDexStore.getState().tcgCollectionCards).toEqual(cardsBefore);
+    setSyncAccessStatus('checking');
+  });
+
   it('adds a selection once, ignores duplicate printings, and publishes one store update', () => {
     setSyncAccessStatus('ready');
     resetCollectionState();

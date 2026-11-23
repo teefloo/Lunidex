@@ -150,17 +150,31 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
     const totals = new Map<string, TCGCollectionValueGroup>();
     for (const group of collectionValueQueries.flatMap((query) => query.data?.groups ?? [])) {
       if (group.currency.toUpperCase() !== displayCurrency) continue;
-      const key = group.currency.toUpperCase();
+      const key = `${group.currency.toUpperCase()}|${group.provider ?? 'unknown'}`;
       const existing = totals.get(key);
       totals.set(key, existing
-        ? { ...existing, total: existing.total + group.total, count: existing.count + group.count }
+        ? {
+            ...existing,
+            total: existing.total + group.total,
+            count: existing.count + group.count,
+            oldestPriceAt: [existing.oldestPriceAt, group.oldestPriceAt].filter(Boolean).sort()[0],
+            newestPriceAt: [existing.newestPriceAt, group.newestPriceAt].filter(Boolean).sort().at(-1),
+            staleCount: (existing.staleCount ?? 0) + (group.staleCount ?? 0),
+            missingTimestampCount: (existing.missingTimestampCount ?? 0) + (group.missingTimestampCount ?? 0),
+          }
         : group);
     }
     return [...totals.values()];
   }, [collectionValueQueries, displayCurrency]);
   const valuationCoverage = useMemo(() => {
     const priced = collectionValueQueries.reduce((sum, query) => sum + (query.data?.pricedCount ?? 0), 0);
-    return { owned: physicalCount, priced, unpriced: Math.max(0, physicalCount - priced) };
+    const unpriced = collectionValueQueries.reduce((sum, query) => sum + (query.data?.unpricedCount ?? 0), 0);
+    return {
+      owned: physicalCount,
+      priced,
+      unpriced,
+      unavailable: Math.max(0, physicalCount - priced - unpriced),
+    };
   }, [collectionValueQueries, physicalCount]);
   const valuationPending = collectionValueQueries.some((query) => query.isFetching);
   const hasValuationResult = collectionValueQueries.some((query) => query.data !== undefined);
@@ -331,31 +345,73 @@ export function TCGCollectionOverview({ collections, legacyOwnedCards = [] }: TC
             <TCGProgressBar owned={stats.ownedInCollections} total={stats.totalCards} size="sm" className="mt-2 w-full" />
           </div>
         </div>
-        <details className="mt-3 rounded-sm border border-border/35 bg-card/20 px-3">
-          <summary className="flex min-h-11 cursor-pointer items-center justify-between gap-3 text-xs font-bold text-foreground/65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60" aria-busy={valuationPending}>
-            <span>{t('tcg.collection_value_estimate')}</span>
-            <ChevronDown className="h-4 w-4 shrink-0 transition-transform open:rotate-180" aria-hidden="true" />
-          </summary>
-          <div className="border-t border-border/30 py-3">
+        <section className="mt-3 rounded-sm border border-border/35 bg-card/20 px-3 py-3" aria-labelledby="tcg-collection-value-heading" aria-busy={valuationPending}>
+          <h3 id="tcg-collection-value-heading" className="text-xs font-black uppercase tracking-[0.08em] text-foreground/65">
+            {t('tcg.custom_collections.value_estimate')}
+          </h3>
+          <div className="mt-2">
             {valuationPending && !hasValuationResult ? (
               <p className="mt-1 text-sm font-bold text-foreground/55" aria-live="polite">{t('tcg.collection_loading')}</p>
             ) : totalValueGroups.length ? (
               <>
-                <p className="mt-1 break-words text-2xl font-black tabular-nums text-primary">
-                  {totalValueGroups.map((group) => formatCurrency(group, interfaceLanguage)).join(' · ')}
-                </p>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {totalValueGroups.map((group) => (
+                    <div key={`${group.currency}:${group.provider ?? 'unknown'}`} className="min-w-0 rounded-sm border border-primary/15 bg-primary/5 px-3 py-2">
+                      <p className="break-words text-2xl font-black tabular-nums text-primary">{formatCurrency(group, interfaceLanguage)}</p>
+                      <p className="text-[10px] font-black uppercase tracking-[0.08em] text-foreground/55">
+                        {group.provider === 'cardmarket' ? 'Cardmarket' : group.provider === 'tcgplayer' ? 'TCGplayer' : t('tcg.market_price')}
+                        {' · '}{t('tcg.custom_collections.value_priced_copies', { count: group.count })}
+                      </p>
+                      {group.oldestPriceAt && group.newestPriceAt ? (
+                        <p className="mt-1 text-[10px] text-foreground/50">
+                          {t('tcg.custom_collections.value_source_period', {
+                            from: new Intl.DateTimeFormat(interfaceLanguage, { dateStyle: 'medium', timeZone: 'UTC' }).format(new Date(group.oldestPriceAt)),
+                            to: new Intl.DateTimeFormat(interfaceLanguage, { dateStyle: 'medium', timeZone: 'UTC' }).format(new Date(group.newestPriceAt)),
+                            defaultValue: 'Source dates: {{from}} to {{to}}',
+                          })}
+                        </p>
+                      ) : (
+                        <p className="mt-1 text-[10px] text-foreground/50">{t('tcg.market_provider_timestamp_unavailable')}</p>
+                      )}
+                      {(group.staleCount ?? 0) > 0 && (
+                        <p className="mt-1 text-[10px] font-bold text-amber-700 dark:text-amber-200/80">
+                          {t('tcg.custom_collections.value_stale_copies', { count: group.staleCount })}
+                        </p>
+                      )}
+                      {(group.missingTimestampCount ?? 0) > 0 && (
+                        <p className="mt-1 text-[10px] text-foreground/50">
+                          {t('tcg.custom_collections.value_missing_dates', { count: group.missingTimestampCount })}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-3 grid gap-1 text-[11px] font-bold sm:grid-cols-3">
+                  <p>{t('tcg.custom_collections.value_coverage', { priced: valuationCoverage.priced, owned: valuationCoverage.owned })}</p>
+                  {valuationCoverage.unpriced > 0 && (
+                    <p className="text-amber-700 dark:text-amber-200/80">{t('tcg.custom_collections.value_unpriced', { count: valuationCoverage.unpriced })}</p>
+                  )}
+                  {valuationCoverage.unavailable > 0 && (
+                    <p className="text-foreground/50">{t('tcg.custom_collections.value_unknown_copies', { count: valuationCoverage.unavailable })}</p>
+                  )}
+                </div>
                 {valuationPending && <p className="text-[11px] font-bold text-foreground/55">{t('tcg.collection_loading')}</p>}
-                {!valuationPending && valuationCoverage.unpriced > 0 && (
-                  <p className="text-[11px] font-bold text-amber-200/70">{t('tcg.collection_value_partial', { count: valuationCoverage.unpriced })}</p>
-                )}
               </>
             ) : physicalCount > 0 ? (
-              <p className="mt-1 text-sm font-bold text-foreground/55">{t('tcg.collection_value_unavailable')}</p>
+              <>
+                <p className="text-sm font-bold text-foreground/55">{t('tcg.custom_collections.value_unavailable')}</p>
+                <p className="mt-1 text-[11px] font-bold text-foreground/50">{t('tcg.custom_collections.value_coverage', { priced: valuationCoverage.priced, owned: valuationCoverage.owned })}</p>
+                {valuationCoverage.unpriced > 0 && <p className="mt-1 text-[11px] font-bold text-amber-700 dark:text-amber-200/80">{t('tcg.custom_collections.value_unpriced', { count: valuationCoverage.unpriced })}</p>}
+                {valuationCoverage.unavailable > 0 && <p className="mt-1 text-[11px] font-bold text-foreground/50">{t('tcg.custom_collections.value_unknown_copies', { count: valuationCoverage.unavailable })}</p>}
+              </>
             ) : (
-              <p className="mt-1 text-sm font-bold text-foreground/55">{t('tcg.collection_value_none_owned')}</p>
+              <p className="mt-1 text-sm font-bold text-foreground/55">{t('tcg.custom_collections.value_none_owned')}</p>
             )}
+            <p className="mt-3 text-[10px] leading-5 text-foreground/45">{t('tcg.custom_collections.value_market_only')}</p>
+            <p className="mt-1 text-[10px] leading-5 text-foreground/45">{t('tcg.custom_collections.value_no_trend')}</p>
+            <p className="mt-1 text-[10px] leading-5 text-foreground/45">{t('tcg.custom_collections.value_method')}</p>
           </div>
-        </details>
+        </section>
       </section>
 
       {legacyGroups.length > 0 && (

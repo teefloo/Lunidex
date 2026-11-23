@@ -108,6 +108,10 @@ function normalizePathSegment(previous: string | undefined, segment: string): st
     return ':id';
   }
 
+  if (previous === 'showcase') {
+    return ':token';
+  }
+
   return segment;
 }
 
