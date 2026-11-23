@@ -39,9 +39,13 @@ describe('public localized proxy responses', () => {
   });
 
   it('routes non-Flight card requests without Accept through the dynamic detail route', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }));
     const response = await proxy(new NextRequest('https://lunidex.test/en/tcg/cards/lxd-oom-card-no-accept?tcgLang=ja'));
 
     expect(response.status).toBe(200);
+    expect(fetchMock.mock.calls.map(([url]) => url)).toEqual([
+      'https://api.tcgdex.net/v2/ja/cards/lxd-oom-card-no-accept',
+    ]);
     expect(response.headers.get('x-middleware-next')).toBe('1');
     expect(response.headers.get('x-middleware-rewrite')).toBeNull();
     expect(response.headers.get('x-middleware-request-x-primedex-static-localized-route')).toBeNull();
@@ -289,6 +293,20 @@ describe('public localized proxy responses', () => {
     }));
 
     expect(response.status).toBe(200);
+    expect(fetchMock.mock.calls.map(([url]) => url)).toEqual([upstreamUrl]);
+  });
+
+  it.each([
+    ['/en/items/not-a-real-item-lunidex-audit-2026', 'https://pokeapi.co/api/v2/item/not-a-real-item-lunidex-audit-2026'],
+    ['/ko/tcg/sets/2024sv-2', 'https://api.tcgdex.net/v2/en/sets/2024sv-2'],
+  ])('returns a hard 404 when the upstream confirms %s is missing', async (path, upstreamUrl) => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 404 }));
+
+    const response = await proxy(new NextRequest(`https://lunidex.test${path}`, {
+      headers: { 'user-agent': 'Googlebot/2.1' },
+    }));
+
+    expect(response.status).toBe(404);
     expect(fetchMock.mock.calls.map(([url]) => url)).toEqual([upstreamUrl]);
   });
 
