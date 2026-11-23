@@ -188,15 +188,20 @@ class WatchdogReportTests(unittest.TestCase):
         self.assertIn("**INCOMPLETE:**", report)
         self.assertIn("could not be parsed", report)
 
-    def test_workflow_uses_date_and_explicit_get_without_unsupported_context(self):
+    def test_workflow_keeps_manual_confirmation_without_schedules_or_watchdog(self):
         repo_root = Path(__file__).resolve().parents[2]
         workflow = (repo_root / ".github/workflows/audit-ovh-resources.yml").read_text()
 
         self.assertNotIn("github.run_started_at", workflow)
         self.assertIn("date -u +%F", workflow)
-        self.assertIn("gh api --method GET", workflow)
+        self.assertIn("workflow_dispatch:", workflow)
         self.assertIn("inputs.confirm_read_only_inspection", workflow)
-        self.assertIn("actions: read", workflow)
+        self.assertIn("manual_audit_slot", workflow)
+        self.assertNotIn("  schedule:", workflow)
+        self.assertNotIn("  watchdog:", workflow)
+        self.assertNotIn("gh api --method GET", workflow)
+        self.assertNotIn("actions: read", workflow)
+        self.assertIn("permissions:\n  contents: read", workflow)
         self.assertNotIn("contents: write", workflow)
 
 

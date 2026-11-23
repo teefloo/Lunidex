@@ -187,7 +187,7 @@ class RenderOvhStabilityReportTests(unittest.TestCase):
         self.assertIn("**Verdict: GO**", report)
         self.assertIn("Audit UTC date: `2026-11-23`", report)
 
-    def test_workflow_keeps_manual_confirmation_and_read_only_permissions(self):
+    def test_workflow_keeps_manual_confirmation_and_removes_temporary_schedules(self):
         repo_root = Path(__file__).resolve().parents[2]
         workflow = (repo_root / ".github/workflows/audit-ovh-resources.yml").read_text()
 
@@ -199,19 +199,19 @@ class RenderOvhStabilityReportTests(unittest.TestCase):
             "21 13 22 11 *",
             "21 13 23 11 *",
         ):
-            self.assertIn(f"- cron: '{cron}'", workflow)
+            self.assertNotIn(f"cron: '{cron}'", workflow)
         self.assertIn("inputs.confirm_read_only_inspection", workflow)
+        self.assertIn("workflow_dispatch:", workflow)
         self.assertIn("environment: ovh-preproduction", workflow)
-        self.assertIn("actions: read", workflow)
+        self.assertNotIn("  schedule:", workflow)
+        self.assertNotIn("  watchdog:", workflow)
+        self.assertNotIn("actions: read", workflow)
         self.assertNotIn("contents: write", workflow)
-        self.assertIn("github.event.schedule == '6 13 23 11 *'", workflow)
         self.assertNotIn("github.run_started_at", workflow)
         self.assertIn("date -u +%F", workflow)
-        self.assertIn("--method GET", workflow)
         self.assertIn("audit_utc_date", workflow)
         self.assertIn("Probe essential production HTTPS routes", workflow)
-        self.assertIn("Report missing, failed, or incomplete scheduled audit", workflow)
-        self.assertIn("actions: read", workflow)
+        self.assertNotIn("Report missing, failed, or incomplete scheduled audit", workflow)
 
 
 if __name__ == "__main__":
