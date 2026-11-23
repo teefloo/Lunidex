@@ -2,15 +2,6 @@ name: Audit OVH VPS resources
 run-name: OVH stability audit ${{ github.event.schedule || 'manual' }}
 
 on:
-  schedule:
-    # Temporary 2026 audits (UTC). The date gate below is required because GitHub cron has no year field.
-    - cron: '6 19 21 11 *'
-    - cron: '6 13 22 11 *'
-    - cron: '6 13 23 11 *'
-    # Read-only watchdogs report a missing or incomplete scheduled audit 15 minutes later.
-    - cron: '21 19 21 11 *'
-    - cron: '21 13 22 11 *'
-    - cron: '21 13 23 11 *'
   workflow_dispatch:
     inputs:
       confirm_read_only_inspection:
@@ -44,19 +35,9 @@ concurrency:
 jobs:
   inspect:
     if: >-
-      (
-        github.event_name == 'workflow_dispatch' &&
-        (github.ref == 'refs/heads/codex/ovh-vps-migration' || github.ref == 'refs/heads/master') &&
-        inputs.confirm_read_only_inspection
-      ) || (
-        github.event_name == 'schedule' &&
-        github.ref == 'refs/heads/master' &&
-        (
-          github.event.schedule == '6 19 21 11 *' ||
-          github.event.schedule == '6 13 22 11 *' ||
-          github.event.schedule == '6 13 23 11 *'
-        )
-      )
+      github.event_name == 'workflow_dispatch' &&
+      (github.ref == 'refs/heads/codex/ovh-vps-migration' || github.ref == 'refs/heads/master') &&
+      inputs.confirm_read_only_inspection
     runs-on: ubuntu-latest
     timeout-minutes: 5
     environment: ovh-preproduction
@@ -361,17 +342,7 @@ jobs:
   report:
     if: >-
       always() &&
-      (
-        github.event_name == 'workflow_dispatch' ||
-        (
-          github.event_name == 'schedule' &&
-          (
-            github.event.schedule == '6 19 21 11 *' ||
-            github.event.schedule == '6 13 22 11 *' ||
-            github.event.schedule == '6 13 23 11 *'
-          )
-        )
-      )
+      github.event_name == 'workflow_dispatch'
     needs: [inspect]
     runs-on: ubuntu-latest
     permissions:
@@ -425,46 +396,3 @@ jobs:
           AUDIT_UTC_DATE="$audit_utc_date" \
             REPORT_RUNNER_UTC_DATE="$report_runner_utc_date" \
             python3 scripts/deployment/render_ovh_stability_report.py
-
-  watchdog:
-    if: >-
-      github.event_name == 'schedule' &&
-      github.ref == 'refs/heads/master' &&
-      (
-        github.event.schedule == '21 19 21 11 *' ||
-        github.event.schedule == '21 13 22 11 *' ||
-        github.event.schedule == '21 13 23 11 *'
-      )
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      actions: read
-      contents: read
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-
-      - name: Report missing, failed, or incomplete scheduled audit
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-          EVENT_SCHEDULE: ${{ github.event.schedule }}
-          CURRENT_RUN_ID: ${{ github.run_id }}
-        run: |
-          set -Eeuo pipefail
-          RUNNER_UTC_DATE="$(date -u +%F)"
-          if ! runs_json="$(gh api --method GET \
-            "repos/${GITHUB_REPOSITORY}/actions/workflows/audit-ovh-resources.yml/runs" \
-            -f event=schedule -f branch=master -F per_page=100 2>/dev/null)"; then
-            {
-              echo '## Scheduled audit watchdog'
-              echo
-              echo '**INCOMPLETE:** could not read Actions run history for the allowlisted slot.'
-            } >> "$GITHUB_STEP_SUMMARY"
-            exit 1
-          fi
-          printf '%s\n' "$runs_json" \
-            | EVENT_SCHEDULE="$EVENT_SCHEDULE" \
-              RUNNER_UTC_DATE="$RUNNER_UTC_DATE" \
-              CURRENT_RUN_ID="$CURRENT_RUN_ID" \
-              python3 scripts/deployment/ovh_audit_schedule.py \
-            >> "$GITHUB_STEP_SUMMARY"
