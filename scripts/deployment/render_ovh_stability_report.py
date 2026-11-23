@@ -368,7 +368,6 @@ def build_report(values: Mapping[str, str]) -> tuple[str, int]:
             [
                 "",
                 "T+48 memory gate: OVH memory GO requires Node RSS, cgroup anonymous memory, and cgroup current outside inactive_file each to remain at or below 125% of their T+1 references, zero cgroup max/OOM events, and healthy Docker status. Missing or inconsistent cgroup/current cache metrics make memory INCOMPLETE. The cgroup remainder is not a heap measurement. Neon Auth and HTTPS are reported independently.",
-                "**Temporary schedule cleanup required:** remove the 2026 audit and watchdog cron entries in a follow-up PR after this report. No write permission is granted to this workflow.",
             ]
         )
     lines.append("")

@@ -53,14 +53,14 @@ def healthy_audit(**overrides):
 
 
 class RenderOvhStabilityReportTests(unittest.TestCase):
-    def test_t48_report_compares_against_t1_and_contains_cleanup_notice(self):
+    def test_t48_report_compares_against_t1_without_stale_cleanup_notice(self):
         report, status = build_report(healthy_audit())
 
         self.assertEqual(status, 0)
         self.assertIn("**Verdict: GO**", report)
         self.assertIn("T+1 reference", report)
         self.assertIn("625580 KiB", report)
-        self.assertIn("Temporary schedule cleanup required", report)
+        self.assertNotIn("Temporary schedule cleanup required", report)
         self.assertIn("cannot calculate an HTTP 5xx rate", report)
         self.assertIn("2026-11-22T15:45:38Z", report)
         self.assertIn("T+24 catch-up (2h39 late)", report)
@@ -178,6 +178,7 @@ class RenderOvhStabilityReportTests(unittest.TestCase):
             with self.subTest(schedule=schedule):
                 report, status = build_report(
                     healthy_audit(
+                        event_name="schedule",
                         event_schedule=schedule,
                         audit_utc_date=utc_date,
                         auth_session_status="402",
@@ -306,7 +307,7 @@ class RenderOvhStabilityReportTests(unittest.TestCase):
         self.assertIn("**Verdict: GO**", report)
         self.assertIn("Audit UTC date: `2026-11-23`", report)
 
-    def test_workflow_keeps_manual_confirmation_and_read_only_permissions(self):
+    def test_workflow_keeps_manual_confirmation_and_removes_temporary_schedules(self):
         repo_root = Path(__file__).resolve().parents[2]
         workflow = (repo_root / ".github/workflows/audit-ovh-resources.yml").read_text()
 
@@ -318,12 +319,24 @@ class RenderOvhStabilityReportTests(unittest.TestCase):
             "21 13 22 11 *",
             "21 13 23 11 *",
         ):
-            self.assertIn(f"- cron: '{cron}'", workflow)
-        self.assertIn("inputs.confirm_read_only_inspection", workflow)
+            self.assertNotIn(f"cron: '{cron}'", workflow)
+        self.assertNotIn("  schedule:", workflow)
+        self.assertNotIn("github.event.schedule", workflow)
+        self.assertNotIn("  watchdog:", workflow)
+        self.assertNotIn("Report missing, failed, or incomplete scheduled audit", workflow)
+        self.assertIn("workflow_dispatch:", workflow)
         self.assertIn("environment: ovh-preproduction", workflow)
-        self.assertIn("actions: read", workflow)
+        self.assertNotIn("actions: read", workflow)
+        self.assertIn("permissions:\n  contents: read", workflow)
         self.assertNotIn("contents: write", workflow)
-        self.assertIn("github.event.schedule == '6 13 23 11 *'", workflow)
+        inspect_job = workflow.split("\n  inspect:\n", 1)[1].split("\n  report:\n", 1)[0]
+        self.assertIn("github.event_name == 'workflow_dispatch'", inspect_job)
+        self.assertIn("inputs.confirm_read_only_inspection", inspect_job)
+        self.assertIn("confirm_read_only_inspection:\n        description:", workflow)
+        self.assertIn("        required: true", workflow)
+        self.assertIn("        type: boolean", workflow)
+        self.assertIn("always() &&\n      github.event_name == 'workflow_dispatch'", workflow)
+        self.assertIn("Probe essential production HTTPS routes", workflow)
         self.assertIn("bash scripts/deployment/probe_ovh_https.sh", workflow)
         self.assertIn("cgroup_anon_bytes: ${{ steps.diagnostics.outputs.app_cgroup_memory_stat_anon_bytes }}", workflow)
         self.assertIn("cgroup_event_max: ${{ steps.diagnostics.outputs.app_cgroup_memory_event_max }}", workflow)
@@ -331,12 +344,7 @@ class RenderOvhStabilityReportTests(unittest.TestCase):
         self.assertIn("memory_captured_at: ${{ steps.diagnostics.outputs.audit_memory_captured_at }}", workflow)
         self.assertNotIn("github.run_started_at", workflow)
         self.assertIn("date -u +%F", workflow)
-        self.assertIn("--method GET", workflow)
         self.assertIn("audit_utc_date", workflow)
-        self.assertIn("Probe essential production HTTPS routes", workflow)
-        self.assertIn("Report missing, failed, or incomplete scheduled audit", workflow)
-        self.assertIn("actions: read", workflow)
-
 
 if __name__ == "__main__":
     unittest.main()
