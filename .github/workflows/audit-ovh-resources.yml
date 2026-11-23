@@ -1,5 +1,4 @@
 name: Audit OVH VPS resources
-run-name: OVH stability audit ${{ github.event.schedule || 'manual' }}
 
 on:
   workflow_dispatch:
@@ -59,6 +58,13 @@ jobs:
       root_fs_free_bytes: ${{ steps.host.outputs.audit_root_fs_free_bytes }}
       cgroup_current_bytes: ${{ steps.diagnostics.outputs.app_cgroup_memory_current_bytes }}
       cgroup_peak_bytes: ${{ steps.diagnostics.outputs.app_cgroup_memory_peak_bytes }}
+      cgroup_anon_bytes: ${{ steps.diagnostics.outputs.app_cgroup_memory_stat_anon_bytes }}
+      cgroup_file_bytes: ${{ steps.diagnostics.outputs.app_cgroup_memory_stat_file_bytes }}
+      cgroup_inactive_file_bytes: ${{ steps.diagnostics.outputs.app_cgroup_memory_stat_inactive_file_bytes }}
+      cgroup_slab_bytes: ${{ steps.diagnostics.outputs.app_cgroup_memory_stat_slab_bytes }}
+      cgroup_kernel_bytes: ${{ steps.diagnostics.outputs.app_cgroup_memory_stat_kernel_bytes }}
+      memory_captured_at: ${{ steps.diagnostics.outputs.audit_memory_captured_at }}
+      cgroup_event_max: ${{ steps.diagnostics.outputs.app_cgroup_memory_event_max }}
       cgroup_oom: ${{ steps.diagnostics.outputs.app_cgroup_memory_event_oom }}
       cgroup_oom_kill: ${{ steps.diagnostics.outputs.app_cgroup_memory_event_oom_kill }}
       cgroup_oom_group_kill: ${{ steps.diagnostics.outputs.app_cgroup_memory_event_oom_group_kill }}
@@ -85,7 +91,7 @@ jobs:
         shell: bash
         env:
           EVENT_NAME: ${{ github.event_name }}
-          EVENT_SCHEDULE: ${{ github.event.schedule }}
+          EVENT_SCHEDULE: ''
           MANUAL_AUDIT_SLOT: ${{ inputs.manual_audit_slot || 'adhoc' }}
         run: |
           set -Eeuo pipefail
@@ -231,6 +237,7 @@ jobs:
             echo 'The expected diagnostic run identifier must be empty or contain only digits and one hyphen.' >&2
             exit 78
           }
+          audit_memory_captured_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           target="$OVH_DEPLOY_USER@$OVH_DEPLOY_HOST"
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
           remote_command="EXPECTED_HEAP_SAMPLE_RUN_ID='$EXPECTED_HEAP_SAMPLE_RUN_ID' python3 -"
@@ -238,11 +245,12 @@ jobs:
           printf '%s\n' "$diagnostics_output"
           while IFS='=' read -r name value; do
             case "$name" in
-              app_cgroup_memory_current_bytes|app_cgroup_memory_peak_bytes|app_cgroup_memory_event_oom|app_cgroup_memory_event_oom_kill|app_cgroup_memory_event_oom_group_kill|app_host_runtime_1_vmrss_kib|app_host_runtime_1_cpu_pct|caddy_access_logs_available)
+              app_cgroup_memory_current_bytes|app_cgroup_memory_peak_bytes|app_cgroup_memory_stat_anon_bytes|app_cgroup_memory_stat_file_bytes|app_cgroup_memory_stat_inactive_file_bytes|app_cgroup_memory_stat_slab_bytes|app_cgroup_memory_stat_kernel_bytes|app_cgroup_memory_event_max|app_cgroup_memory_event_oom|app_cgroup_memory_event_oom_kill|app_cgroup_memory_event_oom_group_kill|app_host_runtime_1_vmrss_kib|app_host_runtime_1_cpu_pct|caddy_access_logs_available)
                 printf '%s=%s\n' "$name" "$value" >> "$GITHUB_OUTPUT"
                 ;;
             esac
           done <<< "$diagnostics_output"
+          printf 'audit_memory_captured_at=%s\n' "$audit_memory_captured_at" >> "$GITHUB_OUTPUT"
 
       - name: Probe essential production HTTPS routes
         if: steps.slot.outputs.audit_date_valid == 'true'
@@ -250,28 +258,7 @@ jobs:
         shell: bash
         env:
           AUDIT_UTC_DATE: ${{ steps.slot.outputs.audit_utc_date }}
-        run: |
-          set -Eeuo pipefail
-          printf 'Audit UTC date: %s\n' "$AUDIT_UTC_DATE"
-          probe() {
-            local name="$1" path="$2" expected="$3" response status duration tls
-            response="$(curl --max-time 20 --silent --show-error --output /dev/null \
-              --write-out '%{http_code}|%{time_total}|%{ssl_verify_result}' \
-              "https://lunidex.app${path}")"
-            IFS='|' read -r status duration tls <<< "$response"
-            printf '%s status=%s duration=%ss tls_verify_result=%s expected=%s\n' \
-              "$name" "$status" "$duration" "$tls" "$expected"
-            printf '%s_status=%s\n' "$name" "$status" >> "$GITHUB_OUTPUT"
-            printf 'tls_verify_result=%s\n' "$tls" >> "$GITHUB_OUTPUT"
-            [[ "$status" == "$expected" && "$tls" == 0 ]]
-          }
-          probe healthz /api/healthz 200
-          probe home /en 200
-          probe tcg /en/tcg 200
-          probe manifest /manifest.webmanifest 200
-          probe service_worker /sw.js 200
-          probe auth_session /api/auth/get-session 200
-          probe profile /api/profile 401
+        run: bash scripts/deployment/probe_ovh_https.sh
 
       - name: Retrieve one matching sanitized heap sample
         if: inputs.expected_heap_sample_run_id != '' && steps.slot.outputs.audit_date_valid == 'true'
@@ -359,7 +346,6 @@ jobs:
           AUDIT_DATE_VALID: ${{ needs.inspect.outputs.audit_date_valid }}
           AUDIT_DATE_ERROR: ${{ needs.inspect.outputs.audit_date_error }}
           EVENT_NAME: ${{ github.event_name }}
-          EVENT_SCHEDULE: ${{ github.event.schedule }}
           CONFIRM_READ_ONLY_INSPECTION: ${{ inputs.confirm_read_only_inspection }}
           MANUAL_AUDIT_SLOT: ${{ inputs.manual_audit_slot || 'adhoc' }}
           CONTAINER_STATUS: ${{ needs.inspect.outputs.container_status }}
@@ -375,6 +361,12 @@ jobs:
           ROOT_FS_FREE_BYTES: ${{ needs.inspect.outputs.root_fs_free_bytes }}
           CGROUP_CURRENT_BYTES: ${{ needs.inspect.outputs.cgroup_current_bytes }}
           CGROUP_PEAK_BYTES: ${{ needs.inspect.outputs.cgroup_peak_bytes }}
+          CGROUP_ANON_BYTES: ${{ needs.inspect.outputs.cgroup_anon_bytes }}
+          CGROUP_FILE_BYTES: ${{ needs.inspect.outputs.cgroup_file_bytes }}
+          CGROUP_INACTIVE_FILE_BYTES: ${{ needs.inspect.outputs.cgroup_inactive_file_bytes }}
+          CGROUP_SLAB_BYTES: ${{ needs.inspect.outputs.cgroup_slab_bytes }}
+          CGROUP_KERNEL_BYTES: ${{ needs.inspect.outputs.cgroup_kernel_bytes }}
+          CGROUP_EVENT_MAX: ${{ needs.inspect.outputs.cgroup_event_max }}
           CGROUP_OOM: ${{ needs.inspect.outputs.cgroup_oom }}
           CGROUP_OOM_KILL: ${{ needs.inspect.outputs.cgroup_oom_kill }}
           CGROUP_OOM_GROUP_KILL: ${{ needs.inspect.outputs.cgroup_oom_group_kill }}
@@ -389,6 +381,7 @@ jobs:
           AUTH_SESSION_STATUS: ${{ needs.inspect.outputs.auth_session_status }}
           PROFILE_STATUS: ${{ needs.inspect.outputs.profile_status }}
           TLS_VERIFY_RESULT: ${{ needs.inspect.outputs.tls_verify_result }}
+          AUDIT_CAPTURED_AT: ${{ needs.inspect.outputs.audit_memory_captured_at }}
         run: |
           set -Eeuo pipefail
           report_runner_utc_date="$(date -u +%F)"

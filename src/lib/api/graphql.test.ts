@@ -78,6 +78,41 @@ describe('getItemDetail', () => {
     );
   });
 
+  it('falls back to REST when GraphQL returns a validation error with HTTP 200', async () => {
+    mocks.graphqlPost.mockResolvedValue({
+      data: {
+        data: null,
+        errors: [{ message: "field 'cost' not found in type: 'item'" }],
+      },
+    });
+    mocks.restGet.mockResolvedValue({
+      data: {
+        id: 934,
+        name: 'contest-costume--dress',
+        cost: 0,
+        category: { name: 'unused' },
+        names: [{ name: 'Vestito Live', language: { name: 'it' } }],
+        effect_entries: [{
+          effect: 'Abito da gara',
+          short_effect: 'Abito elegante',
+          language: { name: 'it' },
+        }],
+        flavor_text_entries: [{ text: 'Grazioso vestito.', language: { name: 'it' } }],
+      },
+    });
+
+    await expect(getItemDetail('contest-costume--dress', 8)).resolves.toEqual({
+      id: 934,
+      name: 'contest-costume--dress',
+      cost: 0,
+      pokemon_v2_itemcategory: { name: 'unused' },
+      pokemon_v2_itemnames: [{ name: 'Vestito Live' }],
+      pokemon_v2_itemeffecttexts: [{ effect: 'Abito da gara', short_effect: 'Abito elegante' }],
+      pokemon_v2_itemflavortexts: [{ flavor_text: 'Grazioso vestito.' }],
+    });
+    expect(mocks.restGet).toHaveBeenCalledWith('/item/contest-costume--dress');
+  });
+
   it('keeps successful GraphQL item lookups on the existing path', async () => {
     const item = {
       id: 1,

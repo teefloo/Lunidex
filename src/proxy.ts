@@ -692,7 +692,7 @@ export async function proxy(request: NextRequest) {
     const accept = (request.headers.get('accept') ?? '').toLowerCase();
     const isDocumentRequest = !isFlightRequest(request)
       && (request.method === 'HEAD'
-        || (request.method === 'GET' && (accept.includes('text/html') || accept.includes('*/*'))));
+        || (request.method === 'GET' && (!accept || accept.includes('text/html') || accept.includes('*/*'))));
     if (isDocumentRequest && hasObviouslyInvalidResourceIdentifier(pathname, urlLocale)) {
       return hardNotFoundResponse(request, urlLocale);
     }

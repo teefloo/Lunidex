@@ -111,7 +111,7 @@ function postPokemonGraphQL<TData>(
   variables?: Record<string, unknown>,
   config?: AxiosRequestConfig,
 ) {
-  return graphqlClient.post<{ data?: TData }>(
+  return graphqlClient.post<{ data?: TData; errors?: { message: string }[] }>(
     GRAPHQL_API_PATH,
     { query: toV1Beta2Query(query), variables },
     config,
@@ -940,6 +940,10 @@ export const getItemDetail = async (name: string, languageId: number): Promise<G
       timeout: 10000,
       'axios-retry': { retries: 0 },
     });
+
+    if (data.errors?.length) {
+      throw new Error('PokéAPI GraphQL item detail lookup returned errors');
+    }
 
     const result = data?.data?.pokemon_v2_item?.[0];
     if (!result) return null;
