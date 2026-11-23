@@ -214,7 +214,7 @@ describe('AuthProvider session refresh', () => {
     expect(container.querySelector('output')?.dataset.user).toBe('');
   });
 
-  it('bounds automatic retries and requires explicit retry after the budget is exhausted', async () => {
+  it('bounds automatic retries and recovers on a later online event after transient failures', async () => {
     const timers = captureWindowTimers();
     let now = Date.now();
     vi.spyOn(Date, 'now').mockImplementation(() => now);
@@ -250,13 +250,7 @@ describe('AuthProvider session refresh', () => {
       await Promise.resolve();
       await Promise.resolve();
     });
-    expect(fetchMock).toHaveBeenCalledTimes(4);
 
-    await act(async () => {
-      container.querySelector<HTMLButtonElement>('button')?.click();
-      await Promise.resolve();
-      await Promise.resolve();
-    });
     expect(fetchMock).toHaveBeenCalledTimes(5);
     expect(container.querySelector('output')?.dataset.sessionStatus).toBe('resolved');
   });

@@ -542,9 +542,14 @@ function useClientSession(): { data: SessionData; isPending: boolean; status: 'c
     let quotaRetryDelayMs = AUTH_SESSION_QUOTA_RETRY_INITIAL_MS;
     let retryAttempts = 0;
     let retryDueAt: number | null = null;
+    let quotaFailureSeen = false;
     let lastForegroundEventAt = 0;
     let latestSession: SessionData = null;
     let expiryRefreshAttemptedFor: number | null = null;
+
+    const canRestartTransientRetryBurst = () => retryDueAt === null
+      && retryAttempts >= AUTH_SESSION_RETRY_MAX_ATTEMPTS
+      && !quotaFailureSeen;
 
     const clearRetryTimer = () => {
       if (retryTimer === null) return;
@@ -597,7 +602,7 @@ function useClientSession(): { data: SessionData; isPending: boolean; status: 'c
           return;
         }
         if (!refreshAlreadyAttempted) expiryRefreshAttemptedFor = expiresAt;
-        void refresh(false);
+        void refresh(false, canRestartTransientRetryBurst());
       }, delay);
     };
 
@@ -612,6 +617,7 @@ function useClientSession(): { data: SessionData; isPending: boolean; status: 'c
         retryDelayMs = AUTH_SESSION_RETRY_INITIAL_MS;
         quotaRetryDelayMs = AUTH_SESSION_QUOTA_RETRY_INITIAL_MS;
         retryDueAt = null;
+        quotaFailureSeen = false;
         clearRetryTimer();
       }
       if (showPending) setState((current) => current.data === null
@@ -629,6 +635,7 @@ function useClientSession(): { data: SessionData; isPending: boolean; status: 'c
             retryDelayMs = AUTH_SESSION_RETRY_INITIAL_MS;
             quotaRetryDelayMs = AUTH_SESSION_QUOTA_RETRY_INITIAL_MS;
             retryDueAt = null;
+            quotaFailureSeen = false;
             clearRetryTimer();
             scheduleSessionExpiryRefresh(result.data);
           }
@@ -652,6 +659,7 @@ function useClientSession(): { data: SessionData; isPending: boolean; status: 'c
       if (retryDueAt !== null || retryAttempts >= AUTH_SESSION_RETRY_MAX_ATTEMPTS
         || !active || document.visibilityState !== 'visible') return;
       if (isQuotaExceededError(error)) {
+        quotaFailureSeen = true;
         retryDueAt = Date.now() + quotaRetryDelayMs;
         quotaRetryDelayMs = Math.min(quotaRetryDelayMs * 2, AUTH_SESSION_QUOTA_RETRY_MAX_MS);
       } else {
@@ -671,7 +679,7 @@ function useClientSession(): { data: SessionData; isPending: boolean; status: 'c
         armRetryTimer();
         return;
       }
-      void refresh();
+      void refresh(false, canRestartTransientRetryBurst());
     };
 
     const handleVisibilityChange = () => {
