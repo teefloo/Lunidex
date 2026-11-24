@@ -4,15 +4,20 @@ on:
   workflow_dispatch:
     inputs:
       production_commit:
-        description: Exact 40-character master commit SHA to build and deploy
+        description: Exact image source SHA; leave at current master SHA when building a new image
         required: true
+        type: string
+      candidate_image_digest:
+        description: Optional existing GHCR sha256 digest to reuse without rebuilding the image
+        required: false
+        default: ''
         type: string
       confirmation:
         description: Type DEPLOY_OVH_PRODUCTION to authorize this production workflow
         required: true
         type: string
       deployment_mode:
-        description: Preflight builds, publishes, and validates an image on GitHub/GHCR; deploy alone connects to OVH
+        description: Preflight validates a supplied digest or builds and publishes a candidate on GitHub/GHCR; deploy alone connects to OVH
         required: true
         default: preflight
         type: choice
@@ -38,7 +43,7 @@ jobs:
       github.event_name == 'workflow_dispatch' &&
       github.ref == 'refs/heads/master' &&
       inputs.confirmation == 'DEPLOY_OVH_PRODUCTION' &&
-      inputs.production_commit == github.sha
+      inputs.production_commit != ''
     runs-on: ubuntu-latest
     timeout-minutes: 45
     environment: ovh-production
@@ -48,6 +53,7 @@ jobs:
     env:
       PRODUCTION_COMMIT: ${{ inputs.production_commit }}
       PRODUCTION_CONFIRMATION: ${{ inputs.confirmation }}
+      CANDIDATE_IMAGE_DIGEST: ${{ inputs.candidate_image_digest }}
       DEPLOYMENT_MODE: ${{ inputs.deployment_mode }}
       HEAP_SAMPLING_DIAGNOSTIC: ${{ inputs.heap_sampling_diagnostic }}
       HEAP_SAMPLING_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
@@ -76,10 +82,18 @@ jobs:
             echo 'The exact production confirmation phrase is required.' >&2
             exit 1
           }
-          [[ "$PRODUCTION_COMMIT" == "$GITHUB_SHA" && "$PRODUCTION_COMMIT" =~ ^[0-9a-f]{40}$ ]] || {
-            echo 'The requested full SHA must equal the selected master commit.' >&2
+          [[ "$PRODUCTION_COMMIT" =~ ^[0-9a-f]{40}$ ]] || {
+            echo 'The selected image source must be a full 40-character SHA.' >&2
             exit 1
           }
+          if [[ -n "$CANDIDATE_IMAGE_DIGEST" && ! "$CANDIDATE_IMAGE_DIGEST" =~ ^sha256:[0-9a-f]{64}$ ]]; then
+            echo 'A reused candidate must be supplied as a sha256 digest, without a tag or repository override.' >&2
+            exit 78
+          fi
+          if [[ -z "$CANDIDATE_IMAGE_DIGEST" && "$PRODUCTION_COMMIT" != "$GITHUB_SHA" ]]; then
+            echo 'A newly built image must use the exact selected master SHA.' >&2
+            exit 78
+          fi
           [[ "$DEPLOYMENT_MODE" == 'preflight' || "$DEPLOYMENT_MODE" == 'deploy' ]] || {
             echo 'Unknown production deployment mode.' >&2
             exit 1
@@ -95,7 +109,21 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
-          ref: ${{ inputs.production_commit }}
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Verify the image source commit belongs to selected master
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git cat-file -e "$PRODUCTION_COMMIT^{commit}" || {
+            echo 'The selected image source SHA is not present in the checked-out master history.' >&2
+            exit 78
+          }
+          git merge-base --is-ancestor "$PRODUCTION_COMMIT" "$GITHUB_SHA" || {
+            echo 'The selected image source SHA is not an ancestor of the selected master commit.' >&2
+            exit 78
+          }
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
@@ -155,8 +183,27 @@ jobs:
             'ghcr.io/teefloo/lunidex@sha256:9ca8f66d0b5f79a984358d12fe1c382319df7364388ec2d5df78fe3c5afc318a' \
             'd0f5e1af2cf95dd43eb046069c0d37f0a2add93e'
 
+      - name: Reuse the supplied immutable candidate image digest
+        id: reused_candidate_image
+        if: inputs.candidate_image_digest != ''
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          image_ref="$(node scripts/deployment/resolve-candidate-image-ref.mjs "$CANDIDATE_IMAGE_DIGEST")"
+          printf 'image_ref=%s\n' "$image_ref" >> "$GITHUB_OUTPUT"
+          printf 'image_digest=%s\n' "$CANDIDATE_IMAGE_DIGEST" >> "$GITHUB_OUTPUT"
+          {
+            echo '## Reusing existing immutable OVH candidate image'
+            echo
+            echo "- Source commit expected: $PRODUCTION_COMMIT"
+            echo "- Candidate image ref: $image_ref"
+            echo '- The image will be pulled and checked for source revision, linux/amd64, Compose limits, and /api/healthz.'
+            echo '- No container image build or publication is performed for this input.'
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Build and publish the candidate image
         id: candidate_image
+        if: inputs.candidate_image_digest == ''
         shell: bash
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
@@ -217,7 +264,7 @@ jobs:
       - name: Validate the candidate Compose contract and app health in isolation
         shell: bash
         env:
-          IMAGE_REF: ${{ steps.candidate_image.outputs.image_ref }}
+          IMAGE_REF: ${{ steps.reused_candidate_image.outputs.image_ref || steps.candidate_image.outputs.image_ref }}
         run: |
           set -Eeuo pipefail
           bash scripts/deployment/validate-image-isolated.sh "$IMAGE_REF" "$PRODUCTION_COMMIT"
@@ -310,7 +357,7 @@ jobs:
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          IMAGE_REF: ${{ steps.candidate_image.outputs.image_ref }}
+          IMAGE_REF: ${{ steps.reused_candidate_image.outputs.image_ref || steps.candidate_image.outputs.image_ref }}
         run: |
           set -Eeuo pipefail
           target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
@@ -390,7 +437,7 @@ jobs:
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          IMAGE_REF: ${{ steps.candidate_image.outputs.image_ref }}
+          IMAGE_REF: ${{ steps.reused_candidate_image.outputs.image_ref || steps.candidate_image.outputs.image_ref }}
         run: |
           set -Eeuo pipefail
           target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
@@ -491,13 +538,18 @@ jobs:
         if: success() && inputs.deployment_mode == 'preflight'
         shell: bash
         env:
-          IMAGE_REF: ${{ steps.candidate_image.outputs.image_ref }}
+          IMAGE_REF: ${{ steps.reused_candidate_image.outputs.image_ref || steps.candidate_image.outputs.image_ref }}
+          CANDIDATE_IMAGE_DIGEST: ${{ inputs.candidate_image_digest }}
         run: |
           set -Eeuo pipefail
           {
             echo '## Isolated preflight complete'
             echo
-            echo 'The candidate image was built and published to GHCR, then the candidate and rollback images were checked by digest and smoke-tested on this GitHub runner.'
+            if [[ -n "$CANDIDATE_IMAGE_DIGEST" ]]; then
+              echo 'The supplied candidate image and rollback image were checked by digest and smoke-tested on this GitHub runner. The candidate was reused; no image build or publication was performed.'
+            else
+              echo 'The candidate image was built and published to GHCR, then the candidate and rollback images were checked by digest and smoke-tested on this GitHub runner.'
+            fi
             echo 'No SSH key was configured; no VPS, production environment file, container, Caddy route, or Neon data was accessed.'
             echo "Candidate: \`$IMAGE_REF\`"
           } >> "$GITHUB_STEP_SUMMARY"
