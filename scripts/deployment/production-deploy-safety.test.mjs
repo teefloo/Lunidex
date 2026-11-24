@@ -105,6 +105,8 @@ test('production dispatch requires master, the exact current SHA, and explicit c
   assert.equal(inputs.production_commit.required, true);
   assert.equal(inputs.confirmation.required, true);
   assert.equal(inputs.confirmation.type, 'string');
+  assert.match(inputs.deployment_mode.description, /isolated image in GitHub/);
+  assert.match(inputs.deployment_mode.description, /deploy alone connects to OVH/);
   assert.match(job.if, /github\.ref == 'refs\/heads\/master'/);
   assert.match(job.if, /inputs\.confirmation == 'DEPLOY_OVH_PRODUCTION'/);
   assert.match(job.if, /inputs\.production_commit == github\.sha/);

@@ -12,7 +12,7 @@ on:
         required: true
         type: string
       deployment_mode:
-        description: Preflight tests the image without keeping it running; deploy starts the app behind Caddy
+        description: Preflight builds and validates an isolated image in GitHub; deploy alone connects to OVH
         required: true
         default: preflight
         type: choice
@@ -380,7 +380,7 @@ jobs:
           echo 'Preproduction app is stopped before durable production deployment.'
           REMOTE
 
-      - name: Deploy or privately preflight the production image
+      - name: Deploy the production image by immutable digest
         if: inputs.deployment_mode == 'deploy'
         shell: bash
         env:
