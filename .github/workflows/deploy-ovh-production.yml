@@ -29,6 +29,13 @@ on:
         required: true
         default: false
         type: boolean
+  workflow_run:
+    workflows:
+      - CI
+    branches:
+      - master
+    types:
+      - completed
 
 permissions:
   contents: read
@@ -40,10 +47,15 @@ concurrency:
 jobs:
   deploy:
     if: >-
-      github.event_name == 'workflow_dispatch' &&
+      (github.event_name == 'workflow_dispatch' &&
       github.ref == 'refs/heads/master' &&
       inputs.confirmation == 'DEPLOY_OVH_PRODUCTION' &&
-      inputs.production_commit != ''
+      inputs.production_commit != '') ||
+      (github.event_name == 'workflow_run' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'master' &&
+      vars.AUTO_DEPLOY_ENABLED == 'true')
     runs-on: ubuntu-latest
     timeout-minutes: 45
     environment: ovh-production
@@ -51,12 +63,13 @@ jobs:
       contents: read
       packages: write
     env:
-      PRODUCTION_COMMIT: ${{ inputs.production_commit }}
+      PRODUCTION_COMMIT: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || inputs.production_commit }}
       PRODUCTION_CONFIRMATION: ${{ inputs.confirmation }}
       CANDIDATE_IMAGE_DIGEST: ${{ inputs.candidate_image_digest }}
-      DEPLOYMENT_MODE: ${{ inputs.deployment_mode }}
+      DEPLOYMENT_MODE: ${{ github.event_name == 'workflow_run' && 'deploy' || inputs.deployment_mode }}
       HEAP_SAMPLING_DIAGNOSTIC: ${{ inputs.heap_sampling_diagnostic }}
       HEAP_SAMPLING_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+      AUTO_DEPLOY_ENABLED: ${{ vars.AUTO_DEPLOY_ENABLED || 'false' }}
       NEXT_PUBLIC_NEON_AUTH_URL: ${{ vars.NEXT_PUBLIC_NEON_AUTH_URL }}
       NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN: ${{ vars.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN }}
       NEXT_PUBLIC_POSTHOG_HOST: ${{ vars.NEXT_PUBLIC_POSTHOG_HOST }}
@@ -72,16 +85,34 @@ jobs:
     steps:
       - name: Guard the production branch and commit
         shell: bash
+        env:
+          WORKFLOW_RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          WORKFLOW_RUN_EVENT: ${{ github.event.workflow_run.event }}
+          WORKFLOW_RUN_HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
         run: |
           set -Eeuo pipefail
-          [[ "$GITHUB_REF" == 'refs/heads/master' ]] || {
-            echo 'Production deployment is permitted only from master.' >&2
-            exit 1
-          }
-          [[ "$PRODUCTION_CONFIRMATION" == 'DEPLOY_OVH_PRODUCTION' ]] || {
-            echo 'The exact production confirmation phrase is required.' >&2
-            exit 1
-          }
+          if [[ "$GITHUB_EVENT_NAME" == 'workflow_dispatch' ]]; then
+            [[ "$GITHUB_REF" == 'refs/heads/master' ]] || {
+              echo 'Manual production deployment is permitted only from master.' >&2
+              exit 1
+            }
+            [[ "$PRODUCTION_CONFIRMATION" == 'DEPLOY_OVH_PRODUCTION' ]] || {
+              echo 'The exact production confirmation phrase is required for manual deployment.' >&2
+              exit 1
+            }
+          elif [[ "$GITHUB_EVENT_NAME" == 'workflow_run' ]]; then
+            [[ "$AUTO_DEPLOY_ENABLED" == 'true' ]] || {
+              echo 'Automatic production deployment is disabled by AUTO_DEPLOY_ENABLED.' >&2
+              exit 78
+            }
+            [[ "$WORKFLOW_RUN_CONCLUSION" == 'success' && "$WORKFLOW_RUN_EVENT" == 'push' && "$WORKFLOW_RUN_HEAD_BRANCH" == 'master' ]] || {
+              echo 'Automatic deployment requires successful CI from a master push.' >&2
+              exit 78
+            }
+          else
+            echo 'Unsupported production deployment event.' >&2
+            exit 78
+          fi
           [[ "$PRODUCTION_COMMIT" =~ ^[0-9a-f]{40}$ ]] || {
             echo 'The selected image source must be a full 40-character SHA.' >&2
             exit 1
@@ -90,7 +121,7 @@ jobs:
             echo 'A reused candidate must be supplied as a sha256 digest, without a tag or repository override.' >&2
             exit 78
           fi
-          if [[ -z "$CANDIDATE_IMAGE_DIGEST" && "$PRODUCTION_COMMIT" != "$GITHUB_SHA" ]]; then
+          if [[ "$GITHUB_EVENT_NAME" == 'workflow_dispatch' && -z "$CANDIDATE_IMAGE_DIGEST" && "$PRODUCTION_COMMIT" != "$GITHUB_SHA" ]]; then
             echo 'A newly built image must use the exact selected master SHA.' >&2
             exit 78
           fi
@@ -109,8 +140,17 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
           fetch-depth: 0
+
+      - name: Reject stale automatic deployment before build
+        if: github.event_name == 'workflow_run'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -Eeuo pipefail
+          bash scripts/deployment/check-current-master-sha.sh "$PRODUCTION_COMMIT"
 
       - name: Verify the image source commit belongs to selected master
         shell: bash
@@ -120,10 +160,18 @@ jobs:
             echo 'The selected image source SHA is not present in the checked-out master history.' >&2
             exit 78
           }
-          git merge-base --is-ancestor "$PRODUCTION_COMMIT" "$GITHUB_SHA" || {
-            echo 'The selected image source SHA is not an ancestor of the selected master commit.' >&2
-            exit 78
-          }
+          if [[ "$GITHUB_EVENT_NAME" == 'workflow_run' ]]; then
+            checked_out_sha="$(git rev-parse HEAD)"
+            [[ "$checked_out_sha" == "$PRODUCTION_COMMIT" ]] || {
+              echo 'The automatic build checkout does not match workflow_run.head_sha.' >&2
+              exit 78
+            }
+          else
+            git merge-base --is-ancestor "$PRODUCTION_COMMIT" "$GITHUB_SHA" || {
+              echo 'The selected image source SHA is not an ancestor of the selected master commit.' >&2
+              exit 78
+            }
+          fi
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
@@ -140,7 +188,7 @@ jobs:
           }
 
       - name: Require production contact delivery configuration
-        if: inputs.deployment_mode == 'deploy'
+        if: env.DEPLOYMENT_MODE == 'deploy'
         shell: bash
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
@@ -207,8 +255,12 @@ jobs:
         shell: bash
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -Eeuo pipefail
+          if [[ "$GITHUB_EVENT_NAME" == 'workflow_run' ]]; then
+            bash scripts/deployment/check-current-master-sha.sh "$PRODUCTION_COMMIT"
+          fi
           image=ghcr.io/teefloo/lunidex
           metadata_file="$RUNNER_TEMP/lunidex-image-metadata.json"
           candidate_tag="$image:$PRODUCTION_COMMIT-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
@@ -275,14 +327,14 @@ jobs:
         run: docker logout ghcr.io >/dev/null 2>&1 || true
 
       - name: Require Neon Auth functionality before replacing production
-        if: inputs.deployment_mode == 'deploy'
+        if: env.DEPLOYMENT_MODE == 'deploy'
         shell: bash
         run: |
           set -Eeuo pipefail
           bash scripts/deployment/check-neon-production.sh https://lunidex.app/api/auth/get-session
 
       - name: Prepare the server-only production environment
-        if: inputs.deployment_mode == 'deploy'
+        if: env.DEPLOYMENT_MODE == 'deploy'
         shell: bash
         env:
           NEON_DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
@@ -335,7 +387,7 @@ jobs:
           chmod 0600 "$app_env"
 
       - name: Configure the separate production SSH connection
-        if: inputs.deployment_mode == 'deploy'
+        if: env.DEPLOYMENT_MODE == 'deploy'
         shell: bash
         env:
           OVH_PRODUCTION_DEPLOY_SSH_KEY: ${{ secrets.OVH_PRODUCTION_DEPLOY_SSH_KEY }}
@@ -353,13 +405,17 @@ jobs:
           chmod 0600 "$HOME/.ssh/ovh_deploy" "$HOME/.ssh/known_hosts"
 
       - name: Bootstrap the isolated production root through Docker
-        if: inputs.deployment_mode == 'deploy'
+        if: env.DEPLOYMENT_MODE == 'deploy'
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           IMAGE_REF: ${{ steps.reused_candidate_image.outputs.image_ref || steps.candidate_image.outputs.image_ref }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -Eeuo pipefail
+          if [[ "$GITHUB_EVENT_NAME" == 'workflow_run' ]]; then
+            bash scripts/deployment/check-current-master-sha.sh "$PRODUCTION_COMMIT"
+          fi
           target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
           bootstrap_script="$(ssh "${ssh_args[@]}" "$target" 'umask 077; mktemp /tmp/lunidex-production-bootstrap.XXXXXX')"
@@ -378,25 +434,35 @@ jobs:
           printf '%s' "$GITHUB_TOKEN" | ssh "${ssh_args[@]}" "$target" "$remote_command"
 
       - name: Prune dangling images for production deploys
-        if: inputs.deployment_mode == 'deploy'
+        if: env.DEPLOYMENT_MODE == 'deploy'
         shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -Eeuo pipefail
+          if [[ "$GITHUB_EVENT_NAME" == 'workflow_run' ]]; then
+            bash scripts/deployment/check-current-master-sha.sh "$PRODUCTION_COMMIT"
+          fi
           target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=10 -o ServerAliveInterval=5 -o ServerAliveCountMax=4)
           remote_command="set -Eeuo pipefail; if docker image prune --force --filter dangling=true >/dev/null 2>&1; then printf '%s\\n' 'dangling_images_pruned=true'; else printf '%s\\n' 'dangling_images_pruned=false' >&2; exit 1; fi"
           timeout 90s ssh "${ssh_args[@]}" "$target" "$remote_command"
 
       - name: Transfer isolated production files and environment
-        if: inputs.deployment_mode == 'deploy'
+        if: env.DEPLOYMENT_MODE == 'deploy'
         shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -Eeuo pipefail
+          if [[ "$GITHUB_EVENT_NAME" == 'workflow_run' ]]; then
+            bash scripts/deployment/check-current-master-sha.sh "$PRODUCTION_COMMIT"
+          fi
           target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
           ssh "${ssh_args[@]}" "$target" 'set -Eeuo pipefail; root=/opt/lunidex-production; install -d -m 0755 "$root/scripts/deployment" "$root/deploy/production" "$root/deploy/systemd-production"; if [[ ! -f "$root/.env" ]]; then umask 077; printf "%s\n" "APP_IMAGE_REF=ghcr.io/teefloo/lunidex@sha256:9ca8f66d0b5f79a984358d12fe1c382319df7364388ec2d5df78fe3c5afc318a" > "$root/.env"; fi; chmod 0600 "$root/.env"'
           scp "${ssh_args[@]}" compose.production.yaml "$target:/opt/lunidex-production/"
-          scp "${ssh_args[@]}" scripts/deployment/deploy-production.sh scripts/deployment/rollback-production.sh scripts/deployment/healthcheck-production.sh scripts/deployment/check-neon-production.sh scripts/deployment/preflight-production.sh scripts/deployment/rehearse-rollback-production.sh scripts/deployment/production-memory-gate.sh "$target:/opt/lunidex-production/scripts/deployment/"
+          scp "${ssh_args[@]}" scripts/deployment/deploy-production.sh scripts/deployment/rollback-production.sh scripts/deployment/rollback-candidates.sh scripts/deployment/healthcheck-production.sh scripts/deployment/check-neon-production.sh scripts/deployment/preflight-production.sh scripts/deployment/rehearse-rollback-production.sh scripts/deployment/production-memory-gate.sh "$target:/opt/lunidex-production/scripts/deployment/"
           scp "${ssh_args[@]}" scripts/deployment/activate-production-route.sh "$target:/opt/lunidex-production/scripts/deployment/"
           scp "${ssh_args[@]}" deploy/production/* "$target:/opt/lunidex-production/deploy/production/"
           scp "${ssh_args[@]}" deploy/systemd-production/* "$target:/opt/lunidex-production/deploy/systemd-production/"
@@ -404,10 +470,15 @@ jobs:
           ssh "${ssh_args[@]}" "$target" "chmod 0600 /opt/lunidex-production/app.env.$PRODUCTION_COMMIT.tmp && mv /opt/lunidex-production/app.env.$PRODUCTION_COMMIT.tmp /opt/lunidex-production/app.env"
 
       - name: Stop preproduction before durable production deployment
-        if: inputs.deployment_mode == 'deploy'
+        if: env.DEPLOYMENT_MODE == 'deploy'
         shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -Eeuo pipefail
+          if [[ "$GITHUB_EVENT_NAME" == 'workflow_run' ]]; then
+            bash scripts/deployment/check-current-master-sha.sh "$PRODUCTION_COMMIT"
+          fi
           target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=10 -o ServerAliveInterval=5 -o ServerAliveCountMax=4)
           timeout 60s ssh "${ssh_args[@]}" "$target" 'bash -s' <<'REMOTE'
@@ -433,20 +504,26 @@ jobs:
           REMOTE
 
       - name: Deploy the production image by immutable digest
-        if: inputs.deployment_mode == 'deploy'
+        id: deploy_production
+        if: env.DEPLOYMENT_MODE == 'deploy'
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           IMAGE_REF: ${{ steps.reused_candidate_image.outputs.image_ref || steps.candidate_image.outputs.image_ref }}
         run: |
           set -Eeuo pipefail
+          if [[ "$GITHUB_EVENT_NAME" == 'workflow_run' ]]; then
+            bash scripts/deployment/check-current-master-sha.sh "$PRODUCTION_COMMIT"
+          fi
           target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
           remote_command="set -Eeuo pipefail; umask 077; export DOCKER_CONFIG=\$(mktemp -d /tmp/lunidex-production-docker.XXXXXX); trap 'rm -rf \"\$DOCKER_CONFIG\"' EXIT; docker login ghcr.io --username teefloo --password-stdin; bash /opt/lunidex-production/scripts/deployment/deploy-production.sh '$IMAGE_REF' '$PRODUCTION_COMMIT' deploy"
           printf '%s' "$GITHUB_TOKEN" | ssh "${ssh_args[@]}" "$target" "$remote_command"
 
       - name: Verify the production deployment health
-        if: success() && inputs.deployment_mode == 'deploy'
+        id: production_health
+        if: success() && env.DEPLOYMENT_MODE == 'deploy'
         shell: bash
         run: |
           set -Eeuo pipefail
@@ -454,8 +531,26 @@ jobs:
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=10 -o ServerAliveInterval=5 -o ServerAliveCountMax=4)
           timeout 90s ssh "${ssh_args[@]}" "$target" 'bash /opt/lunidex-production/scripts/deployment/healthcheck-production.sh'
 
+      - name: Verify public HTTPS smoke routes
+        id: public_health
+        if: success() && env.DEPLOYMENT_MODE == 'deploy'
+        shell: bash
+        run: bash scripts/deployment/check-public-production-health.sh
+
+      - name: Roll back after a post-deploy health failure
+        if: failure() && env.DEPLOYMENT_MODE == 'deploy' && steps.deploy_production.outcome == 'success' && (steps.production_health.outcome == 'failure' || steps.public_health.outcome == 'failure')
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -Eeuo pipefail
+          target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
+          ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=10 -o ServerAliveInterval=5 -o ServerAliveCountMax=4)
+          remote_command="set -Eeuo pipefail; umask 077; export DOCKER_CONFIG=\$(mktemp -d /tmp/lunidex-production-rollback-docker.XXXXXX); trap 'rm -rf \"\$DOCKER_CONFIG\"' EXIT; docker login ghcr.io --username teefloo --password-stdin; bash /opt/lunidex-production/scripts/deployment/rollback-production.sh --last-stable"
+          printf '%s' "$GITHUB_TOKEN" | ssh "${ssh_args[@]}" "$target" "$remote_command"
+
       - name: Probe Neon Auth separately from application health
-        if: success() && inputs.deployment_mode == 'deploy'
+        if: success() && env.DEPLOYMENT_MODE == 'deploy'
         id: neon_auth_probe
         continue-on-error: true
         shell: bash
@@ -467,7 +562,7 @@ jobs:
             'bash /opt/lunidex-production/scripts/deployment/check-neon-production.sh https://lunidex.app/api/auth/get-session'
 
       - name: Report Neon availability independently of Node health
-        if: always() && inputs.deployment_mode == 'deploy'
+        if: always() && env.DEPLOYMENT_MODE == 'deploy'
         shell: bash
         env:
           NEON_PROBE_OUTCOME: ${{ steps.neon_auth_probe.outcome }}
@@ -477,15 +572,21 @@ jobs:
             echo '## Separate application and provider outcomes'
             echo
             echo '- The Docker health check and local /api/healthz response measure the Lunidex process only.'
-            if [[ "$NEON_PROBE_OUTCOME" == 'success' ]]; then
-              echo '- Neon Auth session endpoint responded. This unauthenticated probe confirms reachability only; it does not claim that a signed-in session works.'
-            else
-              echo '- **Neon Auth functional availability: NO-GO.** The provider probe failed, including HTTP 402 quota exhaustion. This does not change the Node/container health verdict and does not cause an app rollback.'
-            fi
+            case "$NEON_PROBE_OUTCOME" in
+              success)
+                echo '- Neon Auth session endpoint responded. This unauthenticated probe confirms reachability only; it does not claim that a signed-in session works.'
+                ;;
+              failure)
+                echo '- **Neon Auth functional availability: NO-GO.** The provider probe failed, including HTTP 402 quota exhaustion. This does not change the Node/container health verdict and does not cause an app rollback.'
+                ;;
+              *)
+                echo '- **Neon Auth functional availability: INCOMPLETE.** The post-deploy provider probe did not run, so no Auth availability verdict is inferred from the application health result.'
+                ;;
+            esac
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Retrieve optional sanitized heap allocation summary
-        if: success() && inputs.deployment_mode == 'deploy' && inputs.heap_sampling_diagnostic
+        if: success() && env.DEPLOYMENT_MODE == 'deploy' && env.HEAP_SAMPLING_DIAGNOSTIC == 'true'
         continue-on-error: true
         shell: bash
         run: |
@@ -514,7 +615,7 @@ jobs:
           printf '%s\n' "$safe_summary_line" | node scripts/deployment/validate-heap-sample-summary.mjs "$HEAP_SAMPLING_RUN_ID"
 
       - name: Retrieve the exact-run sanitized heap memory series
-        if: success() && inputs.deployment_mode == 'deploy' && inputs.heap_sampling_diagnostic
+        if: success() && env.DEPLOYMENT_MODE == 'deploy' && env.HEAP_SAMPLING_DIAGNOSTIC == 'true'
         shell: bash
         run: |
           set -Eeuo pipefail
@@ -535,7 +636,7 @@ jobs:
             | node scripts/deployment/validate-heap-sample-summary.mjs --memory-series "$HEAP_SAMPLING_RUN_ID"
 
       - name: Report isolated preflight boundary
-        if: success() && inputs.deployment_mode == 'preflight'
+        if: success() && env.DEPLOYMENT_MODE == 'preflight'
         shell: bash
         env:
           IMAGE_REF: ${{ steps.reused_candidate_image.outputs.image_ref || steps.candidate_image.outputs.image_ref }}

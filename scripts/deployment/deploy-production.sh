@@ -45,8 +45,20 @@ if ! flock -n 9; then
 fi
 
 previous_image_ref="$(sed -n 's/^APP_IMAGE_REF=//p' .env | tail -n 1)"
-if [[ ! "$previous_image_ref" =~ ^ghcr\.io/teefloo/lunidex@sha256:[0-9a-f]{64}$ ]]; then
-  previous_image_ref="$rollback_image_ref"
+running_image_ref="$(docker inspect --format '{{.Config.Image}}' lunidex-production-app 2>/dev/null || true)"
+was_running="$(docker inspect --format '{{.State.Running}}' lunidex-production-app 2>/dev/null || true)"
+container_health="$(docker inspect --format '{{.State.Health.Status}}' lunidex-production-app 2>/dev/null || true)"
+mapfile -t rollback_candidates < <(
+  source /opt/lunidex-production/scripts/deployment/rollback-candidates.sh
+  production_rollback_candidates \
+    "$previous_image_ref" \
+    "$running_image_ref" \
+    "${was_running:-false}" \
+    "$container_health" \
+    "$rollback_image_ref"
+)
+if ((${#rollback_candidates[@]} == 0)); then
+  rollback_candidates=("$rollback_image_ref")
 fi
 if [[ "$previous_image_ref" == "$new_image_ref" ]]; then
   echo 'The requested immutable image is already selected.' >&2
@@ -105,15 +117,24 @@ wait_for_app() {
 }
 
 rollback_to_stable() {
-  echo 'Candidate deployment failed; restoring the pinned d0f5 production image.' >&2
-  write_image_ref "$rollback_image_ref"
-  if docker compose -f compose.production.yaml pull app \
-    && docker compose -f compose.production.yaml up -d --no-deps app \
-    && wait_for_app; then
-    echo 'The stable d0f5 rollback image is healthy again.' >&2
-  else
-    echo 'Pinned d0f5 rollback did not become healthy; inspect Docker and app logs immediately.' >&2
-  fi
+  local candidate
+  for candidate in "${rollback_candidates[@]}"; do
+    echo "Candidate deployment failed; trying previously healthy immutable image $candidate." >&2
+    write_image_ref "$candidate"
+    if docker compose -f compose.production.yaml config --quiet \
+      && docker compose -f compose.production.yaml pull app \
+      && docker compose -f compose.production.yaml up -d --no-deps app \
+      && wait_for_app \
+      && bash /opt/lunidex-production/scripts/deployment/healthcheck-production.sh; then
+      printf '%s\n' "$candidate" > .previous-image-ref
+      chmod 0600 .previous-image-ref
+      echo "Rollback image $candidate is healthy again." >&2
+      return 0
+    fi
+    echo "Rollback candidate $candidate did not become healthy." >&2
+  done
+  echo 'All rollback candidates failed; inspect Docker and app logs immediately.' >&2
+  return 1
 }
 
 on_error() {
@@ -135,7 +156,7 @@ docker compose -f compose.production.yaml pull app
 docker compose -f compose.production.yaml up -d --no-deps app
 wait_for_app
 bash /opt/lunidex-production/scripts/deployment/healthcheck-production.sh
-printf '%s\n' "$previous_image_ref" > .previous-image-ref
+printf '%s\n' "${rollback_candidates[0]}" > .previous-image-ref
 chmod 0600 .previous-image-ref
 trap - ERR
 echo "Production image $new_image_ref is healthy. Neon/Auth availability is reported separately."

@@ -20,6 +20,8 @@ const appHealthPath = path.join(repositoryRoot, 'scripts/deployment/healthcheck-
 const authProbePath = path.join(repositoryRoot, 'scripts/deployment/check-neon-production.sh');
 const isolatedValidatorPath = path.join(repositoryRoot, 'scripts/deployment/validate-image-isolated.sh');
 const composeContractValidatorPath = path.join(repositoryRoot, 'scripts/deployment/validate-compose-runtime-contract.mjs');
+const currentMasterCheckPath = path.join(repositoryRoot, 'scripts/deployment/check-current-master-sha.sh');
+const rollbackCandidatesPath = path.join(repositoryRoot, 'scripts/deployment/rollback-candidates.sh');
 const rollbackCommit = 'd0f5e1af2cf95dd43eb046069c0d37f0a2add93e';
 const rollbackImageRef = 'ghcr.io/teefloo/lunidex@sha256:9ca8f66d0b5f79a984358d12fe1c382319df7364388ec2d5df78fe3c5afc318a';
 
@@ -58,8 +60,9 @@ test('Compose, deploy, and manual rollback use immutable digest references', () 
   assert.match(compose, /image:\s+\$\{APP_IMAGE_REF:\?Set APP_IMAGE_REF to a digest-pinned GHCR image reference\}/);
   assert.doesNotMatch(compose, /APP_IMAGE_TAG/);
   assert.match(deploy, /readonly rollback_image_ref='ghcr\.io\/teefloo\/lunidex@sha256:[0-9a-f]{64}'/);
-  assert.match(rollback, /requested_image_ref="\$\{1:-\$rollback_image_ref\}"/);
-  assert.match(rollback, /Manual production rollback is pinned to the verified d0f5 image digest/);
+  assert.match(rollback, /rollback_mode='manual'/);
+  assert.match(rollback, /--last-stable\) rollback_mode='last-stable'/);
+  assert.match(rollback, /readonly rollback_image_ref='ghcr\.io\/teefloo\/lunidex@sha256:[0-9a-f]{64}'/);
   assert.match(workflow, new RegExp(rollbackCommit));
   assert.match(workflow, new RegExp(rollbackImageRef.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
   assert.doesNotMatch(workflow, /ace4b8|Dockerfile\.rollback-baseline/);
@@ -211,13 +214,13 @@ test('preflight performs no SSH or production file/container mutation', () => {
   for (const step of steps) {
     const searchable = `${step.run ?? ''}\n${JSON.stringify(step.env ?? {})}`;
     if (sideEffectPatterns.test(searchable)) {
-      assert.match(step.if ?? '', /inputs\.deployment_mode == 'deploy'/, `${step.name} must be deploy-only`);
+      assert.match(step.if ?? '', /env\.DEPLOYMENT_MODE == 'deploy'/, `${step.name} must be deploy-only`);
     }
   }
 
-  assert.match(stepByName(steps, 'Prepare the server-only production environment').if, /deployment_mode == 'deploy'/);
-  assert.match(stepByName(steps, 'Configure the separate production SSH connection').if, /deployment_mode == 'deploy'/);
-  assert.match(stepByName(steps, 'Report isolated preflight boundary').if, /deployment_mode == 'preflight'/);
+  assert.match(stepByName(steps, 'Prepare the server-only production environment').if, /env\.DEPLOYMENT_MODE == 'deploy'/);
+  assert.match(stepByName(steps, 'Configure the separate production SSH connection').if, /env\.DEPLOYMENT_MODE == 'deploy'/);
+  assert.match(stepByName(steps, 'Report isolated preflight boundary').if, /env\.DEPLOYMENT_MODE == 'preflight'/);
   assert.match(stepByName(steps, 'Report isolated preflight boundary').run, /No SSH key was configured/);
 });
 
@@ -244,8 +247,179 @@ test('production dispatch requires master and explicit confirmation; image sourc
   assert.match(guard.run, /newly built image must use the exact selected master SHA/);
   assert.match(stepByName(job.steps, 'Verify the image source commit belongs to selected master').run, /git merge-base --is-ancestor/);
   assert.ok(checkout);
-  assert.equal(checkout.with.ref, '${{ github.sha }}');
+  assert.equal(checkout.with.ref, '${{ github.event_name == \'workflow_run\' && github.event.workflow_run.head_sha || github.sha }}');
   assert.equal(checkout.with['fetch-depth'], 0);
+});
+
+test('automatic deployment requires successful CI from a master push and stays disabled by default', () => {
+  const workflow = yaml.load(read(workflowPath));
+  const job = workflow.jobs.deploy;
+  const dispatch = workflow.on.workflow_dispatch;
+  const autoGuard = stepByName(job.steps, 'Guard the production branch and commit');
+
+  assert.deepEqual(workflow.on.workflow_run, {
+    workflows: ['CI'],
+    branches: ['master'],
+    types: ['completed'],
+  });
+  assert.match(job.if, /workflow_run\.conclusion == 'success'/);
+  assert.match(job.if, /workflow_run\.event == 'push'/);
+  assert.match(job.if, /workflow_run\.head_branch == 'master'/);
+  assert.match(job.if, /vars\.AUTO_DEPLOY_ENABLED == 'true'/);
+  assert.match(job.env.AUTO_DEPLOY_ENABLED, /vars\.AUTO_DEPLOY_ENABLED \|\| 'false'/);
+  assert.match(job.env.PRODUCTION_COMMIT, /workflow_run\.head_sha/);
+  assert.match(autoGuard.run, /AUTO_DEPLOY_ENABLED.*'true'/);
+  assert.match(autoGuard.run, /WORKFLOW_RUN_CONCLUSION.*success/);
+  assert.match(autoGuard.run, /WORKFLOW_RUN_EVENT.*push/);
+  assert.match(autoGuard.run, /WORKFLOW_RUN_HEAD_BRANCH.*master/);
+  assert.match(job.if, /workflow_dispatch/);
+  assert.match(job.if, /inputs\.confirmation == 'DEPLOY_OVH_PRODUCTION'/);
+  assert.equal(dispatch.inputs.confirmation.required, true);
+  assert.equal(dispatch.inputs.confirmation.default, undefined);
+  assert.equal(workflow.concurrency.group, 'lunidex-ovh-production');
+  assert.equal(workflow.concurrency['cancel-in-progress'], false);
+});
+
+test('automatic deployment rejects a stale master SHA before build and before production SSH/mutations', () => {
+  const workflow = yaml.load(read(workflowPath));
+  const steps = workflow.jobs.deploy.steps;
+  const names = steps.map((step) => step.name);
+  const buildIndex = names.indexOf('Build and publish the candidate image');
+  const checkBeforeBuild = names.indexOf('Reject stale automatic deployment before build');
+  const candidateBuildIndex = names.indexOf('Build and publish the candidate image');
+  const bootstrapIndex = names.indexOf('Bootstrap the isolated production root through Docker');
+  const transferIndex = names.indexOf('Transfer isolated production files and environment');
+  const stopIndex = names.indexOf('Stop preproduction before durable production deployment');
+  const deployIndex = names.indexOf('Deploy the production image by immutable digest');
+
+  assert.ok(checkBeforeBuild >= 0 && checkBeforeBuild < buildIndex);
+  assert.match(steps[checkBeforeBuild].if, /workflow_run/);
+  assert.match(steps[candidateBuildIndex].run, /check-current-master-sha\.sh/);
+  for (const index of [bootstrapIndex, transferIndex, stopIndex, deployIndex]) {
+    assert.match(steps[index].run, /check-current-master-sha\.sh/);
+    assert.match(steps[index].run, /GITHUB_EVENT_NAME.*workflow_run/);
+  }
+  assert.match(steps[bootstrapIndex].run, /check-current-master-sha\.sh[\s\S]*ssh/);
+  assert.match(steps[transferIndex].run, /check-current-master-sha\.sh[\s\S]*scp/);
+  assert.match(steps[deployIndex].run, /check-current-master-sha\.sh[\s\S]*deploy-production\.sh/);
+});
+
+test('current-master SHA guard accepts only the exact current master and fails closed', () => {
+  const tempDir = mkdtempSync(path.join(os.tmpdir(), 'lunidex-master-sha-test-'));
+  const expected = 'a'.repeat(40);
+  try {
+    const fakeGh = path.join(tempDir, 'gh');
+    writeFileSync(fakeGh, '#!/bin/sh\nprintf %s "$CURRENT_MASTER_SHA"\n', { mode: 0o700 });
+    chmodSync(fakeGh, 0o700);
+    const run = (sha) => spawnSync('bash', [currentMasterCheckPath, expected], {
+      cwd: tempDir,
+      encoding: 'utf8',
+      env: {
+        ...process.env,
+        PATH: `${tempDir}:${process.env.PATH ?? ''}`,
+        GITHUB_REPOSITORY: 'teefloo/Lunidex',
+        GH_TOKEN: 'test-token-never-printed',
+        CURRENT_MASTER_SHA: sha,
+      },
+    });
+
+    const current = run(expected);
+    assert.equal(current.status, 0);
+    assert.match(current.stdout, new RegExp(`master_sha_current=${expected}`));
+    assert.doesNotMatch(current.stdout + current.stderr, /test-token-never-printed/);
+
+    const stale = run('b'.repeat(40));
+    assert.equal(stale.status, 78);
+    assert.match(stale.stderr, /Skipping stale deployment/);
+
+    const malformed = run('latest');
+    assert.equal(malformed.status, 78);
+    assert.match(malformed.stderr, /invalid master SHA/);
+  } finally {
+    rmSync(tempDir, { recursive: true, force: true });
+  }
+});
+
+test('rollback candidate order prefers only the currently running healthy immutable image, then d0f5', () => {
+  const tempDir = mkdtempSync(path.join(os.tmpdir(), 'lunidex-rollback-candidates-test-'));
+  try {
+    const d0f5 = rollbackImageRef;
+    const prior = `ghcr.io/teefloo/lunidex@sha256:${'a'.repeat(64)}`;
+    const script = `source ${JSON.stringify(rollbackCandidatesPath)}; production_rollback_candidates "$@"`;
+    const run = (...args) => spawnSync('bash', ['-c', script, 'rollback-test', ...args], {
+      cwd: tempDir,
+      encoding: 'utf8',
+    });
+
+    const healthy = run(prior, prior, 'true', 'healthy', d0f5);
+    assert.equal(healthy.status, 0);
+    assert.deepEqual(healthy.stdout.trim().split('\n'), [prior, d0f5]);
+
+    const unhealthy = run(prior, prior, 'true', 'unhealthy', d0f5);
+    assert.equal(unhealthy.status, 0);
+    assert.deepEqual(unhealthy.stdout.trim().split('\n'), [d0f5]);
+
+    const mismatchedContainer = run(prior, d0f5, 'true', 'healthy', d0f5);
+    assert.equal(mismatchedContainer.status, 0);
+    assert.deepEqual(mismatchedContainer.stdout.trim().split('\n'), [d0f5]);
+
+    const invalidFallback = run(prior, prior, 'true', 'healthy', 'latest');
+    assert.equal(invalidFallback.status, 64);
+
+    const lastStableScript = `source ${JSON.stringify(rollbackCandidatesPath)}; production_last_stable_candidates "$@"`;
+    const lastStable = spawnSync('bash', ['-c', lastStableScript, 'rollback-test', prior, d0f5], {
+      cwd: tempDir,
+      encoding: 'utf8',
+    });
+    assert.equal(lastStable.status, 0);
+    assert.deepEqual(lastStable.stdout.trim().split('\n'), [prior, d0f5]);
+
+    const missingPrevious = spawnSync('bash', ['-c', lastStableScript, 'rollback-test', 'mutable:latest', d0f5], {
+      cwd: tempDir,
+      encoding: 'utf8',
+    });
+    assert.equal(missingPrevious.status, 0);
+    assert.deepEqual(missingPrevious.stdout.trim().split('\n'), [d0f5]);
+  } finally {
+    rmSync(tempDir, { recursive: true, force: true });
+  }
+});
+
+test('both in-script and post-deploy health failures roll back without using Neon as an app failure signal', () => {
+  const deploy = read(deployPath);
+  const rollback = read(rollbackPath);
+  const workflow = yaml.load(read(workflowPath));
+  const steps = workflow.jobs.deploy.steps;
+  const postDeployRollback = stepByName(steps, 'Roll back after a post-deploy health failure');
+  const health = stepByName(steps, 'Verify the production deployment health');
+  const publicHealth = stepByName(steps, 'Verify public HTTPS smoke routes');
+  const neon = stepByName(steps, 'Probe Neon Auth separately from application health');
+  const neonReport = stepByName(steps, 'Report Neon availability independently of Node health');
+
+  assert.match(deploy, /rollback_candidates\[@\]/);
+  assert.match(deploy, /production_rollback_candidates/);
+  assert.match(deploy, /wait_for_app[\s\\]*&& bash \/opt\/lunidex-production\/scripts\/deployment\/healthcheck-production\.sh/);
+  assert.match(rollback, /--last-stable/);
+  assert.match(rollback, /previous_stable_ref/);
+  assert.match(rollback, /production_last_stable_candidates/);
+  assert.match(rollback, /candidates\+=\("\$rollback_image_ref"\)/);
+  assert.match(rollback, /for candidate in "\$\{candidates\[@\]\}"/);
+  assert.match(rollback, /docker compose -f compose\.production\.yaml pull app[\s\S]*healthcheck-production\.sh/);
+  assert.match(rollback, /if \(\(\$\{#candidates\[@\]\} == 0\)\); then[\s\S]*candidates\+=\("\$rollback_image_ref"\)/);
+  assert.match(rollback, /healthcheck-production\.sh/);
+  assert.equal(health.id, 'production_health');
+  assert.equal(publicHealth.id, 'public_health');
+  assert.match(postDeployRollback.if, /failure\(\)/);
+  assert.match(postDeployRollback.if, /steps\.deploy_production\.outcome == 'success'/);
+  assert.match(postDeployRollback.if, /steps\.production_health\.outcome == 'failure'/);
+  assert.match(postDeployRollback.if, /steps\.public_health\.outcome == 'failure'/);
+  assert.match(postDeployRollback.run, /rollback-production\.sh --last-stable/);
+  assert.doesNotMatch(postDeployRollback.if, /neon_auth_probe/);
+  assert.equal(neon['continue-on-error'], true);
+  assert.match(neon.if, /success\(\)/);
+  assert.match(neonReport.run, /INCOMPLETE/);
+  assert.match(neonReport.run, /case "\$NEON_PROBE_OUTCOME"/);
+  assert.match(neonReport.if, /always\(\)/);
 });
 
 test('preflight explicitly publishes its candidate image to GHCR', () => {
@@ -257,7 +431,7 @@ test('preflight explicitly publishes its candidate image to GHCR', () => {
   assert.match(build.run, /docker buildx build[\s\S]*--push/);
   assert.match(report.run, /candidate image was built and published to GHCR/);
   assert.match(report.run, /no VPS[\s\S]*was accessed/);
-  assert.match(report.if, /deployment_mode == 'preflight'/);
+  assert.match(report.if, /env\.DEPLOYMENT_MODE == 'preflight'/);
 });
 
 test('the deploy-only disk cleanup prunes dangling images only and keeps the pinned rollback image', () => {
@@ -269,7 +443,7 @@ test('the deploy-only disk cleanup prunes dangling images only and keeps the pin
   const prune = stepByName(steps, 'Prune dangling images for production deploys');
 
   assert.ok(bootstrapIndex >= 0 && bootstrapIndex < pruneIndex && pruneIndex < transferIndex);
-  assert.match(prune.if, /inputs\.deployment_mode == 'deploy'/);
+  assert.match(prune.if, /env\.DEPLOYMENT_MODE == 'deploy'/);
   assert.match(prune.run, /docker image prune --force --filter dangling=true/);
   assert.doesNotMatch(prune.run, /--all|\s-a\b|until=/);
   assert.doesNotMatch(prune.run, /docker system prune|docker container prune|docker volume prune/);
