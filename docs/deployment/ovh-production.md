@@ -1,81 +1,65 @@
-# Préparation de la production OVH
+# Déploiement de production Lunidex sur OVH
 
-## État et garde-fous
+## État actuel
 
-- **État opérationnel du 18 novembre 2026 :** la production Lunidex tourne sur OVHcloud; les DNS de `lunidex.app` et `www.lunidex.app` pointent vers le VPS et Caddy sert le HTTPS public. Le runtime production, son image et son rollback sont distincts de la préproduction. Les timers cron restent désactivés; la branche Neon `ovh-preproduction` est conservée.
-- Le rollback OVH a été exercé en préflight privé avec la baseline `ace4b8e`; l'image précédente a été rétablie sans changement DNS public ni écriture de données applicatives Neon.
-- Le workflow .github/workflows/deploy-ovh-production.yml est uniquement manuel et ne démarre que depuis master avec le SHA complet courant, la confirmation explicite et l'approbation de l'environnement ovh-production.
-- Une première exécution en preflight, le 18 novembre 2026 sur le SHA 693d7f196c5cb6259c01c7a9d47453e203020441, a construit et publié les images candidate et baseline ace4b8e, puis s'est arrêtée avant le transfert : lunidex-deploy ne pouvait pas créer directement /opt/lunidex-production. Aucun conteneur de production n'a été lancé et aucune connexion à Neon ni modification DNS/Caddy/cron n'a eu lieu. Le workflow prépare maintenant uniquement les répertoires attendus via Docker, avec /opt comme seul volume monté, sans écraser les chemins existants ni changement récursif de propriétaire; il échoue si un chemin existe avec un propriétaire inattendu.
-- Le preflight #44212986434 a ensuite réussi le bootstrap et les transferts des fichiers de déploiement, puis échoué sur le transfert du fichier d'environnement (`app.env`) : ce `scp` omettait la clé SSH dédiée, provoquant `Too many authentication failures`. Le fichier d'environnement n'a donc pas été transféré, le script de déploiement n'a pas été lancé, aucune application de production n'a démarré et aucune connexion ou écriture Neon n'a eu lieu. Aucun changement DNS, Caddy ou cron n'a été effectué. La commande `scp` utilise maintenant les mêmes options SSH explicites que les autres transferts.
-- Le preflight #44216008854 a démarré le candidat, dont le healthcheck Docker était `healthy`; la lecture du JWKS Neon Auth a réussi. Le contrôle SQL a ensuite échoué avant toute requête, car `node -e` ne résolvait pas `@neondatabase/serverless` depuis la racine de l'image standalone. Le script a automatiquement restauré l'image `ace4b8e` puis arrêté l'application en mode preflight. Les contrôles HTTP/Caddy et la répétition du rollback n'ont pas été atteints; aucune instruction SQL n'a été exécutée et aucune donnée Neon n'a été écrite. Le Dockerfile copie maintenant le seul point d'entrée ESM du paquet dans `node_modules` à la racine de l'image pour le contrôle Node autonome. Le contrôle utilise `SELECT 1 as ok` dans une transaction explicitement `READ ONLY`, avec une limite de 10 secondes; il ne lit aucune table et n'écrit aucune donnée.
-- Il est limité à master, exige le SHA complet actuellement sélectionné et la phrase DEPLOY_OVH_PRODUCTION, puis attend l'approbation de l'environnement GitHub protégé ovh-production.
-- Le workflow produit deux images immuables : le candidat sélectionné et une image de rollback basée sur le commit de référence ace4b8eb76e5992c935cfc01120377d17297733d.
-- Le premier fichier .env du VPS est initialisé sur ce tag de rollback. Si le candidat échoue, le script tente de restaurer cette image. Ce filet de sécurité n'existe qu'après que le workflow a réussi à construire et publier l'image baseline.
-- La baseline reprend le code de ce commit et ajoute dans l'image un endpoint /api/healthz sans données, requis par le healthcheck Compose actuel. Son Dockerfile de secours utilise next start, car ce commit ne produit pas la sortie standalone attendue par le Dockerfile courant.
-- Le mode preflight journalise uptime/load, free -h, df -h / /opt et docker stats sans lire l'environnement du conteneur, d'abord avec le candidat en marche puis après les sondes. Il vérifie les contrôles à travers le Caddy local en TLS interne, puis arrête le candidat et restaure le tag antérieur. Après ce succès, le workflow capture APP_IMAGE_TAG, démarre le candidat sans route Caddy ni port hôte, uniquement pour le healthcheck privé, puis appelle rollback-production.sh avec la baseline ace4b8eb76e5992c935cfc01120377d17297733d et vérifie la baseline. Les deux images passent le healthcheck du conteneur, la lecture du JWKS Neon Auth et SELECT 1. Le trap arrête toujours l'application et restaure atomiquement le tag capturé, y compris en cas d'échec ou de signal. Aucune route publique, DNS, tâche cron ou donnée applicative n'est modifiée par cette répétition.
-- Le mode deploy garde l'application candidate en exécution, toujours sans port public. Il refuse le démarrage si le conteneur de préproduction tourne encore.
-- compose.production.yaml est un projet distinct, son cache et son conteneur sont isolés, et son seul service app n'expose aucun port à l'hôte. Après les OOM V8 observés le 19 novembre, son heap V8 est porté à 1 408 Mio et sa limite mémoire à 2 176 Mio; le plafond CPU reste à 1 cœur. Avec Caddy plafonné à 256 Mio, les plafonds combinés app+Caddy sont de 2 432 Mio, ce qui laisse environ 1,3 Gio des 3,7 Gio utilisables au système et aux autres processus. Cette marge est une mitigation de capacité, pas une correction de la cause des OOM; ne pas faire tourner l'app de préproduction ou les cron en parallèle.
-- Le script de préparation Caddy préserve le fichier de préproduction dans /opt/lunidex-production/Caddyfile.before-production; le routage public n'est installé qu'après une invocation manuelle avec le texte de confirmation prévu par le script.
-- Les timers de production ne sont ni installés ni activés par le workflow. Persistent=false évite le rattrapage après un arrêt; les deux jobs partagent /run/lunidex-cron/shared.lock, et un conflit fait ignorer le démarrage plutôt que lancer une seconde exécution.
+- Production reste sur `d0f5e1af2cf95dd43eb046069c0d37f0a2add93e`. L'audit T+48 le plus récent rapportait 0 redémarrage et 0 OOM, avec RSS Node stable sur les dernières 25 heures. Il a aussi compté `memory.events:max=1315` : cela signale une pression à la limite cgroup, même sans OOM. Les limites Docker ne sont pas augmentées.
+- HTTPS public fonctionne. Neon Auth renvoie toujours HTTP 402 `GENERIC_QUOTA_EXCEEDED`; les fonctions de compte restent indisponibles tant que Neon n'a pas rétabli le service. Cet état ne prouve pas un crash de Node.
+- Les tâches cron applicatives restent désactivées. Aucun déploiement, changement DNS, accès Neon ou préflight OVH n'est exécuté par cette PR.
+- **Verdict de mise en production : NO-GO fonctionnel tant que Neon Auth répond 402.** L'image actuelle demeure en place. Une sonde Auth anonyme confirme seulement l'accessibilité du endpoint, pas une session authentifiée.
 
-Le rollback applicatif OVH est vérifié : il restaure l’image précédente sur le même VPS. Garder les DNS sur OVH pendant le diagnostic; la restauration DNS vers un ancien hébergement n’est pas un rollback fonctionnel.
+## Images immuables vérifiées
 
-## Configuration GitHub et état actuel
+L'image de rollback existe sur GHCR et n'est pas reconstruite par le workflow. Les métadonnées vérifiées sont :
 
-Les réglages suivants sont déjà présents dans l'environnement GitHub ovh-production. Aucune valeur de préproduction n'est utilisée.
+- Révision : `d0f5e1af2cf95dd43eb046069c0d37f0a2add93e`.
+- Référence exacte pour le VPS `linux/amd64` : `ghcr.io/teefloo/lunidex@sha256:9ca8f66d0b5f79a984358d12fe1c382319df7364388ec2d5df78fe3c5afc318a`.
+- Digest de l'index multi-plateforme du tag SHA : `sha256:8f1645b3cd4f371fef8ac47cc0ee2682b0f94412a4229552069f3c8cf5ffc454`.
+- Digest de configuration amd64 : `sha256:97224cef46f56dbc071ddb896d06a61a79785851087f82ac1711a9f520543a7a`.
+- Contrat Compose confirmé : `linux/amd64`, utilisateur `nextjs`, dossier `/app`, commande `node server.js`; la configuration garde la limite existante de 2176 Mio et le CPU limité à un cœur.
 
-Variables d'environnement GitHub :
+La candidate de ce futur changement n'a pas encore été construite ou publiée : son digest sera généré au build, testé, puis consigné dans le résumé et les sorties GitHub Actions. Aucun digest candidate n'est inventé dans ce document. Compose, le déploiement et le rollback consomment des références `ghcr.io/teefloo/lunidex@sha256:…`, jamais un tag mutable.
 
-- NEXT_PUBLIC_NEON_AUTH_URL
-- OVH_PRODUCTION_DEPLOY_HOST, OVH_PRODUCTION_DEPLOY_USER, OVH_PRODUCTION_DEPLOY_KNOWN_HOSTS
+## Préflight isolé et workflow
 
-Secrets de l'environnement GitHub déjà configurés :
+`.github/workflows/deploy-ovh-production.yml` reste manuel, limité à `master`, au SHA complet actuellement sélectionné, à la confirmation `DEPLOY_OVH_PRODUCTION` et à l'environnement GitHub protégé `ovh-production`.
 
-- NEON_AUTH_BASE_URL, NEON_AUTH_JWKS_URL, NEON_AUTH_COOKIE_SECRET.
-- LUNIDEX_CRON_SECRET.
-- OVH_PRODUCTION_DEPLOY_SSH_KEY — clé dédiée configurée dans ovh-production; sa clé publique est installée dans /home/lunidex-deploy/.ssh/authorized_keys.
+Le job construit la candidate sur le runner GitHub, publie un tag de traçabilité unique, lit le digest du manifeste Buildx, puis utilise uniquement la référence par digest. Il tire et valide d0f5 par son digest existant; il ne construit jamais l'ancienne image avec `Dockerfile.rollback-baseline`. Les deux images sont contrôlées sans réseau dans des conteneurs jetables. Le contrôle vérifie le label de révision, l'architecture, l'utilisateur, la commande, le rendu Compose et le endpoint local `/api/healthz`.
 
-NEON_DATABASE_URL est configuré dans l'environnement GitHub ovh-production avec la connexion Neon main. Le rôle runtime est créé; le GRANT EXECUTE sur analytics.increment_daily_metric a réussi et has_function_privilege confirme l'accès à cette fonction. Une vérification SELECT 1 en lecture seule a réussi. Aucun enregistrement de données applicatives de Neon main n'a été lu ou écrit.
+En mode `preflight`, les étapes autorisées s'arrêtent sur le runner GitHub : aucune clé SSH n'est configurée, aucune commande SSH/SCP n'est lancée, aucun fichier `app.env` n'est créé ou envoyé, aucun conteneur, Caddy, DNS ou service VPS n'est consulté ou modifié. `deploy-production.sh` et l'ancien script `preflight-production.sh` refusent aussi le mode preflight côté VPS.
 
-Les paramètres Resend du formulaire de contact (`RESEND_API_KEY`, `CONTACT_FROM_EMAIL` et `CONTACT_TO_EMAIL`) sont configurés dans l’environnement protégé `ovh-production`. Le formulaire peut envoyer les messages via Resend. Les secrets Sentry côté serveur et VAPID restent facultatifs; leurs fonctionnalités ne sont disponibles que si les secrets correspondants sont configurés. Aucune valeur secrète n’est documentée ici.
+En mode `deploy`, les étapes distantes sont explicitement conditionnées au choix `deploy`. Le workflow ne rebâtit pas la candidate, utilise son digest Buildx exact, contrôle son label de révision, arrête la préproduction avant le démarrage durable si nécessaire, et conserve l'image d0f5 pour le rollback. La santé Docker et `/api/healthz` mesurent l'application. Le contrôle Neon Auth est séparé et un HTTP 402 donne un verdict de disponibilité fonctionnelle NO-GO sans transformer ce résultat en panne Node ni déclencher un rollback applicatif.
 
-Les noms runtime suivent `.env.example` : utiliser `NEON_DATABASE_URL` avec Neon `main` en production, jamais une URL de préproduction.
+## Procédure future
 
-NEON_AUTH_JWT_ISSUER et NEON_AUTH_JWT_AUDIENCE restent facultatifs et ne sont pas requis ni inventés dans ce workflow. Sans valeurs exactes vérifiées par Neon, l'authentification par Bearer token demeure désactivée; les sessions cookie sont revalidées auprès de NEON_AUTH_BASE_URL.
+Après restauration de Neon Auth et revue/approbation de la PR :
 
-## Préflight privé
+1. Relire le SHA exact de `master` et les contrôles CI verts.
+2. Vérifier qu'un snapshot Neon exploitable existe selon la procédure de sauvegarde approuvée. Le déploiement ne doit pas exécuter de migration ni écrire dans Neon.
+3. Dans Actions → `Deploy OVH production`, sélectionner ce SHA exact, saisir `DEPLOY_OVH_PRODUCTION`, et choisir `deploy`. N'utiliser `preflight` que pour la validation GitHub isolée; elle ne teste pas le VPS.
+4. Relire dans le résumé Actions le SHA source, le digest candidate, la plateforme amd64 et le digest d0f5. Refuser le déploiement si la candidate ne passe pas l'image smoke test ou si Neon Auth renvoie encore 402.
+5. Laisser le job remplacer l'app sur place sans lancer deux processus Node lourds en parallèle. Le remplacement peut créer une courte interruption. Ne pas démarrer la préproduction ou les cron applicatifs pendant cette fenêtre.
+6. Vérifier séparément le conteneur/`/api/healthz`, les pages HTTPS essentielles, les codes HTTP/API, Neon Auth et les ressources mémoire. Un 402 Neon est un incident fonctionnel distinct; il ne doit pas être présenté comme un OOM ou une panne du processus.
 
-Le préflight valide :
+Rollback autorisé uniquement en cas de régression applicative ou d'échec de santé :
 
-- le healthcheck HTTP local et la disponibilité de l'endpoint JWKS;
-- la connectivité Neon avec uniquement SELECT 1 (lecture sans écriture de test); cette vérification a déjà réussi pour le rôle runtime configuré, sans lecture ni écriture de données applicatives;
-- les routes de contenu, SEO et PWA, dont robots.txt, sitemap.xml, manifest.webmanifest et sw.js;
-- les réponses non authentifiées des routes de profil et des deux API cron;
-- /api/auth/get-session sans cookie fourni, qui doit répondre HTTP 200, avec le type application/json et le corps JSON null;
-- les en-têtes de sécurité.
+```bash
+bash /opt/lunidex-production/scripts/deployment/rollback-production.sh
+```
 
-Ce contrôle vérifie uniquement l’état anonyme et le proxy de session; il ne simule pas une connexion utilisateur. Le test utilise une connexion TLS interne avec curl --insecure; il valide le routage HTTPS et le handshake, pas encore la chaîne de confiance publique. Le certificat public Let's Encrypt ne peut être validé qu'après que le DNS du domaine pointe vers OVH et que Caddy l'a obtenu.
+Le script refuse toute autre référence et restaure `ghcr.io/teefloo/lunidex@sha256:9ca8f66d0b5f79a984358d12fe1c382319df7364388ec2d5df78fe3c5afc318a` (d0f5). Cette image est le dernier état OVH connu stable, mais le rollback n'est pas une correction d'un défaut introduit après d0f5. Les déclencheurs de rollback sont un conteneur unhealthy, un échec répété de `/api/healthz`, une régression grave sur les pages/API ou un nouvel OOM/redémarrage. Une panne Neon/Auth seule ne provoque pas un rollback de Node; elle conserve un NO-GO fonctionnel séparé.
 
-Le workflow construit le client avec les variables publiques de l'environnement de production. Les secrets serveur sont transférés dans app.env en mode 0600; ils ne sont pas inscrits dans l'image.
+## Surveillance mémoire après le prochain déploiement
 
-## Audit mémoire et ordre d'activation
+Il n'existe plus de schedule temporaire pour ces audits. Déclencher manuellement le workflow `Audit OVH VPS resources` en lecture seule aux échéances suivantes, avec le SHA et le digest déployés dans le rapport :
 
-Avant le mode deploy, lancer le workflow .github/workflows/deploy-ovh.yml depuis la branche de migration avec l'entrée inspect_read_only_resources activée et confirm_deployment désactivée. Son job séparé affiche RAM, swap, espace disque, charge hôte, statistiques de conteneurs et état des timers sans lire app.env ni modifier les services. Le workflow autonome .github/workflows/audit-ovh-resources.yml fournit aussi cette inspection.
+| Échéance | Contrôles |
+| --- | --- |
+| T+15 min | Premier démarrage, `RestartCount`, OOM, `memory.events`, `memory.current/max/peak`, RSS Node, heap V8 numérique si diagnostic borné activé, CPU, RAM hôte, disque, endpoint local et HTTPS. |
+| T+1 h | Comparaison au relevé T+15 min; vérifier la stabilisation après le démarrage et les erreurs V8/5xx. |
+| T+6 h | Tendance de RSS, `anon`, `file`, `inactive_file`, `slab`, `memory.current - inactive_file`, événements cgroup et RAM hôte. Le reste cgroup ne représente pas le heap. |
+| T+24 h | Confirmer la pente sur une journée, l'absence d'OOM/redémarrages et la disponibilité HTTPS; consigner Neon Auth séparément. |
+| T+48 h | Verdict mémoire final et comparaison au d0f5/T+15 min, sans assimiler une croissance RSS ou le cache fichiers à une fuite JavaScript. |
 
-Le VPS n'a que 4 Gio. Le mode préflight vérifie qu'il reste au moins 1,5 Gio de RAM disponible et 2 Gio de disque, puis arrête son conteneur. Le mode deploy conserve aussi le seuil de 1,5 Gio lorsque le conteneur de production ne tourne pas encore. Si une application de production est déjà en cours, il saute uniquement ce contrôle de RAM : Docker Compose arrête puis remplace l'instance par le candidat avec `up -d --no-deps app`, sans garder durablement deux applications de production en mémoire. Ce remplacement séquentiel peut créer une courte interruption. Si le candidat échoue au contrôle de santé, le trap de déploiement restaure le tag précédent et relance l'ancienne image avec le même remplacement séquentiel. Le contrôle de 2 Gio d'espace disque reste requis dans les deux modes. L'application de préproduction doit toujours être arrêtée avant tout déploiement durable de production; le script bloque deploy si `lunidex-app` fonctionne encore. La branche Neon ovh-preproduction reste intacte. Après le remplacement du Caddyfile par le routage production, `vps-test.lunidex.app` ne sera plus desservi par la préproduction. Il pourra être rétabli plus tard en redémarrant séparément l'application préproduction et en restaurant son routage, uniquement pendant une fenêtre où les ressources permettent cette instance supplémentaire.
+**Rollback immédiat / NO-GO mémoire** si `RestartCount`, `oom` ou `oom_kill` augmente, si Docker devient unhealthy, si le endpoint local cesse de répondre, ou si la mémoire cgroup reste au-dessus de 90 % de `memory.max` et continue de monter. Une hausse de `memory.events:max` seule indique une pression et appelle une vérification rapprochée; elle ne démontre pas à elle seule un OOM V8. En cas de pression, comparer les pages anonymes et le cache récupérable, préserver les compteurs et journaux, puis diagnostiquer avant tout changement de limites. Ne pas forcer le GC, prendre un heap snapshot ou redémarrer pour un diagnostic sans autorisation.
 
-Les timers ne peuvent être activés que séparément, par l'administrateur OVH connecté comme ubuntu avec sudo, après vérification qu’aucun scheduler externe n’appelle les mêmes tâches et désactivation des timers préproduction. Le compte lunidex-deploy n'a pas de privilège sudo. Depuis une session administrateur :
-
-1. vérifier qu’aucun autre scheduler n’appelle les routes, puis créer le marqueur avec `sudo touch /opt/lunidex-production/LEGACY_SCHEDULES_DISABLED`;
-2. lancer sudo bash /opt/lunidex-production/scripts/deployment/enable-production-crons.sh ENABLE_PRODUCTION_CRONS;
-3. vérifier l'état des timers avec sudo systemctl list-timers --all.
-
-Le script crée ENABLE_PRODUCTION_CRONS avec le propriétaire lunidex-deploy et le mode 0600, afin que les unités systemd puissent le lire. Le workflow ne crée aucun marqueur et n'appelle jamais ces scripts. Pour arrêter les timers et retirer le marqueur : sudo bash /opt/lunidex-production/scripts/deployment/disable-production-crons.sh.
-
-## Contrôles post-bascule et retour arrière
-
-La bascule est effectuée : les DNS de `lunidex.app` et `www.lunidex.app` pointent vers le VPS OVH, et Caddy sert le HTTPS public. Pour le contrôle post-bascule, vérifier la résolution des deux noms, les certificats, `/api/healthz`, les routes localisées, les API, l’Auth, les fichiers SEO/PWA, le formulaire de contact et les ressources du VPS. Les timers cron de production restent désactivés jusqu’à une validation opérationnelle distincte.
-
-Le script `activate-production-route.sh` sert uniquement à réparer ou rétablir le routage Caddy. Il exige une confirmation explicite et vérifie la résolution DNS avant de charger la configuration.
-
-Pour un défaut applicatif, garder les DNS sur OVH et exécuter `bash /opt/lunidex-production/scripts/deployment/rollback-production.sh`. Il restaure le tag image précédent, initialisé sur la baseline `ace4b8eb76e5992c935cfc01120377d17297733d`. Le rollback concerne l’image de production et ne redémarre pas la préproduction. Une restauration DNS vers un autre hébergement n’est pas un rollback fonctionnel.
+À chaque point, rapporter séparément : santé conteneur/Node, disponibilité HTTPS, disponibilité Neon Auth, redémarrages et `OOMKilled`, RAM cgroup/hôte, RSS, heap V8 lorsqu'il est mesuré, CPU, stockage et erreurs HTTP 5xx. Une requête Auth anonyme HTTP 200 prouve uniquement la joignabilité du proxy; elle ne valide pas une connexion authentifiée.

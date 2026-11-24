@@ -2,7 +2,7 @@ name: lunidex-production
 
 services:
   app:
-    image: ghcr.io/teefloo/lunidex:${APP_IMAGE_TAG:?Set APP_IMAGE_TAG to an immutable Git SHA}
+    image: ${APP_IMAGE_REF:?Set APP_IMAGE_REF to a digest-pinned GHCR image reference}
     container_name: lunidex-production-app
     restart: unless-stopped
     init: true
