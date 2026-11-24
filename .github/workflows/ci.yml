@@ -31,6 +31,9 @@ jobs:
 
       - run: node --test scripts/deployment/production-memory-gate.test.mjs
 
+      - name: Verify OVH production deployment automation safeguards
+        run: node --test scripts/deployment/production-deploy-safety.test.mjs
+
       - name: Verify OVH audit diagnostics and stability reports
         run: python3 -m unittest discover -s scripts/deployment -p 'test_*ovh*.py'
 

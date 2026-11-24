@@ -21,13 +21,32 @@ La candidate de ce futur changement n'a pas encore été construite ou publiée 
 
 ## Préflight isolé et workflow
 
-`.github/workflows/deploy-ovh-production.yml` reste manuel, limité à `master`, au SHA complet actuellement sélectionné, à la confirmation `DEPLOY_OVH_PRODUCTION` et à l'environnement GitHub protégé `ovh-production`.
+`.github/workflows/deploy-ovh-production.yml` conserve son déclenchement manuel, limité à `master`, au SHA complet sélectionné et à la confirmation `DEPLOY_OVH_PRODUCTION`. Il accepte aussi le résultat `workflow_run` du workflow `CI`, uniquement pour une exécution réussie issue d'un événement `push` sur `master`. Le chemin automatique est ignoré tant que la variable de dépôt `AUTO_DEPLOY_ENABLED` n'a pas exactement la valeur `true`; l'absence de cette variable équivaut à `false`. Cette PR ne crée ni ne modifie cette variable.
 
 Le job construit la candidate sur le runner GitHub, publie un tag de traçabilité unique, lit le digest du manifeste Buildx, puis utilise uniquement la référence par digest. Il tire et valide d0f5 par son digest existant; il ne construit jamais l'ancienne image avec `Dockerfile.rollback-baseline`. Les deux images sont contrôlées sans réseau dans des conteneurs jetables. Le contrôle vérifie le label de révision, l'architecture, l'utilisateur, la commande, le rendu Compose et le endpoint local `/api/healthz`.
 
 En mode `preflight`, les étapes autorisées s'arrêtent sur le runner GitHub : aucune clé SSH n'est configurée, aucune commande SSH/SCP n'est lancée, aucun fichier `app.env` n'est créé ou envoyé, aucun conteneur, Caddy, DNS ou service VPS n'est consulté ou modifié. `deploy-production.sh` et l'ancien script `preflight-production.sh` refusent aussi le mode preflight côté VPS.
 
-En mode `deploy`, les étapes distantes sont explicitement conditionnées au choix `deploy`. Le workflow ne rebâtit pas la candidate, utilise son digest Buildx exact, contrôle son label de révision, arrête la préproduction avant le démarrage durable si nécessaire, et conserve l'image d0f5 pour le rollback. La santé Docker et `/api/healthz` mesurent l'application. Le contrôle Neon Auth est séparé et un HTTP 402 donne un verdict de disponibilité fonctionnelle NO-GO sans transformer ce résultat en panne Node ni déclencher un rollback applicatif.
+En mode manuel `deploy`, les étapes distantes restent conditionnées au choix `deploy` et à la confirmation existante. Le chemin automatique construit une image neuve `linux/amd64` depuis `workflow_run.head_sha`, la publie sur GHCR, puis utilise uniquement son digest. Les deux chemins partagent le même job, les validations d'image, la garde Neon Auth, les protections mémoire et le déploiement OVH. Le SHA source est comparé à `master` avant le build, avant chaque phase distante et juste avant le déploiement; un run devenu obsolète s'arrête sans remplacer la version courante. Les chemins manuel et automatique utilisent le même groupe de concurrence `lunidex-ovh-production`, avec annulation désactivée.
+
+Le déploiement essaie de revenir à l'image immuable précédente uniquement si elle correspond au conteneur qui était sain avant le remplacement; sinon il prend d0f5 comme secours. Si le script de déploiement réussit mais qu'un contrôle de santé ultérieur échoue, le workflow appelle `rollback-production.sh --last-stable`, qui tente cette même image précédente puis d0f5. Le rollback manuel sans argument reste strictement épinglé à d0f5. L'image d0f5 n'est jamais supprimée. Après le healthcheck local, deux sondes anonymes HTTPS vérifient `/api/healthz` et `/en`; elles détectent les pannes de disponibilité de base, mais ne remplacent pas des tests métier authentifiés et ne garantissent pas la détection de toutes les régressions applicatives.
+
+Le contrôle Neon Auth s'exécute avant la première connexion SSH et un HTTP 402 bloque le déploiement. Après le déploiement, l'état Neon reste séparé des verdicts Node/HTTPS; un problème Auth seul ne déclenche pas le rollback applicatif.
+
+### Réglages GitHub requis avant activation
+
+L'automatisation est désactivée par défaut. Après restauration de Neon Auth et validation d'un premier déploiement stable, l'activation se fera séparément dans **Repository → Settings → Secrets and variables → Actions → Variables** : créer `AUTO_DEPLOY_ENABLED` avec la valeur exacte `true`. Pour suspendre les nouveaux runs, supprimer la variable ou remplacer sa valeur par `false`. Cela ne stoppe pas un déploiement déjà en cours; pour une suspension immédiate, désactiver la variable **et annuler explicitement le run actif** dans Actions. Ne pas utiliser un secret pour cette option.
+
+Les runs manuels et automatiques partagent `lunidex-ovh-production`. GitHub n'en exécute qu'un à la fois; sans annulation du run actif, une seule exécution reste en attente et une exécution plus récente remplace l'attente plus ancienne. Les contrôles de SHA courante bloquent aussi un run devenu périmé.
+
+Protéger `master` dans **Settings → Rules → Rulesets** (ou Branch protection rules) avec au minimum :
+
+- exiger une Pull Request et au moins une approbation;
+- exiger le contrôle CI complet (`ci`) avant fusion;
+- exiger la résolution des conversations et, si disponible, invalider les approbations après nouveaux commits;
+- interdire les force-push et la suppression de branche.
+
+Restreindre l'environnement **Settings → Environments → `ovh-production`** aux déploiements depuis `master` et conserver les secrets/variables de production dans cet environnement. Les **Required reviewers** mettent en pause chaque run automatique jusqu'à approbation. Garder cette protection pendant le rétablissement de Neon Auth et le premier déploiement stable; pour un fonctionnement réellement sans intervention humaine, un administrateur devra ensuite retirer ces reviewers requis. Les protections de branche, le contrôle Neon avant SSH, les garde-fous de SHA, l'option désactivée par défaut et le rollback restent en place. Cette PR ne modifie aucune variable, aucun reviewer et aucun secret.
 
 ## Procédure future
 
@@ -46,7 +65,7 @@ Rollback autorisé uniquement en cas de régression applicative ou d'échec de s
 bash /opt/lunidex-production/scripts/deployment/rollback-production.sh
 ```
 
-Le script refuse toute autre référence et restaure `ghcr.io/teefloo/lunidex@sha256:9ca8f66d0b5f79a984358d12fe1c382319df7364388ec2d5df78fe3c5afc318a` (d0f5). Cette image est le dernier état OVH connu stable, mais le rollback n'est pas une correction d'un défaut introduit après d0f5. Les déclencheurs de rollback sont un conteneur unhealthy, un échec répété de `/api/healthz`, une régression grave sur les pages/API ou un nouvel OOM/redémarrage. Une panne Neon/Auth seule ne provoque pas un rollback de Node; elle conserve un NO-GO fonctionnel séparé.
+Sans argument, le rollback manuel restaure uniquement `ghcr.io/teefloo/lunidex@sha256:9ca8f66d0b5f79a984358d12fe1c382319df7364388ec2d5df78fe3c5afc318a` (d0f5). Le workflow peut appeler `rollback-production.sh --last-stable` après l'échec d'un contrôle HTTPS post-déploiement : cette option interne tente le digest précédent consigné, puis d0f5 si le précédent ne démarre pas ou échoue au healthcheck. Les deux sont des références GHCR immuables. d0f5 est le dernier état OVH connu stable, mais le rollback n'est pas une correction d'un défaut introduit après d0f5. Les déclencheurs de rollback sont un conteneur unhealthy, un échec de `/api/healthz` ou des deux sondes publiques de base, ou un nouvel OOM/redémarrage. Une panne Neon/Auth seule ne provoque pas un rollback de Node; elle conserve un NO-GO fonctionnel séparé.
 
 ## Surveillance mémoire après le prochain déploiement
 

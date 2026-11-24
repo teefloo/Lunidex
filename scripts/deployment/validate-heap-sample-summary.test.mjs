@@ -222,7 +222,7 @@ test('keeps the exact-run memory-series retrieval required when an optional summ
       path: '../../.github/workflows/deploy-ovh-production.yml',
       summaryName: 'Retrieve optional sanitized heap allocation summary',
       seriesName: 'Retrieve the exact-run sanitized heap memory series',
-      condition: "if: success() && inputs.deployment_mode == 'deploy' && inputs.heap_sampling_diagnostic",
+      condition: "if: success() && env.DEPLOYMENT_MODE == 'deploy' && env.HEAP_SAMPLING_DIAGNOSTIC == 'true'",
       preserveWindowWait: true,
     },
   ];
