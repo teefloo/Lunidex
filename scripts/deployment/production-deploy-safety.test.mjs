@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import test from 'node:test';
 import { validateRenderedCompose } from './validate-compose-runtime-contract.mjs';
+import { resolveCandidateImageRef } from './resolve-candidate-image-ref.mjs';
 
 const require = createRequire(import.meta.url);
 const yaml = require('js-yaml');
@@ -78,6 +79,60 @@ test('candidate and rollback images are verified in isolated no-network containe
   assert.match(workflow, /Validate the candidate Compose contract and app health in isolation/);
   assert.match(workflow, /containerimage\.digest/);
   assert.match(workflow, /image_ref=%s/);
+  assert.match(validator, /docker exec[\s\S]*api\/healthz/);
+});
+
+test('reused candidate digests resolve only to immutable Lunidex GHCR image references', () => {
+  const digest = 'sha256:' + 'a'.repeat(64);
+  assert.equal(resolveCandidateImageRef(digest), `ghcr.io/teefloo/lunidex@${digest}`);
+  assert.equal(
+    resolveCandidateImageRef('sha256:aec1231996e4ebcfac433d187bade59440272988d50918b2035ac166596f0091'),
+    'ghcr.io/teefloo/lunidex@sha256:aec1231996e4ebcfac433d187bade59440272988d50918b2035ac166596f0091',
+  );
+
+  for (const malformed of [
+    '',
+    'sha256:abc',
+    'sha256:' + 'A'.repeat(64),
+    `ghcr.io/other/image@${digest}`,
+    `ghcr.io/teefloo/lunidex:latest`,
+  ]) {
+    assert.throws(() => resolveCandidateImageRef(malformed), /lowercase sha256 digest/);
+  }
+});
+
+test('reused digest skips only image build and preserves SHA, platform, and health checks', () => {
+  const workflow = yaml.load(read(workflowPath));
+  const steps = workflow.jobs.deploy.steps;
+  const digestInput = workflow.on.workflow_dispatch.inputs.candidate_image_digest;
+  const guard = stepByName(steps, 'Guard the production branch and commit');
+  const reuse = stepByName(steps, 'Reuse the supplied immutable candidate image digest');
+  const build = stepByName(steps, 'Build and publish the candidate image');
+  const sourceHistory = stepByName(steps, 'Verify the image source commit belongs to selected master');
+  const validator = read(isolatedValidatorPath);
+  const validate = stepByName(steps, 'Validate the candidate Compose contract and app health in isolation');
+  const deploy = stepByName(steps, 'Deploy the production image by immutable digest');
+  const report = stepByName(steps, 'Report isolated preflight boundary');
+  const selectedImageRef = /steps\.reused_candidate_image\.outputs\.image_ref \|\| steps\.candidate_image\.outputs\.image_ref/;
+
+  assert.equal(digestInput.required, false);
+  assert.equal(digestInput.default, '');
+  assert.equal(digestInput.type, 'string');
+  assert.match(guard.run, /CANDIDATE_IMAGE_DIGEST.*\^sha256:\[0-9a-f\]\{64\}\$/);
+  assert.match(reuse.if, /candidate_image_digest != ''/);
+  assert.match(reuse.run, /resolve-candidate-image-ref\.mjs/);
+  assert.match(build.if, /candidate_image_digest == ''/);
+  assert.match(build.run, /docker buildx build[\s\S]*--push/);
+  assert.match(validate.env.IMAGE_REF, selectedImageRef);
+  assert.match(deploy.env.IMAGE_REF, selectedImageRef);
+  assert.match(report.env.IMAGE_REF, selectedImageRef);
+  assert.match(report.run, /candidate was reused; no image build or publication was performed/);
+  assert.match(report.run, /candidate image was built and published to GHCR/);
+  assert.match(sourceHistory.run, /git merge-base --is-ancestor "\$PRODUCTION_COMMIT" "\$GITHUB_SHA"/);
+  assert.match(guard.run, /-z "\$CANDIDATE_IMAGE_DIGEST" && "\$PRODUCTION_COMMIT" != "\$GITHUB_SHA"/);
+  assert.match(validator, /docker pull --platform linux\/amd64/);
+  assert.match(validator, /\[\[ "\$revision" != "\$expected_revision"/);
+  assert.match(validator, /api\/healthz/);
 });
 
 test('Compose runtime contract accepts equivalent normalized and source resource forms', () => {
@@ -166,24 +221,31 @@ test('preflight performs no SSH or production file/container mutation', () => {
   assert.match(stepByName(steps, 'Report isolated preflight boundary').run, /No SSH key was configured/);
 });
 
-test('production dispatch requires master, the exact current SHA, and explicit confirmation', () => {
+test('production dispatch requires master and explicit confirmation; image source must belong to master', () => {
   const workflow = yaml.load(read(workflowPath));
   const inputs = workflow.on.workflow_dispatch.inputs;
   const job = workflow.jobs.deploy;
   const guard = stepByName(job.steps, 'Guard the production branch and commit');
+  const checkout = job.steps.find((step) => step.uses === 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683');
 
   assert.equal(inputs.production_commit.required, true);
   assert.equal(inputs.confirmation.required, true);
   assert.equal(inputs.confirmation.type, 'string');
-  assert.match(inputs.deployment_mode.description, /image on GitHub\/GHCR/);
+  assert.match(inputs.deployment_mode.description, /validates a supplied digest or builds and publishes a candidate on GitHub\/GHCR/);
   assert.match(inputs.deployment_mode.description, /publishes.*GHCR/);
   assert.match(inputs.deployment_mode.description, /deploy alone connects to OVH/);
   assert.match(job.if, /github\.ref == 'refs\/heads\/master'/);
   assert.match(job.if, /inputs\.confirmation == 'DEPLOY_OVH_PRODUCTION'/);
-  assert.match(job.if, /inputs\.production_commit == github\.sha/);
+  assert.match(job.if, /inputs\.production_commit != ''/);
+  assert.match(stepByName(job.steps, 'Verify the image source commit belongs to selected master').run, /git cat-file -e/);
   assert.match(guard.run, /\$GITHUB_REF.*refs\/heads\/master/);
   assert.match(guard.run, /\$PRODUCTION_CONFIRMATION.*DEPLOY_OVH_PRODUCTION/);
-  assert.match(guard.run, /\$PRODUCTION_COMMIT.*\$GITHUB_SHA/);
+  assert.match(guard.run, /\$PRODUCTION_COMMIT.*\[0-9a-f\]\{40\}/);
+  assert.match(guard.run, /newly built image must use the exact selected master SHA/);
+  assert.match(stepByName(job.steps, 'Verify the image source commit belongs to selected master').run, /git merge-base --is-ancestor/);
+  assert.ok(checkout);
+  assert.equal(checkout.with.ref, '${{ github.sha }}');
+  assert.equal(checkout.with['fetch-depth'], 0);
 });
 
 test('preflight explicitly publishes its candidate image to GHCR', () => {
