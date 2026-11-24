@@ -6,6 +6,7 @@ import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import test from 'node:test';
+import { validateRenderedCompose } from './validate-compose-runtime-contract.mjs';
 
 const require = createRequire(import.meta.url);
 const yaml = require('js-yaml');
@@ -17,6 +18,7 @@ const rollbackPath = path.join(repositoryRoot, 'scripts/deployment/rollback-prod
 const appHealthPath = path.join(repositoryRoot, 'scripts/deployment/healthcheck-production.sh');
 const authProbePath = path.join(repositoryRoot, 'scripts/deployment/check-neon-production.sh');
 const isolatedValidatorPath = path.join(repositoryRoot, 'scripts/deployment/validate-image-isolated.sh');
+const composeContractValidatorPath = path.join(repositoryRoot, 'scripts/deployment/validate-compose-runtime-contract.mjs');
 const rollbackCommit = 'd0f5e1af2cf95dd43eb046069c0d37f0a2add93e';
 const rollbackImageRef = 'ghcr.io/teefloo/lunidex@sha256:9ca8f66d0b5f79a984358d12fe1c382319df7364388ec2d5df78fe3c5afc318a';
 
@@ -70,12 +72,66 @@ test('candidate and rollback images are verified in isolated no-network containe
   assert.match(validator, /docker pull --platform linux\/amd64/);
   assert.match(validator, /org\.opencontainers\.image\.revision/);
   assert.match(validator, /docker compose[\s\S]*config --format json/);
-  assert.match(validator, /rendered_limit[\s\S]{0,40}'2176m'/);
+  assert.match(validator, /validate-compose-runtime-contract\.mjs/);
   assert.match(validator, /docker run --detach[\s\S]*--network none[\s\S]*--read-only[\s\S]*--memory 2176m/);
   assert.match(workflow, /Verify the pinned d0f5 rollback image in isolation/);
   assert.match(workflow, /Validate the candidate Compose contract and app health in isolation/);
   assert.match(workflow, /containerimage\.digest/);
   assert.match(workflow, /image_ref=%s/);
+});
+
+test('Compose runtime contract accepts equivalent normalized and source resource forms', () => {
+  const expectedImage = 'ghcr.io/teefloo/lunidex@sha256:' + 'a'.repeat(64);
+  const unnormalized = validateRenderedCompose({
+    services: { app: { image: expectedImage, mem_limit: '2176m', cpus: '1.0' } },
+  }, expectedImage);
+  const normalized = validateRenderedCompose({
+    services: { app: { image: expectedImage, mem_limit: '2281701376', cpus: 1 } },
+  }, expectedImage);
+
+  assert.equal(unnormalized.ok, true);
+  assert.equal(unnormalized.actual.mem_limit_bytes, '2281701376');
+  assert.equal(normalized.ok, true);
+  assert.equal(normalized.actual.mem_limit_bytes, '2281701376');
+});
+
+test('Compose runtime contract rejects effective resource changes and image mismatches', () => {
+  const expectedImage = 'ghcr.io/teefloo/lunidex@sha256:' + 'a'.repeat(64);
+  const changedMemory = validateRenderedCompose({
+    services: { app: { image: expectedImage, mem_limit: '2281701377', cpus: 1 } },
+  }, expectedImage);
+  const changedCpus = validateRenderedCompose({
+    services: { app: { image: expectedImage, mem_limit: 2281701376, cpus: 1.01 } },
+  }, expectedImage);
+  const changedImage = validateRenderedCompose({
+    services: { app: { image: 'ghcr.io/teefloo/lunidex:latest', mem_limit: '2176m', cpus: 1 } },
+  }, expectedImage);
+
+  assert.equal(changedMemory.ok, false);
+  assert.equal(changedCpus.ok, false);
+  assert.equal(changedImage.ok, false);
+});
+
+test('Compose contract failure reports the rendered image and resource values', () => {
+  const expectedImage = 'ghcr.io/teefloo/lunidex@sha256:' + 'a'.repeat(64);
+  const tempDir = mkdtempSync(path.join(os.tmpdir(), 'lunidex-compose-contract-test-'));
+  const renderedPath = path.join(tempDir, 'rendered.json');
+  try {
+    writeFileSync(renderedPath, JSON.stringify({
+      services: { app: { image: expectedImage, mem_limit: '2281701377', cpus: 1.5 } },
+    }));
+    const result = spawnSync('node', [composeContractValidatorPath, renderedPath, expectedImage], {
+      cwd: repositoryRoot,
+      encoding: 'utf8',
+    });
+
+    assert.equal(result.status, 78);
+    assert.match(result.stderr, /image="ghcr\.io\/teefloo\/lunidex@sha256:/);
+    assert.match(result.stderr, /mem_limit="2281701377" mem_limit_bytes=2281701377/);
+    assert.match(result.stderr, /cpus=1\.5/);
+  } finally {
+    rmSync(tempDir, { recursive: true, force: true });
+  }
 });
 
 test('private rollback image authentication happens before the first GHCR pull', () => {

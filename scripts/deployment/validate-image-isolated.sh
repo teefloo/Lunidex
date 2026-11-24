@@ -42,13 +42,9 @@ docker compose \
   --env-file "$temporary_root/compose/.env" \
   -f "$temporary_root/compose/compose.production.yaml" config --format json \
   > "$temporary_root/compose-rendered.json"
-rendered_image="$(jq -r '.services.app.image' "$temporary_root/compose-rendered.json")"
-rendered_limit="$(jq -r '.services.app.mem_limit' "$temporary_root/compose-rendered.json")"
-rendered_cpus="$(jq -r '.services.app.cpus' "$temporary_root/compose-rendered.json")"
-if [[ "$rendered_image" != "$image_ref" || "$rendered_limit" != '2176m' || "$rendered_cpus" != '1' ]]; then
-  echo 'The current production Compose file did not render the immutable image and bounded resources as expected.' >&2
-  exit 78
-fi
+node scripts/deployment/validate-compose-runtime-contract.mjs \
+  "$temporary_root/compose-rendered.json" \
+  "$image_ref"
 
 docker run --detach --name "$container_name" \
   --network none \
