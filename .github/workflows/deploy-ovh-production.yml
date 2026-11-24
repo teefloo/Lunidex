@@ -12,7 +12,7 @@ on:
         required: true
         type: string
       deployment_mode:
-        description: Preflight builds and validates an isolated image in GitHub; deploy alone connects to OVH
+        description: Preflight builds, publishes, and validates an image on GitHub/GHCR; deploy alone connects to OVH
         required: true
         default: preflight
         type: choice
@@ -139,6 +139,14 @@ jobs:
       - run: npm run build
       - run: npx tsc --project packages/core/tsconfig.json --noEmit
 
+      - name: Authenticate to GHCR before pulling the private rollback image
+        shell: bash
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -Eeuo pipefail
+          printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+
       - name: Verify the pinned d0f5 rollback image in isolation
         shell: bash
         run: |
@@ -151,7 +159,6 @@ jobs:
         id: candidate_image
         shell: bash
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: |
           set -Eeuo pipefail
@@ -161,8 +168,6 @@ jobs:
           docker buildx version
           docker buildx create --name lunidex-production-builder --driver docker-container --use
           docker buildx inspect --bootstrap
-          printf '%s' "$GITHUB_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
-
           build_args=(
             --build-arg "NEXT_DEPLOYMENT_ID=$PRODUCTION_COMMIT"
             --build-arg "NEXT_PUBLIC_NEON_AUTH_URL=$NEXT_PUBLIC_NEON_AUTH_URL"
@@ -492,7 +497,7 @@ jobs:
           {
             echo '## Isolated preflight complete'
             echo
-            echo 'The candidate and rollback were built or pulled, checked by digest, and smoke-tested on this GitHub runner.'
+            echo 'The candidate image was built and published to GHCR, then the candidate and rollback images were checked by digest and smoke-tested on this GitHub runner.'
             echo 'No SSH key was configured; no VPS, production environment file, container, Caddy route, or Neon data was accessed.'
             echo "Candidate: \`$IMAGE_REF\`"
           } >> "$GITHUB_STEP_SUMMARY"

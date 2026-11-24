@@ -78,6 +78,20 @@ test('candidate and rollback images are verified in isolated no-network containe
   assert.match(workflow, /image_ref=%s/);
 });
 
+test('private rollback image authentication happens before the first GHCR pull', () => {
+  const parsed = yaml.load(read(workflowPath));
+  const steps = parsed.jobs.deploy.steps;
+  const authIndex = steps.findIndex((step) => step.name === 'Authenticate to GHCR before pulling the private rollback image');
+  const rollbackIndex = steps.findIndex((step) => step.name === 'Verify the pinned d0f5 rollback image in isolation');
+  const candidateIndex = steps.findIndex((step) => step.name === 'Build and publish the candidate image');
+  const auth = stepByName(steps, 'Authenticate to GHCR before pulling the private rollback image');
+
+  assert.ok(authIndex >= 0 && authIndex < rollbackIndex && rollbackIndex < candidateIndex);
+  assert.match(auth.env.GHCR_TOKEN, /secrets\.GITHUB_TOKEN/);
+  assert.match(auth.run, /docker login ghcr\.io --username .* --password-stdin/);
+  assert.equal(parsed.jobs.deploy.permissions.packages, 'write');
+});
+
 test('preflight performs no SSH or production file/container mutation', () => {
   const workflow = yaml.load(read(workflowPath));
   const steps = workflow.jobs.deploy.steps;
@@ -105,7 +119,8 @@ test('production dispatch requires master, the exact current SHA, and explicit c
   assert.equal(inputs.production_commit.required, true);
   assert.equal(inputs.confirmation.required, true);
   assert.equal(inputs.confirmation.type, 'string');
-  assert.match(inputs.deployment_mode.description, /isolated image in GitHub/);
+  assert.match(inputs.deployment_mode.description, /image on GitHub\/GHCR/);
+  assert.match(inputs.deployment_mode.description, /publishes.*GHCR/);
   assert.match(inputs.deployment_mode.description, /deploy alone connects to OVH/);
   assert.match(job.if, /github\.ref == 'refs\/heads\/master'/);
   assert.match(job.if, /inputs\.confirmation == 'DEPLOY_OVH_PRODUCTION'/);
@@ -113,6 +128,18 @@ test('production dispatch requires master, the exact current SHA, and explicit c
   assert.match(guard.run, /\$GITHUB_REF.*refs\/heads\/master/);
   assert.match(guard.run, /\$PRODUCTION_CONFIRMATION.*DEPLOY_OVH_PRODUCTION/);
   assert.match(guard.run, /\$PRODUCTION_COMMIT.*\$GITHUB_SHA/);
+});
+
+test('preflight explicitly publishes its candidate image to GHCR', () => {
+  const workflow = yaml.load(read(workflowPath));
+  const steps = workflow.jobs.deploy.steps;
+  const build = stepByName(steps, 'Build and publish the candidate image');
+  const report = stepByName(steps, 'Report isolated preflight boundary');
+
+  assert.match(build.run, /docker buildx build[\s\S]*--push/);
+  assert.match(report.run, /candidate image was built and published to GHCR/);
+  assert.match(report.run, /no VPS[\s\S]*was accessed/);
+  assert.match(report.if, /deployment_mode == 'preflight'/);
 });
 
 test('the deploy-only disk cleanup prunes dangling images only and keeps the pinned rollback image', () => {
