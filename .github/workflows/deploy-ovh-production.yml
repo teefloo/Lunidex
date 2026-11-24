@@ -112,6 +112,7 @@ jobs:
           }
 
       - name: Require production contact delivery configuration
+        if: inputs.deployment_mode == 'deploy'
         shell: bash
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
@@ -138,48 +139,16 @@ jobs:
       - run: npm run build
       - run: npx tsc --project packages/core/tsconfig.json --noEmit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-        with:
-          ref: ace4b8eb76e5992c935cfc01120377d17297733d
-          path: .rollback-baseline
-
-      - name: Build and publish the historical rollback baseline
+      - name: Verify the pinned d0f5 rollback image in isolation
         shell: bash
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -Eeuo pipefail
-          baseline=ace4b8eb76e5992c935cfc01120377d17297733d
-          image=ghcr.io/teefloo/lunidex
-          docker buildx version
-          docker buildx create --name lunidex-production-builder --driver docker-container --use
-          docker buildx inspect --bootstrap
-          printf '%s' "$GITHUB_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
-          cp Dockerfile.rollback-baseline .rollback-baseline/Dockerfile.rollback-baseline
-          printf '%s\n' '.git' 'node_modules' '.next' '.env*' >> .rollback-baseline/.dockerignore
-          docker buildx build \
-            --platform linux/amd64 \
-            --file .rollback-baseline/Dockerfile.rollback-baseline \
-            --tag "$image:$baseline" \
-            --label "org.opencontainers.image.revision=$baseline" \
-            --build-arg "NEXT_DEPLOYMENT_ID=$baseline" \
-            --build-arg "NEXT_PUBLIC_NEON_AUTH_URL=$NEXT_PUBLIC_NEON_AUTH_URL" \
-            --build-arg "NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN=$NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN" \
-            --build-arg "NEXT_PUBLIC_POSTHOG_HOST=$NEXT_PUBLIC_POSTHOG_HOST" \
-            --build-arg "NEXT_PUBLIC_POSTHOG_ENABLED=$NEXT_PUBLIC_POSTHOG_ENABLED" \
-            --build-arg "NEXT_PUBLIC_POSTHOG_ENVIRONMENT=production" \
-            --build-arg "NEXT_PUBLIC_APP_RELEASE=$baseline" \
-            --build-arg "NEXT_PUBLIC_POSTHOG_REPLAY_SAMPLE_RATE=$NEXT_PUBLIC_POSTHOG_REPLAY_SAMPLE_RATE" \
-            --build-arg "NEXT_PUBLIC_SENTRY_DSN=$NEXT_PUBLIC_SENTRY_DSN" \
-            --build-arg "NEXT_PUBLIC_SENTRY_ENVIRONMENT=production" \
-            --build-arg "NEXT_PUBLIC_SENTRY_RELEASE=$baseline" \
-            --build-arg "NEXT_PUBLIC_GOOGLE_VERIFICATION=$NEXT_PUBLIC_GOOGLE_VERIFICATION" \
-            --build-arg "NEXT_PUBLIC_VAPID_PUBLIC_KEY=$NEXT_PUBLIC_VAPID_PUBLIC_KEY" \
-            --push \
-            .rollback-baseline
-          docker logout ghcr.io >/dev/null
+          bash scripts/deployment/validate-image-isolated.sh \
+            'ghcr.io/teefloo/lunidex@sha256:9ca8f66d0b5f79a984358d12fe1c382319df7364388ec2d5df78fe3c5afc318a' \
+            'd0f5e1af2cf95dd43eb046069c0d37f0a2add93e'
 
-      - name: Build and publish the production SHA image
+      - name: Build and publish the candidate image
+        id: candidate_image
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -187,7 +156,10 @@ jobs:
         run: |
           set -Eeuo pipefail
           image=ghcr.io/teefloo/lunidex
+          metadata_file="$RUNNER_TEMP/lunidex-image-metadata.json"
+          candidate_tag="$image:$PRODUCTION_COMMIT-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
           docker buildx version
+          docker buildx create --name lunidex-production-builder --driver docker-container --use
           docker buildx inspect --bootstrap
           printf '%s' "$GITHUB_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
 
@@ -213,14 +185,52 @@ jobs:
 
           docker buildx build \
             --platform linux/amd64 \
-            --tag "$image:$PRODUCTION_COMMIT" \
+            --tag "$candidate_tag" \
             --label "org.opencontainers.image.revision=$PRODUCTION_COMMIT" \
+            --metadata-file "$metadata_file" \
             "${build_args[@]}" \
             "${secret_args[@]}" \
             --push .
-          docker logout ghcr.io >/dev/null
+          digest="$(jq -r '."containerimage.digest" // empty' "$metadata_file")"
+          [[ "$digest" =~ ^sha256:[0-9a-f]{64}$ ]] || {
+            echo 'Buildx did not return an immutable image digest.' >&2
+            exit 78
+          }
+          image_ref="$image@$digest"
+          printf 'image_ref=%s\n' "$image_ref" >> "$GITHUB_OUTPUT"
+          printf 'image_digest=%s\n' "$digest" >> "$GITHUB_OUTPUT"
+          {
+            echo '## Immutable OVH candidate image'
+            echo
+            echo "- Source commit: \`$PRODUCTION_COMMIT\`"
+            echo "- Candidate: \`$image_ref\`"
+            echo '- Platform: \`linux/amd64\`'
+            echo
+            echo 'Rollback: \`ghcr.io/teefloo/lunidex@sha256:9ca8f66d0b5f79a984358d12fe1c382319df7364388ec2d5df78fe3c5afc318a\` (d0f5).'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Validate the candidate Compose contract and app health in isolation
+        shell: bash
+        env:
+          IMAGE_REF: ${{ steps.candidate_image.outputs.image_ref }}
+        run: |
+          set -Eeuo pipefail
+          bash scripts/deployment/validate-image-isolated.sh "$IMAGE_REF" "$PRODUCTION_COMMIT"
+
+      - name: Log out of GHCR on the GitHub runner
+        if: always()
+        shell: bash
+        run: docker logout ghcr.io >/dev/null 2>&1 || true
+
+      - name: Require Neon Auth functionality before replacing production
+        if: inputs.deployment_mode == 'deploy'
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          bash scripts/deployment/check-neon-production.sh https://lunidex.app/api/auth/get-session
 
       - name: Prepare the server-only production environment
+        if: inputs.deployment_mode == 'deploy'
         shell: bash
         env:
           NEON_DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
@@ -273,6 +283,7 @@ jobs:
           chmod 0600 "$app_env"
 
       - name: Configure the separate production SSH connection
+        if: inputs.deployment_mode == 'deploy'
         shell: bash
         env:
           OVH_PRODUCTION_DEPLOY_SSH_KEY: ${{ secrets.OVH_PRODUCTION_DEPLOY_SSH_KEY }}
@@ -290,9 +301,11 @@ jobs:
           chmod 0600 "$HOME/.ssh/ovh_deploy" "$HOME/.ssh/known_hosts"
 
       - name: Bootstrap the isolated production root through Docker
+        if: inputs.deployment_mode == 'deploy'
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IMAGE_REF: ${{ steps.candidate_image.outputs.image_ref }}
         run: |
           set -Eeuo pipefail
           target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
@@ -308,7 +321,7 @@ jobs:
           trap cleanup_remote_bootstrap_file EXIT
           scp "${ssh_args[@]}" scripts/deployment/bootstrap-production-directories.mjs "$target:$bootstrap_script"
 
-          image="ghcr.io/teefloo/lunidex:$PRODUCTION_COMMIT"
+          image="$IMAGE_REF"
           remote_command="set -Eeuo pipefail; umask 077; bootstrap_file='$bootstrap_script'; export DOCKER_CONFIG=\$(mktemp -d /tmp/lunidex-production-bootstrap-docker.XXXXXX); trap 'rm -f \"\$bootstrap_file\"; rm -rf \"\$DOCKER_CONFIG\"' EXIT; if ! docker info >/dev/null 2>&1; then echo 'lunidex-deploy must have access to the Docker daemon to prepare the production directory.' >&2; exit 77; fi; docker login ghcr.io --username teefloo --password-stdin; image='$image'; docker pull \"\$image\"; target_uid=\$(id -u); target_gid=\$(id -g); docker run --rm --network none --read-only --userns=host --user 0:0 --cap-drop ALL --cap-add CHOWN --cap-add DAC_OVERRIDE --mount type=bind,source=/opt,target=/host/opt --mount type=bind,source=\$bootstrap_file,target=/bootstrap-production-directories.mjs,readonly --env BOOTSTRAP_ROOT=/host/opt/lunidex-production --env BOOTSTRAP_UID=\$target_uid --env BOOTSTRAP_GID=\$target_gid --entrypoint node \"\$image\" /bootstrap-production-directories.mjs"
           printf '%s' "$GITHUB_TOKEN" | ssh "${ssh_args[@]}" "$target" "$remote_command"
 
@@ -323,14 +336,15 @@ jobs:
           timeout 90s ssh "${ssh_args[@]}" "$target" "$remote_command"
 
       - name: Transfer isolated production files and environment
+        if: inputs.deployment_mode == 'deploy'
         shell: bash
         run: |
           set -Eeuo pipefail
           target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
-          ssh "${ssh_args[@]}" "$target" 'set -Eeuo pipefail; root=/opt/lunidex-production; install -d -m 0755 "$root/scripts/deployment" "$root/deploy/production" "$root/deploy/systemd-production"; if [[ ! -f "$root/.env" ]]; then umask 077; printf "%s\n" "APP_IMAGE_TAG=ace4b8eb76e5992c935cfc01120377d17297733d" > "$root/.env"; fi; chmod 0600 "$root/.env"'
+          ssh "${ssh_args[@]}" "$target" 'set -Eeuo pipefail; root=/opt/lunidex-production; install -d -m 0755 "$root/scripts/deployment" "$root/deploy/production" "$root/deploy/systemd-production"; if [[ ! -f "$root/.env" ]]; then umask 077; printf "%s\n" "APP_IMAGE_REF=ghcr.io/teefloo/lunidex@sha256:9ca8f66d0b5f79a984358d12fe1c382319df7364388ec2d5df78fe3c5afc318a" > "$root/.env"; fi; chmod 0600 "$root/.env"'
           scp "${ssh_args[@]}" compose.production.yaml "$target:/opt/lunidex-production/"
-          scp "${ssh_args[@]}" scripts/deployment/*production*.sh "$target:/opt/lunidex-production/scripts/deployment/"
+          scp "${ssh_args[@]}" scripts/deployment/deploy-production.sh scripts/deployment/rollback-production.sh scripts/deployment/healthcheck-production.sh scripts/deployment/check-neon-production.sh scripts/deployment/preflight-production.sh scripts/deployment/rehearse-rollback-production.sh scripts/deployment/production-memory-gate.sh "$target:/opt/lunidex-production/scripts/deployment/"
           scp "${ssh_args[@]}" scripts/deployment/activate-production-route.sh "$target:/opt/lunidex-production/scripts/deployment/"
           scp "${ssh_args[@]}" deploy/production/* "$target:/opt/lunidex-production/deploy/production/"
           scp "${ssh_args[@]}" deploy/systemd-production/* "$target:/opt/lunidex-production/deploy/systemd-production/"
@@ -367,14 +381,16 @@ jobs:
           REMOTE
 
       - name: Deploy or privately preflight the production image
+        if: inputs.deployment_mode == 'deploy'
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IMAGE_REF: ${{ steps.candidate_image.outputs.image_ref }}
         run: |
           set -Eeuo pipefail
           target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
-          remote_command="set -Eeuo pipefail; umask 077; export DOCKER_CONFIG=\$(mktemp -d /tmp/lunidex-production-docker.XXXXXX); trap 'rm -rf \"\$DOCKER_CONFIG\"' EXIT; docker login ghcr.io --username teefloo --password-stdin; bash /opt/lunidex-production/scripts/deployment/deploy-production.sh $PRODUCTION_COMMIT $DEPLOYMENT_MODE"
+          remote_command="set -Eeuo pipefail; umask 077; export DOCKER_CONFIG=\$(mktemp -d /tmp/lunidex-production-docker.XXXXXX); trap 'rm -rf \"\$DOCKER_CONFIG\"' EXIT; docker login ghcr.io --username teefloo --password-stdin; bash /opt/lunidex-production/scripts/deployment/deploy-production.sh '$IMAGE_REF' '$PRODUCTION_COMMIT' deploy"
           printf '%s' "$GITHUB_TOKEN" | ssh "${ssh_args[@]}" "$target" "$remote_command"
 
       - name: Verify the production deployment health
@@ -385,6 +401,36 @@ jobs:
           target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=10 -o ServerAliveInterval=5 -o ServerAliveCountMax=4)
           timeout 90s ssh "${ssh_args[@]}" "$target" 'bash /opt/lunidex-production/scripts/deployment/healthcheck-production.sh'
+
+      - name: Probe Neon Auth separately from application health
+        if: success() && inputs.deployment_mode == 'deploy'
+        id: neon_auth_probe
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
+          ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=10 -o ServerAliveInterval=5 -o ServerAliveCountMax=4)
+          timeout 45s ssh "${ssh_args[@]}" "$target" \
+            'bash /opt/lunidex-production/scripts/deployment/check-neon-production.sh https://lunidex.app/api/auth/get-session'
+
+      - name: Report Neon availability independently of Node health
+        if: always() && inputs.deployment_mode == 'deploy'
+        shell: bash
+        env:
+          NEON_PROBE_OUTCOME: ${{ steps.neon_auth_probe.outcome }}
+        run: |
+          set -Eeuo pipefail
+          {
+            echo '## Separate application and provider outcomes'
+            echo
+            echo '- The Docker health check and local /api/healthz response measure the Lunidex process only.'
+            if [[ "$NEON_PROBE_OUTCOME" == 'success' ]]; then
+              echo '- Neon Auth session endpoint responded. This unauthenticated probe confirms reachability only; it does not claim that a signed-in session works.'
+            else
+              echo '- **Neon Auth functional availability: NO-GO.** The provider probe failed, including HTTP 402 quota exhaustion. This does not change the Node/container health verdict and does not cause an app rollback.'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Retrieve optional sanitized heap allocation summary
         if: success() && inputs.deployment_mode == 'deploy' && inputs.heap_sampling_diagnostic
@@ -436,18 +482,20 @@ jobs:
           printf '%s\n' "$safe_memory_points" \
             | node scripts/deployment/validate-heap-sample-summary.mjs --memory-series "$HEAP_SAMPLING_RUN_ID"
 
-      - name: Rehearse candidate-to-baseline rollback after successful private preflight
+      - name: Report isolated preflight boundary
         if: success() && inputs.deployment_mode == 'preflight'
         shell: bash
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IMAGE_REF: ${{ steps.candidate_image.outputs.image_ref }}
         run: |
           set -Eeuo pipefail
-          target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
-          ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
-          baseline=ace4b8eb76e5992c935cfc01120377d17297733d
-          remote_command="set -Eeuo pipefail; umask 077; export DOCKER_CONFIG=\$(mktemp -d /tmp/lunidex-rollback-rehearsal.XXXXXX); trap 'rm -rf \"\$DOCKER_CONFIG\"' EXIT; trap 'exit 129' HUP; trap 'exit 130' INT; trap 'exit 143' TERM; docker login ghcr.io --username teefloo --password-stdin; bash /opt/lunidex-production/scripts/deployment/rehearse-rollback-production.sh $baseline $PRODUCTION_COMMIT"
-          printf '%s' "$GITHUB_TOKEN" | ssh "${ssh_args[@]}" "$target" "$remote_command"
+          {
+            echo '## Isolated preflight complete'
+            echo
+            echo 'The candidate and rollback were built or pulled, checked by digest, and smoke-tested on this GitHub runner.'
+            echo 'No SSH key was configured; no VPS, production environment file, container, Caddy route, or Neon data was accessed.'
+            echo "Candidate: \`$IMAGE_REF\`"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Remove temporary secrets and SSH key
         if: always()
