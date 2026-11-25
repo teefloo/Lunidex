@@ -354,6 +354,7 @@ jobs:
         shell: bash
         env:
           SUPABASE_DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           LUNIDEX_CRON_SECRET: ${{ secrets.LUNIDEX_CRON_SECRET }}
           LUNIDEX_VAPID_PRIVATE_KEY: ${{ secrets.LUNIDEX_VAPID_PRIVATE_KEY }}
@@ -383,7 +384,14 @@ jobs:
           }
 
           append_env SUPABASE_DATABASE_URL "$SUPABASE_DATABASE_URL" yes
-          append_env SUPABASE_SERVICE_ROLE_KEY "$SUPABASE_SERVICE_ROLE_KEY" yes
+          if [[ -n "$SUPABASE_SECRET_KEY" ]]; then
+            append_env SUPABASE_SECRET_KEY "$SUPABASE_SECRET_KEY" yes
+          elif [[ -n "$SUPABASE_SERVICE_ROLE_KEY" ]]; then
+            append_env SUPABASE_SERVICE_ROLE_KEY "$SUPABASE_SERVICE_ROLE_KEY" yes
+          else
+            echo 'Set SUPABASE_SECRET_KEY (preferred) or SUPABASE_SERVICE_ROLE_KEY (legacy fallback) in the ovh-production environment.' >&2
+            exit 78
+          fi
           append_env LUNIDEX_CRON_SECRET "$LUNIDEX_CRON_SECRET" yes
           append_env LUNIDEX_VAPID_PRIVATE_KEY "$LUNIDEX_VAPID_PRIVATE_KEY" no
           append_env LUNIDEX_VAPID_SUBJECT "$LUNIDEX_VAPID_SUBJECT" no

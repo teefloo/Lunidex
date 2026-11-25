@@ -30,11 +30,15 @@ if [[ ! -f .env || ! -f app.env || ! -f /opt/lunidex/.env || ! -f /opt/lunidex/c
 fi
 source /opt/lunidex-production/scripts/deployment/production-memory-gate.sh
 
-required_runtime_vars=(SUPABASE_DATABASE_URL SUPABASE_SERVICE_ROLE_KEY LUNIDEX_CRON_SECRET)
+required_runtime_vars=(SUPABASE_DATABASE_URL LUNIDEX_CRON_SECRET)
 missing_runtime_vars=()
 for variable in "${required_runtime_vars[@]}"; do
   if ! grep -Eq "^${variable}=.+$" app.env; then missing_runtime_vars+=("${variable}"); fi
 done
+if ! grep -Eq '^SUPABASE_SECRET_KEY=.+$' app.env \
+  && ! grep -Eq '^SUPABASE_SERVICE_ROLE_KEY=.+$' app.env; then
+  missing_runtime_vars+=('SUPABASE_SECRET_KEY (preferred) or SUPABASE_SERVICE_ROLE_KEY (legacy fallback)')
+fi
 if ((${#missing_runtime_vars[@]})); then
   printf 'Missing required server variable names in production app.env:' >&2
   printf ' %s' "${missing_runtime_vars[@]}" >&2

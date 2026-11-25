@@ -10,11 +10,13 @@ const stagingConfig = {
   LUNIDEX_STAGING_APP_URL: 'https://staging.lunidex.app',
   SUPABASE_DATABASE_URL: `postgresql://postgres.${LUNIDEX_PROJECT_REF}:fake@aws-0-eu-west-3.pooler.supabase.com:5432/postgres`,
   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'local-test-publishable-key',
+  SUPABASE_SECRET_KEY: 'sb_secret_synthetic_test',
   SUPABASE_SERVICE_ROLE_KEY: 'local-test-service-role-key',
 };
 
 test('hosted smoke config accepts only the fixed Lunidex ref, API, database, app origin and explicit opt-in', () => {
   assert.equal(validateStagingSmokeConfig(stagingConfig).apiUrl, `https://${LUNIDEX_PROJECT_REF}.supabase.co`);
+  assert.equal(validateStagingSmokeConfig(stagingConfig).adminKey, 'sb_secret_synthetic_test');
   assert.equal(validateStagingSmokeConfig({
     ...stagingConfig,
     SUPABASE_DATABASE_URL: `${stagingConfig.SUPABASE_DATABASE_URL}?sslmode=verify-full`,
@@ -69,6 +71,23 @@ test('hosted smoke config accepts only the fixed Lunidex ref, API, database, app
   assert.throws(
     () => validateStagingSmokeConfig({ ...stagingConfig, LUNIDEX_STAGING_SMOKE: undefined }),
     /only when intentionally running/,
+  );
+  assert.equal(validateStagingSmokeConfig({
+    ...stagingConfig,
+    SUPABASE_SECRET_KEY: undefined,
+  }).adminKey, 'local-test-service-role-key');
+  assert.throws(
+    () => validateStagingSmokeConfig({
+      ...stagingConfig,
+      SUPABASE_SECRET_KEY: undefined,
+      SUPABASE_SERVICE_ROLE_KEY: undefined,
+    }),
+    (error) => {
+      assert.match(error.message, /SUPABASE_SECRET_KEY/);
+      assert.match(error.message, /SUPABASE_SERVICE_ROLE_KEY/);
+      assert.doesNotMatch(error.message, /sb_secret_synthetic_test|local-test-service-role-key/);
+      return true;
+    },
   );
 });
 

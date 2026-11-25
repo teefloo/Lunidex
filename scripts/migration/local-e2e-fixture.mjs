@@ -46,7 +46,7 @@ export function validateLocalFixtureTarget({ projectRef, apiUrl, databaseUrl }) 
 export function parseLocalSupabaseStatusEnv(output) {
   const parsed = {};
   for (const line of output.split(/\r?\n/)) {
-    const match = /^(?:export\s+)?(API_URL|DB_URL|SERVICE_ROLE_KEY)=(.*)$/.exec(line.trim());
+    const match = /^(?:export\s+)?(API_URL|DB_URL|SECRET_KEY|SERVICE_ROLE_KEY)=(.*)$/.exec(line.trim());
     if (!match) continue;
     let value = match[2];
     if (value.startsWith('"')) {
@@ -61,10 +61,24 @@ export function parseLocalSupabaseStatusEnv(output) {
     if (typeof value !== 'string' || value.length === 0) continue;
     parsed[match[1]] = value;
   }
-  if (!parsed.API_URL || !parsed.DB_URL || !parsed.SERVICE_ROLE_KEY) {
-    fail('Supabase local status did not provide the local API, database URL, and service-role key.');
+  if (!parsed.API_URL || !parsed.DB_URL || !(parsed.SECRET_KEY || parsed.SERVICE_ROLE_KEY)) {
+    fail('Supabase local status did not provide the local API, database URL, and server admin key.');
   }
   return parsed;
+}
+
+export function configureLocalSupabaseAdminKey(localEnv, targetEnv) {
+  delete targetEnv.SUPABASE_SECRET_KEY;
+  delete targetEnv.SUPABASE_SERVICE_ROLE_KEY;
+  if (localEnv.SECRET_KEY?.trim()) {
+    targetEnv.SUPABASE_SECRET_KEY = localEnv.SECRET_KEY.trim();
+    return 'SUPABASE_SECRET_KEY';
+  }
+  if (localEnv.SERVICE_ROLE_KEY?.trim()) {
+    targetEnv.SUPABASE_SERVICE_ROLE_KEY = localEnv.SERVICE_ROLE_KEY.trim();
+    return 'SUPABASE_SERVICE_ROLE_KEY';
+  }
+  fail('Supabase local status did not provide a server admin key.');
 }
 
 function readLocalSupabaseStatusEnv() {
@@ -156,7 +170,7 @@ async function run() {
   process.env.SUPABASE_URL = target.apiUrl;
   process.env.SUPABASE_PROJECT_REF = 'local';
   process.env.SUPABASE_MIGRATION_DATABASE_URL = target.databaseUrl;
-  process.env.SUPABASE_SERVICE_ROLE_KEY = localEnv.SERVICE_ROLE_KEY;
+  configureLocalSupabaseAdminKey(localEnv, process.env);
   process.env.NEON_SOURCE_DATABASE_URL = fixtureDatabaseUrl(target.databaseUrl);
   process.env.LUNIDEX_MIGRATION_EXPORT_DIR = exportDir;
   process.env.LUNIDEX_MIGRATION_WRITE_FREEZE = 'I_HAVE_FROZEN_WRITES';

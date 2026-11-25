@@ -1,6 +1,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { localFixtureTestValues, parseLocalSupabaseStatusEnv, validateLocalFixtureTarget } from './local-e2e-fixture.mjs';
+import {
+  configureLocalSupabaseAdminKey,
+  localFixtureTestValues,
+  parseLocalSupabaseStatusEnv,
+  validateLocalFixtureTarget,
+} from './local-e2e-fixture.mjs';
 
 const localTarget = {
   projectRef: 'local',
@@ -34,17 +39,39 @@ test('fixture uses only reviewed synthetic identity values', () => {
   assert.ok(localFixtureTestValues.FIXTURE_SCORE >= 0 && localFixtureTestValues.FIXTURE_SCORE <= 10);
 });
 
-test('local CLI status parser captures only the values needed and rejects incomplete output', () => {
+test('local CLI parser prefers SECRET_KEY when present and retains legacy SERVICE_ROLE_KEY compatibility', () => {
   const values = parseLocalSupabaseStatusEnv([
     'API_URL="http://127.0.0.1:54321"',
     'DB_URL="postgresql://postgres:local-only@127.0.0.1:54322/postgres"',
     'ANON_KEY="ignored-public-key"',
+    'SECRET_KEY="sb_secret_local_synthetic"',
     'SERVICE_ROLE_KEY="local-service-role-key"',
   ].join('\n'));
   assert.deepEqual(values, {
     API_URL: 'http://127.0.0.1:54321',
     DB_URL: 'postgresql://postgres:local-only@127.0.0.1:54322/postgres',
+    SECRET_KEY: 'sb_secret_local_synthetic',
     SERVICE_ROLE_KEY: 'local-service-role-key',
   });
+
+  const targetEnv = {
+    SUPABASE_SECRET_KEY: 'inherited-secret-must-not-win',
+    SUPABASE_SERVICE_ROLE_KEY: 'inherited-legacy-must-not-win',
+  };
+  assert.equal(configureLocalSupabaseAdminKey(values, targetEnv), 'SUPABASE_SECRET_KEY');
+  assert.equal(targetEnv.SUPABASE_SECRET_KEY, 'sb_secret_local_synthetic');
+  assert.equal(targetEnv.SUPABASE_SERVICE_ROLE_KEY, undefined);
+});
+
+test('local CLI fixture falls back to SERVICE_ROLE_KEY only when SECRET_KEY is absent', () => {
+  const values = parseLocalSupabaseStatusEnv([
+    'API_URL="http://127.0.0.1:54321"',
+    'DB_URL="postgresql://postgres:local-only@127.0.0.1:54322/postgres"',
+    'SERVICE_ROLE_KEY="local-service-role-key"',
+  ].join('\n'));
+  const targetEnv = {};
+  assert.equal(configureLocalSupabaseAdminKey(values, targetEnv), 'SUPABASE_SERVICE_ROLE_KEY');
+  assert.equal(targetEnv.SUPABASE_SECRET_KEY, undefined);
+  assert.equal(targetEnv.SUPABASE_SERVICE_ROLE_KEY, 'local-service-role-key');
   assert.throws(() => parseLocalSupabaseStatusEnv('API_URL="http://127.0.0.1:54321"'), /did not provide/);
 });

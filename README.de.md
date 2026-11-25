@@ -108,7 +108,7 @@ cp .env.example .env.local
 | `NEXT_PUBLIC_APP_URL` | Web / öffentlich | Kanonische Site- und API-Basis-URL. Standard: `https://lunidex.app`. |
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Web / öffentlich | Supabase-Auth-Konfiguration für Browser- und SSR-Client. |
 | `SUPABASE_DATABASE_URL` | Nur Server | Supabase-PostgreSQL-Verbindung der Laufzeit. Gemeinsamen Session-Pooler mit geprüfter TLS-Verbindung verwenden. |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server-only | Auth-Administration nur auf dem Server; niemals an den Browser senden. |
+| `SUPABASE_SECRET_KEY` (bevorzugt), `SUPABASE_SERVICE_ROLE_KEY` (Legacy-Fallback) | Nur Server | Auth-Administration nur auf dem Server; keine der beiden Schlüssel an den Browser senden. |
 | `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Web / öffentlich | Optionaler Wert für die Google-Search-Console-Verifizierung. |
 | `NEXT_PUBLIC_ENABLE_AGENTATION` | Entwicklung | Aktiviert das Agentation-UI-Review-Overlay bei `true`. |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Web / öffentlich | Optionaler Schlüssel für Browser-Push-Abonnements. |

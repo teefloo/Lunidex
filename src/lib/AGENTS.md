@@ -9,6 +9,7 @@ This guide supplements `src/AGENTS.md` for the web API façade, pure helpers, lo
 - Use `@/lib/i18n` in client code and `@/lib/server-i18n` in Server Components/metadata. Keep the eight locales synchronized with `src/lib/languages.ts`, core data, and translation bundles.
 - Use the established SEO helpers for canonical URLs, alternates, breadcrumbs, JSON-LD, and Open Graph metadata.
 - Keep `src/lib/supabase/database.ts` and `server-auth.ts` out of client imports. Browser authentication uses the Supabase SSR client; server APIs authenticate and enforce ownership explicitly because the server PostgreSQL role bypasses RLS.
+- Server-side Supabase Auth administration prefers `SUPABASE_SECRET_KEY`; accept `SUPABASE_SERVICE_ROLE_KEY` only as a temporary legacy fallback. Never expose either key or include it in errors/logs.
 - Import server-only profile/database helpers directly from Server Components or Route Handlers; never re-export them from the mixed client/server `src/lib/api.ts` façade.
 - Treat `src/lib/supabase/sync-state.ts` as a stable data-contract path. Supabase Auth and PostgreSQL are the active web runtime.
 - Validate external/user data at boundaries with explicit interfaces or unions. Do not introduce `any` or broad unstructured records.

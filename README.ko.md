@@ -108,7 +108,7 @@ cp .env.example .env.local
 | `NEXT_PUBLIC_APP_URL` | Web / 공개 | 정식 사이트 및 API 기본 URL. 기본값은 `https://lunidex.app`입니다. |
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Web / 공개 | 브라우저 및 SSR 클라이언트용 Supabase Auth 설정입니다. |
 | `SUPABASE_DATABASE_URL` | 서버 전용 | 런타임의 Supabase PostgreSQL 연결입니다. TLS 검증을 사용하는 공유 세션 풀러를 설정하세요. |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server-only | 서버 전용 Auth 관리 키이며 브라우저에 보내지 않습니다. |
+| `SUPABASE_SECRET_KEY`(우선), `SUPABASE_SERVICE_ROLE_KEY`(레거시 대체) | 서버 전용 | 서버 Auth 관리에만 사용하며 두 키 모두 브라우저로 보내지 않습니다. |
 | `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Web / 공개 | 선택적인 Google Search Console 인증 값. |
 | `NEXT_PUBLIC_ENABLE_AGENTATION` | 개발 | `true`일 때 Agentation UI 리뷰 오버레이 활성화. |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Web / 공개 | 선택적인 브라우저 Push 구독 키. |

@@ -207,6 +207,19 @@ test('private rollback image authentication happens before the first GHCR pull',
   assert.equal(parsed.jobs.deploy.permissions.packages, 'write');
 });
 
+test('production runtime prefers the Supabase secret key and retains service-role fallback', () => {
+  const workflow = yaml.load(read(workflowPath));
+  const steps = workflow.jobs.deploy.steps;
+  const prepare = stepByName(steps, 'Prepare the server-only production environment');
+  const deploy = read(deployPath);
+
+  assert.match(prepare.env.SUPABASE_SECRET_KEY, /secrets\.SUPABASE_SECRET_KEY/);
+  assert.match(prepare.env.SUPABASE_SERVICE_ROLE_KEY, /secrets\.SUPABASE_SERVICE_ROLE_KEY/);
+  assert.match(prepare.run, /if \[\[ -n "\$SUPABASE_SECRET_KEY" \]\][\s\S]*append_env SUPABASE_SECRET_KEY[\s\S]*elif \[\[ -n "\$SUPABASE_SERVICE_ROLE_KEY" \]\][\s\S]*append_env SUPABASE_SERVICE_ROLE_KEY/);
+  assert.match(deploy, /SUPABASE_SECRET_KEY=\.\+\$[\s\S]*SUPABASE_SERVICE_ROLE_KEY=\.\+\$/);
+  assert.doesNotMatch(prepare.run, /echo ["']?\$SUPABASE_(?:SECRET_KEY|SERVICE_ROLE_KEY)/);
+});
+
 test('preflight performs no SSH or production file/container mutation', () => {
   const workflow = yaml.load(read(workflowPath));
   const steps = workflow.jobs.deploy.steps;

@@ -17,6 +17,7 @@ const cleanupConfig = {
   SUPABASE_PROJECT_REF: LUNIDEX_PROJECT_REF,
   SUPABASE_URL: `https://${LUNIDEX_PROJECT_REF}.supabase.co`,
   SUPABASE_DATABASE_URL: `postgresql://postgres.${LUNIDEX_PROJECT_REF}:fake@aws-0-eu-west-3.pooler.supabase.com:5432/postgres`,
+  SUPABASE_SECRET_KEY: 'sb_secret_synthetic_test',
   SUPABASE_SERVICE_ROLE_KEY: 'local-test-service-role-key',
 };
 
@@ -28,6 +29,7 @@ const markedUser = {
 
 test('hosted cleanup requires explicit opt-in and the fixed Lunidex ref across all target coordinates', () => {
   assert.equal(validateHostedCleanupConfig(cleanupConfig).projectRef, LUNIDEX_PROJECT_REF);
+  assert.equal(validateHostedCleanupConfig(cleanupConfig).adminKey, 'sb_secret_synthetic_test');
   assert.equal(validateHostedCleanupConfig({
     ...cleanupConfig,
     SUPABASE_DATABASE_URL: `${cleanupConfig.SUPABASE_DATABASE_URL}?sslmode=verify-full`,
@@ -70,6 +72,23 @@ test('hosted cleanup requires explicit opt-in and the fixed Lunidex ref across a
       SUPABASE_DATABASE_URL: `${cleanupConfig.SUPABASE_DATABASE_URL}?sslmode=require`,
     }),
     /fixed Lunidex Shared Pooler/,
+  );
+  assert.equal(validateHostedCleanupConfig({
+    ...cleanupConfig,
+    SUPABASE_SECRET_KEY: undefined,
+  }).adminKey, 'local-test-service-role-key');
+  assert.throws(
+    () => validateHostedCleanupConfig({
+      ...cleanupConfig,
+      SUPABASE_SECRET_KEY: undefined,
+      SUPABASE_SERVICE_ROLE_KEY: undefined,
+    }),
+    (error) => {
+      assert.match(error.message, /SUPABASE_SECRET_KEY/);
+      assert.match(error.message, /SUPABASE_SERVICE_ROLE_KEY/);
+      assert.doesNotMatch(error.message, /sb_secret_synthetic_test|local-test-service-role-key/);
+      return true;
+    },
   );
 });
 

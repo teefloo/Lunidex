@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { Pool } from 'pg';
 import { createClient } from '@supabase/supabase-js';
+import { requireSupabaseAdminKey } from './supabase-admin-key.mjs';
 import {
   LUNIDEX_PROJECT_REF,
   SYNTHETIC_SMOKE_EMAIL_PREFIX,
@@ -85,7 +86,7 @@ export function validateStagingSmokeConfig(env) {
     databaseUrl,
     checkAppApi: env.LUNIDEX_STAGING_APP_API_CHECK === APP_API_OPT_IN,
     publishableKey: requireEnv('NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY', env),
-    serviceRoleKey: requireEnv('SUPABASE_SERVICE_ROLE_KEY', env),
+    adminKey: requireSupabaseAdminKey(env),
   };
 }
 
@@ -123,7 +124,7 @@ async function expectDenied(request, label) {
 
 async function run() {
   const config = validateStagingSmokeConfig(process.env);
-  const admin = createClient(config.apiUrl, config.serviceRoleKey, {
+  const admin = createClient(config.apiUrl, config.adminKey, {
     auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
   });
   const anonymous = createClient(config.apiUrl, config.publishableKey, {

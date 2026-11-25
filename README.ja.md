@@ -107,7 +107,7 @@ cp .env.example .env.local
 | `NEXT_PUBLIC_APP_URL` | Web / 公開 | 正規サイト URL と API のベース URL。既定値は `https://lunidex.app`。 |
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Web / 公開 | ブラウザーとSSRで使用する Supabase Auth の設定。 |
 | `SUPABASE_DATABASE_URL` | サーバー専用 | ランタイム用 Supabase PostgreSQL 接続。TLS 検証付きの共有セッションプーラーを使用。 |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server-only | サーバー専用の Auth 管理キー。ブラウザーへ送信しない。 |
+| `SUPABASE_SECRET_KEY`（優先）、`SUPABASE_SERVICE_ROLE_KEY`（旧キーの代替） | サーバー専用 | サーバー側の Auth 管理にのみ使用し、どちらのキーもブラウザーへ送信しない。 |
 | `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Web / 公開 | Google Search Console の任意の検証値。 |
 | `NEXT_PUBLIC_ENABLE_AGENTATION` | 開発 | `true` のとき Agentation UI レビューオーバーレイを有効化。 |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Web / 公開 | ブラウザーの Push 購読用の任意の公開キー。 |

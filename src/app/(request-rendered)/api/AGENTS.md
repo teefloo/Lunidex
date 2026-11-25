@@ -4,8 +4,8 @@ This guide supplements the App Router guide for `src/app/api/`. These handlers a
 
 ## Handler rules
 
-- Keep handlers server-side. Never expose `SUPABASE_DATABASE_URL`, `SUPABASE_MIGRATION_DATABASE_URL`, Supabase Auth secrets, service-role keys, or VAPID private keys; never import a handler into a client component.
-- The application runtime uses Supabase Auth and PostgreSQL. `SUPABASE_SERVICE_ROLE_KEY` is used only for the account deletion Admin API and is not browser-visible.
+- Keep handlers server-side. Never expose `SUPABASE_DATABASE_URL`, `SUPABASE_MIGRATION_DATABASE_URL`, Supabase Auth secrets, `SUPABASE_SECRET_KEY`, the legacy service-role key, or VAPID private keys; never import a handler into a client component.
+- The application runtime uses Supabase Auth and PostgreSQL. `SUPABASE_SECRET_KEY` is preferred for the account deletion Admin API; `SUPABASE_SERVICE_ROLE_KEY` is a temporary compatibility fallback. Neither is browser-visible.
 - Use `NextRequest`/`NextResponse`, await promise-based `params`, validate and bound every path/query/body value, and return explicit status codes for invalid, unauthenticated, unavailable, upstream-failed, and successful cases.
 - For authenticated handlers, derive the user from the request session/token with the established Supabase helpers. Never trust a client-supplied `user_id`.
 - The `postgres` connection bypasses RLS. Every server handler must retain explicit authentication, ownership checks, rate limits for public or mutation-heavy endpoints, and must avoid logging personal data, tokens, emails, or credentials.

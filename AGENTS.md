@@ -35,7 +35,7 @@ Do not rename those identifiers as part of a visible rebrand. Persisted data and
 - Use Node.js 22 and npm with the committed `package-lock.json`. Do not add a second package manager or lockfile.
 - Install reproducibly with `npm ci`; use `npm install` only when intentionally updating the local workspace installation.
 - Copy `.env.example` to `.env.local` for optional web configuration. This file is ignored and must never be committed.
-- The web runtime uses `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in browser code; `SUPABASE_DATABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are server-only. The PostgreSQL URL must use the Supabase shared pooler in session mode with TLS certificate verification.
+- The web runtime uses `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in browser code; `SUPABASE_DATABASE_URL` and the preferred `SUPABASE_SECRET_KEY` are server-only. `SUPABASE_SERVICE_ROLE_KEY` is accepted only as a temporary legacy fallback. The PostgreSQL URL must use the Supabase shared pooler in session mode with TLS certificate verification.
 - One-time migration tooling uses `NEON_SOURCE_DATABASE_URL`, `SUPABASE_MIGRATION_DATABASE_URL`, and `SUPABASE_PROJECT_REF`; these are operational secrets and must never be exposed in build args, logs, or browser code. The archived Edge Function has separate Supabase/VAPID/cron settings.
 - Without Supabase configuration, authentication, cloud sync, and server-backed features degrade to their established unavailable/local-first behavior.
 - Set `NEXT_PUBLIC_ENABLE_AGENTATION=true` only for the development overlay. Its local port is 4747 and the required development origins/CSP entries already exist; do not weaken production security headers for it.
@@ -94,7 +94,7 @@ Vitest tests live beside the code they cover in `src/` and `packages/core/src/`.
 
 ## Security and data boundaries
 
-- Database URLs, Auth service keys, service-role keys, VAPID private keys, cron credentials, and local database URLs are server/operation secrets. Never commit, log, expose, or place them in `NEXT_PUBLIC_*` variables.
+- Database URLs, `SUPABASE_SECRET_KEY`, the legacy `SUPABASE_SERVICE_ROLE_KEY`, VAPID private keys, cron credentials, and local database URLs are server/operation secrets. Never commit, log, expose, or place them in `NEXT_PUBLIC_*` variables.
 - The application authenticates through Supabase Auth. Server APIs use the privileged `postgres` connection, which bypasses RLS, and must continue enforcing ownership explicitly in each handler. Data API access is separately limited by RLS and grants.
 - Keep security headers and CSP in `next.config.ts` strict. Add a remote origin or weaken a directive only when the project requirement is explicit and the complete impact is reviewed.
 - Treat authenticated, personalized, and mutation responses as non-public. Apply the established validation, authentication, rate limiting, and unavailable responses in Route Handlers.

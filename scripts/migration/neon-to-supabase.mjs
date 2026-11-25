@@ -9,6 +9,7 @@ import { once } from 'node:events';
 import { fileURLToPath } from 'node:url';
 import { Pool } from 'pg';
 import { createClient } from '@supabase/supabase-js';
+import { requireSupabaseAdminKey } from './supabase-admin-key.mjs';
 
 const EXPECTED_TABLES = [
   'app.users',
@@ -669,7 +670,7 @@ async function importAuthCommand() {
   const { manifest, users } = await readExport();
   validateFinalExport(manifest);
   const target = validateTarget();
-  const serviceKey = requiredEnv('SUPABASE_SERVICE_ROLE_KEY');
+  const adminKey = requireSupabaseAdminKey(process.env);
   const databasePool = createPool(target.databaseUrl, 'lunidex-supabase-auth-import-preflight');
   const databaseClient = await databasePool.connect();
   try {
@@ -711,7 +712,7 @@ async function importAuthCommand() {
     await databasePool.end();
   }
 
-  const admin = createClient(target.publicUrl, serviceKey, {
+  const admin = createClient(target.publicUrl, adminKey, {
     auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
   });
   const existingIds = new Set((await (async () => {

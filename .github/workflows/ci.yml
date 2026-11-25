@@ -44,8 +44,8 @@ jobs:
       - name: Run local pgTAP security tests
         run: npx --yes supabase@3.4.0 test db
 
-      - name: Verify migration fixture and hosted cleanup safety guards
-        run: node --test scripts/migration/local-e2e-fixture.test.mjs scripts/migration/staging-smoke.test.mjs scripts/migration/cleanup-hosted-smoke.test.mjs
+      - name: Verify migration fixture, hosted cleanup, and server-key guards
+        run: node --test scripts/migration/local-e2e-fixture.test.mjs scripts/migration/staging-smoke.test.mjs scripts/migration/cleanup-hosted-smoke.test.mjs scripts/migration/supabase-admin-key.test.mjs
 
       - name: Rehearse Neon-to-Supabase migration with synthetic local data
         run: node scripts/migration/local-e2e-fixture.mjs

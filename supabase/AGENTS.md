@@ -14,8 +14,8 @@ Supabase is the active Auth and PostgreSQL provider for the Lunidex web app. Rea
 ## Environment separation
 
 - Browser config: `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` only.
-- Long-running OVH runtime: `SUPABASE_DATABASE_URL` using the shared session pooler, TLS verification, and a small `pg` pool; `SUPABASE_SERVICE_ROLE_KEY` is server-only and used only for Auth administration.
-- One-time migration tooling: `NEON_SOURCE_DATABASE_URL` (read-only), `SUPABASE_MIGRATION_DATABASE_URL` (explicit target), `SUPABASE_PROJECT_REF`, and the protected service role key. The migration URL and runtime URL are distinct.
+- Long-running OVH runtime: `SUPABASE_DATABASE_URL` using the shared session pooler, TLS verification, and a small `pg` pool; `SUPABASE_SECRET_KEY` is preferred for server Auth administration, with `SUPABASE_SERVICE_ROLE_KEY` only as a temporary compatibility fallback.
+- One-time migration tooling: `NEON_SOURCE_DATABASE_URL` (read-only), `SUPABASE_MIGRATION_DATABASE_URL` (explicit target), `SUPABASE_PROJECT_REF`, and the protected `SUPABASE_SECRET_KEY` (legacy service-role fallback only). The migration URL and runtime URL are distinct.
 - The archived Edge Function has its own deployment secret names. Do not reuse the app runtime URL or mix its VAPID/cron settings with web configuration.
 
 ## Local verification

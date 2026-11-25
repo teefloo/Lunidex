@@ -4,6 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createClient } from '@supabase/supabase-js';
 import { Pool } from 'pg';
+import { requireSupabaseAdminKey } from './supabase-admin-key.mjs';
 import {
   isSyntheticSmokeUser,
   LUNIDEX_PROJECT_REF,
@@ -86,7 +87,7 @@ export function validateHostedCleanupConfig(env) {
     projectRef,
     apiUrl: apiUrl.origin,
     databaseUrl,
-    serviceRoleKey: required(env, 'SUPABASE_SERVICE_ROLE_KEY'),
+    adminKey: requireSupabaseAdminKey(env),
   };
 }
 
@@ -217,7 +218,7 @@ export async function cleanupSyntheticSmokeAccounts({ admin, pool }) {
 
 async function run() {
   const config = validateHostedCleanupConfig(process.env);
-  const admin = createClient(config.apiUrl, config.serviceRoleKey, {
+  const admin = createClient(config.apiUrl, config.adminKey, {
     auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
   });
   const pool = new Pool({

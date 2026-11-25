@@ -13,6 +13,15 @@ export interface SupabaseRequestUser {
   };
 }
 
+export function resolveSupabaseAdminKey(
+  env: Record<string, string | undefined> = process.env,
+): string | null {
+  const secretKey = env.SUPABASE_SECRET_KEY?.trim();
+  if (secretKey) return secretKey;
+  const legacyServiceRoleKey = env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  return legacyServiceRoleKey || null;
+}
+
 function getPublicConfig(): { url: string; key: string } | null {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
@@ -116,12 +125,12 @@ export async function getServerAuthUser(): Promise<SupabaseRequestUser | null> {
   }
 }
 
-/** Admin operations stay server-only and require an explicitly configured service role. */
+/** Admin operations stay server-only and prefer a secret key with legacy service-role fallback. */
 export function getSupabaseAdminClient(): SupabaseClient | null {
   const config = getPublicConfig();
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!config || !serviceRoleKey) return null;
-  return createClient(config.url, serviceRoleKey, {
+  const adminKey = resolveSupabaseAdminKey();
+  if (!config || !adminKey) return null;
+  return createClient(config.url, adminKey, {
     auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
   });
 }

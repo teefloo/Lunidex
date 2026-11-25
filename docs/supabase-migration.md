@@ -49,15 +49,56 @@ Copier les variables dans un `.env.local` ignoré par Git ou les fournir via un 
 | --- | --- |
 | `NEXT_PUBLIC_SUPABASE_URL` | URL publique du projet utilisée par le navigateur et Auth SSR |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Clé publishable publique, jamais la clé service/secret |
+| `SUPABASE_URL` | URL API du projet utilisée par les scripts smoke et migration |
 | `SUPABASE_DATABASE_URL` | Pool runtime OVH, pooler partagé session, TLS vérifié |
-| `SUPABASE_SERVICE_ROLE_KEY` | Serveur uniquement : administration Auth et import explicite des identités |
+| `SUPABASE_SECRET_KEY` | Clé Supabase serveur/admin préférée; jamais dans le navigateur |
+| `SUPABASE_SERVICE_ROLE_KEY` | Repli de compatibilité temporaire uniquement si la nouvelle clé n'est pas configurée |
 | `NEON_SOURCE_DATABASE_URL` | Accès Neon en lecture seule pour l'export |
 | `SUPABASE_MIGRATION_DATABASE_URL` | Connexion directe ou pooler session de la cible explicitement choisie |
 | `SUPABASE_PROJECT_REF` | `ref` exact correspondant à l'URL API et à l'URL de base |
+| `LUNIDEX_STAGING_APP_URL` | Origine de l'app locale `http://localhost:3000` pour le smoke hébergé |
+| `LUNIDEX_STAGING_APP_API_CHECK` | Opt-in facultatif, uniquement après avoir démarré l'app avec ce même projet Supabase |
 | `LUNIDEX_MIGRATION_EXPORT_DIR` | Répertoire local privé ignoré par Git, par défaut `.migration/neon-to-supabase` |
 | `LUNIDEX_MIGRATION_WRITE_FREEZE` | Valeur sentinelle requise pour les commandes Auth/data après gel effectif des écritures |
 
 Le pool runtime OVH et la connexion de migration sont intentionnellement séparés. Pour un serveur Node long-running sur VPS, utiliser le pooler partagé Supabase en mode session (port 5432) afin de préserver transactions et état de session. `pg` impose TLS avec validation du certificat; ne pas désactiver cette vérification.
+
+Les scripts Node n'importent pas `.env.local` automatiquement. Pour exécuter un smoke local ou un script d'opération en chargeant ce fichier sans afficher son contenu, utilisez Node 22 `--env-file` (les noms/valeurs restent dans le fichier ignoré) :
+
+```bash
+LUNIDEX_STAGING_SMOKE=I_CONFIRM_LUNIDEX_STAGING_DATA_MUTATION node --env-file=.env.local scripts/migration/staging-smoke.mjs
+LUNIDEX_HOSTED_SMOKE_CLEANUP=I_CONFIRM_DELETE_LUNIDEX_SYNTHETIC_SMOKE_USERS node --env-file=.env.local scripts/migration/cleanup-hosted-smoke.mjs
+```
+
+Ne passez jamais une clé ou une URL de base en argument shell et ne faites jamais `cat`, `echo` ou `printenv` sur les clés/URLs chargées. Dans CI/production, fournissez-les via le gestionnaire de secrets.
+
+### Préparer le smoke local et les redirections Auth
+
+`.env.local` est ignoré par Git. Renseignez localement les paramètres ci-dessous pour le projet Lunidex; les clés restent vides dans le dépôt et aucun faux exemple de clé n'est fourni. Gardez les sentinelles d'opt-in uniquement dans la commande shell explicite ci-dessus, pas dans `.env.local` :
+
+```dotenv
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+SUPABASE_URL=
+SUPABASE_PROJECT_REF=vrovnfsdjfwuuomwsuvj
+SUPABASE_SECRET_KEY=
+SUPABASE_DATABASE_URL=
+LUNIDEX_STAGING_APP_URL=http://localhost:3000
+```
+
+Choisir dans Connect la connexion **Shared Pooler / Session** et le port `5432`. Pour `SUPABASE_DATABASE_URL`, conserver l'URI exacte et utiliser uniquement aucun paramètre de requête ou `sslmode=verify-full`; les deux scripts vérifient la TLS et refusent `sslmode=require` ou les options qui pourraient l'affaiblir. La clé publishable reste publique; `SUPABASE_SECRET_KEY` ne quitte jamais le serveur. Le repli `SUPABASE_SERVICE_ROLE_KEY` reste accepté temporairement, mais ne désactivez pas les clés legacy dans le projet avant d'avoir migré et validé tous les consommateurs.
+
+Pour les essais de redirection OAuth depuis une application locale, dans Authentication > URL Configuration du projet Lunidex, ajoutez uniquement les URLs de redirection exactes utilisées par l'application, par exemple `http://localhost:3000/fr/auth/callback` et, si un parcours anglais est testé, `http://localhost:3000/en/auth/callback`. Si l'app est démarrée sur `127.0.0.1`, ajoutez séparément les mêmes chemins sur cette origine; n'utilisez pas de wildcard. Dans les consoles Google/GitHub de test, le callback fournisseur reste celui de Supabase Auth : `https://vrovnfsdjfwuuomwsuvj.supabase.co/auth/v1/callback`. Ne changez aucun réglage OAuth de production pour un test local.
+
+Le contrôle optionnel de collections via `/api/user-state` exige que `npm run dev` soit déjà lancé avec l'URL et la clé publishable de ce même projet Lunidex. Après seulement, relancez le smoke avec ces opt-ins :
+
+```bash
+LUNIDEX_STAGING_APP_API_CHECK=I_CONFIRM_LUNIDEX_STAGING_APP_IS_READY LUNIDEX_STAGING_SMOKE=I_CONFIRM_LUNIDEX_STAGING_DATA_MUTATION node --env-file=.env.local scripts/migration/staging-smoke.mjs
+```
+
+Sans ce prérequis, laissez `LUNIDEX_STAGING_APP_API_CHECK` absent; le smoke n'appellera pas l'API de l'app.
+
+Pour tester les courriels d'Auth, configurez SMTP Resend dans le dashboard avec une clé distincte à portée d'envoi seulement, un expéditeur vérifié et une boîte de test contrôlée; vérifiez le quota Free Resend courant avant les essais. Signup réel, confirmation email, recovery email et OAuth en navigateur exigent une boîte contrôlée et un clic manuel sur le lien reçu. Le smoke fourni ne réalise pas ces tests : il crée des comptes confirmés par l'API admin et vérifie un lien recovery généré sans envoi.
 
 ## Commandes locales
 
@@ -118,14 +159,14 @@ Dans `supabase/config.toml`, le `site_url` local est `http://localhost:3000` et 
 
 L'accès lecture à la source Neon a répondu HTTP 402/quota, sans renvoyer de données ni permettre un export. Le projet hébergé Lunidex est disponible comme cible temporaire de smoke synthétique, mais cela ne valide ni l'export, ni l'import des données réelles, ni une bascule. Le nombre courant de comptes/lignes, l'export frais, la comparaison de toutes les lignes et l'isolation des handlers restent à valider. Ne pas créer de comptes réels ni servir de trafic de production durant les essais.
 
-Le smoke hébergé opt-in de `scripts/migration/staging-smoke.mjs` n'a pas été exécuté. Avant utilisation, revérifier les quotas Free et charger dans un environnement protégé `SUPABASE_PROJECT_REF=vrovnfsdjfwuuomwsuvj`, l'URL API, la connexion runtime `SUPABASE_DATABASE_URL` du Shared Pooler session, `LUNIDEX_STAGING_APP_URL`, la clé publishable et la clé service-role; aucune valeur de secret/URL de base ne doit être ajoutée à Git ou affichée. Le script refuse tout ref différent du ref fixe Lunidex, utilise TLS avec validation du certificat, contrôle `pg_stat_ssl` et réemploi de la session PostgreSQL. L'origine de l'application doit être exactement `http://localhost:3000`, `http://127.0.0.1:3000` ou une origine HTTPS de l'application de test sous `*.lunidex.app` hors des domaines de production; l'API et la base restent celles du projet hébergé Lunidex. Pour l'app locale, ajouter explicitement ses URL callback à l'allowlist Auth hébergée avant l'exécution.
+Le smoke hébergé opt-in de `scripts/migration/staging-smoke.mjs` n'a pas été exécuté. Avant utilisation, revérifier les quotas Free et charger dans un environnement protégé `SUPABASE_URL`, `SUPABASE_PROJECT_REF=vrovnfsdjfwuuomwsuvj`, la connexion runtime `SUPABASE_DATABASE_URL` du Shared Pooler session, `LUNIDEX_STAGING_APP_URL`, la clé publishable et la clé `SUPABASE_SECRET_KEY` (ou temporairement le repli `SUPABASE_SERVICE_ROLE_KEY`); aucune valeur de secret/URL de base ne doit être ajoutée à Git ou affichée. Le script refuse tout ref différent du ref fixe Lunidex, utilise TLS avec validation du certificat, contrôle `pg_stat_ssl` et réemploi de la session PostgreSQL. L'origine de l'application doit être exactement `http://localhost:3000`, `http://127.0.0.1:3000` ou une origine HTTPS de l'application de test sous `*.lunidex.app` hors des domaines de production; l'API et la base restent celles du projet hébergé Lunidex. Pour l'app locale, ajouter explicitement ses URL callback exactes à l'allowlist Auth hébergée avant l'exécution.
 
 Le smoke crée deux comptes confirmés via l'API admin, avec une adresse aléatoire `lunidex-migration-smoke+<UUID>@lunidex.app` et un tag unique dans `app_metadata`; `createUser` ne déclenche pas l'envoi d'un message. Il teste login, génération et vérification locale d'un lien de recovery (sans envoi SMTP), contrôle l'URL callback, l'accès croisé Data API, le profil public et les refus anon pour email, api_keys et analytics. L'option `LUNIDEX_STAGING_APP_API_CHECK=I_CONFIRM_LUNIDEX_STAGING_APP_IS_READY` ajoute le test GET/PUT d'une collection TCG via `/api/user-state` si l'application locale ou de test utilise le même projet hébergé. Le smoke ne valide ni le signup public/email de confirmation, ni la livraison SMTP, ni l'échange PKCE dans le navigateur, ni OAuth Google/GitHub réel; ces parcours restent des lacunes et ne doivent pas être activés en modifiant la configuration OAuth/SMTP de production.
 
 Après un smoke interrompu ou terminé, exécuter le nettoyage récupérable dans un environnement protégé avec les mêmes coordonnées de projet et `LUNIDEX_HOSTED_SMOKE_CLEANUP=I_CONFIRM_DELETE_LUNIDEX_SYNTHETIC_SMOKE_USERS` :
 
 ```bash
-node scripts/migration/cleanup-hosted-smoke.mjs
+LUNIDEX_HOSTED_SMOKE_CLEANUP=I_CONFIRM_DELETE_LUNIDEX_SYNTHETIC_SMOKE_USERS node --env-file=.env.local scripts/migration/cleanup-hosted-smoke.mjs
 ```
 
 Ce script est strictement verrouillé au ref Lunidex ci-dessus et exige la sentinelle explicite. Il ne cible que des UUID Auth dont l'adresse suit le motif réservé `lunidex-migration-smoke+<UUID>@lunidex.app` et dont `app_metadata` porte le tag synthétique; les projections orphelines ne sont récupérées qu'avec cette adresse réservée et le même tag en profil/état. Il supprime leurs lignes `app.users` (les clés étrangères ne peuvent cascader que depuis ces UUID synthétiques), puis les comptes Auth, et vérifie leur absence dans `auth.users`, `app.users`, `profiles` et `user_state`. Les comptes non marqués ou les refs différentes bloquent l'opération. Il ne réinitialise pas la base. En cas d'erreur ou de résidu, arrêter et examiner manuellement; ne pas importer.

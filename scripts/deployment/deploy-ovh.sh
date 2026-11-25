@@ -15,7 +15,6 @@ fi
 
 required_runtime_vars=(
   SUPABASE_DATABASE_URL
-  SUPABASE_SERVICE_ROLE_KEY
   LUNIDEX_CRON_SECRET
 )
 missing_runtime_vars=()
@@ -24,6 +23,10 @@ for variable in "${required_runtime_vars[@]}"; do
     missing_runtime_vars+=("$variable")
   fi
 done
+if ! grep -Eq '^SUPABASE_SECRET_KEY=.+$' app.env \
+  && ! grep -Eq '^SUPABASE_SERVICE_ROLE_KEY=.+$' app.env; then
+  missing_runtime_vars+=("SUPABASE_SECRET_KEY (preferred) or SUPABASE_SERVICE_ROLE_KEY (legacy fallback)")
+fi
 if ((${#missing_runtime_vars[@]})); then
   printf 'Missing required server variable names in app.env:' >&2
   printf ' %s' "${missing_runtime_vars[@]}" >&2

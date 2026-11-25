@@ -108,7 +108,7 @@ cp .env.example .env.local
 | `NEXT_PUBLIC_APP_URL` | Web / 公开 | 规范站点 URL 和 API 基础 URL。默认值为 `https://lunidex.app`。 |
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Web / 公开 | 浏览器和 SSR 客户端使用的 Supabase Auth 配置。 |
 | `SUPABASE_DATABASE_URL` | 仅服务器 | 运行时 Supabase PostgreSQL 连接。使用启用 TLS 证书验证的共享会话池。 |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server-only | 仅服务器使用的 Auth 管理密钥，绝不发送到浏览器。 |
+| `SUPABASE_SECRET_KEY`（优先），`SUPABASE_SERVICE_ROLE_KEY`（旧版回退） | 仅服务器 | 仅服务器用于 Auth 管理；绝不将任一密钥发送到浏览器。 |
 | `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Web / 公开 | 可选的 Google Search Console 验证值。 |
 | `NEXT_PUBLIC_ENABLE_AGENTATION` | 开发环境 | 值为 `true` 时启用 Agentation UI 审查浮层。 |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Web / 公开 | 可选的浏览器 Push 订阅公钥。 |
