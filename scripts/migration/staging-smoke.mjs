@@ -5,12 +5,17 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { Pool } from 'pg';
 import { createClient } from '@supabase/supabase-js';
+import {
+  LUNIDEX_PROJECT_REF,
+  SYNTHETIC_SMOKE_EMAIL_PREFIX,
+  SYNTHETIC_SMOKE_METADATA_KEY,
+  SYNTHETIC_SMOKE_TAG,
+} from './hosted-smoke-constants.mjs';
 
 const REQUIRED_OPT_IN = 'I_CONFIRM_LUNIDEX_STAGING_DATA_MUTATION';
 const APP_API_OPT_IN = 'I_CONFIRM_LUNIDEX_STAGING_APP_IS_READY';
 const PRODUCTION_APP_ORIGINS = new Set(['https://lunidex.app', 'https://www.lunidex.app']);
 const LOCAL_APP_ORIGINS = new Set(['http://localhost:3000', 'http://127.0.0.1:3000']);
-const RESERVED_OTHER_APP_REF = 'pimauymeakxbvxdangbx';
 
 function fail(message) {
   throw new Error(message);
@@ -18,7 +23,7 @@ function fail(message) {
 
 function requireEnv(name, env) {
   const value = env[name]?.trim();
-  if (!value) fail(`Required staging smoke variable ${name} is not set.`);
+  if (!value) fail(`Required hosted smoke variable ${name} is not set.`);
   return value;
 }
 
@@ -30,21 +35,26 @@ function sharedPoolerRef(databaseUrl) {
   return null;
 }
 
+function hasVerifiedTlsConnectionStringOptions(databaseUrl) {
+  const parameters = [...new URL(databaseUrl).searchParams.entries()];
+  return parameters.length === 0
+    || (parameters.length === 1
+      && parameters[0][0].toLowerCase() === 'sslmode'
+      && parameters[0][1].toLowerCase() === 'verify-full');
+}
+
 export function validateStagingSmokeConfig(env) {
   if (env.LUNIDEX_STAGING_SMOKE !== REQUIRED_OPT_IN) {
-    fail(`Set LUNIDEX_STAGING_SMOKE=${REQUIRED_OPT_IN} only when intentionally running this destructive test-account smoke against the dedicated staging project.`);
+    fail(`Set LUNIDEX_STAGING_SMOKE=${REQUIRED_OPT_IN} only when intentionally running this test-account smoke against the fixed Lunidex project with synthetic accounts.`);
   }
-  const stagingRef = requireEnv('LUNIDEX_STAGING_PROJECT_REF', env);
-  if (!/^[a-z0-9-]+$/i.test(stagingRef)
-    || stagingRef === 'local'
-    || stagingRef === RESERVED_OTHER_APP_REF
-    || env.SUPABASE_PROJECT_REF !== stagingRef) {
-    fail('SUPABASE_PROJECT_REF must exactly match the generated LUNIDEX_STAGING_PROJECT_REF from the approved staging config.');
+  const projectRef = LUNIDEX_PROJECT_REF;
+  if (env.SUPABASE_PROJECT_REF !== projectRef) {
+    fail('SUPABASE_PROJECT_REF must exactly match the reviewed Lunidex project ref.');
   }
   const api = new URL(requireEnv('SUPABASE_URL', env));
-  if (api.protocol !== 'https:' || api.hostname !== `${stagingRef}.supabase.co`
+  if (api.protocol !== 'https:' || api.hostname !== `${projectRef}.supabase.co`
     || api.port || api.pathname !== '/' || api.search || api.hash || api.username || api.password) {
-    fail('SUPABASE_URL hostname must exactly match LUNIDEX_STAGING_PROJECT_REF.supabase.co over HTTPS.');
+    fail('SUPABASE_URL must exactly match the fixed Lunidex Supabase API over HTTPS.');
   }
   const app = new URL(requireEnv('LUNIDEX_STAGING_APP_URL', env));
   const isAllowedLocalOrigin = LOCAL_APP_ORIGINS.has(app.origin);
@@ -54,21 +64,22 @@ export function validateStagingSmokeConfig(env) {
     && !PRODUCTION_APP_ORIGINS.has(app.origin);
   if ((!isAllowedLocalOrigin && !isAllowedHostedOrigin)
     || app.pathname !== '/' || app.search || app.hash || app.username || app.password) {
-    fail('LUNIDEX_STAGING_APP_URL must be an exact loopback origin on port 3000 or an explicit HTTPS staging subdomain, without credentials, path, query, or fragment.');
+    fail('LUNIDEX_STAGING_APP_URL must be an exact loopback origin on port 3000 or an explicit HTTPS Lunidex test-app subdomain, without credentials, path, query, or fragment.');
   }
   const databaseUrl = requireEnv('SUPABASE_DATABASE_URL', env);
   const database = new URL(databaseUrl);
-  if (sharedPoolerRef(databaseUrl) !== stagingRef
+  if (sharedPoolerRef(databaseUrl) !== projectRef
     || !['postgres:', 'postgresql:'].includes(database.protocol)
-    || database.pathname !== '/postgres') {
-    fail('SUPABASE_DATABASE_URL must use the staging Shared Pooler session endpoint on port 5432 with the matching postgres.<ref> user.');
+    || database.pathname !== '/postgres'
+    || !hasVerifiedTlsConnectionStringOptions(databaseUrl)) {
+    fail('SUPABASE_DATABASE_URL must use the fixed Lunidex Shared Pooler session endpoint on port 5432 with its matching postgres.<ref> user.');
   }
   if (env.LUNIDEX_STAGING_APP_API_CHECK
     && env.LUNIDEX_STAGING_APP_API_CHECK !== APP_API_OPT_IN) {
     fail(`LUNIDEX_STAGING_APP_API_CHECK must be ${APP_API_OPT_IN} or unset.`);
   }
   return {
-    projectRef: stagingRef,
+    projectRef,
     apiUrl: api.origin,
     appOrigin: app.origin,
     databaseUrl,
@@ -101,7 +112,7 @@ function randomPassword() {
 }
 
 function assertNoError(result, label) {
-  if (result.error) fail(`${label} failed; the staging smoke stopped. Inspect the redacted staging logs and Auth configuration.`);
+  if (result.error) fail(`${label} failed; the hosted smoke stopped. Inspect the redacted logs and Auth configuration.`);
   return result.data;
 }
 
@@ -122,7 +133,7 @@ async function run() {
     connectionString: config.databaseUrl,
     max: 1,
     ssl: { rejectUnauthorized: true },
-    application_name: 'lunidex-staging-smoke',
+    application_name: 'lunidex-hosted-smoke',
   });
   const created = [];
   let primaryError = null;
@@ -137,19 +148,19 @@ async function run() {
       `);
       if (sslState.rows.length !== 1 || sslState.rows[0].ssl !== true
         || !sslState.rows[0].version || !sslState.rows[0].cipher) {
-        fail('The staging runtime pool connection did not report verified TLS state.');
+        fail('The hosted smoke pool connection did not report verified TLS state.');
       }
       const firstPid = await runtimeClient.query('select pg_backend_pid() as pid');
       const secondPid = await runtimeClient.query('select pg_backend_pid() as pid');
       if (firstPid.rows[0]?.pid !== secondPid.rows[0]?.pid) {
-        fail('The staging runtime pooler did not preserve its PostgreSQL backend session.');
+        fail('The hosted smoke pooler did not preserve its PostgreSQL backend session.');
       }
     } finally {
       runtimeClient.release();
     }
 
     for (const label of ['a', 'b']) {
-      const email = `lunidex-staging-smoke+${randomUUID()}-${label}@example.com`;
+      const email = `${SYNTHETIC_SMOKE_EMAIL_PREFIX}${randomUUID()}@lunidex.app`;
       const password = randomPassword();
       const collectionKey = `tcg2:en:base${label === 'a' ? '1' : '2'}`;
       const collectionCard = `${collectionKey}|base${label === 'a' ? '1' : '2'}-001|normal|1`;
@@ -157,9 +168,12 @@ async function run() {
         email,
         password,
         email_confirm: true,
-        user_metadata: { name: `Synthetic staging smoke ${label}` },
-      }), `Staging Auth account ${label}`);
-      if (!user.user?.id) fail(`Staging Auth did not return synthetic account ${label}.`);
+        user_metadata: {
+          name: `Synthetic Lunidex hosted smoke ${label}`,
+        },
+        app_metadata: { [SYNTHETIC_SMOKE_METADATA_KEY]: SYNTHETIC_SMOKE_TAG },
+      }), `Lunidex Auth account ${label}`);
+      if (!user.user?.id) fail(`Lunidex Auth did not return synthetic account ${label}.`);
       created.push({ id: user.user.id, email, password, label, collectionKey, collectionCard });
     }
 
@@ -169,12 +183,13 @@ async function run() {
         await seedClient.query(`
           insert into public.profiles (id, name, email, is_public)
           values ($1::uuid, $2, $3, true)
-        `, [account.id, `Synthetic staging smoke ${account.label}`, account.email]);
+        `, [account.id, `Synthetic Lunidex hosted smoke ${account.label} [${SYNTHETIC_SMOKE_TAG}]`, account.email]);
         await seedClient.query(`
           insert into public.user_state (user_id, data)
           values ($1::uuid, $2::jsonb)
         `, [account.id, JSON.stringify({
           migration_smoke: account.label,
+          [SYNTHETIC_SMOKE_METADATA_KEY]: SYNTHETIC_SMOKE_TAG,
           tcgCollectionModelVersion: 3,
           tcgCollections: [account.collectionKey],
           tcgCollectionCards: [account.collectionCard],
@@ -218,7 +233,7 @@ async function run() {
           headers: { authorization: `Bearer ${session.accessToken}` },
           signal: AbortSignal.timeout(10_000),
         });
-        if (!response.ok) fail(`The configured staging /api/user-state route returned HTTP ${response.status}.`);
+        if (!response.ok) fail(`The configured Lunidex test-app /api/user-state route returned HTTP ${response.status}.`);
         return response.json();
       };
       const [sessionA, sessionB] = sessions;
@@ -249,7 +264,7 @@ async function run() {
         body: JSON.stringify({ data: updatedA, expectedUpdatedAt: initialA.updatedAt }),
         signal: AbortSignal.timeout(10_000),
       });
-      if (!putResponse.ok) fail(`The configured staging /api/user-state collection write returned HTTP ${putResponse.status}.`);
+      if (!putResponse.ok) fail(`The configured Lunidex test-app /api/user-state collection write returned HTTP ${putResponse.status}.`);
       const writtenA = await putResponse.json();
       if (writtenA?.data?.tcgCollections?.at(-1) !== addedCollection
         || writtenA.data.tcgCollectionCards?.at(-1) !== addedCard) {
@@ -287,7 +302,7 @@ async function run() {
       options: { redirectTo: callbackUrl.toString() },
     }), 'Staging recovery-link generation');
     if (recovery.properties.redirect_to !== callbackUrl.toString()) {
-      fail('Supabase did not preserve the configured staging recovery callback URL.');
+      fail('Supabase did not preserve the configured Lunidex test-app recovery callback URL.');
     }
     const recoveryClient = createClient(config.apiUrl, config.publishableKey, {
       auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
@@ -348,7 +363,7 @@ async function run() {
   try {
     await pool.end();
   } catch {
-    cleanupErrors.push('Could not close the staging smoke database pool cleanly.');
+    cleanupErrors.push('Could not close the hosted smoke database pool cleanly.');
   }
 
   if (primaryError && cleanupErrors.length > 0) {
@@ -358,9 +373,9 @@ async function run() {
   if (primaryError) throw primaryError;
   if (cleanupErrors.length > 0) fail(`Staging smoke cleanup is incomplete or could not be confirmed: ${cleanupErrors.join(' ')}`);
   for (const warning of cleanupWarnings) console.warn(warning);
-  console.log(`Staging smoke passed for two synthetic accounts on configured ref ${config.projectRef}: password login/reset API, callback allowlist, user_state owner isolation, private-column denial, and public-profile access.`);
-  if (!config.checkAppApi) console.log('The app /api/user-state collection-ownership check was not run; configure LUNIDEX_STAGING_APP_API_CHECK only after its deployment uses this same staging project.');
-  console.log('This smoke does not test public signup delivery, browser PKCE callback exchange, real OAuth, or SMTP delivery; those require the separate staging mailbox/browser checklist.');
+  console.log(`Hosted smoke passed for two synthetic accounts on the fixed Lunidex ref ${config.projectRef}: password login/reset API, callback allowlist, user_state owner isolation, private-column denial, and public-profile access.`);
+  if (!config.checkAppApi) console.log('The app /api/user-state collection-ownership check was not run; configure LUNIDEX_STAGING_APP_API_CHECK only after the test app uses this same Lunidex project.');
+  console.log('This smoke does not test public signup delivery, browser PKCE callback exchange, real OAuth, or SMTP delivery; these require separately configured test credentials/mailboxes and browser checks, without changing production OAuth/SMTP settings.');
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {

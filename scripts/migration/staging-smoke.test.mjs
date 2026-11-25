@@ -1,35 +1,39 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { validateStagingSmokeConfig, withDatabaseTransaction } from './staging-smoke.mjs';
+import { LUNIDEX_PROJECT_REF } from './hosted-smoke-constants.mjs';
 
 const stagingConfig = {
   LUNIDEX_STAGING_SMOKE: 'I_CONFIRM_LUNIDEX_STAGING_DATA_MUTATION',
-  LUNIDEX_STAGING_PROJECT_REF: 'lunidex-stage-test-123',
-  SUPABASE_PROJECT_REF: 'lunidex-stage-test-123',
-  SUPABASE_URL: 'https://lunidex-stage-test-123.supabase.co',
+  SUPABASE_PROJECT_REF: LUNIDEX_PROJECT_REF,
+  SUPABASE_URL: `https://${LUNIDEX_PROJECT_REF}.supabase.co`,
   LUNIDEX_STAGING_APP_URL: 'https://staging.lunidex.app',
-  SUPABASE_DATABASE_URL: 'postgresql://postgres.lunidex-stage-test-123:fake@aws-0-eu-west-3.pooler.supabase.com:5432/postgres',
+  SUPABASE_DATABASE_URL: `postgresql://postgres.${LUNIDEX_PROJECT_REF}:fake@aws-0-eu-west-3.pooler.supabase.com:5432/postgres`,
   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'local-test-publishable-key',
   SUPABASE_SERVICE_ROLE_KEY: 'local-test-service-role-key',
 };
 
-test('staging smoke config accepts only the dedicated ref, API, database, app origin and explicit opt-in', () => {
-  assert.equal(validateStagingSmokeConfig(stagingConfig).apiUrl, 'https://lunidex-stage-test-123.supabase.co');
+test('hosted smoke config accepts only the fixed Lunidex ref, API, database, app origin and explicit opt-in', () => {
+  assert.equal(validateStagingSmokeConfig(stagingConfig).apiUrl, `https://${LUNIDEX_PROJECT_REF}.supabase.co`);
+  assert.equal(validateStagingSmokeConfig({
+    ...stagingConfig,
+    SUPABASE_DATABASE_URL: `${stagingConfig.SUPABASE_DATABASE_URL}?sslmode=verify-full`,
+  }).projectRef, LUNIDEX_PROJECT_REF);
   assert.throws(
     () => validateStagingSmokeConfig({ ...stagingConfig, SUPABASE_PROJECT_REF: 'another-project' }),
-    /exactly match the generated LUNIDEX_STAGING_PROJECT_REF/,
+    /exactly match the reviewed Lunidex project ref/,
   );
   assert.throws(
     () => validateStagingSmokeConfig({ ...stagingConfig, SUPABASE_URL: 'https://some-production-project.supabase.co' }),
-    /hostname must exactly match/,
+    /exactly match the fixed Lunidex Supabase API/,
   );
   assert.throws(
     () => validateStagingSmokeConfig({ ...stagingConfig, LUNIDEX_STAGING_APP_URL: 'https://lunidex.app' }),
-    /exact loopback origin on port 3000 or an explicit HTTPS staging subdomain/,
+    /exact loopback origin on port 3000 or an explicit HTTPS Lunidex test-app subdomain/,
   );
   assert.throws(
     () => validateStagingSmokeConfig({ ...stagingConfig, LUNIDEX_STAGING_APP_URL: 'https://attacker.example.test' }),
-    /exact loopback origin on port 3000 or an explicit HTTPS staging subdomain/,
+    /exact loopback origin on port 3000 or an explicit HTTPS Lunidex test-app subdomain/,
   );
   assert.throws(
     () => validateStagingSmokeConfig({ ...stagingConfig, SUPABASE_DATABASE_URL: 'postgresql://postgres.other:fake@aws-0-eu-west-3.pooler.supabase.com:5432/postgres' }),
@@ -38,15 +42,28 @@ test('staging smoke config accepts only the dedicated ref, API, database, app or
   assert.throws(
     () => validateStagingSmokeConfig({
       ...stagingConfig,
-      LUNIDEX_STAGING_PROJECT_REF: 'pimauymeakxbvxdangbx',
       SUPABASE_PROJECT_REF: 'pimauymeakxbvxdangbx',
       SUPABASE_URL: 'https://pimauymeakxbvxdangbx.supabase.co',
       SUPABASE_DATABASE_URL: 'postgresql://postgres.pimauymeakxbvxdangbx:fake@aws-0-eu-west-3.pooler.supabase.com:5432/postgres',
     }),
-    /exactly match the generated LUNIDEX_STAGING_PROJECT_REF/,
+    /exactly match the reviewed Lunidex project ref/,
   );
   assert.throws(
-    () => validateStagingSmokeConfig({ ...stagingConfig, SUPABASE_DATABASE_URL: 'postgresql://postgres.lunidex-stage-test-123:fake@aws-0-eu-west-3.pooler.supabase.com:6543/postgres' }),
+    () => validateStagingSmokeConfig({ ...stagingConfig, SUPABASE_DATABASE_URL: `postgresql://postgres.${LUNIDEX_PROJECT_REF}:fake@aws-0-eu-west-3.pooler.supabase.com:6543/postgres` }),
+    /Shared Pooler session endpoint on port 5432/,
+  );
+  assert.throws(
+    () => validateStagingSmokeConfig({
+      ...stagingConfig,
+      SUPABASE_DATABASE_URL: `${stagingConfig.SUPABASE_DATABASE_URL}?sslmode=no-verify`,
+    }),
+    /Shared Pooler session endpoint on port 5432/,
+  );
+  assert.throws(
+    () => validateStagingSmokeConfig({
+      ...stagingConfig,
+      SUPABASE_DATABASE_URL: `${stagingConfig.SUPABASE_DATABASE_URL}?sslmode=require`,
+    }),
     /Shared Pooler session endpoint on port 5432/,
   );
   assert.throws(
@@ -55,7 +72,7 @@ test('staging smoke config accepts only the dedicated ref, API, database, app or
   );
 });
 
-test('staging smoke accepts only exact localhost app origins and rejects non-loopback or decorated URLs', () => {
+test('hosted smoke accepts only exact localhost app origins and rejects non-loopback or decorated URLs', () => {
   for (const appUrl of ['http://localhost:3000', 'http://127.0.0.1:3000']) {
     assert.equal(
       validateStagingSmokeConfig({ ...stagingConfig, LUNIDEX_STAGING_APP_URL: appUrl }).appOrigin,
@@ -73,13 +90,13 @@ test('staging smoke accepts only exact localhost app origins and rejects non-loo
   ]) {
     assert.throws(
       () => validateStagingSmokeConfig({ ...stagingConfig, LUNIDEX_STAGING_APP_URL: appUrl }),
-      /exact loopback origin on port 3000 or an explicit HTTPS staging subdomain/,
+      /exact loopback origin on port 3000 or an explicit HTTPS Lunidex test-app subdomain/,
       appUrl,
     );
   }
 });
 
-test('staging projection seed transaction pins begin, writes, commit and release to one client', async () => {
+test('hosted smoke projection seed pins begin, writes, commit and release to one client', async () => {
   const calls = [];
   let connectCount = 0;
   const client = {
@@ -99,7 +116,7 @@ test('staging projection seed transaction pins begin, writes, commit and release
   assert.deepEqual(calls, ['begin', 'insert synthetic projections', 'commit', 'release']);
 });
 
-test('staging projection transaction rolls back on failure and still releases its client', async () => {
+test('hosted smoke projection transaction rolls back on failure and still releases its client', async () => {
   const calls = [];
   const client = {
     query: async (sql) => { calls.push(sql); return { rows: [] }; },
