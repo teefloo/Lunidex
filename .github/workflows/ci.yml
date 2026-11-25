@@ -9,7 +9,7 @@ on:
 jobs:
   supabase-local:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     env:
       SUPABASE_TELEMETRY_DISABLED: '1'
     steps:
@@ -18,20 +18,37 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
+          cache: npm
+
+      - name: Install application migration tooling
+        run: npm ci
 
       - name: Install pinned Supabase CLI
         run: npx --yes supabase@3.4.0 --version
 
       - name: Start isolated local database and Auth
-        run: >-
-          npx --yes supabase@3.4.0 start
-          --exclude realtime,storage-api,imgproxy,kong,mailpit,postgrest,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+        run: |
+          if npx --yes supabase@3.4.0 start \
+            --exclude realtime,storage-api,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor \
+            >/dev/null 2>&1; then
+            echo "Local Supabase stack started; CLI credential output was suppressed."
+          else
+            start_status=$?
+            echo "Local Supabase stack failed to start; raw CLI output was suppressed because it can contain local keys." >&2
+            exit "$start_status"
+          fi
 
       - name: Apply local schema migrations
         run: npx --yes supabase@3.4.0 migration up
 
       - name: Run local pgTAP security tests
         run: npx --yes supabase@3.4.0 test db
+
+      - name: Verify migration fixture refuses hosted targets
+        run: node --test scripts/migration/local-e2e-fixture.test.mjs scripts/migration/staging-smoke.test.mjs
+
+      - name: Rehearse Neon-to-Supabase migration with synthetic local data
+        run: node scripts/migration/local-e2e-fixture.mjs
 
       - name: Stop local Supabase containers
         if: always()
