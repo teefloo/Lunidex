@@ -85,6 +85,29 @@ test('target URL and explicit project ref must identify the same Supabase projec
     () => validateTarget({ ...matching, SUPABASE_PROJECT_REF: 'another-project' }),
     /does not match the configured Supabase API URL/,
   );
+  const passwordMarker = 'synthetic-db-password-marker';
+  assert.throws(
+    () => validateTarget({
+      ...matching,
+      SUPABASE_MIGRATION_DATABASE_URL: `postgresql://postgres:${passwordMarker}@bad host:5432/postgres`,
+    }),
+    (error) => {
+      assert.match(error.message, /Database connection URL is invalid/);
+      assert.doesNotMatch(error.message, new RegExp(passwordMarker));
+      return true;
+    },
+  );
+  assert.throws(
+    () => validateTarget({
+      ...matching,
+      SUPABASE_MIGRATION_DATABASE_URL: `${matching.SUPABASE_MIGRATION_DATABASE_URL}#${passwordMarker}`,
+    }),
+    (error) => {
+      assert.match(error.message, /must not contain a fragment/);
+      assert.doesNotMatch(error.message, new RegExp(passwordMarker));
+      return true;
+    },
+  );
 });
 
 test('migration refuses any unmarked non-empty target and only accepts an exact idempotent digest', () => {

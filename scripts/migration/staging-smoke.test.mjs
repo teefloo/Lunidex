@@ -68,6 +68,29 @@ test('hosted smoke config accepts only the fixed Lunidex ref, API, database, app
     }),
     /Shared Pooler session endpoint on port 5432/,
   );
+  const passwordMarker = 'synthetic-db-password-marker';
+  assert.throws(
+    () => validateStagingSmokeConfig({
+      ...stagingConfig,
+      SUPABASE_DATABASE_URL: `postgresql://postgres:${passwordMarker}@bad host:5432/postgres`,
+    }),
+    (error) => {
+      assert.match(error.message, /valid PostgreSQL URL/);
+      assert.doesNotMatch(error.message, new RegExp(passwordMarker));
+      return true;
+    },
+  );
+  assert.throws(
+    () => validateStagingSmokeConfig({
+      ...stagingConfig,
+      SUPABASE_DATABASE_URL: `${stagingConfig.SUPABASE_DATABASE_URL}#${passwordMarker}`,
+    }),
+    (error) => {
+      assert.match(error.message, /Shared Pooler session endpoint on port 5432/);
+      assert.doesNotMatch(error.message, new RegExp(passwordMarker));
+      return true;
+    },
+  );
   assert.throws(
     () => validateStagingSmokeConfig({ ...stagingConfig, LUNIDEX_STAGING_SMOKE: undefined }),
     /only when intentionally running/,

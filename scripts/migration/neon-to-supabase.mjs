@@ -75,10 +75,21 @@ function qualifiedName(schema, table) {
 }
 
 function parseProjectRef(value, env = process.env) {
-  const parsed = new URL(value);
+  let parsed;
+  try {
+    parsed = new URL(value);
+  } catch {
+    fail('Database connection URL is invalid; connection values were not logged.');
+  }
+  if (parsed.hash) fail('Database connection URL must not contain a fragment.');
   const directHost = /^db\.([a-z0-9-]+)\.supabase\.co$/i.exec(parsed.hostname);
   if (directHost) return directHost[1];
-  const username = decodeURIComponent(parsed.username);
+  let username;
+  try {
+    username = decodeURIComponent(parsed.username);
+  } catch {
+    fail('Database connection URL is invalid; connection values were not logged.');
+  }
   const poolerUser = /^postgres\.([a-z0-9-]+)$/i.exec(username);
   if (poolerUser && parsed.hostname.endsWith('.pooler.supabase.com')) return poolerUser[1];
   if ((parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1' || parsed.hostname === '::1')
@@ -90,7 +101,12 @@ function validateTarget(env = process.env) {
   const projectRef = requiredEnv('SUPABASE_PROJECT_REF', env);
   const publicUrl = env.SUPABASE_URL ?? env.NEXT_PUBLIC_SUPABASE_URL;
   if (!publicUrl) fail('Set SUPABASE_URL to the intended migration project URL.');
-  const url = new URL(publicUrl);
+  let url;
+  try {
+    url = new URL(publicUrl);
+  } catch {
+    fail('SUPABASE_URL is not a valid URL.');
+  }
   const publicRef = url.hostname.endsWith('.supabase.co')
     ? url.hostname.split('.')[0]
     : url.hostname === 'localhost' || url.hostname === '127.0.0.1' ? 'local' : null;
@@ -104,9 +120,16 @@ function validateTarget(env = process.env) {
 }
 
 function createPool(connectionString, applicationName) {
-  const isLocal = new URL(connectionString).hostname === 'localhost'
-    || new URL(connectionString).hostname === '127.0.0.1'
-    || new URL(connectionString).hostname === '::1';
+  let connectionUrl;
+  try {
+    connectionUrl = new URL(connectionString);
+  } catch {
+    fail('Database connection URL is invalid; connection values were not logged.');
+  }
+  if (connectionUrl.hash) fail('Database connection URL must not contain a fragment.');
+  const isLocal = connectionUrl.hostname === 'localhost'
+    || connectionUrl.hostname === '127.0.0.1'
+    || connectionUrl.hostname === '::1';
   return new Pool({
     connectionString,
     max: 1,

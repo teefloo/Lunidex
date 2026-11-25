@@ -28,16 +28,20 @@ function requireEnv(name, env) {
   return value;
 }
 
-function sharedPoolerRef(databaseUrl) {
-  const url = new URL(databaseUrl);
-  const user = decodeURIComponent(url.username);
+function sharedPoolerRef(url) {
+  let user;
+  try {
+    user = decodeURIComponent(url.username);
+  } catch {
+    return null;
+  }
   const pooled = /^postgres\.([a-z0-9-]+)$/i.exec(user);
   if (pooled && /^[a-z0-9-]+\.pooler\.supabase\.com$/i.test(url.hostname) && url.port === '5432') return pooled[1];
   return null;
 }
 
-function hasVerifiedTlsConnectionStringOptions(databaseUrl) {
-  const parameters = [...new URL(databaseUrl).searchParams.entries()];
+function hasVerifiedTlsConnectionStringOptions(database) {
+  const parameters = [...database.searchParams.entries()];
   return parameters.length === 0
     || (parameters.length === 1
       && parameters[0][0].toLowerCase() === 'sslmode'
@@ -52,12 +56,22 @@ export function validateStagingSmokeConfig(env) {
   if (env.SUPABASE_PROJECT_REF !== projectRef) {
     fail('SUPABASE_PROJECT_REF must exactly match the reviewed Lunidex project ref.');
   }
-  const api = new URL(requireEnv('SUPABASE_URL', env));
+  let api;
+  try {
+    api = new URL(requireEnv('SUPABASE_URL', env));
+  } catch {
+    fail('SUPABASE_URL is not a valid URL.');
+  }
   if (api.protocol !== 'https:' || api.hostname !== `${projectRef}.supabase.co`
     || api.port || api.pathname !== '/' || api.search || api.hash || api.username || api.password) {
     fail('SUPABASE_URL must exactly match the fixed Lunidex Supabase API over HTTPS.');
   }
-  const app = new URL(requireEnv('LUNIDEX_STAGING_APP_URL', env));
+  let app;
+  try {
+    app = new URL(requireEnv('LUNIDEX_STAGING_APP_URL', env));
+  } catch {
+    fail('LUNIDEX_STAGING_APP_URL is not a valid URL.');
+  }
   const isAllowedLocalOrigin = LOCAL_APP_ORIGINS.has(app.origin);
   const isAllowedHostedOrigin = app.protocol === 'https:'
     && app.hostname.endsWith('.lunidex.app')
@@ -68,11 +82,17 @@ export function validateStagingSmokeConfig(env) {
     fail('LUNIDEX_STAGING_APP_URL must be an exact loopback origin on port 3000 or an explicit HTTPS Lunidex test-app subdomain, without credentials, path, query, or fragment.');
   }
   const databaseUrl = requireEnv('SUPABASE_DATABASE_URL', env);
-  const database = new URL(databaseUrl);
-  if (sharedPoolerRef(databaseUrl) !== projectRef
+  let database;
+  try {
+    database = new URL(databaseUrl);
+  } catch {
+    fail('SUPABASE_DATABASE_URL must be a valid PostgreSQL URL.');
+  }
+  if (sharedPoolerRef(database) !== projectRef
     || !['postgres:', 'postgresql:'].includes(database.protocol)
     || database.pathname !== '/postgres'
-    || !hasVerifiedTlsConnectionStringOptions(databaseUrl)) {
+    || database.hash
+    || !hasVerifiedTlsConnectionStringOptions(database)) {
     fail('SUPABASE_DATABASE_URL must use the fixed Lunidex Shared Pooler session endpoint on port 5432 with its matching postgres.<ref> user.');
   }
   if (env.LUNIDEX_STAGING_APP_API_CHECK

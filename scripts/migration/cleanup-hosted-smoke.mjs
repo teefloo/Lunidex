@@ -25,22 +25,21 @@ function required(env, key) {
   return value;
 }
 
-function sharedPoolerRef(databaseUrl) {
-  let url;
+function sharedPoolerRef(url) {
+  let username;
   try {
-    url = new URL(databaseUrl);
+    username = decodeURIComponent(url.username);
   } catch {
-    fail('SUPABASE_DATABASE_URL is not a valid PostgreSQL URL.');
+    return null;
   }
-  const username = decodeURIComponent(url.username);
   const match = /^postgres\.([a-z0-9-]+)$/i.exec(username);
   if (match && /^[a-z0-9-]+\.pooler\.supabase\.com$/i.test(url.hostname)
     && url.port === '5432') return match[1];
   return null;
 }
 
-function hasVerifiedTlsConnectionStringOptions(databaseUrl) {
-  const parameters = [...new URL(databaseUrl).searchParams.entries()];
+function hasVerifiedTlsConnectionStringOptions(database) {
+  const parameters = [...database.searchParams.entries()];
   return parameters.length === 0
     || (parameters.length === 1
       && parameters[0][0].toLowerCase() === 'sslmode'
@@ -77,9 +76,9 @@ export function validateHostedCleanupConfig(env) {
     fail('SUPABASE_DATABASE_URL is not a valid PostgreSQL URL.');
   }
   if (!['postgres:', 'postgresql:'].includes(database.protocol)
-    || sharedPoolerRef(databaseUrl) !== LUNIDEX_PROJECT_REF
+    || sharedPoolerRef(database) !== LUNIDEX_PROJECT_REF
     || database.pathname !== '/postgres' || !database.password
-    || database.hash || !hasVerifiedTlsConnectionStringOptions(databaseUrl)) {
+    || database.hash || !hasVerifiedTlsConnectionStringOptions(database)) {
     fail('SUPABASE_DATABASE_URL must use the fixed Lunidex Shared Pooler session endpoint on port 5432.');
   }
 

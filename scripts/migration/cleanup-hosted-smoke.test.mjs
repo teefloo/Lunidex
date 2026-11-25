@@ -73,6 +73,29 @@ test('hosted cleanup requires explicit opt-in and the fixed Lunidex ref across a
     }),
     /fixed Lunidex Shared Pooler/,
   );
+  const passwordMarker = 'synthetic-db-password-marker';
+  assert.throws(
+    () => validateHostedCleanupConfig({
+      ...cleanupConfig,
+      SUPABASE_DATABASE_URL: `postgresql://postgres:${passwordMarker}@bad host:5432/postgres`,
+    }),
+    (error) => {
+      assert.match(error.message, /valid PostgreSQL URL/);
+      assert.doesNotMatch(error.message, new RegExp(passwordMarker));
+      return true;
+    },
+  );
+  assert.throws(
+    () => validateHostedCleanupConfig({
+      ...cleanupConfig,
+      SUPABASE_DATABASE_URL: `${cleanupConfig.SUPABASE_DATABASE_URL}#${passwordMarker}`,
+    }),
+    (error) => {
+      assert.match(error.message, /fixed Lunidex Shared Pooler/);
+      assert.doesNotMatch(error.message, new RegExp(passwordMarker));
+      return true;
+    },
+  );
   assert.equal(validateHostedCleanupConfig({
     ...cleanupConfig,
     SUPABASE_SECRET_KEY: undefined,
