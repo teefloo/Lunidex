@@ -31,6 +31,7 @@ test('fixture uses only reviewed synthetic identity values', () => {
   assert.equal(localFixtureTestValues.FIXTURE_DATABASE, 'lunidex_neon_fixture');
   assert.match(localFixtureTestValues.FIXTURE_EMAIL, /@lunidex\.invalid$/);
   assert.match(localFixtureTestValues.FIXTURE_USER_ID, /^[0-9a-f-]{36}$/i);
+  assert.ok(localFixtureTestValues.FIXTURE_SCORE >= 0 && localFixtureTestValues.FIXTURE_SCORE <= 10);
 });
 
 test('local CLI status parser captures only the values needed and rejects incomplete output', () => {

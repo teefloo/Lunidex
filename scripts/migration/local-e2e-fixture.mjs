@@ -10,6 +10,7 @@ import { Pool } from 'pg';
 const FIXTURE_DATABASE = 'lunidex_neon_fixture';
 const FIXTURE_USER_ID = 'ce8e7fe2-f0c8-4bd3-a154-a44f32fc93cf';
 const FIXTURE_EMAIL = 'migration-fixture@lunidex.invalid';
+const FIXTURE_SCORE = 7;
 const MIGRATION_DIR = path.resolve('neon/migrations');
 
 function fail(message) {
@@ -125,8 +126,8 @@ async function prepareSyntheticSource(databaseUrl) {
     await sourcePool.query('insert into app.users (id) values ($1::uuid)', [FIXTURE_USER_ID]);
     await sourcePool.query(`
       insert into public.quiz_scores (user_id, pseudo, mode, challenge, score, date)
-      values ($1::uuid, 'Synthetic migration account', 'marathon', 'classic', 17, date '2026-10-01')
-    `, [FIXTURE_USER_ID]);
+      values ($1::uuid, 'Synthetic migration account', 'marathon', 'classic', $2, date '2026-10-01')
+    `, [FIXTURE_USER_ID, FIXTURE_SCORE]);
   } finally {
     await sourcePool.end();
   }
@@ -184,4 +185,4 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   });
 }
 
-export const localFixtureTestValues = { FIXTURE_DATABASE, FIXTURE_EMAIL, FIXTURE_USER_ID };
+export const localFixtureTestValues = { FIXTURE_DATABASE, FIXTURE_EMAIL, FIXTURE_SCORE, FIXTURE_USER_ID };
