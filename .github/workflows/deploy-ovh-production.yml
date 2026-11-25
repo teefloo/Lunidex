@@ -482,12 +482,21 @@ jobs:
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
           ssh "${ssh_args[@]}" "$target" 'set -Eeuo pipefail; root=/opt/lunidex-production; install -d -m 0755 "$root/scripts/deployment" "$root/deploy/production" "$root/deploy/systemd-production"; if [[ ! -f "$root/.env" ]]; then umask 077; printf "%s\n" "APP_IMAGE_REF=ghcr.io/teefloo/lunidex@sha256:0000000000000000000000000000000000000000000000000000000000000000" > "$root/.env"; fi; chmod 0600 "$root/.env"'
           scp "${ssh_args[@]}" compose.production.yaml "$target:/opt/lunidex-production/"
-          scp "${ssh_args[@]}" scripts/deployment/deploy-production.sh scripts/deployment/rollback-production.sh scripts/deployment/rollback-candidates.sh scripts/deployment/healthcheck-production.sh scripts/deployment/check-supabase-auth.sh scripts/deployment/preflight-production.sh scripts/deployment/rehearse-rollback-production.sh scripts/deployment/production-memory-gate.sh "$target:/opt/lunidex-production/scripts/deployment/"
+          scp "${ssh_args[@]}" scripts/deployment/deploy-production.sh scripts/deployment/rollback-production.sh scripts/deployment/rollback-candidates.sh scripts/deployment/healthcheck-production.sh scripts/deployment/check-supabase-auth.sh scripts/deployment/preflight-production.sh scripts/deployment/rehearse-rollback-production.sh scripts/deployment/production-memory-gate.sh scripts/deployment/require-supabase-ca.sh "$target:/opt/lunidex-production/scripts/deployment/"
           scp "${ssh_args[@]}" scripts/deployment/activate-production-route.sh "$target:/opt/lunidex-production/scripts/deployment/"
           scp "${ssh_args[@]}" deploy/production/* "$target:/opt/lunidex-production/deploy/production/"
           scp "${ssh_args[@]}" deploy/systemd-production/* "$target:/opt/lunidex-production/deploy/systemd-production/"
           scp "${ssh_args[@]}" "$RUNNER_TEMP/lunidex-production-app.env" "$target:/opt/lunidex-production/app.env.$PRODUCTION_COMMIT.tmp"
           ssh "${ssh_args[@]}" "$target" "chmod 0600 /opt/lunidex-production/app.env.$PRODUCTION_COMMIT.tmp && mv /opt/lunidex-production/app.env.$PRODUCTION_COMMIT.tmp /opt/lunidex-production/app.env"
+
+      - name: Verify the preinstalled Supabase CA before stopping preproduction
+        if: env.DEPLOYMENT_MODE == 'deploy'
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
+          ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
+          ssh "${ssh_args[@]}" "$target" 'bash /opt/lunidex-production/scripts/deployment/require-supabase-ca.sh'
 
       - name: Stop preproduction before durable production deployment
         if: env.DEPLOYMENT_MODE == 'deploy'

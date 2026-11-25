@@ -13,6 +13,7 @@ services:
       HOSTNAME: 0.0.0.0
       PORT: "3000"
       NODE_OPTIONS: --max-old-space-size=1408
+      NODE_EXTRA_CA_CERTS: /etc/ssl/certs/lunidex-supabase-ca.crt
     expose:
       - "3000"
     networks:
@@ -20,6 +21,12 @@ services:
       - egress
     volumes:
       - next-cache:/app/.next/cache
+      - type: bind
+        source: ./supabase-ca.crt
+        target: /etc/ssl/certs/lunidex-supabase-ca.crt
+        read_only: true
+        bind:
+          create_host_path: false
     read_only: true
     tmpfs:
       - /tmp:rw,noexec,nosuid,size=64m

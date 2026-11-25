@@ -45,6 +45,7 @@ if ((${#missing_runtime_vars[@]})); then
   printf '\n' >&2
   exit 78
 fi
+bash /opt/lunidex-production/scripts/deployment/require-supabase-ca.sh
 
 write_rollback_ref() {
   local image_ref="$1" tmp

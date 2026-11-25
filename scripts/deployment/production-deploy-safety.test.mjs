@@ -6,7 +6,7 @@ import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import test from 'node:test';
-import { validateRenderedCompose } from './validate-compose-runtime-contract.mjs';
+import { EXPECTED_SUPABASE_CA_PATH, validateRenderedCompose } from './validate-compose-runtime-contract.mjs';
 import { resolveCandidateImageRef } from './resolve-candidate-image-ref.mjs';
 
 const require = createRequire(import.meta.url);
@@ -23,6 +23,27 @@ const composeContractValidatorPath = path.join(repositoryRoot, 'scripts/deployme
 const currentMasterCheckPath = path.join(repositoryRoot, 'scripts/deployment/check-current-master-sha.sh');
 const rollbackCandidatesPath = path.join(repositoryRoot, 'scripts/deployment/rollback-candidates.sh');
 const rollbackImageRef = `ghcr.io/teefloo/lunidex@sha256:${'b'.repeat(64)}`;
+
+function validComposeConfig(image, overrides = {}) {
+  return {
+    services: {
+      app: {
+        image,
+        mem_limit: '2176m',
+        cpus: '1.0',
+        environment: { NODE_EXTRA_CA_CERTS: EXPECTED_SUPABASE_CA_PATH },
+        volumes: [{
+          type: 'bind',
+          source: '/tmp/supabase-ca.crt',
+          target: EXPECTED_SUPABASE_CA_PATH,
+          read_only: true,
+          bind: { create_host_path: false },
+        }],
+        ...overrides,
+      },
+    },
+  };
+}
 
 function read(filePath) {
   return readFileSync(filePath, 'utf8');
@@ -55,6 +76,7 @@ test('Compose, deploy, and manual rollback use immutable digest references', () 
   const deploy = read(deployPath);
   const rollback = read(rollbackPath);
   const dockerfile = read(path.join(repositoryRoot, 'Dockerfile'));
+  const dockerignore = read(path.join(repositoryRoot, '.dockerignore'));
   const workflow = read(workflowPath);
 
   assert.match(compose, /image:\s+\$\{APP_IMAGE_REF:\?Set APP_IMAGE_REF to a digest-pinned GHCR image reference\}/);
@@ -66,6 +88,14 @@ test('Compose, deploy, and manual rollback use immutable digest references', () 
   assert.match(rollback, /SUPABASE_ROLLBACK_IMAGE_REF/);
   assert.match(workflow, /SUPABASE_ROLLBACK_IMAGE_REF/);
   assert.match(dockerfile, /LABEL com\.lunidex\.backend="supabase"/);
+  assert.match(compose, /NODE_EXTRA_CA_CERTS:\s+\/etc\/ssl\/certs\/lunidex-supabase-ca\.crt/);
+  assert.match(compose, /source:\s+\.\/supabase-ca\.crt[\s\S]*target:\s+\/etc\/ssl\/certs\/lunidex-supabase-ca\.crt[\s\S]*read_only:\s+true[\s\S]*create_host_path:\s+false/);
+  assert.match(dockerignore, /^\.migration\/$/m);
+  assert.match(dockerignore, /^\*\.key$/m);
+  assert.match(dockerignore, /^\*\.crt$/m);
+  assert.match(dockerignore, /^\*\.pem$/m);
+  assert.match(deploy, /require-supabase-ca\.sh/);
+  assert.match(rollback, /require-supabase-ca\.sh/);
   assert.doesNotMatch(`${workflow}\n${deploy}\n${rollback}`, /9ca8f66|d0f5e1af|Dockerfile\.rollback-baseline/);
   assert.doesNotMatch(read(path.join(repositoryRoot, 'scripts/deployment/rehearse-rollback-production.sh')), /ace4b8/);
 });
@@ -141,34 +171,47 @@ test('reused digest skips only image build and preserves SHA, platform, and heal
 
 test('Compose runtime contract accepts equivalent normalized and source resource forms', () => {
   const expectedImage = 'ghcr.io/teefloo/lunidex@sha256:' + 'a'.repeat(64);
-  const unnormalized = validateRenderedCompose({
-    services: { app: { image: expectedImage, mem_limit: '2176m', cpus: '1.0' } },
-  }, expectedImage);
-  const normalized = validateRenderedCompose({
-    services: { app: { image: expectedImage, mem_limit: '2281701376', cpus: 1 } },
-  }, expectedImage);
+  const unnormalized = validateRenderedCompose(validComposeConfig(expectedImage), expectedImage);
+  const normalized = validateRenderedCompose(validComposeConfig(expectedImage, { mem_limit: '2281701376', cpus: 1 }), expectedImage);
 
   assert.equal(unnormalized.ok, true);
   assert.equal(unnormalized.actual.mem_limit_bytes, '2281701376');
+  assert.equal(unnormalized.actual.ca_mount_read_only, true);
+  assert.equal(unnormalized.actual.node_extra_ca_certs, EXPECTED_SUPABASE_CA_PATH);
   assert.equal(normalized.ok, true);
   assert.equal(normalized.actual.mem_limit_bytes, '2281701376');
 });
 
 test('Compose runtime contract rejects effective resource changes and image mismatches', () => {
   const expectedImage = 'ghcr.io/teefloo/lunidex@sha256:' + 'a'.repeat(64);
-  const changedMemory = validateRenderedCompose({
-    services: { app: { image: expectedImage, mem_limit: '2281701377', cpus: 1 } },
-  }, expectedImage);
-  const changedCpus = validateRenderedCompose({
-    services: { app: { image: expectedImage, mem_limit: 2281701376, cpus: 1.01 } },
-  }, expectedImage);
-  const changedImage = validateRenderedCompose({
-    services: { app: { image: 'ghcr.io/teefloo/lunidex:latest', mem_limit: '2176m', cpus: 1 } },
-  }, expectedImage);
+  const changedMemory = validateRenderedCompose(validComposeConfig(expectedImage, { mem_limit: '2281701377', cpus: 1 }), expectedImage);
+  const changedCpus = validateRenderedCompose(validComposeConfig(expectedImage, { mem_limit: 2281701376, cpus: 1.01 }), expectedImage);
+  const changedImage = validateRenderedCompose(validComposeConfig('ghcr.io/teefloo/lunidex:latest'), expectedImage);
 
   assert.equal(changedMemory.ok, false);
   assert.equal(changedCpus.ok, false);
   assert.equal(changedImage.ok, false);
+});
+
+test('Compose runtime contract requires the read-only Supabase CA mount and Node trust configuration', () => {
+  const expectedImage = 'ghcr.io/teefloo/lunidex@sha256:' + 'a'.repeat(64);
+  const missingCaMount = validateRenderedCompose(validComposeConfig(expectedImage, { volumes: [] }), expectedImage);
+  const writableCaMount = validateRenderedCompose(validComposeConfig(expectedImage, {
+    volumes: [{
+      type: 'bind',
+      source: '/tmp/supabase-ca.crt',
+      target: EXPECTED_SUPABASE_CA_PATH,
+      read_only: false,
+      bind: { create_host_path: false },
+    }],
+  }), expectedImage);
+  const wrongCaPath = validateRenderedCompose(validComposeConfig(expectedImage, {
+    environment: { NODE_EXTRA_CA_CERTS: '/tmp/other-ca.crt' },
+  }), expectedImage);
+
+  assert.equal(missingCaMount.ok, false);
+  assert.equal(writableCaMount.ok, false);
+  assert.equal(wrongCaPath.ok, false);
 });
 
 test('Compose contract failure reports the rendered image and resource values', () => {
@@ -466,6 +509,24 @@ test('the deploy-only disk cleanup prunes dangling images only and keeps the pin
   assert.doesNotMatch(prune.run, /--all|\s-a\b|until=/);
   assert.doesNotMatch(prune.run, /docker system prune|docker container prune|docker volume prune/);
   assert.doesNotMatch(prune.run, /sha256:|Deleted Images|IMAGE ID/);
+});
+
+test('deployment requires a preinstalled valid Supabase CA before stopping preproduction and never copies it into the image', () => {
+  const workflow = yaml.load(read(workflowPath));
+  const steps = workflow.jobs.deploy.steps;
+  const transfer = stepByName(steps, 'Transfer isolated production files and environment');
+  const verifyCa = stepByName(steps, 'Verify the preinstalled Supabase CA before stopping preproduction');
+  const stopPreproduction = stepByName(steps, 'Stop preproduction before durable production deployment');
+  const caValidator = read(path.join(repositoryRoot, 'scripts/deployment/require-supabase-ca.sh'));
+
+  assert.ok(steps.indexOf(transfer) < steps.indexOf(verifyCa));
+  assert.ok(steps.indexOf(verifyCa) < steps.indexOf(stopPreproduction));
+  assert.match(transfer.run, /require-supabase-ca\.sh/);
+  assert.doesNotMatch(transfer.run, /scp[^\n]*supabase-ca\.crt/);
+  assert.match(verifyCa.run, /require-supabase-ca\.sh/);
+  assert.match(caValidator, /mode 0644 or 0444/);
+  assert.match(caValidator, /openssl x509/);
+  assert.doesNotMatch(caValidator, /cat |echo .*\$ca_file/);
 });
 
 test('preflight scripts fail closed before touching production paths', () => {

@@ -17,6 +17,7 @@ if [[ ! -f .env || ! -f app.env ]]; then
   echo 'Production environment files are missing.' >&2
   exit 78
 fi
+bash /opt/lunidex-production/scripts/deployment/require-supabase-ca.sh
 rollback_image_ref="$(sed -n 's/^SUPABASE_ROLLBACK_IMAGE_REF=//p' .env | tail -n 1)"
 if [[ ! "$rollback_image_ref" =~ $image_pattern ]]; then
   echo 'No configured Supabase-compatible rollback image is available.' >&2

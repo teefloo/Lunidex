@@ -2,7 +2,7 @@
 
 ## État de la migration
 
-Ce document décrit la chaîne de déploiement, pas une migration exécutée. Au 24 novembre 2026, la production OVH tourne encore avec l'ancien runtime Neon. La branche de préparation Supabase n'a pas été déployée; l'accès lecture à Neon a répondu HTTP 402 sans fournir de données, et aucun import ou test hébergé n'est considéré validé par cette préparation. Le projet Supabase Lunidex est créé et pourra servir aux tests synthétiques ponctuels du runbook; il n'a pas encore reçu l'import de production. Le projet Supabase déjà connecté d'une autre application ne doit pas être utilisé ni modifié.
+Ce document décrit la chaîne de déploiement, pas une migration exécutée. Au 24 novembre 2026, la production OVH tourne encore avec l'ancien runtime Neon. La branche de préparation Supabase n'a pas été déployée; l'accès lecture à Neon a répondu HTTP 402 sans fournir de données ni permettre l'export. Après un premier smoke bloqué par TLS, un smoke hébergé ultérieur a réussi avec deux comptes synthétiques : connexion PostgreSQL/TLS vérifiée (`SELECT 1`, `pg_stat_ssl`, session réutilisée), login et récupération de mot de passe avec callback allowlist, tests RLS/isolation entre comptes et GET/PUT de collection via `/api/user-state`. L'audit de nettoyage a confirmé zéro résidu synthétique. Cela ne valide pas l'import des données de production ni un cutover. Le signup avec livraison d'e-mail, PKCE dans un navigateur, OAuth réel et SMTP restent non testés. Le projet Supabase Lunidex n'a pas encore reçu l'import de production. Le projet Supabase déjà connecté d'une autre application ne doit pas être utilisé ni modifié.
 
 Ne pas déclencher `deploy` depuis cette branche avant d'avoir réussi l'export, vérifié les quotas et la capacité du projet Lunidex, terminé les tests synthétiques hébergés et le contrôle zéro résidu avant import, défini les variables et secrets de l'environnement `ovh-production`, puis terminé la revue indépendante. Les migrations hébergées ne sont pas une preuve d'import de production; le runbook indique les vérifications exécutées et les validations restantes.
 
@@ -13,7 +13,7 @@ Le runbook de migration fournit les préconditions détaillées, les commandes s
 - Les images sont publiées sur GHCR et sélectionnées par référence immuable `ghcr.io/teefloo/lunidex@sha256:…`. L'image candidate porte un label de révision Git et `com.lunidex.backend=supabase`.
 - Le workflow `.github/workflows/deploy-ovh-production.yml` garde son mode manuel protégé et son mode `workflow_run` existant, encore conditionné à `AUTO_DEPLOY_ENABLED=true`. Cette tâche ne change pas cette variable. Le mode `preflight` valide uniquement le runner GitHub; il ne touche pas OVH.
 - Les checks d'image isolés testent le digest, l'architecture `linux/amd64`, le label backend, l'utilisateur, la commande, le contrat Compose et `/api/healthz`, sans secrets runtime ni réseau sortant.
-- La production utilise le pool `pg` Supabase avec un petit nombre de connexions et une URL de pooler partagé en mode session sur TLS vérifié. `SUPABASE_SECRET_KEY` est la clé runtime serveur/admin préférée; `SUPABASE_SERVICE_ROLE_KEY` reste un repli legacy temporaire. L'URL publique et la clé publishable sont incorporées au build.
+- La production utilise le pool `pg` Supabase avec un petit nombre de connexions et une URL de pooler partagé en mode session sur TLS vérifié. Le certificat racine est préinstallé sur l'hôte dans `/opt/lunidex-production/supabase-ca.crt`, monté en lecture seule dans le conteneur et chargé par Node via `NODE_EXTRA_CA_CERTS`; il n'est pas dans le build ni livré par Actions. `SUPABASE_SECRET_KEY` est la clé runtime serveur/admin préférée; `SUPABASE_SERVICE_ROLE_KEY` reste un repli legacy temporaire. L'URL publique et la clé publishable sont incorporées au build.
 - Le healthcheck Docker et `/api/healthz` mesurent seulement le processus. `check-supabase-auth.sh` teste uniquement la joignabilité anonyme de `/auth/v1/health`; aucune de ces sondes ne démontre l'isolation RLS ou une session authentifiée.
 
 ### Variables de build et de runtime
@@ -36,6 +36,8 @@ Les variables `SUPABASE_MIGRATION_DATABASE_URL`, `NEON_SOURCE_DATABASE_URL`, `SU
 ### Rollback compatible
 
 Le job exige `SUPABASE_ROLLBACK_IMAGE_REF` (digest GHCR immuable) et `SUPABASE_ROLLBACK_IMAGE_REVISION` (SHA complet) dans l'environnement `ovh-production`. Le runner valide cette image sans réseau et exige le label `com.lunidex.backend=supabase`; le serveur répète le contrôle avant de remplacer l'application. Le déploiement refuse de démarrer si aucun rollback Supabase-compatible explicite n'est disponible. L'image Neon historique n'est jamais un candidat.
+
+Aucun digest rollback Supabase-compatible n'est validé dans le checkout de préparation; en l'absence d'une référence publiée et d'une validation préflight documentée, le déploiement reste NO-GO. L'image courante Neon et `Dockerfile.rollback-baseline` ne sont pas des alternatives valides.
 
 Après un premier déploiement Supabase, `rollback-production.sh --last-stable` essaie le digest stable précédent puis le rollback Supabase explicitement configuré. Un rollback d'image seul ne réconcilie pas des données écrites côté Supabase vers Neon. Si des écritures ont eu lieu après la bascule, geler les écritures et suivre un plan opérateur de réconciliation avant de changer de runtime.
 
