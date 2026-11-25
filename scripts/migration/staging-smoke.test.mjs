@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { validateStagingSmokeConfig } from './staging-smoke.mjs';
+import { validateStagingSmokeConfig, withDatabaseTransaction } from './staging-smoke.mjs';
 
 const stagingConfig = {
   LUNIDEX_STAGING_SMOKE: 'I_CONFIRM_LUNIDEX_STAGING_DATA_MUTATION',
@@ -77,4 +77,43 @@ test('staging smoke accepts only exact localhost app origins and rejects non-loo
       appUrl,
     );
   }
+});
+
+test('staging projection seed transaction pins begin, writes, commit and release to one client', async () => {
+  const calls = [];
+  let connectCount = 0;
+  const client = {
+    query: async (sql) => { calls.push(sql); return { rows: [] }; },
+    release: () => calls.push('release'),
+  };
+  const pool = {
+    connect: async () => { connectCount += 1; return client; },
+    query: async () => { throw new Error('pool.query must not be used inside the checked-out transaction'); },
+  };
+
+  await withDatabaseTransaction(pool, async (transactionClient) => {
+    await transactionClient.query('insert synthetic projections');
+  });
+
+  assert.equal(connectCount, 1);
+  assert.deepEqual(calls, ['begin', 'insert synthetic projections', 'commit', 'release']);
+});
+
+test('staging projection transaction rolls back on failure and still releases its client', async () => {
+  const calls = [];
+  const client = {
+    query: async (sql) => { calls.push(sql); return { rows: [] }; },
+    release: () => calls.push('release'),
+  };
+  const pool = { connect: async () => client };
+
+  await assert.rejects(
+    withDatabaseTransaction(pool, async (transactionClient) => {
+      await transactionClient.query('insert synthetic projections');
+      throw new Error('seed failed');
+    }),
+    /seed failed/,
+  );
+
+  assert.deepEqual(calls, ['begin', 'insert synthetic projections', 'rollback', 'release']);
 });

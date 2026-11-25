@@ -78,6 +78,24 @@ export function validateStagingSmokeConfig(env) {
   };
 }
 
+export async function withDatabaseTransaction(pool, operation) {
+  const client = await pool.connect();
+  let transactionOpen = false;
+  try {
+    await client.query('begin');
+    transactionOpen = true;
+    const result = await operation(client);
+    await client.query('commit');
+    transactionOpen = false;
+    return result;
+  } catch (error) {
+    if (transactionOpen) await client.query('rollback').catch(() => undefined);
+    throw error;
+  } finally {
+    client.release();
+  }
+}
+
 function randomPassword() {
   return `${randomBytes(32).toString('base64url')}aA1!`;
 }
@@ -145,15 +163,14 @@ async function run() {
       created.push({ id: user.user.id, email, password, label, collectionKey, collectionCard });
     }
 
-    await pool.query('begin');
-    try {
+    await withDatabaseTransaction(pool, async (seedClient) => {
       for (const account of created) {
-        await pool.query('insert into app.users (id) values ($1::uuid)', [account.id]);
-        await pool.query(`
+        await seedClient.query('insert into app.users (id) values ($1::uuid)', [account.id]);
+        await seedClient.query(`
           insert into public.profiles (id, name, email, is_public)
           values ($1::uuid, $2, $3, true)
         `, [account.id, `Synthetic staging smoke ${account.label}`, account.email]);
-        await pool.query(`
+        await seedClient.query(`
           insert into public.user_state (user_id, data)
           values ($1::uuid, $2::jsonb)
         `, [account.id, JSON.stringify({
@@ -164,11 +181,7 @@ async function run() {
           tcgActiveCollections: [account.collectionKey],
         })]);
       }
-      await pool.query('commit');
-    } catch (error) {
-      await pool.query('rollback').catch(() => undefined);
-      throw error;
-    }
+    });
 
     const sessions = [];
     for (const account of created) {
