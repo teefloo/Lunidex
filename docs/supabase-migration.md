@@ -175,6 +175,27 @@ NODE_EXTRA_CA_CERTS=.migration/supabase-ca.crt LUNIDEX_HOSTED_SMOKE_CLEANUP=I_CO
 
 Ce script est strictement verrouillé au ref Lunidex ci-dessus et exige la sentinelle explicite. Il ne cible que des UUID Auth dont l'adresse suit le motif réservé `lunidex-migration-smoke+<UUID>@lunidex.app` et dont `app_metadata` porte le tag synthétique; les projections orphelines ne sont récupérées qu'avec cette adresse réservée et le même tag en profil/état. Il supprime leurs lignes `app.users` (les clés étrangères ne peuvent cascader que depuis ces UUID synthétiques), puis les comptes Auth, et vérifie leur absence dans `auth.users`, `app.users`, `profiles` et `user_state`. Les comptes non marqués ou les refs différentes bloquent l'opération. Il ne réinitialise pas la base. En cas d'erreur ou de résidu, arrêter et examiner manuellement; ne pas importer.
 
+### SMTP pour les e-mails Supabase Auth
+
+**État actuel :** le SMTP personnalisé Resend n'est pas configuré et aucun vrai e-mail de confirmation ou de récupération n'a été livré puis vérifié. Le smoke hébergé décrit plus haut génère un lien recovery sans envoyer de message; il ne prouve pas la livraison.
+
+Quand une validation de livraison est autorisée, vérifier d'abord le domaine d'envoi Lunidex dans Resend et terminer ses enregistrements DNS de vérification. Créer une clé API dédiée avec la permission **Sending access**, limitée au domaine d'envoi Lunidex vérifié. Dans Supabase Dashboard > Authentication > SMTP Settings, saisir exactement les paramètres suivants :
+
+| Champ SMTP Supabase | Valeur |
+| --- | --- |
+| Host | `smtp.resend.com` |
+| Port | `465` (SSL) |
+| Username | `resend` |
+| Password | La clé Resend **Sending access** dédiée et limitée au domaine vérifié |
+| Sender name | `Lunidex` |
+| Sender email | Une adresse choisie et vérifiée sous `@lunidex.app` |
+
+La clé SMTP est un secret : la saisir uniquement dans les réglages Auth protégés de Supabase; ne pas la mettre dans Git, `.env.local`, les arguments de commande, tickets ou logs. Avant les essais, vérifier dans le tableau de bord Resend la limite Free et l'usage actuels, ainsi que les limites de fréquence Auth Supabase; les quotas peuvent changer. Garder **pay-as-you-go / Transactional Overages désactivé** et ne pas activer une facturation de dépassement pour ce test. Références : [SMTP personnalisé Supabase](https://supabase.com/docs/guides/auth/auth-smtp), [paramètres SMTP Resend](https://resend.com/changelog/smtp-service), [permissions et restriction de domaine des clés Resend](https://resend.com/changelog/new-api-key-permissions), [tarif et quotas Resend](https://resend.com/pricing).
+
+Tester ensuite le signup public avec confirmation et la récupération de mot de passe uniquement avec une boîte contrôlée par l'opérateur/testeur : recevoir les messages, ouvrir les liens manuellement, vérifier les callbacks autorisés et terminer le changement de mot de passe. Aucun destinataire réel non contrôlé ne doit être utilisé. Pour pouvoir utiliser le nettoyage récupérable ci-dessus, l'utilisateur de test doit avoir une adresse synthétique unique `lunidex-migration-smoke+<UUID>@lunidex.app` routée vers cette boîte et `app_metadata.lunidex_synthetic_smoke=lunidex-hosted-migration-smoke-v1`. Le signup public ne peut pas écrire ce marqueur lui-même : l'ajouter via une opération admin protégée après création, puis lancer la commande de cleanup avec sa sentinelle et vérifier le résultat zéro résidu. Si le marquage ou le nettoyage n'est pas confirmé, arrêter et faire une suppression ciblée revue avant tout import; ne pas considérer le smoke nettoyé.
+
+OAuth reste indépendant de SMTP : tester Google/GitHub exige des identifiants client dédiés, leurs callbacks exacts et une validation browser distincte. Aucun test OAuth, signup livré ou SMTP ne doit modifier la configuration de production sans préparation et revue spécifiques.
+
 Avant l'import définitif, lancer le cleanup jusqu'à résultat zéro résidu, puis exécuter le `dry-run` du migrateur contre ce même projet avec l'export final. Le cleanup confirme uniquement l'absence des comptes/projections synthétiques marqués; le `dry-run` doit aussi confirmer l'absence de comptes Auth non attendus et l'état vide de toutes les tables applicatives. Toute ligne, identité, séquence ou objet inattendu est NO-GO et ne doit pas être « nettoyé » par un reset.
 
 ## Bascule, santé et rollback
