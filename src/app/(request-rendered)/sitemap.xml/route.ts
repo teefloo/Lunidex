@@ -1,14 +1,14 @@
 import { renderSitemapIndex, sitemapIndexUrls } from '@/lib/sitemap';
-import { getNeonClient, isNeonConfiguredServer } from '@/lib/neon/server';
+import { getSupabaseDatabaseClient, isSupabaseConfiguredServer } from '@/lib/supabase/database';
 import { SEALED_PRODUCT_CATEGORY_IDS } from '@primedex/core/types/sealed';
 
 export const revalidate = 21600;
 
 async function hasSealedProductSitemapData(): Promise<boolean> {
-  if (!isNeonConfiguredServer) return false;
+  if (!isSupabaseConfiguredServer) return false;
 
   try {
-    const sql = getNeonClient();
+    const sql = getSupabaseDatabaseClient();
     if (!sql) return false;
 
     const rows = await sql.query(`

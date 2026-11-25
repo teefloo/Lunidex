@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
 import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
-import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
-import { isInactiveAccountError } from '@/lib/neon/errors';
-import { getNeonClient } from '@/lib/neon/server';
+import { ensureSupabaseUser, getSupabaseUserFromRequest } from '@/lib/supabase/auth';
+import { isInactiveAccountError } from '@/lib/supabase/errors';
+import { getSupabaseDatabaseClient } from '@/lib/supabase/database';
 import {
   DAILY_LEADERBOARD_CHALLENGE,
   DAILY_LEADERBOARD_MODE,
@@ -65,7 +65,7 @@ function toEntry(row: LeaderboardRpcRow): LeaderboardEntry {
 }
 
 async function getQuizLeaderboard(request: NextRequest): Promise<NextResponse> {
-  const sql = getNeonClient();
+  const sql = getSupabaseDatabaseClient();
   if (!sql) {
     return NextResponse.json(
       { error: 'Leaderboard unavailable' },
@@ -84,8 +84,8 @@ async function getQuizLeaderboard(request: NextRequest): Promise<NextResponse> {
     // Identify the caller (if signed in) so their rank can be surfaced even
     // outside the returned top N.
     let callerId: string | null = null;
-    const currentUser = await getNeonUserFromRequest(request);
-    if (currentUser && await ensureNeonUser(sql, currentUser) !== false) {
+    const currentUser = await getSupabaseUserFromRequest(request);
+    if (currentUser && await ensureSupabaseUser(sql, currentUser) !== false) {
       callerId = currentUser.id;
     }
 
@@ -153,13 +153,13 @@ async function postQuizLeaderboard(request: NextRequest): Promise<NextResponse> 
     return NextResponse.json({ error: 'Too many requests' }, { status: 429, headers: { 'Cache-Control': 'private, no-store' } });
   }
 
-  const sql = getNeonClient();
+  const sql = getSupabaseDatabaseClient();
   if (!sql) return NextResponse.json({ error: 'Leaderboard unavailable' }, { status: 503, headers: { 'Cache-Control': 'private, no-store' } });
-  const user = await getNeonUserFromRequest(request);
+  const user = await getSupabaseUserFromRequest(request);
   if (!user) {
     return NextResponse.json({ error: 'Authentication required' }, { status: 401, headers: { 'Cache-Control': 'private, no-store' } });
   }
-  if (await ensureNeonUser(sql, user) === false) {
+  if (await ensureSupabaseUser(sql, user) === false) {
     return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
   }
 

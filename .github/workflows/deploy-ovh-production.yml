@@ -70,7 +70,10 @@ jobs:
       HEAP_SAMPLING_DIAGNOSTIC: ${{ inputs.heap_sampling_diagnostic }}
       HEAP_SAMPLING_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
       AUTO_DEPLOY_ENABLED: ${{ vars.AUTO_DEPLOY_ENABLED || 'false' }}
-      NEXT_PUBLIC_NEON_AUTH_URL: ${{ vars.NEXT_PUBLIC_NEON_AUTH_URL }}
+      NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+      SUPABASE_ROLLBACK_IMAGE_REF: ${{ vars.SUPABASE_ROLLBACK_IMAGE_REF }}
+      SUPABASE_ROLLBACK_IMAGE_REVISION: ${{ vars.SUPABASE_ROLLBACK_IMAGE_REVISION }}
       NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN: ${{ vars.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN }}
       NEXT_PUBLIC_POSTHOG_HOST: ${{ vars.NEXT_PUBLIC_POSTHOG_HOST }}
       NEXT_PUBLIC_POSTHOG_ENABLED: ${{ vars.NEXT_PUBLIC_POSTHOG_ENABLED || 'false' }}
@@ -178,12 +181,24 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Require the production Neon Auth public URL
+      - name: Require the production Supabase public configuration and rollback image
         shell: bash
         run: |
           set -Eeuo pipefail
-          [[ -n "$NEXT_PUBLIC_NEON_AUTH_URL" ]] || {
-            echo 'Set NEXT_PUBLIC_NEON_AUTH_URL in the ovh-production environment.' >&2
+          [[ -n "$NEXT_PUBLIC_SUPABASE_URL" ]] || {
+            echo 'Set NEXT_PUBLIC_SUPABASE_URL in the ovh-production environment.' >&2
+            exit 78
+          }
+          [[ -n "$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY" ]] || {
+            echo 'Set NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY in the ovh-production environment.' >&2
+            exit 78
+          }
+          [[ "$SUPABASE_ROLLBACK_IMAGE_REF" =~ ^ghcr\.io/teefloo/lunidex@sha256:[0-9a-f]{64}$ ]] || {
+            echo 'Set SUPABASE_ROLLBACK_IMAGE_REF to a reviewed, Supabase-compatible GHCR digest.' >&2
+            exit 78
+          }
+          [[ "$SUPABASE_ROLLBACK_IMAGE_REVISION" =~ ^[0-9a-f]{40}$ ]] || {
+            echo 'Set SUPABASE_ROLLBACK_IMAGE_REVISION to the full source SHA of that image.' >&2
             exit 78
           }
 
@@ -223,13 +238,13 @@ jobs:
           set -Eeuo pipefail
           printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
 
-      - name: Verify the pinned d0f5 rollback image in isolation
+      - name: Verify the configured Supabase-compatible rollback image in isolation
         shell: bash
         run: |
           set -Eeuo pipefail
           bash scripts/deployment/validate-image-isolated.sh \
-            'ghcr.io/teefloo/lunidex@sha256:9ca8f66d0b5f79a984358d12fe1c382319df7364388ec2d5df78fe3c5afc318a' \
-            'd0f5e1af2cf95dd43eb046069c0d37f0a2add93e'
+            "$SUPABASE_ROLLBACK_IMAGE_REF" \
+            "$SUPABASE_ROLLBACK_IMAGE_REVISION"
 
       - name: Reuse the supplied immutable candidate image digest
         id: reused_candidate_image
@@ -269,7 +284,8 @@ jobs:
           docker buildx inspect --bootstrap
           build_args=(
             --build-arg "NEXT_DEPLOYMENT_ID=$PRODUCTION_COMMIT"
-            --build-arg "NEXT_PUBLIC_NEON_AUTH_URL=$NEXT_PUBLIC_NEON_AUTH_URL"
+            --build-arg "NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL"
+            --build-arg "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"
             --build-arg "NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN=$NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN"
             --build-arg "NEXT_PUBLIC_POSTHOG_HOST=$NEXT_PUBLIC_POSTHOG_HOST"
             --build-arg "NEXT_PUBLIC_POSTHOG_ENABLED=$NEXT_PUBLIC_POSTHOG_ENABLED"
@@ -310,7 +326,7 @@ jobs:
             echo "- Candidate: \`$image_ref\`"
             echo '- Platform: \`linux/amd64\`'
             echo
-            echo 'Rollback: \`ghcr.io/teefloo/lunidex@sha256:9ca8f66d0b5f79a984358d12fe1c382319df7364388ec2d5df78fe3c5afc318a\` (d0f5).'
+            echo "Rollback candidate: \`$SUPABASE_ROLLBACK_IMAGE_REF\` (reviewed for Supabase compatibility)."
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Validate the candidate Compose contract and app health in isolation
@@ -326,21 +342,19 @@ jobs:
         shell: bash
         run: docker logout ghcr.io >/dev/null 2>&1 || true
 
-      - name: Require Neon Auth functionality before replacing production
+      - name: Require Supabase Auth functionality before replacing production
         if: env.DEPLOYMENT_MODE == 'deploy'
         shell: bash
         run: |
           set -Eeuo pipefail
-          bash scripts/deployment/check-neon-production.sh https://lunidex.app/api/auth/get-session
+          bash scripts/deployment/check-supabase-auth.sh "$NEXT_PUBLIC_SUPABASE_URL"
 
       - name: Prepare the server-only production environment
         if: env.DEPLOYMENT_MODE == 'deploy'
         shell: bash
         env:
-          NEON_DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
-          NEON_AUTH_BASE_URL: ${{ secrets.NEON_AUTH_BASE_URL }}
-          NEON_AUTH_JWKS_URL: ${{ secrets.NEON_AUTH_JWKS_URL }}
-          NEON_AUTH_COOKIE_SECRET: ${{ secrets.NEON_AUTH_COOKIE_SECRET }}
+          SUPABASE_DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           LUNIDEX_CRON_SECRET: ${{ secrets.LUNIDEX_CRON_SECRET }}
           LUNIDEX_VAPID_PRIVATE_KEY: ${{ secrets.LUNIDEX_VAPID_PRIVATE_KEY }}
           LUNIDEX_VAPID_SUBJECT: ${{ vars.LUNIDEX_VAPID_SUBJECT }}
@@ -368,10 +382,8 @@ jobs:
             fi
           }
 
-          append_env NEON_DATABASE_URL "$NEON_DATABASE_URL" yes
-          append_env NEON_AUTH_BASE_URL "$NEON_AUTH_BASE_URL" yes
-          append_env NEON_AUTH_JWKS_URL "$NEON_AUTH_JWKS_URL" yes
-          append_env NEON_AUTH_COOKIE_SECRET "$NEON_AUTH_COOKIE_SECRET" yes
+          append_env SUPABASE_DATABASE_URL "$SUPABASE_DATABASE_URL" yes
+          append_env SUPABASE_SERVICE_ROLE_KEY "$SUPABASE_SERVICE_ROLE_KEY" yes
           append_env LUNIDEX_CRON_SECRET "$LUNIDEX_CRON_SECRET" yes
           append_env LUNIDEX_VAPID_PRIVATE_KEY "$LUNIDEX_VAPID_PRIVATE_KEY" no
           append_env LUNIDEX_VAPID_SUBJECT "$LUNIDEX_VAPID_SUBJECT" no
@@ -460,9 +472,9 @@ jobs:
           fi
           target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
-          ssh "${ssh_args[@]}" "$target" 'set -Eeuo pipefail; root=/opt/lunidex-production; install -d -m 0755 "$root/scripts/deployment" "$root/deploy/production" "$root/deploy/systemd-production"; if [[ ! -f "$root/.env" ]]; then umask 077; printf "%s\n" "APP_IMAGE_REF=ghcr.io/teefloo/lunidex@sha256:9ca8f66d0b5f79a984358d12fe1c382319df7364388ec2d5df78fe3c5afc318a" > "$root/.env"; fi; chmod 0600 "$root/.env"'
+          ssh "${ssh_args[@]}" "$target" 'set -Eeuo pipefail; root=/opt/lunidex-production; install -d -m 0755 "$root/scripts/deployment" "$root/deploy/production" "$root/deploy/systemd-production"; if [[ ! -f "$root/.env" ]]; then umask 077; printf "%s\n" "APP_IMAGE_REF=ghcr.io/teefloo/lunidex@sha256:0000000000000000000000000000000000000000000000000000000000000000" > "$root/.env"; fi; chmod 0600 "$root/.env"'
           scp "${ssh_args[@]}" compose.production.yaml "$target:/opt/lunidex-production/"
-          scp "${ssh_args[@]}" scripts/deployment/deploy-production.sh scripts/deployment/rollback-production.sh scripts/deployment/rollback-candidates.sh scripts/deployment/healthcheck-production.sh scripts/deployment/check-neon-production.sh scripts/deployment/preflight-production.sh scripts/deployment/rehearse-rollback-production.sh scripts/deployment/production-memory-gate.sh "$target:/opt/lunidex-production/scripts/deployment/"
+          scp "${ssh_args[@]}" scripts/deployment/deploy-production.sh scripts/deployment/rollback-production.sh scripts/deployment/rollback-candidates.sh scripts/deployment/healthcheck-production.sh scripts/deployment/check-supabase-auth.sh scripts/deployment/preflight-production.sh scripts/deployment/rehearse-rollback-production.sh scripts/deployment/production-memory-gate.sh "$target:/opt/lunidex-production/scripts/deployment/"
           scp "${ssh_args[@]}" scripts/deployment/activate-production-route.sh "$target:/opt/lunidex-production/scripts/deployment/"
           scp "${ssh_args[@]}" deploy/production/* "$target:/opt/lunidex-production/deploy/production/"
           scp "${ssh_args[@]}" deploy/systemd-production/* "$target:/opt/lunidex-production/deploy/systemd-production/"
@@ -518,7 +530,7 @@ jobs:
           fi
           target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
-          remote_command="set -Eeuo pipefail; umask 077; export DOCKER_CONFIG=\$(mktemp -d /tmp/lunidex-production-docker.XXXXXX); trap 'rm -rf \"\$DOCKER_CONFIG\"' EXIT; docker login ghcr.io --username teefloo --password-stdin; bash /opt/lunidex-production/scripts/deployment/deploy-production.sh '$IMAGE_REF' '$PRODUCTION_COMMIT' deploy"
+          remote_command="set -Eeuo pipefail; umask 077; export DOCKER_CONFIG=\$(mktemp -d /tmp/lunidex-production-docker.XXXXXX); trap 'rm -rf \"\$DOCKER_CONFIG\"' EXIT; docker login ghcr.io --username teefloo --password-stdin; bash /opt/lunidex-production/scripts/deployment/deploy-production.sh '$IMAGE_REF' '$PRODUCTION_COMMIT' deploy '$SUPABASE_ROLLBACK_IMAGE_REF'"
           printf '%s' "$GITHUB_TOKEN" | ssh "${ssh_args[@]}" "$target" "$remote_command"
 
       - name: Verify the production deployment health
@@ -549,38 +561,33 @@ jobs:
           remote_command="set -Eeuo pipefail; umask 077; export DOCKER_CONFIG=\$(mktemp -d /tmp/lunidex-production-rollback-docker.XXXXXX); trap 'rm -rf \"\$DOCKER_CONFIG\"' EXIT; docker login ghcr.io --username teefloo --password-stdin; bash /opt/lunidex-production/scripts/deployment/rollback-production.sh --last-stable"
           printf '%s' "$GITHUB_TOKEN" | ssh "${ssh_args[@]}" "$target" "$remote_command"
 
-      - name: Probe Neon Auth separately from application health
+      - name: Probe Supabase Auth separately from application health
         if: success() && env.DEPLOYMENT_MODE == 'deploy'
-        id: neon_auth_probe
+        id: supabase_auth_probe
         continue-on-error: true
         shell: bash
-        run: |
-          set -Eeuo pipefail
-          target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
-          ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=10 -o ServerAliveInterval=5 -o ServerAliveCountMax=4)
-          timeout 45s ssh "${ssh_args[@]}" "$target" \
-            'bash /opt/lunidex-production/scripts/deployment/check-neon-production.sh https://lunidex.app/api/auth/get-session'
+        run: bash scripts/deployment/check-supabase-auth.sh "$NEXT_PUBLIC_SUPABASE_URL"
 
-      - name: Report Neon availability independently of Node health
+      - name: Report Supabase availability independently of Node health
         if: always() && env.DEPLOYMENT_MODE == 'deploy'
         shell: bash
         env:
-          NEON_PROBE_OUTCOME: ${{ steps.neon_auth_probe.outcome }}
+          SUPABASE_AUTH_PROBE_OUTCOME: ${{ steps.supabase_auth_probe.outcome }}
         run: |
           set -Eeuo pipefail
           {
             echo '## Separate application and provider outcomes'
             echo
             echo '- The Docker health check and local /api/healthz response measure the Lunidex process only.'
-            case "$NEON_PROBE_OUTCOME" in
+            case "$SUPABASE_AUTH_PROBE_OUTCOME" in
               success)
-                echo '- Neon Auth session endpoint responded. This unauthenticated probe confirms reachability only; it does not claim that a signed-in session works.'
+                echo '- Supabase Auth session endpoint responded. This unauthenticated probe confirms reachability only; it does not claim that a signed-in session works.'
                 ;;
               failure)
-                echo '- **Neon Auth functional availability: NO-GO.** The provider probe failed, including HTTP 402 quota exhaustion. This does not change the Node/container health verdict and does not cause an app rollback.'
+                echo '- **Supabase Auth reachability: NO-GO.** The provider health probe failed. This does not change the Node/container health verdict and does not cause an app rollback.'
                 ;;
               *)
-                echo '- **Neon Auth functional availability: INCOMPLETE.** The post-deploy provider probe did not run, so no Auth availability verdict is inferred from the application health result.'
+                echo '- **Supabase Auth functional availability: INCOMPLETE.** The post-deploy provider probe did not run, so no Auth availability verdict is inferred from the application health result.'
                 ;;
             esac
           } >> "$GITHUB_STEP_SUMMARY"
@@ -651,7 +658,7 @@ jobs:
             else
               echo 'The candidate image was built and published to GHCR, then the candidate and rollback images were checked by digest and smoke-tested on this GitHub runner.'
             fi
-            echo 'No SSH key was configured; no VPS, production environment file, container, Caddy route, or Neon data was accessed.'
+            echo 'No SSH key was configured; no VPS, production environment file, container, Caddy route, or Supabase data was accessed.'
             echo "Candidate: \`$IMAGE_REF\`"
           } >> "$GITHUB_STEP_SUMMARY"
 

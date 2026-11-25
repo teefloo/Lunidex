@@ -17,13 +17,12 @@ const composePath = path.join(repositoryRoot, 'compose.production.yaml');
 const deployPath = path.join(repositoryRoot, 'scripts/deployment/deploy-production.sh');
 const rollbackPath = path.join(repositoryRoot, 'scripts/deployment/rollback-production.sh');
 const appHealthPath = path.join(repositoryRoot, 'scripts/deployment/healthcheck-production.sh');
-const authProbePath = path.join(repositoryRoot, 'scripts/deployment/check-neon-production.sh');
+const authProbePath = path.join(repositoryRoot, 'scripts/deployment/check-supabase-auth.sh');
 const isolatedValidatorPath = path.join(repositoryRoot, 'scripts/deployment/validate-image-isolated.sh');
 const composeContractValidatorPath = path.join(repositoryRoot, 'scripts/deployment/validate-compose-runtime-contract.mjs');
 const currentMasterCheckPath = path.join(repositoryRoot, 'scripts/deployment/check-current-master-sha.sh');
 const rollbackCandidatesPath = path.join(repositoryRoot, 'scripts/deployment/rollback-candidates.sh');
-const rollbackCommit = 'd0f5e1af2cf95dd43eb046069c0d37f0a2add93e';
-const rollbackImageRef = 'ghcr.io/teefloo/lunidex@sha256:9ca8f66d0b5f79a984358d12fe1c382319df7364388ec2d5df78fe3c5afc318a';
+const rollbackImageRef = `ghcr.io/teefloo/lunidex@sha256:${'b'.repeat(64)}`;
 
 function read(filePath) {
   return readFileSync(filePath, 'utf8');
@@ -41,7 +40,7 @@ function runAuthProbe(status) {
     const fakeCurl = path.join(tempDir, 'curl');
     writeFileSync(fakeCurl, '#!/bin/sh\nprintf %s "$PROBE_HTTP_STATUS"\n', { mode: 0o700 });
     chmodSync(fakeCurl, 0o700);
-    return spawnSync('bash', [authProbePath, 'https://lunidex.app/api/auth/get-session'], {
+    return spawnSync('bash', [authProbePath, 'https://lunidex-test.supabase.co'], {
       cwd: tempDir,
       encoding: 'utf8',
       env: { ...process.env, PATH: `${tempDir}:${process.env.PATH ?? ''}`, PROBE_HTTP_STATUS: status },
@@ -55,17 +54,19 @@ test('Compose, deploy, and manual rollback use immutable digest references', () 
   const compose = read(composePath);
   const deploy = read(deployPath);
   const rollback = read(rollbackPath);
+  const dockerfile = read(path.join(repositoryRoot, 'Dockerfile'));
   const workflow = read(workflowPath);
 
   assert.match(compose, /image:\s+\$\{APP_IMAGE_REF:\?Set APP_IMAGE_REF to a digest-pinned GHCR image reference\}/);
   assert.doesNotMatch(compose, /APP_IMAGE_TAG/);
-  assert.match(deploy, /readonly rollback_image_ref='ghcr\.io\/teefloo\/lunidex@sha256:[0-9a-f]{64}'/);
+  assert.match(deploy, /rollback_image_ref="\$\{4:-\}"/);
+  assert.match(deploy, /com\.lunidex\.backend/);
   assert.match(rollback, /rollback_mode='manual'/);
   assert.match(rollback, /--last-stable\) rollback_mode='last-stable'/);
-  assert.match(rollback, /readonly rollback_image_ref='ghcr\.io\/teefloo\/lunidex@sha256:[0-9a-f]{64}'/);
-  assert.match(workflow, new RegExp(rollbackCommit));
-  assert.match(workflow, new RegExp(rollbackImageRef.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
-  assert.doesNotMatch(workflow, /ace4b8|Dockerfile\.rollback-baseline/);
+  assert.match(rollback, /SUPABASE_ROLLBACK_IMAGE_REF/);
+  assert.match(workflow, /SUPABASE_ROLLBACK_IMAGE_REF/);
+  assert.match(dockerfile, /LABEL com\.lunidex\.backend="supabase"/);
+  assert.doesNotMatch(`${workflow}\n${deploy}\n${rollback}`, /9ca8f66|d0f5e1af|Dockerfile\.rollback-baseline/);
   assert.doesNotMatch(read(path.join(repositoryRoot, 'scripts/deployment/rehearse-rollback-production.sh')), /ace4b8/);
 });
 
@@ -78,7 +79,7 @@ test('candidate and rollback images are verified in isolated no-network containe
   assert.match(validator, /docker compose[\s\S]*config --format json/);
   assert.match(validator, /validate-compose-runtime-contract\.mjs/);
   assert.match(validator, /docker run --detach[\s\S]*--network none[\s\S]*--read-only[\s\S]*--memory 2176m/);
-  assert.match(workflow, /Verify the pinned d0f5 rollback image in isolation/);
+  assert.match(workflow, /Verify the configured Supabase-compatible rollback image in isolation/);
   assert.match(workflow, /Validate the candidate Compose contract and app health in isolation/);
   assert.match(workflow, /containerimage\.digest/);
   assert.match(workflow, /image_ref=%s/);
@@ -196,7 +197,7 @@ test('private rollback image authentication happens before the first GHCR pull',
   const parsed = yaml.load(read(workflowPath));
   const steps = parsed.jobs.deploy.steps;
   const authIndex = steps.findIndex((step) => step.name === 'Authenticate to GHCR before pulling the private rollback image');
-  const rollbackIndex = steps.findIndex((step) => step.name === 'Verify the pinned d0f5 rollback image in isolation');
+  const rollbackIndex = steps.findIndex((step) => step.name === 'Verify the configured Supabase-compatible rollback image in isolation');
   const candidateIndex = steps.findIndex((step) => step.name === 'Build and publish the candidate image');
   const auth = stepByName(steps, 'Authenticate to GHCR before pulling the private rollback image');
 
@@ -340,10 +341,10 @@ test('current-master SHA guard accepts only the exact current master and fails c
   }
 });
 
-test('rollback candidate order prefers only the currently running healthy immutable image, then d0f5', () => {
+test('rollback candidate order prefers only a healthy Supabase image, then the explicit Supabase fallback', () => {
   const tempDir = mkdtempSync(path.join(os.tmpdir(), 'lunidex-rollback-candidates-test-'));
   try {
-    const d0f5 = rollbackImageRef;
+    const supabaseFallback = rollbackImageRef;
     const prior = `ghcr.io/teefloo/lunidex@sha256:${'a'.repeat(64)}`;
     const script = `source ${JSON.stringify(rollbackCandidatesPath)}; production_rollback_candidates "$@"`;
     const run = (...args) => spawnSync('bash', ['-c', script, 'rollback-test', ...args], {
@@ -351,41 +352,45 @@ test('rollback candidate order prefers only the currently running healthy immuta
       encoding: 'utf8',
     });
 
-    const healthy = run(prior, prior, 'true', 'healthy', d0f5);
+    const healthy = run(prior, prior, 'true', 'healthy', supabaseFallback, 'supabase');
     assert.equal(healthy.status, 0);
-    assert.deepEqual(healthy.stdout.trim().split('\n'), [prior, d0f5]);
+    assert.deepEqual(healthy.stdout.trim().split('\n'), [prior, supabaseFallback]);
 
-    const unhealthy = run(prior, prior, 'true', 'unhealthy', d0f5);
+    const unhealthy = run(prior, prior, 'true', 'unhealthy', supabaseFallback, 'supabase');
     assert.equal(unhealthy.status, 0);
-    assert.deepEqual(unhealthy.stdout.trim().split('\n'), [d0f5]);
+    assert.deepEqual(unhealthy.stdout.trim().split('\n'), [supabaseFallback]);
 
-    const mismatchedContainer = run(prior, d0f5, 'true', 'healthy', d0f5);
+    const mismatchedContainer = run(prior, supabaseFallback, 'true', 'healthy', supabaseFallback, 'supabase');
     assert.equal(mismatchedContainer.status, 0);
-    assert.deepEqual(mismatchedContainer.stdout.trim().split('\n'), [d0f5]);
+    assert.deepEqual(mismatchedContainer.stdout.trim().split('\n'), [supabaseFallback]);
 
-    const invalidFallback = run(prior, prior, 'true', 'healthy', 'latest');
+    const neonRuntime = run(prior, prior, 'true', 'healthy', supabaseFallback, 'neon');
+    assert.equal(neonRuntime.status, 0);
+    assert.deepEqual(neonRuntime.stdout.trim().split('\n'), [supabaseFallback]);
+
+    const invalidFallback = run(prior, prior, 'true', 'healthy', 'latest', 'supabase');
     assert.equal(invalidFallback.status, 64);
 
     const lastStableScript = `source ${JSON.stringify(rollbackCandidatesPath)}; production_last_stable_candidates "$@"`;
-    const lastStable = spawnSync('bash', ['-c', lastStableScript, 'rollback-test', prior, d0f5], {
+    const lastStable = spawnSync('bash', ['-c', lastStableScript, 'rollback-test', prior, supabaseFallback], {
       cwd: tempDir,
       encoding: 'utf8',
     });
     assert.equal(lastStable.status, 0);
-    assert.deepEqual(lastStable.stdout.trim().split('\n'), [prior, d0f5]);
+    assert.deepEqual(lastStable.stdout.trim().split('\n'), [prior, supabaseFallback]);
 
-    const missingPrevious = spawnSync('bash', ['-c', lastStableScript, 'rollback-test', 'mutable:latest', d0f5], {
+    const missingPrevious = spawnSync('bash', ['-c', lastStableScript, 'rollback-test', 'mutable:latest', supabaseFallback], {
       cwd: tempDir,
       encoding: 'utf8',
     });
     assert.equal(missingPrevious.status, 0);
-    assert.deepEqual(missingPrevious.stdout.trim().split('\n'), [d0f5]);
+    assert.deepEqual(missingPrevious.stdout.trim().split('\n'), [supabaseFallback]);
   } finally {
     rmSync(tempDir, { recursive: true, force: true });
   }
 });
 
-test('both in-script and post-deploy health failures roll back without using Neon as an app failure signal', () => {
+test('both in-script and post-deploy health failures roll back without using Supabase as an app failure signal', () => {
   const deploy = read(deployPath);
   const rollback = read(rollbackPath);
   const workflow = yaml.load(read(workflowPath));
@@ -393,8 +398,8 @@ test('both in-script and post-deploy health failures roll back without using Neo
   const postDeployRollback = stepByName(steps, 'Roll back after a post-deploy health failure');
   const health = stepByName(steps, 'Verify the production deployment health');
   const publicHealth = stepByName(steps, 'Verify public HTTPS smoke routes');
-  const neon = stepByName(steps, 'Probe Neon Auth separately from application health');
-  const neonReport = stepByName(steps, 'Report Neon availability independently of Node health');
+  const providerProbe = stepByName(steps, 'Probe Supabase Auth separately from application health');
+  const providerReport = stepByName(steps, 'Report Supabase availability independently of Node health');
 
   assert.match(deploy, /rollback_candidates\[@\]/);
   assert.match(deploy, /production_rollback_candidates/);
@@ -405,7 +410,7 @@ test('both in-script and post-deploy health failures roll back without using Neo
   assert.match(rollback, /candidates\+=\("\$rollback_image_ref"\)/);
   assert.match(rollback, /for candidate in "\$\{candidates\[@\]\}"/);
   assert.match(rollback, /docker compose -f compose\.production\.yaml pull app[\s\S]*healthcheck-production\.sh/);
-  assert.match(rollback, /if \(\(\$\{#candidates\[@\]\} == 0\)\); then[\s\S]*candidates\+=\("\$rollback_image_ref"\)/);
+  assert.match(rollback, /candidates\+=\("\$rollback_image_ref"\)/);
   assert.match(rollback, /healthcheck-production\.sh/);
   assert.equal(health.id, 'production_health');
   assert.equal(publicHealth.id, 'public_health');
@@ -414,12 +419,12 @@ test('both in-script and post-deploy health failures roll back without using Neo
   assert.match(postDeployRollback.if, /steps\.production_health\.outcome == 'failure'/);
   assert.match(postDeployRollback.if, /steps\.public_health\.outcome == 'failure'/);
   assert.match(postDeployRollback.run, /rollback-production\.sh --last-stable/);
-  assert.doesNotMatch(postDeployRollback.if, /neon_auth_probe/);
-  assert.equal(neon['continue-on-error'], true);
-  assert.match(neon.if, /success\(\)/);
-  assert.match(neonReport.run, /INCOMPLETE/);
-  assert.match(neonReport.run, /case "\$NEON_PROBE_OUTCOME"/);
-  assert.match(neonReport.if, /always\(\)/);
+  assert.doesNotMatch(postDeployRollback.if, /supabase_auth_probe/);
+  assert.equal(providerProbe['continue-on-error'], true);
+  assert.match(providerProbe.if, /success\(\)/);
+  assert.match(providerReport.run, /INCOMPLETE/);
+  assert.match(providerReport.run, /case "\$SUPABASE_AUTH_PROBE_OUTCOME"/);
+  assert.match(providerReport.if, /always\(\)/);
 });
 
 test('preflight explicitly publishes its candidate image to GHCR', () => {
@@ -457,28 +462,28 @@ test('preflight scripts fail closed before touching production paths', () => {
   assert.match(preflight, /retired and performs no reads or writes/);
 });
 
-test('application health and Neon/Auth availability have independent verdicts', () => {
+test('application health and Supabase/Auth availability have independent verdicts', () => {
   const appHealth = read(appHealthPath);
   const authProbe = read(authProbePath);
   const workflow = read(workflowPath);
 
   assert.match(appHealth, /api\/healthz/);
-  assert.doesNotMatch(appHealth, /NEON_AUTH|NEON_DATABASE_URL|check-neon-production/);
-  assert.match(authProbe, /HTTP 402 quota response/);
-  assert.doesNotMatch(authProbe, /--write-out ['"]200|--fail-with-body/);
-  assert.match(workflow, /Probe Neon Auth separately from application health/);
+  assert.doesNotMatch(appHealth, /SUPABASE_AUTH|SUPABASE_DATABASE_URL|check-neon-production/);
+  assert.match(authProbe, /auth\/v1\/health/);
+  assert.match(authProbe, /200\|204/);
+  assert.doesNotMatch(authProbe, /Neon|quota/);
+  assert.match(workflow, /Probe Supabase Auth separately from application health/);
   assert.match(workflow, /does not cause an app rollback/);
 });
 
-test('Neon Auth 402 remains an explicit provider failure; anonymous 200 is only reachability', () => {
+test('Supabase Auth health probe reports reachability without claiming authenticated access', () => {
   const quota = runAuthProbe('402');
   assert.equal(quota.status, 1);
-  assert.match(quota.stderr, /HTTP 402 quota response/);
-  assert.doesNotMatch(quota.stdout, /HTTP 200/);
+  assert.match(quota.stderr, /HTTP 402/);
 
   const reachable = runAuthProbe('200');
   assert.equal(reachable.status, 0);
-  assert.match(reachable.stdout, /anonymous response only/);
+  assert.match(reachable.stdout, /anonymous check confirms reachability only/);
 
   const unavailable = runAuthProbe('503');
   assert.equal(unavailable.status, 1);

@@ -1,25 +1,33 @@
-# Supabase compatibility and Edge Function guide
+# Supabase runtime and schema guide
 
-This guide applies to `supabase/`. The current web runtime uses Neon Auth and Neon PostgreSQL; this directory contains an archived Supabase Edge Function and historical security material. The former Supabase SQL migration archive is no longer checked in. Do not use this directory as evidence that the application runtime still uses Supabase Auth or Supabase RLS.
+Supabase is the active Auth and PostgreSQL provider for the Lunidex web app. Read `docs/supabase-migration.md` before schema, account, data, or cutover work. `supabase/functions/` remains a separately deployed historical Edge Function; it is not the web runtime's scheduler.
 
-## Boundaries
+## Schema and security boundaries
 
-- Read `supabase/functions/AGENTS.md` before touching the Deno function.
-- Treat the archived function's secrets, outbound endpoints, and security checks as compatibility/security interfaces.
-- Keep `SECURITY_AUDIT.md` clearly marked as historical; it is not an active migration or deployment source.
-- The web's historical `src/lib/supabase` path is a compatibility name for sync/leaderboard behavior; do not replace Neon runtime code with Supabase clients as part of a documentation or schema change.
+- Apply schema changes as ordered SQL migrations in `supabase/migrations/`. The first migration carries the current 31-table application schema; the next enables RLS and explicit grants.
+- All 31 application tables have RLS enabled. Data API access is fail-closed by default (`auto_expose_new_tables = false`) and only approved reads are granted. Do not expose tables or functions casually.
+- Public profile projection uses a `security_invoker` view. Any view or function change must be reviewed for privilege/RLS bypass.
+- The Next.js server uses a dedicated, server-only `SUPABASE_DATABASE_URL` pool whose `postgres` role bypasses RLS. Every API handler must authenticate with `auth.getUser()` and enforce row ownership and input validation in its own server code. Do not describe those server queries as RLS-enforced.
+- Account deletion soft-deactivates the application identity and removes the Supabase Auth identity; policies also require an active application identity so existing JWTs cannot read user rows after deletion is requested.
+- Do not grant client mutations. Use validated, rate-limited server routes for application writes.
 
-## Secrets and external operations
+## Environment separation
 
-- `SUPABASE_DB_URL` is used by the one-time export/Neon migration tooling, not by the web runtime.
-- The `poll-tcg-prices` function reads `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, VAPID variables, and `CRON_SECRET` from Supabase secrets. Never commit or log them.
-- There is no Supabase CLI package script or checked-in `supabase/config.toml` in this repository. Do not present `supabase db push`, `supabase db reset`, or deployment as a routine local command; use a configured disposable/staging project and explicit approval for any external operation.
-- The documented function deployment command changes external state and requires confirmation:
+- Browser config: `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` only.
+- Long-running OVH runtime: `SUPABASE_DATABASE_URL` using the shared session pooler, TLS verification, and a small `pg` pool; `SUPABASE_SERVICE_ROLE_KEY` is server-only and used only for Auth administration.
+- One-time migration tooling: `NEON_SOURCE_DATABASE_URL` (read-only), `SUPABASE_MIGRATION_DATABASE_URL` (explicit target), `SUPABASE_PROJECT_REF`, and the protected service role key. The migration URL and runtime URL are distinct.
+- The archived Edge Function has its own deployment secret names. Do not reuse the app runtime URL or mix its VAPID/cron settings with web configuration.
 
-  ```bash
-  supabase functions deploy poll-tcg-prices --no-verify-jwt
-  ```
+## Local verification
 
-## Verification
+Use the CLI pinned by CI for database verification and inspect its help before commands whose behavior can change:
 
-Run the relevant static checks from the root. Coordinate any data-contract change with the root lint, type-check, build, and applicable Neon checks.
+```bash
+npx --yes supabase@3.4.0 --version
+npx --yes supabase@3.4.0 start
+npx --yes supabase@3.4.0 migration up
+npx --yes supabase@3.4.0 test db
+npx --yes supabase@3.4.0 stop --no-backup
+```
+
+Run these commands only with Docker available. CI starts isolated local PostgreSQL and GoTrue containers, excludes the hosted-facing services, applies the checked-in migrations, runs pgTAP, and stops the stack. Never link the CLI to a hosted project for this check, and never run `supabase db reset` against a remote project. See `docs/supabase-migration.md` for the migration limits and staging preconditions. Do not apply SQL to hosted projects or deploy the archived function as part of routine local validation.

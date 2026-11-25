@@ -18,7 +18,7 @@ This guide supplements `src/AGENTS.md` for routes under `src/app/`. Feature-spec
 
 - Fetch critical route data on the server when that is the established pattern, pass stable initial props to client leaves, and use TanStack Query for subsequent interactive data.
 - Use `@/lib/api` and its modules rather than ad hoc browser requests. Dynamically load browser-only charts or expensive visualizations when the route already follows that pattern.
-- Keep authenticated/personalized data out of public caches and preserve local-first fallbacks when Neon is unavailable.
+- Keep authenticated/personalized data out of public caches and preserve local-first fallbacks when Supabase is unavailable.
 
 ## Verification
 

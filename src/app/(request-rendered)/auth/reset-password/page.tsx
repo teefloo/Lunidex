@@ -6,7 +6,7 @@ import { Loader2 } from 'lucide-react';
 import { toast } from '@/lib/toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useAuth } from '@/lib/neon/AuthProvider';
+import { useAuth } from '@/lib/supabase/AuthProvider';
 import { useTranslation } from '@/lib/i18n';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useRouter } from 'next/navigation';
@@ -35,9 +35,21 @@ function createResetTokenStore() {
       if (captured) return;
 
       const url = new URL(window.location.href);
-      resetToken = url.searchParams.get('token');
-      if (url.searchParams.has('token')) {
+      const tokenHash = url.searchParams.get('token_hash');
+      const code = url.searchParams.get('code');
+      const legacyToken = url.searchParams.get('token');
+      const hasRecoverySession = url.searchParams.get('mode') === 'recovery'
+        || url.hash.includes('access_token=');
+      resetToken = tokenHash ? `hash:${tokenHash}`
+        : code ? `code:${code}`
+          : legacyToken ?? (hasRecoverySession ? 'session' : null);
+      const hasCredentialInUrl = Boolean(tokenHash || code || legacyToken
+        || url.hash.includes('access_token=') || url.hash.includes('refresh_token='));
+      if (hasCredentialInUrl) {
         url.searchParams.delete('token');
+        url.searchParams.delete('token_hash');
+        url.searchParams.delete('code');
+        if (url.hash.includes('access_token=') || url.hash.includes('refresh_token=')) url.hash = '';
         window.history.replaceState(window.history.state, '', `${url.pathname}${url.search}${url.hash}`);
       }
 

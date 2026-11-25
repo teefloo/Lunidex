@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { AuthModalBoundary } from '@/components/auth/AuthModalBoundary';
-import { useAuth } from '@/lib/neon/AuthProvider';
+import { useAuth } from '@/lib/supabase/AuthProvider';
 import { useTranslation } from '@/lib/i18n';
 import { trackProductEvent } from '@/lib/product-measurement';
 import type { TCGCardLanguage } from '@/lib/tcg-language';

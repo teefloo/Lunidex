@@ -34,7 +34,7 @@ Lunidex 是一个独立的开源 npm workspaces 单体仓库，将宝可梦图�
 
 Web 应用展示配置的 PokéAPI 数据源提供的宝可梦记录，并支持英语、法语、西班牙语、德语、意大利语、日语、韩语和简体中文八种界面语言。葡萄牙语作为翻译版 README 提供，但不是 Web 界面语言。
 
-公开参考页面无需账户即可使用。个人工作空间（收藏、已捕获宝可梦、队伍、测验进度、TCG 收藏、愿望清单、已保存搜索、备注、套牌及相关功能）在配置并完成同步后使用 Neon Auth 和 Neon PostgreSQL。Web 显示偏好使用 IndexedDB。
+公开参考页面无需账户即可使用。个人工作空间（收藏、已捕获宝可梦、队伍、测验进度、TCG 收藏、愿望清单、已保存搜索、备注、套牌及相关功能）在配置并完成同步后使用 Supabase Auth 和 Supabase PostgreSQL。Web 显示偏好使用 IndexedDB。
 
 > [!NOTE]
 > Lunidex 是一个独立的非官方粉丝项目。宝可梦角色名称、商标、插图、图像及相关知识产权归各自权利人所有。Lunidex 与 Nintendo、Creatures Inc.、GAME FREAK inc. 或 The Pokémon Company 没有隶属、认可或赞助关系，也不是与其官方关联的项目。
@@ -106,18 +106,16 @@ cp .env.example .env.local
 | 变量 | 范围 | 用途 |
 | --- | --- | --- |
 | `NEXT_PUBLIC_APP_URL` | Web / 公开 | 规范站点 URL 和 API 基础 URL。默认值为 `https://lunidex.app`。 |
-| `NEXT_PUBLIC_NEON_AUTH_URL` | Web / 公开 | 浏览器客户端使用的 Neon Auth 端点。 |
-| `NEON_AUTH_BASE_URL`、`NEON_AUTH_JWKS_URL` | 仅服务器 | Neon Auth 代理和 JWT 验证端点。 |
-| `NEON_AUTH_COOKIE_SECRET`、`NEON_AUTH_JWT_ISSUER`、`NEON_AUTH_JWT_AUDIENCE` | 仅服务器 | 认证 Cookie 保护和 JWT 验证约束。 |
-| `NEON_DATABASE_URL` | 仅服务器 | Web 运行时和本地迁移工具使用的 Neon PostgreSQL 连接。 |
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Web / 公开 | 浏览器和 SSR 客户端使用的 Supabase Auth 配置。 |
+| `SUPABASE_DATABASE_URL` | 仅服务器 | 运行时 Supabase PostgreSQL 连接。使用启用 TLS 证书验证的共享会话池。 |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server-only | 仅服务器使用的 Auth 管理密钥，绝不发送到浏览器。 |
 | `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Web / 公开 | 可选的 Google Search Console 验证值。 |
 | `NEXT_PUBLIC_ENABLE_AGENTATION` | 开发环境 | 值为 `true` 时启用 Agentation UI 审查浮层。 |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Web / 公开 | 可选的浏览器 Push 订阅公钥。 |
-| `VAPID_PRIVATE_KEY`、`VAPID_SUBJECT` | 仅服务器 | 可选的服务器端 Push 发送配置。 |
+| `LUNIDEX_VAPID_PRIVATE_KEY`、`LUNIDEX_VAPID_SUBJECT` | 仅服务器 | 可选的服务器端 Push 发送配置。 |
 | `RESEND_API_KEY`、`CONTACT_TO_EMAIL`、`CONTACT_FROM_EMAIL` | 仅服务器 | 通过 Resend 发送联系表单邮件（可选）。 |
-| `SUPABASE_DB_URL` | 仅限迁移 | 保留的 Supabase-to-Neon 导出脚本使用的源连接；不是 Web 运行时变量。 |
+| `NEON_SOURCE_DATABASE_URL`, `SUPABASE_MIGRATION_DATABASE_URL`, `SUPABASE_PROJECT_REF` | 仅限迁移 | 将 Neon 数据一次性导出到明确选定的 Supabase 项目。 |
 
-> [!WARNING]
 > 不要通过 `NEXT_PUBLIC_*`、源文件、日志或提交暴露连接字符串、JWKS 设置、Cookie 密钥、VAPID 私钥材料、Resend 密钥或迁移 URL。
 
 <details>
@@ -145,12 +143,12 @@ NEXT_PUBLIC_ENABLE_AGENTATION=true
 | `npm run lint` | 检查 Web 和 core 源码。 |
 | `npm run typecheck` | 检查 Web workspace 类型。 |
 | `npx tsc --project packages/core/tsconfig.json --noEmit` | 检查 `@primedex/core` 类型。 |
-| `npm run db:neon:export` | 导出保留源数据用于迁移。 |
-| `npm run db:neon:import` | 应用 Neon 架构并导入准备好的导出文件。 |
-| `npm run db:neon:verify` | 比较源数据和 Neon 迁移结果。 |
+| `npm run db:migrate:supabase:export` | 以只读方式导出 Neon 源数据。 |
+| `npm run db:migrate:supabase:dry-run` | 不写入地检查所选目标。 |
+| `npm run db:migrate:supabase:auth` | 导入 Auth UUID；用户需要重设密码。 |
+| `npm run db:migrate:supabase:data` | 将数据导入空目标。 |
+| `npm run db:migrate:supabase:verify` | 比较表、键、序列、校验和及 Auth 身份。 |
 
-> [!WARNING]
-> Neon 导入和验证命令会访问外部数据库。请先阅读 [`neon/AGENTS.md`](./neon/AGENTS.md) 和 [`scripts/neon/AGENTS.md`](./scripts/neon/AGENTS.md)，并使用获批准的测试或 staging 目标。
 
 `.github/workflows/ci.yml` 中的 CI 会安装依赖并运行 lint、类型检查、SEO 验证和生产构建。
 
@@ -160,9 +158,9 @@ NEXT_PUBLIC_ENABLE_AGENTATION=true
 .
 ├── src/                 Next.js 16 / React 19 Web 应用
 ├── packages/core/       `@primedex/core`：领域类型、TCG 与未拆封商品 helpers
-├── neon/migrations/     当前使用的 Neon PostgreSQL 应用架构
-├── supabase/            已归档的 Edge Function 和安全历史资料
-├── scripts/neon/        受控的导出、导入和验证脚本
+├── neon/migrations/     历史 Neon PostgreSQL 应用架构
+├── supabase/            当前 PostgreSQL 架构、RLS 和已归档的 Edge Function
+├── scripts/migration/   Neon-to-Supabase migration scripts
 ├── public/              PWA 图标、截图、卡牌资源和静态文件
 └── docs/                产品、设计、迁移、审计和实现说明
 ```
@@ -172,7 +170,7 @@ Web (Next.js App Router)
   ├── 服务端和客户端路由组件
   ├── TanStack Query ──▶ 共享 API 客户端 ──▶ PokéAPI + TCGdex
   ├── Zustand ──▶ IndexedDB 显示偏好
-  └── Route Handlers ──▶ Neon Auth + Neon PostgreSQL 用户工作空间
+  └── Route Handlers ──▶ Supabase Auth + Supabase PostgreSQL 用户工作空间
 
 ```
 
@@ -181,7 +179,7 @@ Web (Next.js App Router)
 - **Web：** Next.js 16 App Router、React 19、TypeScript、Tailwind CSS 4、Base UI、Framer Motion、TanStack Query 和 PWA 层。
 - **共享 core：** Web 应用使用可移植的领域类型以及 TCG/未拆封商品纯函数。
 - **数据访问：** Web 请求通过 src/lib/api 中央 API façade；展示组件不会自行添加 API 客户端。
-- **持久化：** Web 显示偏好使用 IndexedDB 和浏览器 fallback。已认证的工作空间通过 Neon API 同步并存储在 user_state 中。
+- **持久化：** Web 显示偏好使用 IndexedDB 和浏览器 fallback。已认证的工作空间通过 server API 同步并存储在 user_state 中。
 - **本地化：** 带语言前缀的路由和翻译语言包支持 `en`、`fr`、`es`、`de`、`it`、`ja`、`ko` 和 `zh`。
 
 > [!IMPORTANT]
@@ -194,7 +192,7 @@ Web (Next.js App Router)
 | [PokéAPI](https://pokeapi.co/) REST 和 GraphQL | 宝可梦、种族文本、能力值、属性、招式、特性、进化、遭遇地点和本地化名称。 |
 | [PokéAPI sprites](https://github.com/PokeAPI/sprites) | 宝可梦和道具精灵图及相关图像资源。 |
 | [TCGdex](https://www.tcgdex.net/) | Pokémon TCG 卡牌、系列、稀有度、图片、目录字段，以及上游提供时的价格字段。 |
-| [Neon](https://neon.com/) | 可选身份验证、PostgreSQL 用户状态、资料、好友、排行榜、对战房间和服务器端工作空间功能。 |
+| [Supabase](https://supabase.com/) | 可选身份验证、PostgreSQL 用户状态、资料、好友、排行榜、对战房间和服务器端工作空间功能。 |
 
 上游数据的可用性、本地化覆盖、图片和价格字段都可能变化。Lunidex 不是卡牌交易市场，也不保证市场估值或完整的价格历史覆盖。
 
@@ -210,5 +208,5 @@ Lunidex 生产环境运行在 OVHcloud VPS 上，使用 Docker 和 Caddy。GitHu
 
 - [产品上下文](./PRODUCT.md)
 - [设计系统](./DESIGN.md)
-- [Neon 迁移 runbook](./docs/neon-migration.md)
+- [Supabase 迁移 runbook](./docs/supabase-migration.md)
 - [GitHub Issues](https://github.com/teefloo/Lunidex/issues)

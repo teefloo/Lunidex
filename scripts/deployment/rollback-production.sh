@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-readonly rollback_image_ref='ghcr.io/teefloo/lunidex@sha256:9ca8f66d0b5f79a984358d12fe1c382319df7364388ec2d5df78fe3c5afc318a'
 readonly image_pattern='^ghcr\.io/teefloo/lunidex@sha256:[0-9a-f]{64}$'
 rollback_mode='manual'
 case "${1:-}" in
@@ -16,6 +15,17 @@ esac
 cd /opt/lunidex-production
 if [[ ! -f .env || ! -f app.env ]]; then
   echo 'Production environment files are missing.' >&2
+  exit 78
+fi
+rollback_image_ref="$(sed -n 's/^SUPABASE_ROLLBACK_IMAGE_REF=//p' .env | tail -n 1)"
+if [[ ! "$rollback_image_ref" =~ $image_pattern ]]; then
+  echo 'No configured Supabase-compatible rollback image is available.' >&2
+  exit 78
+fi
+docker pull "$rollback_image_ref"
+rollback_backend="$(docker image inspect --format '{{ index .Config.Labels "com.lunidex.backend" }}' "$rollback_image_ref")"
+if [[ "$rollback_backend" != 'supabase' ]]; then
+  echo 'Configured rollback image is not labelled as Supabase-compatible.' >&2
   exit 78
 fi
 exec 9>.deploy.lock
@@ -64,6 +74,12 @@ for candidate in "${candidates[@]}"; do
     echo 'Refusing a rollback reference that is not pinned to a Lunidex GHCR digest.' >&2
     exit 64
   }
+  docker pull "$candidate"
+  candidate_backend="$(docker image inspect --format '{{ index .Config.Labels "com.lunidex.backend" }}' "$candidate")"
+  if [[ "$candidate_backend" != 'supabase' ]]; then
+    echo 'Skipping a rollback candidate that is not labelled as Supabase-compatible.' >&2
+    continue
+  fi
   echo "Trying rollback image $candidate."
   write_image_ref "$candidate"
   if docker compose -f compose.production.yaml config --quiet \

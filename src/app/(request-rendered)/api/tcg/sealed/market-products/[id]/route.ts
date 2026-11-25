@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
-import { getNeonClient } from '@/lib/neon/server';
+import { getSupabaseDatabaseClient } from '@/lib/supabase/database';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
 import { getPublicSealedProduct } from '@/lib/tcg-sealed-server';
 import { sealedErrorResponse, unavailableResponse } from '@/lib/tcg-sealed-route';
@@ -13,7 +13,7 @@ async function getMarketProduct(request: NextRequest, context: { params: Promise
   if (!/^[1-9]\d{0,9}$/.test(rawId) || Number(rawId) > 2_147_483_647) {
     return NextResponse.json({ error: 'Invalid product ID.' }, { status: 400, headers: NO_STORE });
   }
-  const sql = getNeonClient();
+  const sql = getSupabaseDatabaseClient();
   if (!sql) return unavailableResponse();
   if (!rateLimit(`tcg-sealed-market-product:${ipKey(request)}`, 60)) {
     return NextResponse.json({ error: 'Too many product requests.' }, { status: 429, headers: NO_STORE });

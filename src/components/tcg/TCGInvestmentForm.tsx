@@ -12,7 +12,7 @@ import { TCG_CARD_LANGUAGES, getTCGCardLanguageName, type TCGCardLanguage } from
 import { getInvestmentMarketReference } from '@/lib/tcg-investments';
 import { createInvestmentDraft, getDefaultInvestmentVariant, validateInvestmentDraft, type InvestmentDraft, type InvestmentErrors, type InvestmentField } from '@/lib/tcg-investment-form';
 import { saveTCGInvestmentConfirmed } from '@/lib/tcg-investment-save';
-import { useAuth } from '@/lib/neon/AuthProvider';
+import { useAuth } from '@/lib/supabase/AuthProvider';
 import type { TCGCard } from '@/types/tcg';
 import { TCGInvestmentCardPicker } from './TCGInvestmentCardPicker';
 

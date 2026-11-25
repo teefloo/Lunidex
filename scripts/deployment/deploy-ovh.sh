@@ -14,12 +14,8 @@ if [[ ! -f .env || ! -f app.env || ! -f cloudflare-ips.env ]]; then
 fi
 
 required_runtime_vars=(
-  NEON_DATABASE_URL
-  NEON_AUTH_BASE_URL
-  NEON_AUTH_JWKS_URL
-  NEON_AUTH_COOKIE_SECRET
-  NEON_AUTH_JWT_ISSUER
-  NEON_AUTH_JWT_AUDIENCE
+  SUPABASE_DATABASE_URL
+  SUPABASE_SERVICE_ROLE_KEY
   LUNIDEX_CRON_SECRET
 )
 missing_runtime_vars=()

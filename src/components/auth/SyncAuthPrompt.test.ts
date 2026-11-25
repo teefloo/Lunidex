@@ -14,7 +14,7 @@ const mocks = vi.hoisted(() => ({
   toastError: vi.fn(),
 }));
 
-vi.mock('@/lib/neon/AuthProvider', () => ({
+vi.mock('@/lib/supabase/AuthProvider', () => ({
   useAuth: () => ({ enabled: mocks.enabled, loading: mocks.loading, user: mocks.user }),
 }));
 vi.mock('@/lib/i18n', () => ({

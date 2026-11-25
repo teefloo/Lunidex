@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 
 const state = vi.hoisted(() => ({ allowed: true, error: null as Error | null, payload: { index: { status: 'available' }, products: { status: 'available' }, series: { status: 'unavailable' } } }));
 const mocks = vi.hoisted(() => ({ reportSentryException: vi.fn() }));
-vi.mock('@/lib/neon/server', () => ({ getNeonClient: () => ({}) }));
+vi.mock('@/lib/supabase/database', () => ({ getSupabaseDatabaseClient: () => ({}) }));
 vi.mock('@/lib/rate-limit', () => ({ ipKey: () => 'test', rateLimit: () => state.allowed }));
 vi.mock('@/lib/tcg-sealed-guide-server', () => ({ getPublicSealedGuide: async () => { if (state.error) throw state.error; return state.payload; } }));
 vi.mock('@/lib/sentry-observability', () => ({ reportSentryException: mocks.reportSentryException }));
@@ -31,7 +31,7 @@ describe('public sealed guide API', () => {
   });
 
   it('captures the database exception while keeping the unavailable response generic', async () => {
-    const error = new Error('Neon database is over quota');
+    const error = new Error('Supabase database is over quota');
     state.error = error;
 
     const response = await GET(new NextRequest('https://lunidex.test/api/tcg/sealed/guide'));

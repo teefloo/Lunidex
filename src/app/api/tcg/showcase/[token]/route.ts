@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { getTCGCardLocalizedCached } from '@/lib/api/server-cache';
 import { getCardMarketValue } from '@/lib/tcg-collection';
-import { getNeonClient } from '@/lib/neon/server';
+import { getSupabaseDatabaseClient } from '@/lib/supabase/database';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
 import { getShareableTCGCollection, normalizeTCGSharePage, sliceTCGShareCards } from '@/lib/tcg-collection-share';
 
@@ -33,7 +33,7 @@ async function getShowcase(request: NextRequest, { params }: RouteParams): Promi
   }
   const { token } = await params;
   if (!TOKEN_PATTERN.test(token)) return noStoreJson({ error: 'Showcase unavailable' }, 404);
-  const sql = getNeonClient();
+  const sql = getSupabaseDatabaseClient();
   if (!sql) return noStoreJson({ error: 'Showcase service unavailable' }, 503);
 
   try {

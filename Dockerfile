@@ -15,7 +15,8 @@ RUN npm ci
 FROM base AS builder
 
 ARG NEXT_DEPLOYMENT_ID
-ARG NEXT_PUBLIC_NEON_AUTH_URL
+ARG NEXT_PUBLIC_SUPABASE_URL
+ARG NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 ARG NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN
 ARG NEXT_PUBLIC_POSTHOG_HOST
 ARG NEXT_PUBLIC_POSTHOG_ENABLED=false
@@ -29,7 +30,8 @@ ARG NEXT_PUBLIC_GOOGLE_VERIFICATION
 ARG NEXT_PUBLIC_VAPID_PUBLIC_KEY
 
 ENV NEXT_DEPLOYMENT_ID=${NEXT_DEPLOYMENT_ID} \
-    NEXT_PUBLIC_NEON_AUTH_URL=${NEXT_PUBLIC_NEON_AUTH_URL} \
+    NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL} \
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY} \
     NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN=${NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN} \
     NEXT_PUBLIC_POSTHOG_HOST=${NEXT_PUBLIC_POSTHOG_HOST} \
     NEXT_PUBLIC_POSTHOG_ENABLED=${NEXT_PUBLIC_POSTHOG_ENABLED} \
@@ -59,6 +61,7 @@ ENV NODE_ENV=production \
     NODE_OPTIONS=--max-old-space-size=1024
 
 WORKDIR /app
+LABEL com.lunidex.backend="supabase"
 
 RUN addgroup --system --gid 1001 nodejs \
     && adduser --system --uid 1001 --ingroup nodejs nextjs \
@@ -68,12 +71,7 @@ RUN addgroup --system --gid 1001 nodejs \
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
-# Next bundles this driver into route chunks but omits it from the standalone
-# root module tree; the deployment's direct Node health check needs the ESM entry.
-COPY --from=builder --chown=nextjs:nodejs \
-    /app/node_modules/@neondatabase/serverless/package.json \
-    /app/node_modules/@neondatabase/serverless/index.mjs \
-    ./node_modules/@neondatabase/serverless/
+# `pg` and its dependencies are included in Next's standalone output tracing.
 
 USER nextjs
 EXPOSE 3000

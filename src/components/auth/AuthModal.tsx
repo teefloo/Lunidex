@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useAuth } from '@/lib/neon/AuthProvider';
+import { useAuth } from '@/lib/supabase/AuthProvider';
 import { useTranslation } from '@/lib/i18n';
 import LunidexLogo from '@/components/ui/LunidexLogo';
 import { POSTHOG_EVENTS } from '@/lib/posthog-events';

@@ -1,10 +1,10 @@
 # Audit acquisition et activation TCG
 
-Audit du 7 octobre 2026. Le changement concerne la mesure, sans modification du design, du marketing ni des choix, versions, catégories ou interfaces de consentement.
+Audit historique du 7 octobre 2026. Les mentions de Neon, de son AuthProvider et de son stockage ci-dessous décrivent le code observé à cette date et les données historiques correspondantes. Le runtime actuel utilise Supabase ; cette migration ne modifie pas rétroactivement les mesures ni les observations de l'audit. Le changement audité concernait la mesure, sans modification du design, du marketing ni des choix, versions, catégories ou interfaces de consentement.
 
 ## État initial
 
-La lecture du code révèle une différence importante avec le guide général : `src/lib/supabase/useSupabaseSync.ts` implémente actuellement une collection **remote-owned** dans Neon. Le navigateur ne persiste que les préférences. Une modification optimiste de collection est annulée si le PUT `/api/user-state` échoue. L'authentification et le chargement de l'état distant sont nécessaires avant les mutations.
+À la date de l'audit, le code avait une différence importante avec le guide général : `src/lib/supabase/useSupabaseSync.ts` implémentait une collection **remote-owned** dans Neon. Le navigateur ne persistait que les préférences. Une modification optimiste de collection était annulée si le PUT `/api/user-state` échouait. L'authentification et le chargement de l'état distant étaient nécessaires avant les mutations.
 
 Tous les événements client passent par `posthog-client.ts` : configuration explicite, SDK opt-in, exclusion `/auth` et `/api`, sanitisation et déduplication de propriétés identiques pendant 750 ms. Les événements produit vérifient aussi `productMeasurement=granted`. Les effets métier ne réagissaient pas à l'octroi du consentement, sauf les bridges. Les bridges optionnels arrivent après au moins six secondes. Les propriétés communes initiales étaient `app_environment`, `app_release`, `app_locale`, plus les propriétés SDK filtrées.
 

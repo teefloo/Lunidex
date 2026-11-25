@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-readonly rollback_image_ref='ghcr.io/teefloo/lunidex@sha256:9ca8f66d0b5f79a984358d12fe1c382319df7364388ec2d5df78fe3c5afc318a'
 new_image_ref="${1:-}"
 expected_commit="${2:-}"
 mode="${3:-deploy}"
+rollback_image_ref="${4:-}"
 
 if [[ ! "$new_image_ref" =~ ^ghcr\.io/teefloo/lunidex@sha256:[0-9a-f]{64}$ ]]; then
   echo 'Deployment requires a digest-pinned ghcr.io/teefloo/lunidex image reference.' >&2
@@ -18,6 +18,10 @@ if [[ "$mode" != 'deploy' ]]; then
   echo 'Production preflight is GitHub-only and cannot run on this VPS.' >&2
   exit 64
 fi
+if [[ ! "$rollback_image_ref" =~ ^ghcr\.io/teefloo/lunidex@sha256:[0-9a-f]{64}$ ]]; then
+  echo 'Production requires a separately verified Supabase-compatible digest-pinned rollback image.' >&2
+  exit 78
+fi
 
 cd /opt/lunidex-production
 if [[ ! -f .env || ! -f app.env || ! -f /opt/lunidex/.env || ! -f /opt/lunidex/compose.yaml ]]; then
@@ -26,7 +30,7 @@ if [[ ! -f .env || ! -f app.env || ! -f /opt/lunidex/.env || ! -f /opt/lunidex/c
 fi
 source /opt/lunidex-production/scripts/deployment/production-memory-gate.sh
 
-required_runtime_vars=(NEON_DATABASE_URL NEON_AUTH_BASE_URL NEON_AUTH_JWKS_URL NEON_AUTH_COOKIE_SECRET LUNIDEX_CRON_SECRET)
+required_runtime_vars=(SUPABASE_DATABASE_URL SUPABASE_SERVICE_ROLE_KEY LUNIDEX_CRON_SECRET)
 missing_runtime_vars=()
 for variable in "${required_runtime_vars[@]}"; do
   if ! grep -Eq "^${variable}=.+$" app.env; then missing_runtime_vars+=("${variable}"); fi
@@ -38,6 +42,26 @@ if ((${#missing_runtime_vars[@]})); then
   exit 78
 fi
 
+write_rollback_ref() {
+  local image_ref="$1" tmp
+  tmp="$(mktemp .env.XXXXXX)"
+  awk -v image_ref="$image_ref" '
+    BEGIN { updated = 0 }
+    /^SUPABASE_ROLLBACK_IMAGE_REF=/ { print "SUPABASE_ROLLBACK_IMAGE_REF=" image_ref; updated = 1; next }
+    { print }
+    END { if (!updated) print "SUPABASE_ROLLBACK_IMAGE_REF=" image_ref }
+  ' .env > "$tmp"
+  chmod 0600 "$tmp"
+  mv "$tmp" .env
+}
+
+docker pull "$rollback_image_ref"
+rollback_backend="$(docker image inspect --format '{{ index .Config.Labels "com.lunidex.backend" }}' "$rollback_image_ref")"
+if [[ "$rollback_backend" != 'supabase' ]]; then
+  echo 'Rollback image does not carry the Supabase backend compatibility label.' >&2
+  exit 78
+fi
+
 exec 9>.deploy.lock
 if ! flock -n 9; then
   echo 'Another production deployment is already running.' >&2
@@ -46,6 +70,7 @@ fi
 
 previous_image_ref="$(sed -n 's/^APP_IMAGE_REF=//p' .env | tail -n 1)"
 running_image_ref="$(docker inspect --format '{{.Config.Image}}' lunidex-production-app 2>/dev/null || true)"
+running_backend="$(docker inspect --format '{{ index .Config.Labels "com.lunidex.backend" }}' lunidex-production-app 2>/dev/null || true)"
 was_running="$(docker inspect --format '{{.State.Running}}' lunidex-production-app 2>/dev/null || true)"
 container_health="$(docker inspect --format '{{.State.Health.Status}}' lunidex-production-app 2>/dev/null || true)"
 mapfile -t rollback_candidates < <(
@@ -55,10 +80,12 @@ mapfile -t rollback_candidates < <(
     "$running_image_ref" \
     "${was_running:-false}" \
     "$container_health" \
-    "$rollback_image_ref"
+    "$rollback_image_ref" \
+    "$running_backend"
 )
 if ((${#rollback_candidates[@]} == 0)); then
-  rollback_candidates=("$rollback_image_ref")
+  echo 'No Supabase-compatible rollback candidate is available; refusing production deployment.' >&2
+  exit 78
 fi
 if [[ "$previous_image_ref" == "$new_image_ref" ]]; then
   echo 'The requested immutable image is already selected.' >&2
@@ -146,11 +173,17 @@ on_error() {
 APP_IMAGE_REF="$new_image_ref" docker compose -f compose.production.yaml config --quiet
 docker pull "$new_image_ref"
 actual_revision="$(docker image inspect --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}' "$new_image_ref")"
+actual_backend="$(docker image inspect --format '{{ index .Config.Labels "com.lunidex.backend" }}' "$new_image_ref")"
 if [[ "$actual_revision" != "$expected_commit" ]]; then
   echo 'Candidate image revision label does not match the authorized commit.' >&2
   exit 78
 fi
+if [[ "$actual_backend" != 'supabase' ]]; then
+  echo 'Candidate image does not carry the Supabase backend compatibility label.' >&2
+  exit 78
+fi
 trap on_error ERR
+write_rollback_ref "$rollback_image_ref"
 write_image_ref "$new_image_ref"
 docker compose -f compose.production.yaml pull app
 docker compose -f compose.production.yaml up -d --no-deps app
@@ -159,4 +192,4 @@ bash /opt/lunidex-production/scripts/deployment/healthcheck-production.sh
 printf '%s\n' "${rollback_candidates[0]}" > .previous-image-ref
 chmod 0600 .previous-image-ref
 trap - ERR
-echo "Production image $new_image_ref is healthy. Neon/Auth availability is reported separately."
+echo "Production image $new_image_ref is healthy. Supabase/Auth availability is reported separately."

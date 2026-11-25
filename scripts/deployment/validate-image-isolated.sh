@@ -25,11 +25,12 @@ image_json="$(docker image inspect "$image_ref")"
 revision="$(printf '%s' "$image_json" | jq -r '.[0].Config.Labels["org.opencontainers.image.revision"] // ""')"
 platform="$(printf '%s' "$image_json" | jq -r '.[0] | "\(.Os)/\(.Architecture)"')"
 image_user="$(printf '%s' "$image_json" | jq -r '.[0].Config.User // ""')"
+backend="$(printf '%s' "$image_json" | jq -r '.[0].Config.Labels["com.lunidex.backend"] // ""')"
 workdir="$(printf '%s' "$image_json" | jq -r '.[0].Config.WorkingDir // ""')"
 command="$(printf '%s' "$image_json" | jq -c '.[0].Config.Cmd // []')"
-if [[ "$revision" != "$expected_revision" || "$platform" != 'linux/amd64' || "$image_user" != 'nextjs' || "$workdir" != '/app' || "$command" != '["node","server.js"]' ]]; then
-  echo 'Image revision, platform, or expected Compose runtime contract did not match.' >&2
-  printf 'revision=%s platform=%s user=%s workdir=%s cmd=%s\n' "$revision" "$platform" "$image_user" "$workdir" "$command" >&2
+if [[ "$revision" != "$expected_revision" || "$platform" != 'linux/amd64' || "$image_user" != 'nextjs' || "$workdir" != '/app' || "$command" != '["node","server.js"]' || "$backend" != 'supabase' ]]; then
+  echo 'Image revision, backend label, platform, or expected Compose runtime contract did not match.' >&2
+  printf 'revision=%s backend=%s platform=%s user=%s workdir=%s cmd=%s\n' "$revision" "$backend" "$platform" "$image_user" "$workdir" "$command" >&2
   exit 78
 fi
 
@@ -66,7 +67,7 @@ for attempt in $(seq 1 45); do
   if docker exec "$container_name" node --input-type=module -e \
     "const response = await fetch('http://127.0.0.1:3000/api/healthz', { signal: AbortSignal.timeout(3000) }); const payload = await response.json(); if (!response.ok || payload.status !== 'ok') process.exit(1);" \
     >/dev/null 2>&1; then
-    printf 'Isolated image validation passed: revision=%s digest=%s platform=%s; app health passed without Neon secrets or egress.\n' \
+    printf 'Isolated Supabase-compatible image validation passed: revision=%s digest=%s platform=%s; app health passed without runtime secrets or egress.\n' \
       "$revision" "${image_ref##*@}" "$platform"
     exit 0
   fi

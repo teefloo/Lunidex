@@ -1,9 +1,9 @@
-import type { NeonSql } from '@/lib/neon/server';
+import type { SupabaseSql } from '@/lib/supabase/database';
 import type { QualifiedCardmarketObservation } from '@/lib/tcg-qualified-price-history';
 
 /** Idempotently stores only observations with exact source, product, set, and finish identity. */
 export async function upsertQualifiedCardmarketObservations(
-  sql: NeonSql,
+  sql: SupabaseSql,
   observations: readonly QualifiedCardmarketObservation[],
 ): Promise<number> {
   let captured = 0;

@@ -9,8 +9,8 @@ const telemetry = vi.hoisted(() => ({
   capturePostHogServerException: vi.fn().mockResolvedValue(undefined),
 }));
 
-vi.mock('@/lib/neon/server', () => ({
-  getNeonClient: () => state.sqlConfigured ? {} : null,
+vi.mock('@/lib/supabase/database', () => ({
+  getSupabaseDatabaseClient: () => state.sqlConfigured ? {} : null,
 }));
 vi.mock('@/lib/rate-limit', () => ({ ipKey: () => 'test', rateLimit: () => true }));
 vi.mock('@/lib/tcg-sealed-server', async (importOriginal) => {
@@ -75,7 +75,7 @@ describe('sealed product image API', () => {
     expect(telemetry.reportHttpFailure).not.toHaveBeenCalled();
   });
 
-  it('preserves the Sentry unavailable report when Neon is not configured', async () => {
+  it('preserves the Sentry unavailable report when Supabase is not configured', async () => {
     state.sqlConfigured = false;
 
     const response = await GET(

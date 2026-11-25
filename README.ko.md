@@ -106,18 +106,16 @@ cp .env.example .env.local
 | 변수 | 범위 | 용도 |
 | --- | --- | --- |
 | `NEXT_PUBLIC_APP_URL` | Web / 공개 | 정식 사이트 및 API 기본 URL. 기본값은 `https://lunidex.app`입니다. |
-| `NEXT_PUBLIC_NEON_AUTH_URL` | Web / 공개 | 브라우저 클라이언트가 사용하는 Neon Auth 엔드포인트. |
-| `NEON_AUTH_BASE_URL`, `NEON_AUTH_JWKS_URL` | 서버 전용 | Neon Auth 프록시 및 JWT 검증 엔드포인트. |
-| `NEON_AUTH_COOKIE_SECRET`, `NEON_AUTH_JWT_ISSUER`, `NEON_AUTH_JWT_AUDIENCE` | 서버 전용 | 인증 쿠키 보호 및 JWT 검증 조건. |
-| `NEON_DATABASE_URL` | 서버 전용 | 웹 런타임과 로컬 마이그레이션 도구에서 사용하는 Neon PostgreSQL 연결입니다. |
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Web / 공개 | 브라우저 및 SSR 클라이언트용 Supabase Auth 설정입니다. |
+| `SUPABASE_DATABASE_URL` | 서버 전용 | 런타임의 Supabase PostgreSQL 연결입니다. TLS 검증을 사용하는 공유 세션 풀러를 설정하세요. |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server-only | 서버 전용 Auth 관리 키이며 브라우저에 보내지 않습니다. |
 | `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Web / 공개 | 선택적인 Google Search Console 인증 값. |
 | `NEXT_PUBLIC_ENABLE_AGENTATION` | 개발 | `true`일 때 Agentation UI 리뷰 오버레이 활성화. |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Web / 공개 | 선택적인 브라우저 Push 구독 키. |
-| `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | 서버 전용 | 선택적인 서버 측 Push 전송 설정. |
+| `LUNIDEX_VAPID_PRIVATE_KEY`, `LUNIDEX_VAPID_SUBJECT` | 서버 전용 | 선택적인 서버 측 Push 전송 설정. |
 | `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` | 서버 전용 | Resend를 통한 선택적인 문의 폼 이메일 전송. |
-| `SUPABASE_DB_URL` | 마이그레이션 전용 | 보존된 Supabase-to-Neon export 스크립트가 사용하는 원본 연결입니다. Web runtime 변수로 사용하지 않습니다. |
+| `NEON_SOURCE_DATABASE_URL`, `SUPABASE_MIGRATION_DATABASE_URL`, `SUPABASE_PROJECT_REF` | 마이그레이션 전용 | 명시적으로 선택한 Supabase 프로젝트로 Neon 데이터를 일회성 내보내기합니다. |
 
-> [!WARNING]
 > 연결 문자열, JWKS 설정, 쿠키 시크릿, VAPID 개인 키, Resend 키, 마이그레이션 URL을 `NEXT_PUBLIC_*`, 소스 파일, 로그 또는 커밋에 노출하지 마세요.
 
 <details>
@@ -145,12 +143,12 @@ NEXT_PUBLIC_ENABLE_AGENTATION=true
 | `npm run lint` | Web 및 core 소스를 lint합니다. |
 | `npm run typecheck` | Web workspace의 타입을 확인합니다. |
 | `npx tsc --project packages/core/tsconfig.json --noEmit` | `@primedex/core`의 타입을 확인합니다. |
-| `npm run db:neon:export` | 보존된 원본 데이터를 마이그레이션용으로 export합니다. |
-| `npm run db:neon:import` | Neon 스키마를 적용하고 준비된 export를 import합니다. |
-| `npm run db:neon:verify` | 원본과 Neon 마이그레이션 결과를 비교합니다. |
+| `npm run db:migrate:supabase:export` | Neon 원본을 읽기 전용으로 내보냅니다. |
+| `npm run db:migrate:supabase:dry-run` | 선택한 대상을 쓰기 없이 확인합니다. |
+| `npm run db:migrate:supabase:auth` | Auth UUID를 가져옵니다. 사용자는 비밀번호를 재설정해야 합니다. |
+| `npm run db:migrate:supabase:data` | 비어 있는 대상에 데이터를 가져옵니다. |
+| `npm run db:migrate:supabase:verify` | 테이블, 키, 시퀀스, 체크섬 및 Auth ID를 비교합니다. |
 
-> [!WARNING]
-> Neon import 및 verify 명령은 외부 데이터베이스에 접근합니다. 먼저 [`neon/AGENTS.md`](./neon/AGENTS.md)와 [`scripts/neon/AGENTS.md`](./scripts/neon/AGENTS.md)를 읽고 승인된 테스트 또는 staging 대상을 사용하세요.
 
 `.github/workflows/ci.yml`의 CI workflow는 의존성을 설치하고 lint, 타입 검사, SEO 검증, 프로덕션 빌드를 실행합니다.
 
@@ -160,9 +158,9 @@ NEXT_PUBLIC_ENABLE_AGENTATION=true
 .
 ├── src/                 Next.js 16 / React 19 Web 애플리케이션
 ├── packages/core/       `@primedex/core`: 도메인 타입 및 TCG/미개봉 상품 헬퍼
-├── neon/migrations/     활성 Neon PostgreSQL 애플리케이션 스키마
-├── supabase/            보관된 Edge Function 및 보안 기록
-├── scripts/neon/        관리되는 export, import, verify 스크립트
+├── neon/migrations/     과거 Neon PostgreSQL 애플리케이션 스키마
+├── supabase/            활성 PostgreSQL 스키마, RLS 및 보관된 Edge Function
+├── scripts/migration/   Neon-to-Supabase migration scripts
 ├── public/              PWA 아이콘, 스크린샷, 카드 리소스, 정적 파일
 └── docs/                제품, 디자인, 마이그레이션, 감사, 구현 문서
 ```
@@ -172,7 +170,7 @@ Web (Next.js App Router)
   ├── 서버 및 클라이언트 라우트 컴포넌트
   ├── TanStack Query ──▶ 공통 API 클라이언트 ──▶ PokéAPI + TCGdex
   ├── Zustand ──▶ IndexedDB 표시 설정
-  └── Route Handlers ──▶ Neon Auth + Neon PostgreSQL 사용자 워크스페이스
+  └── Route Handlers ──▶ Supabase Auth + Supabase PostgreSQL 사용자 워크스페이스
 
 ```
 
@@ -181,7 +179,7 @@ Web (Next.js App Router)
 - **Web:** Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, Base UI, Framer Motion, TanStack Query, PWA 계층.
 - **공유 core:** Web 앱은 이식 가능한 도메인 타입과 TCG/미개봉 상품 순수 헬퍼를 사용합니다.
 - **데이터 접근:** Web 요청은 src/lib/api의 중앙 API façade를 통합니다. 프레젠테이션 컴포넌트에 별도 API 클라이언트를 추가하지 않습니다.
-- **저장:** Web 표시 설정은 IndexedDB와 브라우저 fallback을 사용합니다. 인증된 워크스페이스 데이터는 Neon API로 동기화되어 user_state에 저장됩니다.
+- **저장:** Web 표시 설정은 IndexedDB와 브라우저 fallback을 사용합니다. 인증된 워크스페이스 데이터는 server API로 동기화되어 user_state에 저장됩니다.
 - **현지화:** 로케일 접두사 라우트와 번역 번들은 `en`, `fr`, `es`, `de`, `it`, `ja`, `ko`, `zh`를 지원합니다.
 
 > [!IMPORTANT]
@@ -193,7 +191,7 @@ Web (Next.js App Router)
 | [PokéAPI](https://pokeapi.co/) REST 및 GraphQL | 포켓몬, 종 텍스트, 능력치, 타입, 기술, 특성, 진화, 출현 정보, 현지화된 이름. |
 | [PokéAPI sprites](https://github.com/PokeAPI/sprites) | 포켓몬과 도구 스프라이트 및 관련 이미지 리소스. |
 | [TCGdex](https://www.tcgdex.net/) | Pokémon TCG 카드, 세트, 레어도, 이미지, 카탈로그 필드, 제공되는 경우 가격 필드. |
-| [Neon](https://neon.com/) | 선택적 인증, PostgreSQL 사용자 상태, 프로필, 친구, 순위표, 배틀룸, 서버 기반 워크스페이스 기능. |
+| [Supabase](https://supabase.com/) | 선택적 인증, PostgreSQL 사용자 상태, 프로필, 친구, 순위표, 배틀룸, 서버 기반 워크스페이스 기능. |
 
 외부 소스의 제공 여부, 현지화 범위, 이미지 및 가격 필드는 변경될 수 있습니다. Lunidex는 카드 마켓플레이스가 아니며 시장 가치나 가격 이력의 완전한 제공을 보장하지 않습니다.
 
@@ -209,5 +207,5 @@ Lunidex 프로덕션은 Docker와 Caddy를 사용하는 OVHcloud VPS에서 실�
 
 - [제품 컨텍스트](./PRODUCT.md)
 - [디자인 시스템](./DESIGN.md)
-- [Neon 마이그레이션 runbook](./docs/neon-migration.md)
+- [Supabase 마이그레이션 runbook](./docs/supabase-migration.md)
 - [GitHub Issues](https://github.com/teefloo/Lunidex/issues)

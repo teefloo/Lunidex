@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { SealedPriceSnapshot, SealedProduct, SealedTransaction } from '@primedex/core';
-import type { NeonSql } from '@/lib/neon/server';
+import type { SupabaseSql } from '@/lib/supabase/database';
 import {
   getSealedOverview,
   getSealedPortfolioDaily,
@@ -73,7 +73,7 @@ const detailPrice = (cardmarketProductId: number): SealedPriceSnapshot => ({
 type TestSql = {
   (strings: TemplateStringsArray, ...values: unknown[]): Promise<unknown[]>;
   query: (query: string, params: unknown[]) => Promise<unknown[]>;
-  transaction: (callback: (tx: NeonSql) => unknown[]) => Promise<unknown[][]>;
+  transaction: (callback: (tx: SupabaseSql) => unknown[]) => Promise<unknown[][]>;
 };
 
 function createOverviewSql(dailyRows: unknown[] = []) {
@@ -86,11 +86,11 @@ function createOverviewSql(dailyRows: unknown[] = []) {
   }) as unknown as TestSql;
   sql.query = async () => [];
   sql.transaction = async (callback) => {
-    const tx = (async () => []) as unknown as NeonSql;
+    const tx = (async () => []) as unknown as SupabaseSql;
     callback(tx);
     return [[], [{ revision: 0 }]];
   };
-  return { sql: sql as unknown as NeonSql, statements };
+  return { sql: sql as unknown as SupabaseSql, statements };
 }
 
 const validDailyPoint = {
@@ -180,7 +180,7 @@ describe('public sealed catalogue search', () => {
     const sql = { query: async (query: string) => {
       statements.push(query);
       return [];
-    } } as unknown as NeonSql;
+    } } as unknown as SupabaseSql;
 
     await searchPublicSealedCatalogue(sql, '', 0, 24, {});
 
@@ -195,7 +195,7 @@ describe('public sealed catalogue search', () => {
         statements.push({ query, params });
         return [];
       },
-    } as unknown as NeonSql;
+    } as unknown as SupabaseSql;
 
     await searchPublicSealedCatalogue(sql, '𐐀'.repeat(150), 0);
 
@@ -207,7 +207,7 @@ describe('public sealed catalogue search', () => {
     const sql = { query: async (query: string, params: unknown[]) => {
       statements.push({ query, params });
       return statements.length === 2 ? [{ count: 3, priced_count: 2, median_cents: 1250 }] : [];
-    } } as unknown as NeonSql;
+    } } as unknown as SupabaseSql;
 
     const result = await searchPublicSealedCatalogue(sql, 'box', 1, 24, { category: 53, expansion: 6569 });
     expect(statements[0]?.params).toEqual([[53], 'box', 6569, 24, 24]);
@@ -229,7 +229,7 @@ describe('public sealed catalogue search', () => {
     const sql = { query: async (query: string, params: unknown[]) => {
       statements.push({ query, params });
       return [];
-    } } as unknown as NeonSql;
+    } } as unknown as SupabaseSql;
 
     await searchPublicSealedCatalogue(sql, '', 2, 24, {
       sort: 'price-desc', minPriceCents: 1000, maxPriceCents: 9000, pricedOnly: true,
@@ -252,7 +252,7 @@ describe('public sealed catalogue search', () => {
     const sql = { query: async (query: string, params: unknown[]) => {
       statements.push({ query, params });
       return [];
-    } } as unknown as NeonSql;
+    } } as unknown as SupabaseSql;
 
     await searchPublicSealedCatalogue(sql, '', 3, 24, { sort });
 
@@ -274,7 +274,7 @@ describe('public sealed catalogue search', () => {
     const sql = { query: async (query: string, params: unknown[]) => {
       statements.push({ query, params });
       return [];
-    } } as unknown as NeonSql;
+    } } as unknown as SupabaseSql;
 
     await searchPublicSealedCatalogue(sql, 'Écarlate et Violet – 151', 0);
 
@@ -287,7 +287,7 @@ describe('public sealed catalogue search', () => {
     const sql = { query: async (query: string, params: unknown[]) => {
       statements.push({ query, params });
       return query.includes('group by expansion_id') ? [{ expansion_id: 6569, product_count: 4 }] : [];
-    } } as unknown as NeonSql;
+    } } as unknown as SupabaseSql;
 
     const result = await searchPublicSealedCatalogue(sql, '', 0);
 
@@ -306,7 +306,7 @@ describe('public sealed catalogue search', () => {
         expansion_id: 6569, cardmarket_url: '', image_available: false,
         source_at: '2026-09-01', updated_at: '2026-09-01', active: true, alias: null,
       }] : [];
-    } } as unknown as NeonSql;
+    } } as unknown as SupabaseSql;
 
     const result = await getPublicSealedProduct(sql, 12);
     expect(result.product.name).toBe('Test box');
@@ -429,7 +429,7 @@ describe('sealed API idempotency', () => {
         return [{ request_hash: 'a'.repeat(64), response: { transaction, revision: 8, allocations: [] } }];
       }
       throw new Error(`Unexpected SQL: ${statement}`);
-    }) as unknown as NeonSql;
+    }) as unknown as SupabaseSql;
 
     const result = await mutateSealedTransaction(sql, '00000000-0000-4000-8000-000000000001', {}, {
       mode: 'create',
@@ -446,7 +446,7 @@ describe('sealed API idempotency', () => {
     const sql = (async () => [{
       request_hash: 'a'.repeat(64),
       response: { transaction: detailTransaction({ id: 'original-transaction' }), revision: 8, allocations: [] },
-    }]) as unknown as NeonSql;
+    }]) as unknown as SupabaseSql;
     await expect(mutateSealedTransaction(sql, '00000000-0000-4000-8000-000000000001', {}, {
       mode: 'create',
       expectedRevision: 7,
@@ -471,8 +471,8 @@ describe('sealed API ownership scoping', () => {
     const accountId = '00000000-0000-4000-8000-000000000001';
     const transactionId = '00000000-0000-4000-8000-000000000002';
 
-    await expect(getSealedTransaction(sql as unknown as NeonSql, accountId, transactionId)).resolves.toBeNull();
-    await getSealedTransactionPage(sql as unknown as NeonSql, accountId, { limit: 25, productId: 123, kind: 'buy' });
+    await expect(getSealedTransaction(sql as unknown as SupabaseSql, accountId, transactionId)).resolves.toBeNull();
+    await getSealedTransactionPage(sql as unknown as SupabaseSql, accountId, { limit: 25, productId: 123, kind: 'buy' });
 
     expect(taggedCalls[0]).toEqual([accountId, transactionId]);
     expect(queryCalls[0].query).toContain('where user_id = $1::uuid');
@@ -556,9 +556,9 @@ function makeMutationSql(options: {
   };
   const tx = ((strings: TemplateStringsArray, ...values: unknown[]) => ({
     statement: strings.join('?'), values,
-  })) as unknown as NeonSql;
+  })) as unknown as SupabaseSql;
   const sqlWithTransaction = sql as unknown as {
-    transaction: (callback: (transaction: NeonSql) => unknown[]) => Promise<unknown[][]>;
+    transaction: (callback: (transaction: SupabaseSql) => unknown[]) => Promise<unknown[][]>;
   };
   sqlWithTransaction.transaction = async (callback) => {
     const queries = callback(tx) as Array<{ statement: string; values: unknown[] }>;
@@ -573,7 +573,7 @@ function makeMutationSql(options: {
     }
     return results;
   };
-  return { sql: sql as unknown as NeonSql, statements, mutationStatements };
+  return { sql: sql as unknown as SupabaseSql, statements, mutationStatements };
 }
 
 const mutationUserId = '00000000-0000-4000-8000-000000000001';

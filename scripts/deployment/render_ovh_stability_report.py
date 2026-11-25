@@ -226,9 +226,9 @@ def build_report(values: Mapping[str, str]) -> tuple[str, int]:
         elif values.get(key) != expected:
             https_reasons.append(f"HTTPS probe {key} returned {values.get(key, 'missing')} (expected {expected})")
     if _missing(values, "auth_session_status"):
-        auth_incomplete.append("Neon Auth session probe is missing")
+        auth_incomplete.append("Supabase Auth session probe is missing")
     elif values.get("auth_session_status") != "200":
-        auth_reasons.append(f"Neon Auth session endpoint returned HTTP {values.get('auth_session_status')}")
+        auth_reasons.append(f"Supabase Auth session endpoint returned HTTP {values.get('auth_session_status')}")
 
     is_final = slot == "2026-11-23-13-06-utc"
     rss = _numeric(values, "node_rss_kib", integer=True)
@@ -266,13 +266,13 @@ def build_report(values: Mapping[str, str]) -> tuple[str, int]:
     if memory_reasons:
         overall_reasons.extend(f"OVH memory: {reason}" for reason in memory_reasons)
     if auth_reasons:
-        overall_reasons.extend(f"Neon Auth: {reason}" for reason in auth_reasons)
+        overall_reasons.extend(f"Supabase Auth: {reason}" for reason in auth_reasons)
     if https_reasons:
         overall_reasons.extend(f"HTTPS: {reason}" for reason in https_reasons)
     if memory_incomplete:
         overall_incomplete.extend(f"OVH memory: {reason}" for reason in memory_incomplete)
     if auth_incomplete:
-        overall_incomplete.extend(f"Neon Auth: {reason}" for reason in auth_incomplete)
+        overall_incomplete.extend(f"Supabase Auth: {reason}" for reason in auth_incomplete)
     if https_incomplete:
         overall_incomplete.extend(f"HTTPS: {reason}" for reason in https_incomplete)
 
@@ -287,7 +287,7 @@ def build_report(values: Mapping[str, str]) -> tuple[str, int]:
         "",
         f"**Verdict: {verdict}**",
         f"**OVH memory verdict: {memory_verdict}**",
-        f"**Neon Auth verdict: {auth_verdict}**",
+        f"**Supabase Auth verdict: {auth_verdict}**",
         f"**Public HTTPS verdict: {https_verdict}**",
         f"Audit job: `{audit_result}`. Reference: T+1 run [{REFERENCE_RUN_ID}](https://github.com/teefloo/Lunidex/actions/runs/{REFERENCE_RUN_ID}) captured {REFERENCE_CAPTURED_AT}.",
         f"Audit UTC date: `{values.get('audit_utc_date', 'unavailable') or 'unavailable'}`.",
@@ -352,9 +352,9 @@ def build_report(values: Mapping[str, str]) -> tuple[str, int]:
     if memory_reasons:
         lines.append("**OVH memory NO-GO reasons:** " + "; ".join(memory_reasons) + ".")
     if auth_incomplete:
-        lines.append("**Neon Auth incomplete:** " + "; ".join(auth_incomplete) + ".")
+        lines.append("**Supabase Auth incomplete:** " + "; ".join(auth_incomplete) + ".")
     if auth_reasons:
-        lines.append("**Neon Auth NO-GO reasons:** " + "; ".join(auth_reasons) + ".")
+        lines.append("**Supabase Auth NO-GO reasons:** " + "; ".join(auth_reasons) + ".")
     if https_incomplete:
         lines.append("**HTTPS incomplete:** " + "; ".join(https_incomplete) + ".")
     if https_reasons:
@@ -367,7 +367,7 @@ def build_report(values: Mapping[str, str]) -> tuple[str, int]:
         lines.extend(
             [
                 "",
-                "T+48 memory gate: OVH memory GO requires Node RSS, cgroup anonymous memory, and cgroup current outside inactive_file each to remain at or below 125% of their T+1 references, zero cgroup max/OOM events, and healthy Docker status. Missing or inconsistent cgroup/current cache metrics make memory INCOMPLETE. The cgroup remainder is not a heap measurement. Neon Auth and HTTPS are reported independently.",
+                "T+48 memory gate: OVH memory GO requires Node RSS, cgroup anonymous memory, and cgroup current outside inactive_file each to remain at or below 125% of their T+1 references, zero cgroup max/OOM events, and healthy Docker status. Missing or inconsistent cgroup/current cache metrics make memory INCOMPLETE. Supabase Auth and HTTPS are reported independently.",
             ]
         )
     lines.append("")

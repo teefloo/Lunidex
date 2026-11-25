@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
-import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
-import { deleteNeonAuthUser, getNeonAuthServer } from '@/lib/neon/server-auth';
-import { getNeonClient, type NeonSql } from '@/lib/neon/server';
+import { ensureSupabaseUser, getSupabaseUserFromRequest } from '@/lib/supabase/auth';
+import { deleteSupabaseAuthUser, getSupabaseAdminClient, verifySupabasePassword } from '@/lib/supabase/server-auth';
+import { getSupabaseDatabaseClient, type SupabaseSql } from '@/lib/supabase/database';
 import { rateLimit } from '@/lib/rate-limit';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
@@ -34,7 +34,7 @@ function pendingResponse(status = 202): NextResponse {
   );
 }
 
-async function getDeletionState(sql: NeonSql, userId: string): Promise<DeletionState | null> {
+async function getDeletionState(sql: SupabaseSql, userId: string): Promise<DeletionState | null> {
   const rows = await sql`
     select deletion_state
     from app.users
@@ -44,7 +44,7 @@ async function getDeletionState(sql: NeonSql, userId: string): Promise<DeletionS
   return rows[0]?.deletion_state ?? null;
 }
 
-async function claimDeletion(sql: NeonSql, userId: string): Promise<boolean> {
+async function claimDeletion(sql: SupabaseSql, userId: string): Promise<boolean> {
   const [rows] = await sql.transaction((tx) => [
     tx`
       update app.users
@@ -60,7 +60,7 @@ async function claimDeletion(sql: NeonSql, userId: string): Promise<boolean> {
 }
 
 /** Remove all application-owned personal data while retaining a tombstone. */
-async function removeApplicationData(sql: NeonSql, userId: string): Promise<void> {
+async function removeApplicationData(sql: SupabaseSql, userId: string): Promise<void> {
   await sql.transaction((tx) => [
     tx`delete from public.api_idempotency where user_id = ${userId}::uuid`,
     tx`delete from public.api_keys where user_id = ${userId}::uuid`,
@@ -85,7 +85,7 @@ async function removeApplicationData(sql: NeonSql, userId: string): Promise<void
   ]);
 }
 
-async function markDeleted(sql: NeonSql, userId: string): Promise<void> {
+async function markDeleted(sql: SupabaseSql, userId: string): Promise<void> {
   await sql`
     update app.users
     set deletion_state = 'deleted',
@@ -107,14 +107,14 @@ async function deleteAccount(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Invalid password' }, { status: 400, headers: NO_STORE_HEADERS });
   }
 
-  const sql = getNeonClient();
-  if (!sql || !getNeonAuthServer()) {
+  const sql = getSupabaseDatabaseClient();
+  if (!sql || !getSupabaseAdminClient()) {
     return NextResponse.json({ error: 'Account deletion unavailable' }, { status: 503, headers: NO_STORE_HEADERS });
   }
 
   // Account deletion is the one endpoint allowed to inspect a pending or
   // terminal tombstone so that retries remain possible and idempotent.
-  const user = await getNeonUserFromRequest(request);
+  const user = await getSupabaseUserFromRequest(request);
   if (!user) return NextResponse.json({ error: 'Authentication required' }, { status: 401, headers: NO_STORE_HEADERS });
 
   // Deletion triggers an auth-provider call plus a multi-table transaction;
@@ -123,9 +123,14 @@ async function deleteAccount(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Too many requests' }, { status: 429, headers: NO_STORE_HEADERS });
   }
 
+  if (typeof payload.password === 'string' && payload.password
+    && !await verifySupabasePassword(user.email, payload.password, user.id)) {
+    return NextResponse.json({ error: 'Current password could not be verified' }, { status: 401, headers: NO_STORE_HEADERS });
+  }
+
   let state = await getDeletionState(sql, user.id);
   if (!state) {
-    await ensureNeonUser(sql, user);
+    await ensureSupabaseUser(sql, user);
     state = await getDeletionState(sql, user.id);
   }
   if (!state) return NextResponse.json({ error: 'Account deletion unavailable' }, { status: 503, headers: NO_STORE_HEADERS });
@@ -147,12 +152,9 @@ async function deleteAccount(request: NextRequest): Promise<NextResponse> {
     return pendingResponse(503);
   }
 
-  let authDeletion: Awaited<ReturnType<typeof deleteNeonAuthUser>>;
+  let authDeletion: Awaited<ReturnType<typeof deleteSupabaseAuthUser>>;
   try {
-    authDeletion = await deleteNeonAuthUser(
-      request,
-      typeof payload.password === 'string' && payload.password ? payload.password : undefined,
-    );
+    authDeletion = await deleteSupabaseAuthUser(user.id);
   } catch {
     return pendingResponse();
   }
@@ -167,10 +169,7 @@ async function deleteAccount(request: NextRequest): Promise<NextResponse> {
     return pendingResponse(503);
   }
 
-  const response = new NextResponse(null, { status: 204, headers: NO_STORE_HEADERS });
-  const setCookies = authDeletion.response.headers.getSetCookie?.() ?? [];
-  for (const cookie of setCookies) response.headers.append('Set-Cookie', cookie);
-  return response;
+  return new NextResponse(null, { status: 204, headers: NO_STORE_HEADERS });
 }
 
 export const DELETE = withObservedRouteHandler('/api/account', 'profile', deleteAccount);

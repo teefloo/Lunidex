@@ -105,18 +105,16 @@ cp .env.example .env.local
 | 変数 | 範囲 | 用途 |
 | --- | --- | --- |
 | `NEXT_PUBLIC_APP_URL` | Web / 公開 | 正規サイト URL と API のベース URL。既定値は `https://lunidex.app`。 |
-| `NEXT_PUBLIC_NEON_AUTH_URL` | Web / 公開 | ブラウザクライアントが使用する Neon Auth エンドポイント。 |
-| `NEON_AUTH_BASE_URL`、`NEON_AUTH_JWKS_URL` | サーバー専用 | Neon Auth プロキシと JWT 検証のエンドポイント。 |
-| `NEON_AUTH_COOKIE_SECRET`、`NEON_AUTH_JWT_ISSUER`、`NEON_AUTH_JWT_AUDIENCE` | サーバー専用 | Auth Cookie の保護と JWT 検証条件。 |
-| `NEON_DATABASE_URL` | サーバー専用 | Web ランタイムとローカルの移行ツールが使用する Neon PostgreSQL 接続。 |
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Web / 公開 | ブラウザーとSSRで使用する Supabase Auth の設定。 |
+| `SUPABASE_DATABASE_URL` | サーバー専用 | ランタイム用 Supabase PostgreSQL 接続。TLS 検証付きの共有セッションプーラーを使用。 |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server-only | サーバー専用の Auth 管理キー。ブラウザーへ送信しない。 |
 | `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Web / 公開 | Google Search Console の任意の検証値。 |
 | `NEXT_PUBLIC_ENABLE_AGENTATION` | 開発 | `true` のとき Agentation UI レビューオーバーレイを有効化。 |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Web / 公開 | ブラウザーの Push 購読用の任意の公開キー。 |
-| `VAPID_PRIVATE_KEY`、`VAPID_SUBJECT` | サーバー専用 | サーバー側の Push 配信設定（任意）。 |
+| `LUNIDEX_VAPID_PRIVATE_KEY`、`LUNIDEX_VAPID_SUBJECT` | サーバー専用 | サーバー側の Push 配信設定（任意）。 |
 | `RESEND_API_KEY`、`CONTACT_TO_EMAIL`、`CONTACT_FROM_EMAIL` | サーバー専用 | Resend を使う問い合わせフォーム送信（任意）。 |
-| `SUPABASE_DB_URL` | マイグレーション専用 | Supabase から Neon への保持済みエクスポートスクリプト用接続です。Web ランタイムでは使いません。 |
+| `NEON_SOURCE_DATABASE_URL`, `SUPABASE_MIGRATION_DATABASE_URL`, `SUPABASE_PROJECT_REF` | マイグレーション専用 | 明示的に選んだ Supabase プロジェクトへの Neon データ一回限りの移行。 |
 
-> [!WARNING]
 > 接続文字列、JWKS 設定、cookie secret、VAPID 秘密鍵、Resend キー、マイグレーション URL を `NEXT_PUBLIC_*`、ソースファイル、ログ、コミットに含めないでください。
 
 <details>
@@ -144,12 +142,12 @@ NEXT_PUBLIC_ENABLE_AGENTATION=true
 | `npm run lint` | Web と core のソースを lint します。 |
 | `npm run typecheck` | Web workspace の型を確認。 |
 | `npx tsc --project packages/core/tsconfig.json --noEmit` | `@primedex/core` の型を確認。 |
-| `npm run db:neon:export` | 保持されたソースデータをマイグレーション用に export。 |
-| `npm run db:neon:import` | Neon スキーマを適用し、準備済みの export を import。 |
-| `npm run db:neon:verify` | ソースと Neon マイグレーション結果を比較。 |
+| `npm run db:migrate:supabase:export` | Neon ソースを読み取り専用で export。 |
+| `npm run db:migrate:supabase:dry-run` | 選択した移行先を変更せずに確認。 |
+| `npm run db:migrate:supabase:auth` | Auth UUID を import。利用者はパスワードを再設定する必要あり。 |
+| `npm run db:migrate:supabase:data` | 空の移行先へデータを import。 |
+| `npm run db:migrate:supabase:verify` | テーブル、キー、シーケンス、checksum、Auth ID を比較。 |
 
-> [!WARNING]
-> Neon の import と verify コマンドは外部データベースにアクセスします。事前に [`neon/AGENTS.md`](./neon/AGENTS.md) と [`scripts/neon/AGENTS.md`](./scripts/neon/AGENTS.md) を読み、承認済みのテストまたは staging 用ターゲットを使用してください。
 
 [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) の CI workflow は、依存関係のインストール、lint、Web/core の型チェック、本番ビルド、モバイルの型チェックを実行します。
 
@@ -159,9 +157,9 @@ NEXT_PUBLIC_ENABLE_AGENTATION=true
 .
 ├── src/                 Next.js 16 / React 19 Web アプリケーション
 ├── packages/core/       `@primedex/core`: ドメイン型、TCG・未開封商品のヘルパー
-├── neon/migrations/     稼働中の Neon PostgreSQL アプリケーションスキーマ
-├── supabase/            アーカイブ済み Edge Function とセキュリティ履歴
-├── scripts/neon/        管理された export、import、verify スクリプト
+├── neon/migrations/     Neon の過去の PostgreSQL アプリケーションスキーマ
+├── supabase/            現行 PostgreSQL スキーマ、RLS、アーカイブ済み Edge Function
+├── scripts/migration/   Neon-to-Supabase migration scripts
 ├── public/              PWA アイコン、スクリーンショット、カード素材、静的ファイル
 └── docs/                プロダクト、デザイン、移行、監査、実装ノート
 ```
@@ -171,7 +169,7 @@ Web (Next.js App Router)
   ├── サーバーおよびクライアントのルートコンポーネント
   ├── TanStack Query ──▶ 共通 API クライアント ──▶ PokéAPI + TCGdex
   ├── Zustand ──▶ IndexedDB の表示設定
-  └── Route Handlers ──▶ Neon Auth + Neon PostgreSQL のユーザーワークスペース
+  └── Route Handlers ──▶ Supabase Auth + Supabase PostgreSQL のユーザーワークスペース
 
 ```
 
@@ -180,7 +178,7 @@ Web (Next.js App Router)
 - **Web:** Next.js 16 App Router、React 19、TypeScript、Tailwind CSS 4、Base UI、Framer Motion、TanStack Query、PWA レイヤー。
 - **共通コア：** Web アプリは移植可能なドメイン型と TCG・未開封商品の純粋ヘルパーを使用します。
 - **データアクセス：** Web のリクエストは src/lib/api の共通 API façade を通します。表示コンポーネントに個別の API クライアントを追加しません。
-- **永続化：** Web の表示設定は IndexedDB とブラウザー fallback を使用します。認証済みワークスペースは Neon API 経由で同期し、user_state に保存します。
+- **永続化：** Web の表示設定は IndexedDB とブラウザー fallback を使用します。認証済みワークスペースは server API 経由で同期し、user_state に保存します。
 - **ローカライズ:** ロケール付きルートと翻訳 bundle は `en`、`fr`、`es`、`de`、`it`、`ja`、`ko`、`zh` に対応します。
 
 > [!IMPORTANT]
@@ -192,7 +190,7 @@ Web (Next.js App Router)
 | [PokéAPI](https://pokeapi.co/) REST / GraphQL | ポケモン、種族テキスト、種族値、タイプ、技、特性、進化、出現場所、各言語の名前。 |
 | [PokéAPI sprites](https://github.com/PokeAPI/sprites) | ポケモンと道具のスプライトおよび関連する画像素材。 |
 | [TCGdex](https://www.tcgdex.net/) | ポケモン TCG のカード、セット、レアリティ、画像、カタログ項目、提供される場合の価格項目。 |
-| [Neon](https://neon.com/) | 任意の認証、PostgreSQL のユーザーデータ、プロフィール、フレンド、ランキング、バトルルーム、サーバー側ワークスペース機能。 |
+| [Supabase](https://supabase.com/) | 任意の認証、PostgreSQL のユーザーデータ、プロフィール、フレンド、ランキング、バトルルーム、サーバー側ワークスペース機能。 |
 
 外部ソースの提供状況、翻訳範囲、画像、価格項目は変わる可能性があります。Lunidex はカードマーケットプレイスではなく、市場価値や価格履歴の完全な提供を保証しません。
 
@@ -208,5 +206,5 @@ Lunidex の本番環境は OVHcloud VPS 上で Docker と Caddy を使用して�
 
 - [プロダクトコンテキスト](./PRODUCT.md)
 - [デザインシステム](./DESIGN.md)
-- [Neon 移行 runbook](./docs/neon-migration.md)
+- [Supabase マイグレーション runbook](./docs/supabase-migration.md)
 - [GitHub Issues](https://github.com/teefloo/Lunidex/issues)

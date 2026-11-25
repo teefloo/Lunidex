@@ -7,6 +7,36 @@ on:
     branches: [master]
 
 jobs:
+  supabase-local:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SUPABASE_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+
+      - name: Install pinned Supabase CLI
+        run: npx --yes supabase@3.4.0 --version
+
+      - name: Start isolated local database and Auth
+        run: >-
+          npx --yes supabase@3.4.0 start
+          --exclude realtime,storage-api,imgproxy,kong,mailpit,postgrest,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+
+      - name: Apply local schema migrations
+        run: npx --yes supabase@3.4.0 migration up
+
+      - name: Run local pgTAP security tests
+        run: npx --yes supabase@3.4.0 test db
+
+      - name: Stop local Supabase containers
+        if: always()
+        run: npx --yes supabase@3.4.0 stop --no-backup
+
   ci:
     runs-on: ubuntu-latest
     steps:

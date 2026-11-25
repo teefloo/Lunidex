@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
-import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
-import { isInactiveAccountError } from '@/lib/neon/errors';
-import { getNeonClient, type NeonSql } from '@/lib/neon/server';
+import { ensureSupabaseUser, getSupabaseUserFromRequest } from '@/lib/supabase/auth';
+import { isInactiveAccountError } from '@/lib/supabase/errors';
+import { getSupabaseDatabaseClient, type SupabaseSql } from '@/lib/supabase/database';
 import { HANDLE_MAX_LENGTH, HANDLE_MIN_LENGTH, HANDLE_REGEX } from '@/types/dashboard';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
@@ -34,7 +34,7 @@ function normalizeHandle(value: unknown): string | null | undefined {
 }
 
 async function getOwnSettings(
-  sql: NeonSql,
+  sql: SupabaseSql,
   userId: string,
 ): Promise<ProfileSettingsRow | null> {
   const rows = await sql`
@@ -47,13 +47,13 @@ async function getOwnSettings(
 }
 
 async function getProfile(request: NextRequest): Promise<NextResponse> {
-  const sql = getNeonClient();
+  const sql = getSupabaseDatabaseClient();
   if (!sql) return unavailable();
 
-  const user = await getNeonUserFromRequest(request);
+  const user = await getSupabaseUserFromRequest(request);
   if (!user) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
 
-  if (await ensureNeonUser(sql, user) === false) {
+  if (await ensureSupabaseUser(sql, user) === false) {
     return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
   }
   return NextResponse.json({ profile: await getOwnSettings(sql, user.id) }, { headers: { 'Cache-Control': 'private, no-store' } });
@@ -63,10 +63,10 @@ async function patchProfile(request: NextRequest): Promise<NextResponse> {
   const originError = requireTrustedMutationOrigin(request);
   if (originError) return originError;
 
-  const sql = getNeonClient();
+  const sql = getSupabaseDatabaseClient();
   if (!sql) return unavailable();
 
-  const user = await getNeonUserFromRequest(request);
+  const user = await getSupabaseUserFromRequest(request);
   if (!user) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
 
   const payload = await readJsonBody<ProfilePayload>(request);
@@ -85,7 +85,7 @@ async function patchProfile(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'A public profile requires a handle' }, { status: 400 });
   }
 
-  if (await ensureNeonUser(sql, user) === false) {
+  if (await ensureSupabaseUser(sql, user) === false) {
     return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
   }
 

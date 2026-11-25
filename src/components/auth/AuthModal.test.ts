@@ -13,7 +13,7 @@ const mocks = vi.hoisted(() => ({
   },
 }));
 
-vi.mock('@/lib/neon/AuthProvider', () => ({ useAuth: () => mocks.auth }));
+vi.mock('@/lib/supabase/AuthProvider', () => ({ useAuth: () => mocks.auth }));
 vi.mock('@/lib/i18n', () => ({
   useTranslation: () => ({ t: (key: string, options?: { defaultValue?: string }) => options?.defaultValue ?? key }),
 }));

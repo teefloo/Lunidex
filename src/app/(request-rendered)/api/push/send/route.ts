@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import webpush from 'web-push';
 import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
 import { rateLimit } from '@/lib/rate-limit';
-import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
-import { getNeonClient } from '@/lib/neon/server';
+import { ensureSupabaseUser, getSupabaseUserFromRequest } from '@/lib/supabase/auth';
+import { getSupabaseDatabaseClient } from '@/lib/supabase/database';
 import { isAllowedPushEndpoint } from '@/lib/push-endpoint';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
@@ -38,14 +38,14 @@ async function postPushSend(request: NextRequest) {
   const originError = requireTrustedMutationOrigin(request);
   if (originError) return originError;
 
-  const sql = getNeonClient();
+  const sql = getSupabaseDatabaseClient();
   if (!sql) return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
 
-  const user = await getNeonUserFromRequest(request);
+  const user = await getSupabaseUserFromRequest(request);
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  if (await ensureNeonUser(sql, user) === false) {
+  if (await ensureSupabaseUser(sql, user) === false) {
     return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
   }
 

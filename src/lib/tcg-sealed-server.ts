@@ -24,7 +24,7 @@ import type {
   SealedTransaction,
   SealedTransactionDraft,
 } from '@primedex/core/types/sealed';
-import type { NeonSql } from '@/lib/neon/server';
+import type { SupabaseSql } from '@/lib/supabase/database';
 import { findCuratedPublicExpansionId, type PublicMarketFilters, type PublicMarketSort } from '@/lib/tcg-sealed-public-market';
 import { publicMarketReleaseDateValuesSql } from '@/lib/tcg-sealed-market-releases';
 import {
@@ -323,7 +323,7 @@ export function normalizeSealedDraft(input: unknown): SealedTransactionDraft {
 }
 
 export async function getSealedTransactions(
-  sql: NeonSql,
+  sql: SupabaseSql,
   userId: string,
   productId?: number,
 ): Promise<SealedTransaction[]> {
@@ -366,7 +366,7 @@ export interface SealedTransactionPageOptions {
 }
 
 export async function getSealedTransactionPage(
-  sql: NeonSql,
+  sql: SupabaseSql,
   userId: string,
   options: SealedTransactionPageOptions,
 ): Promise<{ transactions: SealedTransaction[]; hasMore: boolean }> {
@@ -411,7 +411,7 @@ export async function getSealedTransactionPage(
 }
 
 export async function getSealedTransaction(
-  sql: NeonSql,
+  sql: SupabaseSql,
   userId: string,
   id: string,
 ): Promise<SealedTransaction | null> {
@@ -428,7 +428,7 @@ export async function getSealedTransaction(
   return rows[0] ? mapTransaction(rows[0]) : null;
 }
 
-export async function getSealedRevision(sql: NeonSql, userId: string): Promise<number> {
+export async function getSealedRevision(sql: SupabaseSql, userId: string): Promise<number> {
   const [, rows] = await sql.transaction((tx) => [
     tx`
       insert into public.tcg_sealed_user_revisions (user_id, revision)
@@ -445,7 +445,7 @@ export async function getSealedRevision(sql: NeonSql, userId: string): Promise<n
   return requiredNumber(rows[0]?.revision ?? 0);
 }
 
-export async function getSealedPriceRevision(sql: NeonSql): Promise<number> {
+export async function getSealedPriceRevision(sql: SupabaseSql): Promise<number> {
   const rows = await sql`
     select value
     from public.tcg_sealed_settings
@@ -458,7 +458,7 @@ export async function getSealedPriceRevision(sql: NeonSql): Promise<number> {
 }
 
 export async function getSealedProducts(
-  sql: NeonSql,
+  sql: SupabaseSql,
   userId: string,
   ids?: readonly number[],
   activeOnly = false,
@@ -484,7 +484,7 @@ export async function getSealedProducts(
 }
 
 export async function getSealedPrices(
-  sql: NeonSql,
+  sql: SupabaseSql,
   ids: readonly number[],
   from?: string,
 ): Promise<SealedPriceSnapshot[]> {
@@ -505,7 +505,7 @@ export async function getSealedPrices(
 }
 
 /** Loads only the six dates needed for current value and 1/7/30-day deltas. */
-export async function getSealedCurrentPortfolio(sql: NeonSql, userId: string, asOf: string) {
+export async function getSealedCurrentPortfolio(sql: SupabaseSql, userId: string, asOf: string) {
   const transactions = await getSealedTransactions(sql, userId);
   const ids = [...new Set(transactions.flatMap((transaction) => [
     transaction.cardmarketProductId,
@@ -550,7 +550,7 @@ export async function getSealedCurrentPortfolio(sql: NeonSql, userId: string, as
 }
 
 export async function searchSealedCatalogue(
-  sql: NeonSql,
+  sql: SupabaseSql,
   userId: string,
   queryText: string,
   page: number,
@@ -613,7 +613,7 @@ export async function searchSealedCatalogue(
 
 /** Public catalogue search. This deliberately reads only global catalogue and price data. */
 export async function searchPublicSealedCatalogue(
-  sql: NeonSql,
+  sql: SupabaseSql,
   queryText: string,
   page: number,
   pageSize = 24,
@@ -746,7 +746,7 @@ export async function searchPublicSealedCatalogue(
 }
 
 /** Public detail intentionally bypasses the account product/transaction helpers. */
-export async function getPublicSealedProduct(sql: NeonSql, id: number) {
+export async function getPublicSealedProduct(sql: SupabaseSql, id: number) {
   if (!Number.isSafeInteger(id) || id <= 0) throw new SealedServerError('Invalid product ID.', 400);
   const rows = await sql.query(`
     select p.cardmarket_product_id, p.name, p.category_id, p.category_name,
@@ -768,7 +768,7 @@ export async function getPublicSealedProduct(sql: NeonSql, id: number) {
   };
 }
 
-async function loadSealedPortfolio(sql: NeonSql, userId: string) {
+async function loadSealedPortfolio(sql: SupabaseSql, userId: string) {
   const transactions = await getSealedTransactions(sql, userId);
   const ids = [...new Set(transactions.flatMap((transaction) => [
     transaction.cardmarketProductId,
@@ -782,7 +782,7 @@ async function loadSealedPortfolio(sql: NeonSql, userId: string) {
 }
 
 export async function getSealedPortfolioDaily(
-  sql: NeonSql,
+  sql: SupabaseSql,
   userId: string,
   from: string,
   to: string,
@@ -815,7 +815,7 @@ function validRange(from: string, to: string): boolean {
 }
 
 export async function getSealedOverview(
-  sql: NeonSql,
+  sql: SupabaseSql,
   userId: string,
   options: { from?: string; to?: string; group?: 'day' | 'month' | 'year' } = {},
 ) {
@@ -994,7 +994,7 @@ export function summarizeSealedProductDetail(
   return { positions, lots, sales, exchanges, totals };
 }
 
-export async function getSealedProductDetail(sql: NeonSql, userId: string, id: number) {
+export async function getSealedProductDetail(sql: SupabaseSql, userId: string, id: number) {
   const allTransactions = await getSealedTransactions(sql, userId);
   const transactions = allTransactions.filter((transaction) => (
     transaction.cardmarketProductId === id
@@ -1058,7 +1058,7 @@ export async function getSealedProductDetail(sql: NeonSql, userId: string, id: n
   };
 }
 
-export async function getSealedSourceStatus(sql: NeonSql): Promise<SealedSourceStatus & { sync: ReturnType<typeof mapSyncRun>[]; lastSync: LastSyncDetails | null }> {
+export async function getSealedSourceStatus(sql: SupabaseSql): Promise<SealedSourceStatus & { sync: ReturnType<typeof mapSyncRun>[]; lastSync: LastSyncDetails | null }> {
   const [productResult, priceResult, latestProductResult, latestPriceResult, syncResult, settingResult] = await Promise.all([
     sql`select count(*)::int as count from public.tcg_sealed_products where active = true`,
     sql`select count(*)::int as count from public.tcg_sealed_price_snapshots`,
@@ -1095,7 +1095,7 @@ export async function getSealedSourceStatus(sql: NeonSql): Promise<SealedSourceS
 }
 
 export async function mutateSealedTransaction(
-  sql: NeonSql,
+  sql: SupabaseSql,
   userId: string,
   input: unknown,
   options: {
@@ -1388,7 +1388,7 @@ export async function mutateSealedTransaction(
   return { transaction: next, revision: newRevision, allocations, replayed: false };
 }
 
-export async function setSealedAlias(sql: NeonSql, userId: string, productId: number, alias: string | null) {
+export async function setSealedAlias(sql: SupabaseSql, userId: string, productId: number, alias: string | null) {
   const product = (await getSealedProducts(sql, userId, [productId], false))[0];
   if (!product) throw new SealedNotFoundError('Sealed product not found.');
   const normalized = alias?.trim() ?? '';
@@ -1408,7 +1408,7 @@ export async function setSealedAlias(sql: NeonSql, userId: string, productId: nu
   return { productId, alias: normalized };
 }
 
-export async function exportSealedPortfolio(sql: NeonSql, userId: string) {
+export async function exportSealedPortfolio(sql: SupabaseSql, userId: string) {
   const data = await loadSealedPortfolio(sql, userId);
   const [allocationResult, aliasResult, auditResult, revision] = await Promise.all([
     sql`
@@ -1519,7 +1519,7 @@ interface SealedGuideSeedRow {
 }
 
 /** Freeze an index basket only from observations confirmed in the public snapshot table. */
-async function ensurePersistedSealedGuideBasket(sql: NeonSql, sourceAt: string): Promise<void> {
+async function ensurePersistedSealedGuideBasket(sql: SupabaseSql, sourceAt: string): Promise<void> {
   try {
     const saved = await sql`
       select key from public.tcg_sealed_settings
@@ -1574,7 +1574,7 @@ function priceBatch(prices: readonly SealedPriceSnapshot[]): string {
   })));
 }
 
-async function markSyncFailed(sql: NeonSql, id: string, error: unknown): Promise<void> {
+async function markSyncFailed(sql: SupabaseSql, id: string, error: unknown): Promise<void> {
   try {
     await sql`
       update public.tcg_sealed_sync_runs
@@ -1589,7 +1589,7 @@ async function markSyncFailed(sql: NeonSql, id: string, error: unknown): Promise
   }
 }
 
-export async function synchronizeSealedCardmarket(sql: NeonSql, now = new Date()) {
+export async function synchronizeSealedCardmarket(sql: SupabaseSql, now = new Date()) {
   const runId = randomUUID();
   const lockedUntil = new Date(now.getTime() + 15 * 60_000).toISOString();
   const lockRows = await sql`
@@ -1749,7 +1749,7 @@ export async function synchronizeSealedCardmarket(sql: NeonSql, now = new Date()
   }
 }
 
-export async function getSealedImageUrl(sql: NeonSql, id: number): Promise<string[]> {
+export async function getSealedImageUrl(sql: SupabaseSql, id: number): Promise<string[]> {
   const rows = await sql`
     select category_id, image_available
     from public.tcg_sealed_products

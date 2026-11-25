@@ -1,8 +1,8 @@
 import { NextRequest } from 'next/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const mocks = vi.hoisted(() => ({ sql: vi.fn(), getNeonClient: vi.fn(), getTCGCardLocalizedCached: vi.fn(), reportSentryException: vi.fn() }));
-vi.mock('@/lib/neon/server', () => ({ getNeonClient: mocks.getNeonClient }));
+const mocks = vi.hoisted(() => ({ sql: vi.fn(), getSupabaseDatabaseClient: vi.fn(), getTCGCardLocalizedCached: vi.fn(), reportSentryException: vi.fn() }));
+vi.mock('@/lib/supabase/database', () => ({ getSupabaseDatabaseClient: mocks.getSupabaseDatabaseClient }));
 vi.mock('@/lib/api/server-cache', () => ({ getTCGCardLocalizedCached: mocks.getTCGCardLocalizedCached }));
 vi.mock('@/lib/rate-limit', () => ({ rateLimit: () => true, ipKey: () => 'test' }));
 vi.mock('@/lib/sentry-observability', () => ({ reportSentryException: mocks.reportSentryException }));
@@ -31,7 +31,7 @@ function requestCapture(body: unknown = { language: 'fr' }) {
 describe('qualified card price history route', () => {
   beforeEach(() => {
     vi.resetAllMocks();
-    mocks.getNeonClient.mockReturnValue(mocks.sql);
+    mocks.getSupabaseDatabaseClient.mockReturnValue(mocks.sql);
     mocks.getTCGCardLocalizedCached.mockResolvedValue(sourceCard);
   });
 
@@ -136,8 +136,8 @@ describe('qualified card price history route', () => {
     expect(mocks.sql).not.toHaveBeenCalled();
   });
 
-  it('reports Neon capture errors and leaves the request gracefully unavailable', async () => {
-    const error = new Error('Neon connection failed');
+  it('reports Supabase capture errors and leaves the request gracefully unavailable', async () => {
+    const error = new Error('Supabase connection failed');
     mocks.sql.mockRejectedValue(error);
 
     const response = await requestCapture();
@@ -151,8 +151,8 @@ describe('qualified card price history route', () => {
     });
   });
 
-  it('keeps a graceful unavailable response without Neon', async () => {
-    mocks.getNeonClient.mockReturnValue(null);
+  it('keeps a graceful unavailable response without Supabase', async () => {
+    mocks.getSupabaseDatabaseClient.mockReturnValue(null);
     expect(await (await requestHistory()).json()).toEqual({ history: [], status: 'unavailable' });
     expect(await (await requestCapture()).json()).toMatchObject({ captured: 0, variants: [], status: 'unavailable' });
   });
