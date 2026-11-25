@@ -57,8 +57,27 @@ function makeTag(query: (text: string, values: unknown[]) => Promise<{ rows: Sql
   });
 }
 
-function makeTransactionTag(client: PoolClient): SqlTag {
-  return makeTag((text, values) => client.query(text, values));
+function makeTransactionTag(client: PoolClient): { sql: SqlTag; drain: () => Promise<void> } {
+  let queue: Promise<void> = Promise.resolve();
+  let hasFailed = false;
+  let firstError: unknown;
+
+  const query = (text: string, values: unknown[]) => {
+    const result = queue.then(async () => {
+      if (hasFailed) throw firstError;
+      try {
+        return await client.query(text, values);
+      } catch (error) {
+        hasFailed = true;
+        firstError = error;
+        throw error;
+      }
+    });
+    queue = result.then(() => undefined, () => undefined);
+    return result;
+  };
+
+  return { sql: makeTag(query), drain: () => queue };
 }
 
 let cachedClient: SupabaseSql | null = null;
@@ -76,14 +95,17 @@ export function getSupabaseDatabaseClient(): SupabaseSql | null {
       options?: { isolationLevel?: 'Read Committed' | 'Repeatable Read' | 'Serializable' },
     ): Promise<{ [K in keyof T]: Awaited<T[K]> }> {
       const transactionClient = await pool.connect();
+      const transaction = makeTransactionTag(transactionClient);
       try {
         const isolationLevel = options?.isolationLevel;
         await transactionClient.query(isolationLevel ? `BEGIN ISOLATION LEVEL ${isolationLevel.toUpperCase()}` : 'BEGIN');
-        const pending = callback(makeTransactionTag(transactionClient));
+        const pending = callback(transaction.sql);
         const results = await Promise.all(pending);
+        await transaction.drain();
         await transactionClient.query('COMMIT');
         return results as { [K in keyof T]: Awaited<T[K]> };
       } catch (error) {
+        await transaction.drain();
         await transactionClient.query('ROLLBACK').catch(() => undefined);
         throw error;
       } finally {
