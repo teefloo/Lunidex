@@ -61,13 +61,13 @@ Copier les variables dans un `.env.local` ignoré par Git ou les fournir via un 
 | `LUNIDEX_MIGRATION_EXPORT_DIR` | Répertoire local privé ignoré par Git, par défaut `.migration/neon-to-supabase` |
 | `LUNIDEX_MIGRATION_WRITE_FREEZE` | Valeur sentinelle requise pour les commandes Auth/data après gel effectif des écritures |
 
-Le pool runtime OVH et la connexion de migration sont intentionnellement séparés. Pour un serveur Node long-running sur VPS, utiliser le pooler partagé Supabase en mode session (port 5432) afin de préserver transactions et état de session. `pg` impose TLS avec validation du certificat; ne pas désactiver cette vérification.
+Le pool runtime OVH et la connexion de migration sont intentionnellement séparés. Pour un serveur Node long-running sur VPS, utiliser le pooler partagé Supabase en mode session (port 5432) afin de préserver transactions et état de session. `pg` impose TLS avec validation du certificat; ne pas désactiver cette vérification. Pour les tests locaux sur le pooler Supabase, téléchargez le certificat CA racine depuis **Database Settings > SSL Configuration** et enregistrez-le dans `.migration/supabase-ca.crt`. Le dossier `.migration/` est ignoré par Git; le certificat CA n'est pas une clé secrète, mais gardez ce fichier local. Démarrez chaque processus Node de test local avec `NODE_EXTRA_CA_CERTS=.migration/supabase-ca.crt` afin que Node fasse confiance à cette chaîne tout en vérifiant toujours le certificat du serveur.
 
 Les scripts Node n'importent pas `.env.local` automatiquement. Pour exécuter un smoke local ou un script d'opération en chargeant ce fichier sans afficher son contenu, utilisez Node 22 `--env-file` (les noms/valeurs restent dans le fichier ignoré) :
 
 ```bash
-LUNIDEX_STAGING_SMOKE=I_CONFIRM_LUNIDEX_STAGING_DATA_MUTATION node --env-file=.env.local scripts/migration/staging-smoke.mjs
-LUNIDEX_HOSTED_SMOKE_CLEANUP=I_CONFIRM_DELETE_LUNIDEX_SYNTHETIC_SMOKE_USERS node --env-file=.env.local scripts/migration/cleanup-hosted-smoke.mjs
+NODE_EXTRA_CA_CERTS=.migration/supabase-ca.crt LUNIDEX_STAGING_SMOKE=I_CONFIRM_LUNIDEX_STAGING_DATA_MUTATION node --env-file=.env.local scripts/migration/staging-smoke.mjs
+NODE_EXTRA_CA_CERTS=.migration/supabase-ca.crt LUNIDEX_HOSTED_SMOKE_CLEANUP=I_CONFIRM_DELETE_LUNIDEX_SYNTHETIC_SMOKE_USERS node --env-file=.env.local scripts/migration/cleanup-hosted-smoke.mjs
 ```
 
 Ne passez jamais une clé ou une URL de base en argument shell et ne faites jamais `cat`, `echo` ou `printenv` sur les clés/URLs chargées. Dans CI/production, fournissez-les via le gestionnaire de secrets.
@@ -90,10 +90,10 @@ Choisir dans Connect la connexion **Shared Pooler / Session** et le port `5432`.
 
 Pour les essais de redirection OAuth depuis une application locale, dans Authentication > URL Configuration du projet Lunidex, ajoutez uniquement les URLs de redirection exactes utilisées par l'application, par exemple `http://localhost:3000/fr/auth/callback` et, si un parcours anglais est testé, `http://localhost:3000/en/auth/callback`. Si l'app est démarrée sur `127.0.0.1`, ajoutez séparément les mêmes chemins sur cette origine; n'utilisez pas de wildcard. Dans les consoles Google/GitHub de test, le callback fournisseur reste celui de Supabase Auth : `https://vrovnfsdjfwuuomwsuvj.supabase.co/auth/v1/callback`. Ne changez aucun réglage OAuth de production pour un test local.
 
-Le contrôle optionnel de collections via `/api/user-state` exige que `npm run dev` soit déjà lancé avec l'URL et la clé publishable de ce même projet Lunidex. Après seulement, relancez le smoke avec ces opt-ins :
+Le contrôle optionnel de collections via `/api/user-state` exige que `npm run dev` soit déjà lancé avec l'URL et la clé publishable de ce même projet Lunidex. Démarrez-le avec le CA ajouté au magasin de confiance Node : `NODE_EXTRA_CA_CERTS=.migration/supabase-ca.crt npm run dev`. Après seulement, relancez le smoke avec ces opt-ins :
 
 ```bash
-LUNIDEX_STAGING_APP_API_CHECK=I_CONFIRM_LUNIDEX_STAGING_APP_IS_READY LUNIDEX_STAGING_SMOKE=I_CONFIRM_LUNIDEX_STAGING_DATA_MUTATION node --env-file=.env.local scripts/migration/staging-smoke.mjs
+NODE_EXTRA_CA_CERTS=.migration/supabase-ca.crt LUNIDEX_STAGING_APP_API_CHECK=I_CONFIRM_LUNIDEX_STAGING_APP_IS_READY LUNIDEX_STAGING_SMOKE=I_CONFIRM_LUNIDEX_STAGING_DATA_MUTATION node --env-file=.env.local scripts/migration/staging-smoke.mjs
 ```
 
 Sans ce prérequis, laissez `LUNIDEX_STAGING_APP_API_CHECK` absent; le smoke n'appellera pas l'API de l'app.
@@ -166,7 +166,7 @@ Le smoke crée deux comptes confirmés via l'API admin, avec une adresse aléato
 Après un smoke interrompu ou terminé, exécuter le nettoyage récupérable dans un environnement protégé avec les mêmes coordonnées de projet et `LUNIDEX_HOSTED_SMOKE_CLEANUP=I_CONFIRM_DELETE_LUNIDEX_SYNTHETIC_SMOKE_USERS` :
 
 ```bash
-LUNIDEX_HOSTED_SMOKE_CLEANUP=I_CONFIRM_DELETE_LUNIDEX_SYNTHETIC_SMOKE_USERS node --env-file=.env.local scripts/migration/cleanup-hosted-smoke.mjs
+NODE_EXTRA_CA_CERTS=.migration/supabase-ca.crt LUNIDEX_HOSTED_SMOKE_CLEANUP=I_CONFIRM_DELETE_LUNIDEX_SYNTHETIC_SMOKE_USERS node --env-file=.env.local scripts/migration/cleanup-hosted-smoke.mjs
 ```
 
 Ce script est strictement verrouillé au ref Lunidex ci-dessus et exige la sentinelle explicite. Il ne cible que des UUID Auth dont l'adresse suit le motif réservé `lunidex-migration-smoke+<UUID>@lunidex.app` et dont `app_metadata` porte le tag synthétique; les projections orphelines ne sont récupérées qu'avec cette adresse réservée et le même tag en profil/état. Il supprime leurs lignes `app.users` (les clés étrangères ne peuvent cascader que depuis ces UUID synthétiques), puis les comptes Auth, et vérifie leur absence dans `auth.users`, `app.users`, `profiles` et `user_state`. Les comptes non marqués ou les refs différentes bloquent l'opération. Il ne réinitialise pas la base. En cas d'erreur ou de résidu, arrêter et examiner manuellement; ne pas importer.
