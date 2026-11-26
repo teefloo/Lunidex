@@ -9,6 +9,8 @@ const mocks = vi.hoisted(() => ({
   signIn: vi.fn(),
   signUp: vi.fn(),
   resetPassword: vi.fn(),
+  verifyOtp: vi.fn(),
+  updateUser: vi.fn(),
   getSession: vi.fn(),
   getUser: vi.fn(),
 }));
@@ -30,7 +32,7 @@ vi.mock('@/components/ui/input', () => ({
   Input: (props: ComponentProps<'input'>) => createElement('input', props),
 }));
 
-import { AuthProvider } from '@/lib/supabase/AuthProvider';
+import { AuthProvider, useAuth } from '@/lib/supabase/AuthProvider';
 import AuthModal from './AuthModal';
 
 function ModalOwner({ initialMode }: { initialMode: 'signin' | 'signup' }) {
@@ -64,11 +66,19 @@ describe('AuthModal with Supabase SSR Auth', () => {
         resetPasswordForEmail: mocks.resetPassword,
         signInWithOAuth: vi.fn().mockResolvedValue({ error: null }),
         signOut: vi.fn().mockResolvedValue({ error: null }),
-        verifyOtp: vi.fn().mockResolvedValue({ error: null }),
+        verifyOtp: mocks.verifyOtp,
         exchangeCodeForSession: vi.fn().mockResolvedValue({ error: null }),
-        updateUser: vi.fn().mockResolvedValue({ error: null }),
+        updateUser: mocks.updateUser,
       },
     };
+    mocks.verifyOtp.mockResolvedValue({
+      data: {
+        user: { id: 'recovery-user', email: 'qa@lunidex.invalid', user_metadata: {} },
+        session: { user: { id: 'recovery-user' } },
+      },
+      error: null,
+    });
+    mocks.updateUser.mockResolvedValue({ error: null });
     mocks.cachedClient = client;
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => null }));
     container = document.createElement('div');
@@ -175,5 +185,68 @@ describe('AuthModal with Supabase SSR Auth', () => {
 
     expect(dialog?.querySelector('[role="alert"]')?.textContent)
       .toBe('The service is temporarily unavailable. Please try again.');
+  });
+
+  it('keeps a verified recovery session available when the first password update is rejected', async () => {
+    function ExposeAuthAction() {
+      const updatePassword = useAuth().updatePassword;
+      return createElement('button', {
+        id: 'submit-recovery-password',
+        onClick: () => { void updatePassword('synthetic-new-password', 'hash:opaque-token').then(submitResult); },
+      }, 'Submit recovery password');
+    }
+    const submitResult = vi.fn();
+
+    mocks.updateUser
+      .mockResolvedValueOnce({ error: { name: 'AuthApiError', message: 'Password is too weak.' } })
+      .mockResolvedValueOnce({ error: null });
+    mocks.getUser.mockResolvedValueOnce({
+      data: { user: { id: 'recovery-user', email: 'qa@lunidex.invalid', user_metadata: {} } },
+      error: null,
+    });
+
+    await act(async () => root.render(createElement(AuthProvider, null, createElement(ExposeAuthAction))));
+
+    await act(async () => container.querySelector<HTMLButtonElement>('#submit-recovery-password')?.click());
+    expect(submitResult).toHaveBeenLastCalledWith({ error: { name: 'AuthError', message: 'Password is too weak.' } });
+
+    submitResult.mockClear();
+    await act(async () => container.querySelector<HTMLButtonElement>('#submit-recovery-password')?.click());
+    expect(submitResult).toHaveBeenLastCalledWith({ error: null });
+    expect(mocks.verifyOtp).toHaveBeenCalledTimes(1);
+    expect(mocks.verifyOtp).toHaveBeenCalledWith({ token_hash: 'opaque-token', type: 'recovery' });
+    expect(mocks.getUser).toHaveBeenCalledTimes(1);
+    expect(mocks.updateUser).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not reuse a verified recovery link after the active account changes', async () => {
+    const submitResult = vi.fn();
+    function ExposeAuthAction() {
+      const updatePassword = useAuth().updatePassword;
+      return createElement('button', {
+        id: 'submit-recovery-password',
+        onClick: () => { void updatePassword('synthetic-new-password', 'hash:opaque-token').then(submitResult); },
+      }, 'Submit recovery password');
+    }
+
+    mocks.updateUser
+      .mockResolvedValueOnce({ error: { name: 'AuthApiError', message: 'Temporary update failure.' } })
+      .mockResolvedValueOnce({ error: null });
+    mocks.getUser.mockResolvedValueOnce({
+      data: { user: { id: 'different-user', email: 'other@lunidex.invalid', user_metadata: {} } },
+      error: null,
+    });
+
+    await act(async () => root.render(createElement(AuthProvider, null, createElement(ExposeAuthAction))));
+    await act(async () => container.querySelector<HTMLButtonElement>('#submit-recovery-password')?.click());
+    submitResult.mockClear();
+    await act(async () => container.querySelector<HTMLButtonElement>('#submit-recovery-password')?.click());
+
+    expect(submitResult).toHaveBeenLastCalledWith({
+      error: { name: 'Error', message: 'The recovery session is missing.' },
+    });
+    expect(mocks.verifyOtp).toHaveBeenCalledTimes(1);
+    expect(mocks.getUser).toHaveBeenCalledTimes(1);
+    expect(mocks.updateUser).toHaveBeenCalledTimes(1);
   });
 });

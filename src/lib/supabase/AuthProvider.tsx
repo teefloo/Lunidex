@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
@@ -149,6 +150,7 @@ function ConnectedAuthProvider({ client, children }: { client: SupabaseClient; c
   const [session, setSession] = useState<AppSession | null>(null);
   const [status, setStatus] = useState<AuthContextValue['sessionStatus']>('checking');
   const [revision, setRevision] = useState(0);
+  const verifiedRecoveryRef = useRef<{ tokenHash: string; userId: string } | null>(null);
   const retrySession = useCallback(() => setRevision((value) => value + 1), []);
 
   useEffect(() => {
@@ -273,8 +275,22 @@ function ConnectedAuthProvider({ client, children }: { client: SupabaseClient; c
         if (!resetToken) return { error: { name: 'InvalidToken', message: 'The password reset link is invalid or expired.' } };
         return run(async () => {
           if (resetToken.startsWith('hash:')) {
-            const { error } = await client.auth.verifyOtp({ token_hash: resetToken.slice(5), type: 'recovery' });
-            if (error) return { error };
+            const tokenHash = resetToken.slice(5);
+            const verifiedRecovery = verifiedRecoveryRef.current;
+            if (verifiedRecovery?.tokenHash === tokenHash) {
+              const { data, error } = await client.auth.getUser();
+              if (error) return { error };
+              if (!data.user || data.user.id !== verifiedRecovery.userId) {
+                verifiedRecoveryRef.current = null;
+                return { error: new Error('The recovery session is missing.') };
+              }
+            } else {
+              const { data, error } = await client.auth.verifyOtp({ token_hash: tokenHash, type: 'recovery' });
+              if (error) return { error };
+              const verifiedUserId = data.user?.id ?? data.session?.user.id;
+              if (!verifiedUserId) return { error: new Error('The recovery session is missing.') };
+              verifiedRecoveryRef.current = { tokenHash, userId: verifiedUserId };
+            }
           } else if (resetToken.startsWith('code:')) {
             const { data } = await client.auth.getUser();
             if (!data.user) {
@@ -286,6 +302,7 @@ function ConnectedAuthProvider({ client, children }: { client: SupabaseClient; c
             if (error || !data.user) return { error: error ?? new Error('The recovery session is missing.') };
           }
           const { error } = await client.auth.updateUser({ password });
+          if (!error && resetToken.startsWith('hash:')) verifiedRecoveryRef.current = null;
           return { error };
         });
       },
