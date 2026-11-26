@@ -27,8 +27,8 @@ vi.mock('@sentry/nextjs', () => ({
   }),
 }));
 
-vi.mock('@/lib/neon/client', () => ({
-  getNeonAccessToken: vi.fn().mockResolvedValue(null),
+vi.mock('@/lib/supabase/client', () => ({
+  getSupabaseAccessToken: vi.fn().mockResolvedValue(null),
 }));
 
 vi.mock('idb-keyval', () => ({

@@ -28,7 +28,7 @@ const mocks = vi.hoisted(() => ({
   search: '',
 }));
 
-vi.mock('@/lib/neon/AuthProvider', () => ({ useAuth: () => mocks.auth }));
+vi.mock('@/lib/supabase/AuthProvider', () => ({ useAuth: () => mocks.auth }));
 vi.mock('@/hooks/useMounted', () => ({ useMounted: () => true }));
 vi.mock('@/hooks/useLocaleHref', () => ({ useClientLanguage: () => 'en', useLocaleHref: () => (path: string) => `/en${path}` }));
 vi.mock('next/navigation', () => ({ useRouter: () => ({ push: vi.fn(), replace: vi.fn(), back: vi.fn() }), usePathname: () => '/en/tcg/start', useSearchParams: () => new URLSearchParams(mocks.search) }));

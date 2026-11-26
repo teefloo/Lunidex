@@ -1,5 +1,7 @@
 import { createServer } from 'node:http';
 import { connect } from 'node:net';
+import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 export const CONNECT_POLICIES = Object.freeze({
   tcg: Object.freeze({
@@ -121,7 +123,10 @@ function stop() {
 process.on('SIGTERM', stop);
 process.on('SIGINT', stop);
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+const isDirectExecution = process.argv[1]
+  && import.meta.url === pathToFileURL(resolve(process.argv[1])).href;
+
+if (isDirectExecution) {
   if (!Object.hasOwn(CONNECT_POLICIES, policy)) {
     process.stderr.write('egress_policy_invalid=true\n');
     process.exit(78);

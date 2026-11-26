@@ -16,7 +16,7 @@ import {
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { useAuth } from '@/lib/neon/AuthProvider';
+import { useAuth } from '@/lib/supabase/AuthProvider';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useMounted } from '@/hooks/useMounted';
 import { useLocaleHref } from '@/hooks/useLocaleHref';

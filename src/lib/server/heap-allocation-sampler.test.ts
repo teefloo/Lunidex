@@ -292,7 +292,7 @@ describe('heap allocation sampler summaries', () => {
     vi.stubEnv('NEXT_RUNTIME', 'nodejs');
     vi.stubEnv('LUNIDEX_HEAP_SAMPLER_DIAGNOSTIC', 'enabled');
     vi.stubEnv('LUNIDEX_HEAP_SAMPLER_RUN_ID', '123456789-2');
-    vi.stubEnv('NEON_DATABASE_URL', 'postgresql://user:synthetic-secret@example.invalid/db');
+    vi.stubEnv('SUPABASE_DATABASE_URL', 'postgresql://user:synthetic-secret@example.invalid/db');
     vi.stubEnv('RESEND_API_KEY', 're_test_synthetic_secret');
     vi.stubEnv(
       'LUNIDEX_HEAP_SAMPLER_EXPIRES_AT',

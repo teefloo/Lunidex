@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { NextRequest } from 'next/server';
 
 const mocks = vi.hoisted(() => ({
-  getNeonClient: vi.fn(),
+  getSupabaseDatabaseClient: vi.fn(),
   getTCGCardLocalizedCached: vi.fn(),
   rateLimit: vi.fn(),
   ipKey: vi.fn(),
@@ -11,7 +11,7 @@ const mocks = vi.hoisted(() => ({
   sql: vi.fn(),
 }));
 
-vi.mock('@/lib/neon/server', () => ({ getNeonClient: mocks.getNeonClient }));
+vi.mock('@/lib/supabase/database', () => ({ getSupabaseDatabaseClient: mocks.getSupabaseDatabaseClient }));
 vi.mock('@/lib/api/server-cache', () => ({ getTCGCardLocalizedCached: mocks.getTCGCardLocalizedCached }));
 vi.mock('@/lib/rate-limit', () => ({ rateLimit: mocks.rateLimit, ipKey: mocks.ipKey }));
 
@@ -33,7 +33,7 @@ describe('public TCG collection showcase route', () => {
     vi.clearAllMocks();
     mocks.rows = [];
     mocks.sql.mockImplementation(async () => mocks.rows);
-    mocks.getNeonClient.mockReturnValue(mocks.sql);
+    mocks.getSupabaseDatabaseClient.mockReturnValue(mocks.sql);
     mocks.getTCGCardLocalizedCached.mockResolvedValue({
       id: 'sv1-1', localId: '1', name: 'Bulbasaur', image: 'https://assets.tcgdex.net/en/sv/sv1/1/low.webp',
     });

@@ -14,7 +14,7 @@ vi.mock('@/store/primedex', () => ({
 }));
 vi.mock('@/hooks/useLocaleHref', () => ({ useClientLanguage: () => 'en' }));
 vi.mock('@/lib/client-language', () => ({ ClientLanguageProvider: ({ children }: { children: React.ReactNode }) => children }));
-vi.mock('@/lib/neon/AuthProvider', () => ({ AuthProvider: ({ children }: { children: React.ReactNode }) => children }));
+vi.mock('@/lib/supabase/AuthProvider', () => ({ AuthProvider: ({ children }: { children: React.ReactNode }) => children }));
 vi.mock('@/components/IdleClientServices', () => ({ IdleClientServices: () => null }));
 vi.mock('@/components/auth/SyncAuthPrompt', () => ({ SyncAuthPrompt: () => null }));
 vi.mock('@/lib/i18n', () => ({

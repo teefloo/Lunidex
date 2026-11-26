@@ -17,7 +17,7 @@ import {
 import { normalizeTCGCardLanguage } from '@primedex/core/lib/tcg-language';
 import { normalizeTcgCardId } from '@/lib/tcg-owned-cards';
 import { getTCGCardCached } from '@/lib/api/server-cache';
-import type { NeonSql } from '@/lib/neon/server';
+import type { SupabaseSql } from '@/lib/supabase/database';
 import { normalizeUserStateData } from '@/lib/tcg-owned-cards';
 import { advanceTcgApiSyncMetadata, attachTcgApiSyncMetadata, type TcgApiState } from '@/lib/tcg-api-sync';
 import { apiError } from '@/lib/public-api';
@@ -72,7 +72,7 @@ function toNormalizedState(raw: unknown): TcgApiState {
   };
 }
 
-export async function getCardSnapshot(sql: NeonSql, userId: string): Promise<CardSnapshot> {
+export async function getCardSnapshot(sql: SupabaseSql, userId: string): Promise<CardSnapshot> {
   const rows = await sql`
     select data, updated_at::text as updated_at
     from public.user_state
@@ -156,7 +156,7 @@ export interface SetCardHoldingInput {
 }
 
 export async function setCardHolding(
-  sql: NeonSql,
+  sql: SupabaseSql,
   userId: string,
   keyId: string,
   input: SetCardHoldingInput,

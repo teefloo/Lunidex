@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
 import { rateLimit } from '@/lib/rate-limit';
-import { isInactiveAccountError } from '@/lib/neon/errors';
+import { isInactiveAccountError } from '@/lib/supabase/errors';
 import {
   apiError,
   apiResponse,

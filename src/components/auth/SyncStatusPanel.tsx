@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { RefreshCw } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n';
 import { retrySyncAccess, type SyncAccessStatus } from '@/store/sync-access';
-import { useAuth } from '@/lib/neon/AuthProvider';
+import { useAuth } from '@/lib/supabase/AuthProvider';
 
 interface SyncStatusPanelProps {
   status: Exclude<SyncAccessStatus, 'ready' | 'unauthenticated'>;

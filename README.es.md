@@ -34,7 +34,7 @@ Lunidex es un monorepo independiente y de código abierto basado en npm workspac
 
 La aplicación web muestra las fichas Pokémon que ofrece su fuente PokéAPI configurada y admite ocho idiomas de interfaz: inglés, francés, español, alemán, italiano, japonés, coreano y chino simplificado. El portugués está disponible como traducción del README, pero no es un idioma de la interfaz web.
 
-Las páginas públicas de referencia funcionan sin cuenta. El espacio personal —favoritos, Pokémon capturados, equipos, progreso del quiz, colecciones TCG, listas de deseos, búsquedas guardadas, notas, mazos y funciones relacionadas— usa Neon Auth y Neon PostgreSQL cuando están configurados y sincronizados. Las preferencias visuales web usan IndexedDB.
+Las páginas públicas de referencia funcionan sin cuenta. El espacio personal —favoritos, Pokémon capturados, equipos, progreso del quiz, colecciones TCG, listas de deseos, búsquedas guardadas, notas, mazos y funciones relacionadas— usa Supabase Auth y Supabase PostgreSQL cuando están configurados y sincronizados. Las preferencias visuales web usan IndexedDB.
 
 > [!NOTE]
 > Lunidex es un proyecto de fans independiente y no oficial. Los nombres de personajes Pokémon, marcas, ilustraciones, imágenes y la propiedad intelectual relacionada pertenecen a sus respectivos titulares. Lunidex no está afiliado, respaldado, patrocinado ni oficialmente vinculado a Nintendo, Creatures Inc., GAME FREAK inc. o The Pokémon Company.
@@ -106,18 +106,16 @@ cp .env.example .env.local
 | Variable(s) | Alcance | Finalidad |
 | --- | --- | --- |
 | `NEXT_PUBLIC_APP_URL` | Web / pública | URL canónica del sitio y base de la API. Por defecto: `https://lunidex.app`. |
-| `NEXT_PUBLIC_NEON_AUTH_URL` | Web / pública | Endpoint de Neon Auth utilizado por el cliente del navegador. |
-| `NEON_AUTH_BASE_URL`, `NEON_AUTH_JWKS_URL` | Solo servidor | Endpoints del proxy Neon Auth y de verificación JWT. |
-| `NEON_AUTH_COOKIE_SECRET`, `NEON_AUTH_JWT_ISSUER`, `NEON_AUTH_JWT_AUDIENCE` | Solo servidor | Protección de la cookie de autenticación y restricciones de validación JWT. |
-| `NEON_DATABASE_URL` | Solo servidor | Conexión PostgreSQL de Neon utilizada por el runtime web y las herramientas de migración locales. |
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Web / pública | Configuración de Supabase Auth para el cliente del navegador y SSR. |
+| `SUPABASE_DATABASE_URL` | Solo servidor | Conexión PostgreSQL de Supabase del runtime. Usa el pooler compartido en modo sesión con TLS verificado. |
+| `SUPABASE_SECRET_KEY` (preferida), `SUPABASE_SERVICE_ROLE_KEY` (alternativa heredada) | Solo servidor | Administración de Auth solo en el servidor; nunca enviar ninguna de las dos claves al navegador. |
 | `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Web / pública | Valor opcional de verificación de Google Search Console. |
 | `NEXT_PUBLIC_ENABLE_AGENTATION` | Desarrollo | Activa el overlay de revisión UI Agentation cuando vale `true`. |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Web / pública | Clave opcional para suscribirse a notificaciones push del navegador. |
-| `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | Solo servidor | Configuración opcional de entrega de notificaciones push en el servidor. |
+| `LUNIDEX_VAPID_PRIVATE_KEY`, `LUNIDEX_VAPID_SUBJECT` | Solo servidor | Configuración opcional de entrega de notificaciones push en el servidor. |
 | `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` | Solo servidor | Envío opcional del formulario de contacto mediante Resend. |
-| `SUPABASE_DB_URL` | Solo migración | Conexión de origen para los scripts conservados de exportación Supabase-Neon; nunca es una variable runtime web. |
+| `NEON_SOURCE_DATABASE_URL`, `SUPABASE_MIGRATION_DATABASE_URL`, `SUPABASE_PROJECT_REF` | Solo migración | Exportación puntual de Neon a un proyecto Supabase seleccionado explícitamente. |
 
-> [!WARNING]
 > Nunca expongas cadenas de conexión, configuración JWKS, secretos de cookies, material privado VAPID, claves Resend ni URLs de migración mediante `NEXT_PUBLIC_*`, archivos fuente, logs o commits.
 
 <details>
@@ -145,12 +143,12 @@ Ejecuta los comandos raíz desde la raíz del repositorio:
 | `npm run lint` | Analiza las fuentes web y core. |
 | `npm run typecheck` | Comprueba el workspace web. |
 | `npx tsc --project packages/core/tsconfig.json --noEmit` | Comprueba `@primedex/core`. |
-| `npm run db:neon:export` | Exporta los datos de la fuente conservada para la migración. |
-| `npm run db:neon:import` | Aplica el esquema Neon e importa un export preparado. |
-| `npm run db:neon:verify` | Compara la fuente y el resultado de la migración Neon. |
+| `npm run db:migrate:supabase:export` | Exporta la fuente Neon en modo de solo lectura. |
+| `npm run db:migrate:supabase:dry-run` | Comprueba el destino seleccionado sin escribir. |
+| `npm run db:migrate:supabase:auth` | Importa los UUID de Auth; los usuarios deberán restablecer su contraseña. |
+| `npm run db:migrate:supabase:data` | Importa los datos en un destino vacío. |
+| `npm run db:migrate:supabase:verify` | Compara tablas, claves, secuencias, checksums e identidades Auth. |
 
-> [!WARNING]
-> Los comandos de importación y verificación de Neon acceden a bases de datos externas. Lee [`neon/AGENTS.md`](./neon/AGENTS.md) y [`scripts/neon/AGENTS.md`](./scripts/neon/AGENTS.md), y utiliza un destino de pruebas o staging aprobado.
 
 El workflow CI de `.github/workflows/ci.yml` instala dependencias y ejecuta lint, comprobación de tipos, validación SEO y el build de producción.
 
@@ -160,9 +158,9 @@ El workflow CI de `.github/workflows/ci.yml` instala dependencias y ejecuta lint
 .
 ├── src/                 Aplicación web Next.js 16 / React 19
 ├── packages/core/       `@primedex/core`: tipos de dominio y helpers de TCG/productos sellados
-├── neon/migrations/     Esquema activo de aplicación PostgreSQL Neon
-├── supabase/            Función Edge archivada e histórico de seguridad
-├── scripts/neon/        Scripts controlados de exportación, importación y verificación
+├── neon/migrations/     Esquema Neon histórico
+├── supabase/            Esquema PostgreSQL activo, RLS y función Edge archivada
+├── scripts/migration/   Guarded Neon-to-Supabase migration scripts
 ├── public/              Iconos PWA, capturas, recursos de cartas y archivos estáticos
 └── docs/                Notas de producto, diseño, migración, auditoría e implementación
 ```
@@ -172,7 +170,7 @@ Web (Next.js App Router)
   ├── Componentes de rutas de servidor y cliente
   ├── TanStack Query ──▶ clientes API compartidos ──▶ PokéAPI + TCGdex
   ├── Zustand ──▶ preferencias visuales en IndexedDB
-  └── Route Handlers ──▶ Neon Auth + espacio de usuario PostgreSQL Neon
+  └── Route Handlers ──▶ Supabase Auth + espacio de usuario PostgreSQL Supabase
 
 ```
 
@@ -181,7 +179,7 @@ Límites principales:
 - **Web:** Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, Base UI, Framer Motion, TanStack Query y la capa PWA.
 - **Core compartido:** la aplicación web usa tipos de dominio portables y helpers puros para TCG/productos sellados.
 - **Acceso a datos:** las solicitudes web pasan por la fachada API centralizada de src/lib/api; los componentes de presentación no añaden clientes API ad hoc.
-- **Persistencia:** las preferencias visuales web usan IndexedDB con un fallback del navegador. El espacio autenticado se sincroniza mediante la API Neon y se almacena en user_state.
+- **Persistencia:** las preferencias visuales web usan IndexedDB con un fallback del navegador. El espacio autenticado se sincroniza mediante la API Supabase y se almacena en user_state.
 - **Localización:** las rutas con prefijo y los bundles de traducción admiten `en`, `fr`, `es`, `de`, `it`, `ja`, `ko` y `zh`.
 
 > [!IMPORTANT]
@@ -194,7 +192,7 @@ Límites principales:
 | [PokéAPI](https://pokeapi.co/) REST y GraphQL | Pokémon, textos de especies, estadísticas, tipos, movimientos, habilidades, evoluciones, encuentros y nombres localizados. |
 | [PokéAPI sprites](https://github.com/PokeAPI/sprites) | Sprites de Pokémon y objetos y recursos de ilustración relacionados. |
 | [TCGdex](https://www.tcgdex.net/) | Cartas Pokémon TCG, sets, rarezas, imágenes, campos de catálogo y campos de precio cuando los proporciona la fuente. |
-| [Neon](https://neon.com/) | Autenticación opcional, estado de usuario PostgreSQL, perfiles, amistades, clasificaciones, salas de combate y funciones del espacio personal en el servidor. |
+| [Supabase](https://supabase.com/) | Autenticación opcional, estado de usuario PostgreSQL, perfiles, amistades, clasificaciones, salas de combate y funciones del espacio personal en el servidor. |
 
 La disponibilidad de datos externos, cobertura localizada, imágenes y campos de precio puede cambiar. Lunidex no es un marketplace de cartas y no garantiza valoraciones de mercado ni cobertura de historial de precios.
 
@@ -210,5 +208,5 @@ Consulta la [guía de producción de OVH](./docs/deployment/ovh-production.md) p
 
 - [Contexto del producto](./PRODUCT.md)
 - [Sistema de diseño](./DESIGN.md)
-- [Runbook de migración Neon](./docs/neon-migration.md)
+- [Runbook de migración Supabase](./docs/supabase-migration.md)
 - [Issues de GitHub](https://github.com/teefloo/Lunidex/issues)

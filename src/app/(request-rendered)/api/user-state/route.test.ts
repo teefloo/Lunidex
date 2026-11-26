@@ -2,13 +2,13 @@ import { NextRequest } from 'next/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({ sql: vi.fn(), getClient: vi.fn(), rateLimit: vi.fn(), getUser: vi.fn() }));
-vi.mock('@/lib/neon/server', () => ({ getNeonClient: mocks.getClient }));
-vi.mock('@/lib/neon/auth', () => ({ getNeonUserFromRequest: mocks.getUser, ensureNeonUser: vi.fn().mockResolvedValue(true) }));
+vi.mock('@/lib/supabase/database', () => ({ getSupabaseDatabaseClient: mocks.getClient }));
+vi.mock('@/lib/supabase/auth', () => ({ getSupabaseUserFromRequest: mocks.getUser, ensureSupabaseUser: vi.fn().mockResolvedValue(true) }));
 vi.mock('@/lib/rate-limit', () => ({ rateLimit: mocks.rateLimit }));
 vi.mock('@/lib/api/observed-route', () => ({ withObservedRouteHandler: (_route: string, _feature: string, handler: unknown) => handler }));
 import { GET, PUT } from './route';
 
-describe('simulated Neon snapshot reads', () => {
+describe('simulated Supabase snapshot reads', () => {
   const request = (path = '/api/user-state') => new NextRequest(`http://localhost:3106${path}`);
   const putRequest = (payload: unknown, contentLength?: string) => new NextRequest('http://localhost:3106/api/user-state', {
     method: 'PUT',
@@ -42,7 +42,7 @@ describe('simulated Neon snapshot reads', () => {
     await expect(response.json()).resolves.toMatchObject({ data: { team: [25] } });
   });
   it('returns unavailable for a database connection failure', async () => {
-    mocks.sql.mockRejectedValue(Object.assign(new Error('Simulated outage'), { name: 'NeonDbError', code: '08006' }));
+    mocks.sql.mockRejectedValue(Object.assign(new Error('Simulated outage'), { name: 'PostgresError', code: '08006' }));
     expect((await GET(request())).status).toBe(503);
   });
   it('returns a private rate-limit response before querying', async () => {
@@ -82,7 +82,7 @@ describe('simulated Neon snapshot reads', () => {
   });
 
   it('returns 503 for a database failure during a state write', async () => {
-    mocks.sql.mockRejectedValue(Object.assign(new Error('Simulated outage'), { name: 'NeonDbError', code: '08006' }));
+    mocks.sql.mockRejectedValue(Object.assign(new Error('Simulated outage'), { name: 'PostgresError', code: '08006' }));
     const response = await PUT(putRequest({ data: { team: [25] }, expectedUpdatedAt: null }));
     expect(response.status).toBe(503);
   });

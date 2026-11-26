@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { NextRequest } from 'next/server';
-import type { NeonSql } from '@/lib/neon/server';
+import type { SupabaseSql } from '@/lib/supabase/database';
 
 const mocks = vi.hoisted(() => ({ getUserSessionContext: vi.fn() }));
 
@@ -44,7 +44,7 @@ describe('API key list route', () => {
   it('returns a structured unavailable response when the key list cannot load', async () => {
     const sql = (async () => {
       throw new Error('database unavailable');
-    }) as unknown as NeonSql;
+    }) as unknown as SupabaseSql;
     mocks.getUserSessionContext.mockResolvedValue({
       sql,
       userId: '00000000-0000-4000-8000-000000000001',

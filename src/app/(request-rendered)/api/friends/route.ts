@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
-import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
-import { isInactiveAccountError } from '@/lib/neon/errors';
-import { getNeonClient, type NeonSql } from '@/lib/neon/server';
+import { ensureSupabaseUser, getSupabaseUserFromRequest } from '@/lib/supabase/auth';
+import { isInactiveAccountError } from '@/lib/supabase/errors';
+import { getSupabaseDatabaseClient, type SupabaseSql } from '@/lib/supabase/database';
 import { rateLimit } from '@/lib/rate-limit';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
 import type {
@@ -107,7 +107,7 @@ function isFriendDeck(value: unknown): value is FriendDeck {
 }
 
 interface RequestContext {
-  sql: NeonSql;
+  sql: SupabaseSql;
   userId: string;
 }
 
@@ -123,13 +123,13 @@ function accountDeletionInProgress(): NextResponse {
 }
 
 async function getContext(request: NextRequest): Promise<RequestContext | NextResponse> {
-  const sql = getNeonClient();
+  const sql = getSupabaseDatabaseClient();
   if (!sql) return unavailable();
 
-  const user = await getNeonUserFromRequest(request);
+  const user = await getSupabaseUserFromRequest(request);
   if (!user) return NextResponse.json({ error: 'Authentication required' }, { status: 401, headers: PRIVATE_NO_STORE_HEADERS });
 
-  if (await ensureNeonUser(sql, user) === false) {
+  if (await ensureSupabaseUser(sql, user) === false) {
     return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
   }
   return { sql, userId: user.id };
@@ -181,7 +181,7 @@ function toRelationWithDirectory(row: RelationRow): FriendRelation {
   return toRelation(row, directory);
 }
 
-async function getRelation(sql: NeonSql, userId: string, friendshipId: string): Promise<FriendRelation | null> {
+async function getRelation(sql: SupabaseSql, userId: string, friendshipId: string): Promise<FriendRelation | null> {
   const rows = await sql`
     select f.id, f.requester_id, f.addressee_id, f.status,
       f.created_at, f.updated_at, f.responded_at,
@@ -201,7 +201,7 @@ async function getRelation(sql: NeonSql, userId: string, friendshipId: string): 
 }
 
 async function getDirectory(
-  sql: NeonSql,
+  sql: SupabaseSql,
   userId: string,
   targetId: string,
 ): Promise<FriendDirectoryEntry | null> {
@@ -225,7 +225,7 @@ async function getDirectory(
   return rows[0] ? toDirectoryEntry(rows[0]) : null;
 }
 
-async function canViewSnapshot(sql: NeonSql, userId: string, friendId: string, field: 'share_tcg_collection' | 'share_tcg_decks'): Promise<boolean> {
+async function canViewSnapshot(sql: SupabaseSql, userId: string, friendId: string, field: 'share_tcg_collection' | 'share_tcg_decks'): Promise<boolean> {
   const rows = field === 'share_tcg_collection'
     ? await sql`
       select (

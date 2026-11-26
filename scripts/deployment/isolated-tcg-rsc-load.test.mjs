@@ -187,11 +187,11 @@ test('workflow accurately describes free public standard runner usage and manual
   assert.ok(candidateBuild);
   assert.match(candidateBuild, /if: inputs\.image == 'source-candidate'/);
   assert.match(candidateBuild, /docker build --file Dockerfile --tag "\$APP_IMAGE"/);
-  assert.match(candidateBuild, /NEXT_PUBLIC_NEON_AUTH_URL=https:\/\/auth\.example\.invalid/);
+  assert.match(candidateBuild, /NEXT_PUBLIC_SUPABASE_URL=https:\/\/lunidex-test\.supabase\.co/);
   assert.match(candidateBuild, /NEXT_PUBLIC_POSTHOG_ENABLED=false/);
   assert.match(candidateBuild, /NEXT_PUBLIC_SENTRY_DSN='/);
   assert.match(candidateBuild, /NEXT_PUBLIC_VAPID_PUBLIC_KEY='/);
-  assert.doesNotMatch(candidateBuild, /--secret|SENTRY_AUTH_TOKEN|NEON_DATABASE_URL|docker push/);
+  assert.doesNotMatch(candidateBuild, /--secret|SENTRY_AUTH_TOKEN|SUPABASE_DATABASE_URL|docker push/);
   assert.match(workflow, /if: inputs\.image == 'production'[\s\S]*?docker pull "\$PRODUCTION_IMAGE"/);
   assert.doesNotMatch(workflow, /docker push/);
   assert.match(dockerfile, /FROM node:22\.23\.4-bookworm-slim AS base/);

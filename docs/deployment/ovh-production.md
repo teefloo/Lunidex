@@ -1,84 +1,104 @@
 # Déploiement de production Lunidex sur OVH
 
-## État actuel
+## État de la migration
 
-- Production reste sur `d0f5e1af2cf95dd43eb046069c0d37f0a2add93e`. L'audit T+48 le plus récent rapportait 0 redémarrage et 0 OOM, avec RSS Node stable sur les dernières 25 heures. Il a aussi compté `memory.events:max=1315` : cela signale une pression à la limite cgroup, même sans OOM. Les limites Docker ne sont pas augmentées.
-- HTTPS public fonctionne. Neon Auth renvoie toujours HTTP 402 `GENERIC_QUOTA_EXCEEDED`; les fonctions de compte restent indisponibles tant que Neon n'a pas rétabli le service. Cet état ne prouve pas un crash de Node.
-- Les tâches cron applicatives restent désactivées. Aucun déploiement, changement DNS, accès Neon ou préflight OVH n'est exécuté par cette PR.
-- **Verdict de mise en production : NO-GO fonctionnel tant que Neon Auth répond 402.** L'image actuelle demeure en place. Une sonde Auth anonyme confirme seulement l'accessibilité du endpoint, pas une session authentifiée.
+Ce document décrit la chaîne de déploiement, pas une migration de production exécutée. Au 26 novembre 2026, la production OVH tourne encore avec l'ancien runtime Neon et le projet Supabase Lunidex n'a pas reçu l'import de production. Les vérifications hébergées antérieures ont exercé les parcours synthétiques de signup, login par mot de passe, confirmation et récupération. Les tests PostgreSQL ont validé le Session Pooler `aws-0-eu-west-3.pooler.supabase.com:5432`, TLS strict avec `NODE_EXTRA_CA_CERTS=.migration/supabase-ca.crt`, `SELECT 1`, `pg_stat_ssl`, la réutilisation d'une session et des tests RLS/isolation entre comptes ainsi que GET/PUT de collection via `/api/user-state`.
 
-## Images immuables vérifiées
+Lors de cette préparation, aucune donnée de production n'a été importée ni modifiée. Le compte synthétique et sa collection de test précédemment consignés restent inchangés. Tout compte ou toute donnée existante dont l'origine n'est pas démontrée doit être considéré réel et préservé; aucun compte non marqué ni ses données ne doit être supprimé. Neon reste inaccessible à cause du quota (SQLSTATE `53000` lors de la tentative précédente), donc aucun export ni import de production n'a été effectué.
 
-L'image de rollback existe sur GHCR et n'est pas reconstruite par le workflow. Les métadonnées vérifiées sont :
+La configuration Auth hébergée du projet Supabase Lunidex indique actuellement `Site URL: https://lunidex.app`. L'allowlist de redirection contient uniquement les callbacks exacts suivants, sans wildcard :
 
-- Révision : `d0f5e1af2cf95dd43eb046069c0d37f0a2add93e`.
-- Référence exacte pour le VPS `linux/amd64` : `ghcr.io/teefloo/lunidex@sha256:9ca8f66d0b5f79a984358d12fe1c382319df7364388ec2d5df78fe3c5afc318a`.
-- Digest de l'index multi-plateforme du tag SHA : `sha256:8f1645b3cd4f371fef8ac47cc0ee2682b0f94412a4229552069f3c8cf5ffc454`.
-- Digest de configuration amd64 : `sha256:97224cef46f56dbc071ddb896d06a61a79785851087f82ac1711a9f520543a7a`.
-- Contrat Compose confirmé : `linux/amd64`, utilisateur `nextjs`, dossier `/app`, commande `node server.js`; la configuration garde la limite existante de 2176 Mio et le CPU limité à un cœur.
+```text
+https://lunidex.app/auth/callback
+https://lunidex.app/en/auth/callback
+https://lunidex.app/fr/auth/callback
+https://lunidex.app/es/auth/callback
+https://lunidex.app/de/auth/callback
+https://lunidex.app/it/auth/callback
+https://lunidex.app/ja/auth/callback
+https://lunidex.app/ko/auth/callback
+https://lunidex.app/zh/auth/callback
+http://localhost:3000/auth/callback
+http://localhost:3000/en/auth/callback
+http://localhost:3000/fr/auth/callback
+http://localhost:3000/es/auth/callback
+http://localhost:3000/de/auth/callback
+http://localhost:3000/it/auth/callback
+http://localhost:3000/ja/auth/callback
+http://localhost:3000/ko/auth/callback
+http://localhost:3000/zh/auth/callback
+```
 
-La candidate de ce futur changement n'a pas encore été construite ou publiée : son digest sera généré au build, testé, puis consigné dans le résumé et les sorties GitHub Actions. Aucun digest candidate n'est inventé dans ce document. Compose, le déploiement et le rollback consomment des références `ghcr.io/teefloo/lunidex@sha256:…`, jamais un tag mutable.
+Le modèle hébergé de confirmation utilise `{{ .ConfirmationURL }}`. Le modèle de récupération hébergé doit correspondre à la source `supabase/templates/recovery.html` : utiliser le `RedirectTo` exact avec `TokenHash` et `type=recovery`, puis ne vérifier le jeton qu'après soumission du formulaire de nouveau mot de passe. Cela évite qu'un scanner de liens consomme le jeton lors d'un GET. Le SMTP personnalisé est activé sur `smtp.resend.com:465` avec un identifiant sauvegardé. L'identité d'expéditeur et la livraison réelle ne sont pas vérifiées indépendamment; après déploiement, la livraison sera vérifiée par un envoi à l'adresse déjà vérifiée, sans documenter cette adresse.
 
-## Préflight isolé et workflow
+Aucune branche Supabase isolée de préproduction n'existe actuellement. Les essais synthétiques sur le projet hébergé Lunidex ne constituent pas un environnement Supabase de préproduction. Aucune donnée n'a été modifiée ou importée; les comptes et données existants d'origine inconnue doivent être préservés. Le projet Supabase Repère, utilisé par une autre application, n'a pas été consulté ni modifié. OAuth Google/GitHub reste désactivé faute d'identifiants client. Les quotas Supabase avaient été relevés sur le plan Free avec le pay-as-you-go désactivé; aucune dépense n'a été engagée.
 
-`.github/workflows/deploy-ovh-production.yml` conserve son déclenchement manuel, limité à `master`, au SHA complet sélectionné et à la confirmation `DEPLOY_OVH_PRODUCTION`. Il accepte aussi le résultat `workflow_run` du workflow `CI`, uniquement pour une exécution réussie issue d'un événement `push` sur `master`. Le chemin automatique est ignoré tant que la variable de dépôt `AUTO_DEPLOY_ENABLED` n'a pas exactement la valeur `true`; l'absence de cette variable équivaut à `false`. Cette PR ne crée ni ne modifie cette variable.
+Le déploiement reste **NO-GO** : aucun digest GHCR de rollback Supabase-compatible n'a été publié et validé, et Neon n'a pas pu être exporté. Toute donnée déjà présente sur Supabase doit d'abord être inventoriée sans suppression; les comptes/données non marqués sont à préserver, et l'artefact synthétique connu ne doit être nettoyé qu'après vérification de son marqueur exact et de sa provenance. Ne déclencher `deploy` qu'après ces préconditions, vérification de la capacité du projet Lunidex, test SMTP autorisé, définition des variables/secrets de `ovh-production` et revue indépendante. Les migrations hébergées et les tests synthétiques ne prouvent pas l'import de production ni un cutover.
 
-Le job construit la candidate sur le runner GitHub, publie un tag de traçabilité unique, lit le digest du manifeste Buildx, puis utilise uniquement la référence par digest. Il tire et valide d0f5 par son digest existant; il ne construit jamais l'ancienne image avec `Dockerfile.rollback-baseline`. Les deux images sont contrôlées sans réseau dans des conteneurs jetables. Le contrôle vérifie le label de révision, l'architecture, l'utilisateur, la commande, le rendu Compose et le endpoint local `/api/healthz`.
+Le runbook de migration fournit les préconditions détaillées, les commandes sans destruction et les limites connues : [Migration Neon → Supabase](../supabase-migration.md). Les informations sur l'ancien runtime et son ancienne image sont conservées dans [l'archive Supabase → Neon](../neon-migration.md); aucun digest Neon ne constitue un rollback valide après la bascule.
 
-En mode `preflight`, les étapes autorisées s'arrêtent sur le runner GitHub : aucune clé SSH n'est configurée, aucune commande SSH/SCP n'est lancée, aucun fichier `app.env` n'est créé ou envoyé, aucun conteneur, Caddy, DNS ou service VPS n'est consulté ou modifié. `deploy-production.sh` et l'ancien script `preflight-production.sh` refusent aussi le mode preflight côté VPS.
+## Contrat de l'image et de la chaîne
 
-En mode manuel `deploy`, les étapes distantes restent conditionnées au choix `deploy` et à la confirmation existante. Le chemin automatique construit une image neuve `linux/amd64` depuis `workflow_run.head_sha`, la publie sur GHCR, puis utilise uniquement son digest. Les deux chemins partagent le même job, les validations d'image, la garde Neon Auth, les protections mémoire et le déploiement OVH. Le SHA source est comparé à `master` avant le build, avant chaque phase distante et juste avant le déploiement; un run devenu obsolète s'arrête sans remplacer la version courante. Les chemins manuel et automatique utilisent le même groupe de concurrence `lunidex-ovh-production`, avec annulation désactivée.
+- Les images sont publiées sur GHCR et sélectionnées par référence immuable `ghcr.io/teefloo/lunidex@sha256:…`. L'image candidate porte un label de révision Git et `com.lunidex.backend=supabase`.
+- Le workflow `.github/workflows/deploy-ovh-production.yml` garde son mode manuel protégé et son mode `workflow_run` existant, encore conditionné à `AUTO_DEPLOY_ENABLED=true`. Cette tâche ne change pas cette variable. Le mode `preflight` valide uniquement le runner GitHub; il ne touche pas OVH.
+- Les checks d'image isolés testent le digest, l'architecture `linux/amd64`, le label backend, l'utilisateur, la commande, le contrat Compose et `/api/healthz`, sans secrets runtime ni réseau sortant.
+- La production utilise le pool `pg` Supabase avec un petit nombre de connexions et une URL de pooler partagé en mode session sur TLS vérifié. `SUPABASE_CA_CERT_B64` est une variable publique de l'environnement GitHub `ovh-production`; le workflow la décode puis vérifie l'empreinte épinglée avant de transférer le CA vers un chemin temporaire sur l'hôte et de l'installer par renommage atomique en `/opt/lunidex-production/supabase-ca.crt` avec mode `0644`. Le CA est monté en lecture seule et chargé par Node via `NODE_EXTRA_CA_CERTS`; il ne va ni dans le contexte de build ni dans l'image. `SUPABASE_SECRET_KEY` est la clé runtime serveur/admin préférée; `SUPABASE_SERVICE_ROLE_KEY` reste un repli legacy temporaire. L'URL publique et la clé publishable sont incorporées au build.
+- L'accès applicatif temporaire est limité à l'identité `SUPABASE_ALLOWED_USER_ID` dans un secret server-only de `ovh-production`; chaque requête vérifie l'identité via `auth.getUser()` et exige un e-mail confirmé. L'ID n'est jamais placé dans le code, le bundle public, les logs ou les réponses API. Les rôles PostgREST `authenticated` n'ont aucun droit direct sur `public`, `app` ou `analytics`; les lectures publiques `anon` existantes restent disponibles. Le serveur Next.js reste le seul chemin de données authentifiées et vérifie l'allowlist avant les accès PostgreSQL.
+- Au premier accès autorisé du propriétaire, l'application crée `app.users`, `public.profiles` et un `public.user_state` vide avec des insertions `ON CONFLICT DO NOTHING`. Aucun profil ou snapshot existant n'est remplacé; les autres comptes et leurs lignes sont conservés et refusés. Les inscriptions sont cachées/désactivées dans le build sauf si le flag explicite `NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED=true` est activé; l'Auth hébergée doit également conserver l'inscription publique désactivée pendant cette fenêtre.
+- Le healthcheck Docker et `/api/healthz` mesurent seulement le processus. `check-supabase-auth.sh` teste uniquement la joignabilité anonyme de `/auth/v1/health`; aucune de ces sondes ne démontre l'isolation RLS ou une session authentifiée.
 
-Le déploiement essaie de revenir à l'image immuable précédente uniquement si elle correspond au conteneur qui était sain avant le remplacement; sinon il prend d0f5 comme secours. Si le script de déploiement réussit mais qu'un contrôle de santé ultérieur échoue, le workflow appelle `rollback-production.sh --last-stable`, qui tente cette même image précédente puis d0f5. Le rollback manuel sans argument reste strictement épinglé à d0f5. L'image d0f5 n'est jamais supprimée. Après le healthcheck local, deux sondes anonymes HTTPS vérifient `/api/healthz` et `/en`; elles détectent les pannes de disponibilité de base, mais ne remplacent pas des tests métier authentifiés et ne garantissent pas la détection de toutes les régressions applicatives.
+### Variables de build et de runtime
 
-Le contrôle Neon Auth s'exécute avant la première connexion SSH et un HTTP 402 bloque le déploiement. Après le déploiement, l'état Neon reste séparé des verdicts Node/HTTPS; un problème Auth seul ne déclenche pas le rollback applicatif.
+Variables publiques dans l'environnement GitHub protégé `ovh-production` :
 
-### Réglages GitHub requis avant activation
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+- `NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED` (doit rester `false` pour cette fenêtre owner-only)
+- variables publiques de mesure/SEO déjà utilisées, si activées
 
-L'automatisation est désactivée par défaut. Après restauration de Neon Auth et validation d'un premier déploiement stable, l'activation se fera séparément dans **Repository → Settings → Secrets and variables → Actions → Variables** : créer `AUTO_DEPLOY_ENABLED` avec la valeur exacte `true`. Pour suspendre les nouveaux runs, supprimer la variable ou remplacer sa valeur par `false`. Cela ne stoppe pas un déploiement déjà en cours; pour une suspension immédiate, désactiver la variable **et annuler explicitement le run actif** dans Actions. Ne pas utiliser un secret pour cette option.
+Variable publique utilisée uniquement pour installer le CA épinglé : `SUPABASE_CA_CERT_B64`. Secret runtime : `SUPABASE_ALLOWED_USER_ID`.
 
-Les runs manuels et automatiques partagent `lunidex-ovh-production`. GitHub n'en exécute qu'un à la fois; sans annulation du run actif, une seule exécution reste en attente et une exécution plus récente remplace l'attente plus ancienne. Les contrôles de SHA courante bloquent aussi un run devenu périmé.
+Secrets runtime transmis à `/opt/lunidex-production/app.env` avec permissions `0600` :
 
-Protéger `master` dans **Settings → Rules → Rulesets** (ou Branch protection rules) avec au minimum :
+- `SUPABASE_DATABASE_URL`
+- `SUPABASE_ALLOWED_USER_ID`
+- `SUPABASE_SECRET_KEY` (preferred) or `SUPABASE_SERVICE_ROLE_KEY` (temporary legacy fallback)
+- `LUNIDEX_CRON_SECRET`
+- secrets optionnels de push/contact explicitement requis par l'environnement
 
-- exiger une Pull Request et au moins une approbation;
-- exiger le contrôle CI complet (`ci`) avant fusion;
-- exiger la résolution des conversations et, si disponible, invalider les approbations après nouveaux commits;
-- interdire les force-push et la suppression de branche.
+Les variables `SUPABASE_MIGRATION_DATABASE_URL`, `NEON_SOURCE_DATABASE_URL`, `SUPABASE_PROJECT_REF` et les artefacts sous `.migration/` servent uniquement à la migration ponctuelle; ils ne doivent pas être injectés dans l'image ni le runtime OVH.
 
-Restreindre l'environnement **Settings → Environments → `ovh-production`** aux déploiements depuis `master` et conserver les secrets/variables de production dans cet environnement. Les **Required reviewers** mettent en pause chaque run automatique jusqu'à approbation. Garder cette protection pendant le rétablissement de Neon Auth et le premier déploiement stable; pour un fonctionnement réellement sans intervention humaine, un administrateur devra ensuite retirer ces reviewers requis. Les protections de branche, le contrôle Neon avant SSH, les garde-fous de SHA, l'option désactivée par défaut et le rollback restent en place. Cette PR ne modifie aucune variable, aucun reviewer et aucun secret.
+### Rollback compatible
 
-## Procédure future
+Le job exige `SUPABASE_ROLLBACK_IMAGE_REF` (digest GHCR immuable) et `SUPABASE_ROLLBACK_IMAGE_REVISION` (SHA complet) dans l'environnement `ovh-production`. Le runner valide cette image sans réseau et exige le label `com.lunidex.backend=supabase`; le serveur répète le contrôle avant de remplacer l'application. Le déploiement refuse de démarrer si aucun rollback Supabase-compatible explicite n'est disponible. Le workflow transmet le nouvel `app.env` dans un fichier temporaire; le script sauvegarde de manière atomique l'environnement associé à la cible de rollback avant d'activer le nouveau conteneur. `rollback-production.sh --last-stable` restaure l'image et son `app.env` correspondant.
 
-Après restauration de Neon Auth et revue/approbation de la PR :
+Le SHA de l'image historique stable Neon est `d0f5e1af2cf95dd43eb046069c0d37f0a2add93e`. Elle n'est pas compatible Supabase, n'est pas une cible d'auto-rollback et ne sera jamais étiquetée comme telle. Elle ne peut servir que de recours public-only après vérification indépendante de son digest immuable et de son environnement Neon; ses fonctions Auth et données cloud sont indisponibles et elle peut afficher des données Neon obsolètes. Aucun digest Neon actuel n'est vérifié ici, donc le code refuse cette image comme rollback de production Supabase.
 
-1. Relire le SHA exact de `master` et les contrôles CI verts.
-2. Vérifier qu'un snapshot Neon exploitable existe selon la procédure de sauvegarde approuvée. Le déploiement ne doit pas exécuter de migration ni écrire dans Neon.
-3. Dans Actions → `Deploy OVH production`, sélectionner ce SHA exact, saisir `DEPLOY_OVH_PRODUCTION`, et choisir `deploy`. N'utiliser `preflight` que pour la validation GitHub isolée; elle ne teste pas le VPS.
-4. Relire dans le résumé Actions le SHA source, le digest candidate, la plateforme amd64 et le digest d0f5. Refuser le déploiement si la candidate ne passe pas l'image smoke test ou si Neon Auth renvoie encore 402.
-5. Laisser le job remplacer l'app sur place sans lancer deux processus Node lourds en parallèle. Le remplacement peut créer une courte interruption. Ne pas démarrer la préproduction ou les cron applicatifs pendant cette fenêtre.
-6. Vérifier séparément le conteneur/`/api/healthz`, les pages HTTPS essentielles, les codes HTTP/API, Neon Auth et les ressources mémoire. Un 402 Neon est un incident fonctionnel distinct; il ne doit pas être présenté comme un OOM ou une panne du processus.
+Aucun digest rollback Supabase-compatible n'est validé dans le checkout de préparation; en l'absence d'une référence publiée et d'une validation préflight documentée, le déploiement reste NO-GO. L'image courante Neon et `Dockerfile.rollback-baseline` ne sont pas des alternatives valides.
 
-Rollback autorisé uniquement en cas de régression applicative ou d'échec de santé :
+Après un premier déploiement Supabase, `rollback-production.sh --last-stable` essaie le digest stable précédent puis le rollback Supabase explicitement configuré. Un rollback d'image seul ne réconcilie pas des données écrites côté Supabase vers Neon. Si des écritures ont eu lieu après la bascule, geler les écritures et suivre un plan opérateur de réconciliation avant de changer de runtime.
+
+## Contrôles avant la première bascule
+
+1. Obtenir un export source frais, mesurer la taille/croissance/charge/MAU et confirmer la capacité/quotas du projet Lunidex avant import.
+2. Réussir l'import et les checksums des 31 tables, FK, séquences et identités après avoir contrôlé que la cible est vide et que les tests synthétiques ont été nettoyés.
+3. Tester avec deux JWT que les politiques isolent les comptes et bloquent les JWT dont le compte est pending/deleted. Les requêtes du serveur `postgres` contournent RLS et dépendent des contrôles d'ownership dans chaque handler.
+4. Compléter les parcours opérationnels restants, dont OAuth Google/GitHub après obtention des identifiants, mise à jour manuelle du mot de passe, logout, suppression, synchronisation, routes sensibles et jobs. Le signup synthétique, la confirmation Resend, le login par mot de passe, l'ouverture du lien de récupération, l'isolation RLS et le GET/PUT de collection ont déjà été vérifiés; OAuth n'est pas configuré.
+5. Valider un backup restaurable, les paramètres Auth/SMTP/redirect URLs, la charge sur OVH, la capacité Supabase et l'image de rollback.
+6. Approuver une fenêtre distincte de bascule; ne pas démarrer deux instances Node lourdes simultanément sur le VPS 4 Gio.
+
+## Opération après validation
+
+Le `deploy` manuel reste limité à `master`, à un SHA complet autorisé et à la phrase de confirmation configurée dans Actions. Il met à jour l'image par digest, puis vérifie le conteneur, `/api/healthz` et les routes HTTPS publiques. Une panne de reachability Auth est rapportée séparément de l'état du processus; elle n'est pas une preuve d'OOM.
+
+Rollback manuel après bascule, uniquement vers l'image Supabase-compatible configurée :
 
 ```bash
 bash /opt/lunidex-production/scripts/deployment/rollback-production.sh
 ```
 
-Sans argument, le rollback manuel restaure uniquement `ghcr.io/teefloo/lunidex@sha256:9ca8f66d0b5f79a984358d12fe1c382319df7364388ec2d5df78fe3c5afc318a` (d0f5). Le workflow peut appeler `rollback-production.sh --last-stable` après l'échec d'un contrôle HTTPS post-déploiement : cette option interne tente le digest précédent consigné, puis d0f5 si le précédent ne démarre pas ou échoue au healthcheck. Les deux sont des références GHCR immuables. d0f5 est le dernier état OVH connu stable, mais le rollback n'est pas une correction d'un défaut introduit après d0f5. Les déclencheurs de rollback sont un conteneur unhealthy, un échec de `/api/healthz` ou des deux sondes publiques de base, ou un nouvel OOM/redémarrage. Une panne Neon/Auth seule ne provoque pas un rollback de Node; elle conserve un NO-GO fonctionnel séparé.
+Ne pas exécuter de migration distante, de copie de données, de bascule DNS ou de rollback réel dans le cadre d'une revue de code. Toute activation de cron reste une opération séparée après vérification de ses secrets et de ses effets.
 
-## Surveillance mémoire après le prochain déploiement
+## Surveillance OVH
 
-Il n'existe plus de schedule temporaire pour ces audits. Déclencher manuellement le workflow `Audit OVH VPS resources` en lecture seule aux échéances suivantes, avec le SHA et le digest déployés dans le rapport :
-
-| Échéance | Contrôles |
-| --- | --- |
-| T+15 min | Premier démarrage, `RestartCount`, OOM, `memory.events`, `memory.current/max/peak`, RSS Node, heap V8 numérique si diagnostic borné activé, CPU, RAM hôte, disque, endpoint local et HTTPS. |
-| T+1 h | Comparaison au relevé T+15 min; vérifier la stabilisation après le démarrage et les erreurs V8/5xx. |
-| T+6 h | Tendance de RSS, `anon`, `file`, `inactive_file`, `slab`, `memory.current - inactive_file`, événements cgroup et RAM hôte. Le reste cgroup ne représente pas le heap. |
-| T+24 h | Confirmer la pente sur une journée, l'absence d'OOM/redémarrages et la disponibilité HTTPS; consigner Neon Auth séparément. |
-| T+48 h | Verdict mémoire final et comparaison au d0f5/T+15 min, sans assimiler une croissance RSS ou le cache fichiers à une fuite JavaScript. |
-
-**Rollback immédiat / NO-GO mémoire** si `RestartCount`, `oom` ou `oom_kill` augmente, si Docker devient unhealthy, si le endpoint local cesse de répondre, ou si la mémoire cgroup reste au-dessus de 90 % de `memory.max` et continue de monter. Une hausse de `memory.events:max` seule indique une pression et appelle une vérification rapprochée; elle ne démontre pas à elle seule un OOM V8. En cas de pression, comparer les pages anonymes et le cache récupérable, préserver les compteurs et journaux, puis diagnostiquer avant tout changement de limites. Ne pas forcer le GC, prendre un heap snapshot ou redémarrer pour un diagnostic sans autorisation.
-
-À chaque point, rapporter séparément : santé conteneur/Node, disponibilité HTTPS, disponibilité Neon Auth, redémarrages et `OOMKilled`, RAM cgroup/hôte, RSS, heap V8 lorsqu'il est mesuré, CPU, stockage et erreurs HTTP 5xx. Une requête Auth anonyme HTTP 200 prouve uniquement la joignabilité du proxy; elle ne valide pas une connexion authentifiée.
+Les audits mémoire historiques ont observé une pression cgroup (`memory.events:max`) sans OOM confirmé. Après tout futur déploiement, comparer séparément la santé Node/HTTPS/Auth, `RestartCount`, OOM, `memory.current/max/peak`, RSS Node, CPU, RAM hôte, disque et erreurs 5xx. Une augmentation du compteur `max` signale une pression et appelle une analyse; elle ne prouve pas une fuite JavaScript ou un OOM V8.

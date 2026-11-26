@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { NeonSql } from '@/lib/neon/server';
+import type { SupabaseSql } from '@/lib/supabase/database';
 import type { TCGCard } from '@/types/tcg';
 import {
   claimDuePriceHistoryRefreshTargets,
@@ -25,7 +25,7 @@ describe('daily price history refresh tracking', () => {
     const sqlMock = vi.fn().mockResolvedValue([]);
     const checkedAt = new Date('2026-11-06T12:00:00.000Z');
 
-    await recordPriceHistoryCardSeen(sqlMock as unknown as NeonSql, 'base1-4', 'fr', checkedAt);
+    await recordPriceHistoryCardSeen(sqlMock as unknown as SupabaseSql, 'base1-4', 'fr', checkedAt);
 
     expect(sqlMock).toHaveBeenCalledOnce();
     const [strings, ...values] = sqlMock.mock.calls[0];
@@ -38,7 +38,7 @@ describe('daily price history refresh tracking', () => {
   it('claims no more than twenty due cards and atomically stamps them checked', async () => {
     const sqlMock = vi.fn().mockResolvedValue(targets(25));
 
-    const claimed = await claimDuePriceHistoryRefreshTargets(sqlMock as unknown as NeonSql);
+    const claimed = await claimDuePriceHistoryRefreshTargets(sqlMock as unknown as SupabaseSql);
 
     expect(claimed).toHaveLength(DAILY_PRICE_HISTORY_REFRESH_LIMIT);
     const [strings, limit] = sqlMock.mock.calls[0];

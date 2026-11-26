@@ -4,7 +4,7 @@ import { Trophy, Gamepad2, Zap, EyeOff, BrainCircuit, Heart, Users, Shapes, Back
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
-import { useAuth } from '@/lib/neon/AuthProvider';
+import { useAuth } from '@/lib/supabase/AuthProvider';
 import { fetchAppApi } from '@/lib/app-api';
 import { usePrimeDexStore } from '@/store/primedex';
 import { countPhysicalTCGCards } from '@/lib/tcg-collections';

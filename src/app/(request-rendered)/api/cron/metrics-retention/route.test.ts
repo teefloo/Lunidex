@@ -1,8 +1,8 @@
 import { NextRequest } from 'next/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-const mocks = vi.hoisted(() => ({ sql: vi.fn(), getNeonClient: vi.fn(), refreshDuePriceHistoryCards: vi.fn(), reportSentryException: vi.fn() }));
-vi.mock('@/lib/neon/server', () => ({ getNeonClient: mocks.getNeonClient }));
+const mocks = vi.hoisted(() => ({ sql: vi.fn(), getSupabaseDatabaseClient: vi.fn(), refreshDuePriceHistoryCards: vi.fn(), reportSentryException: vi.fn() }));
+vi.mock('@/lib/supabase/database', () => ({ getSupabaseDatabaseClient: mocks.getSupabaseDatabaseClient }));
 vi.mock('@/lib/tcg-price-history-refresh', () => ({ refreshDuePriceHistoryCards: mocks.refreshDuePriceHistoryCards }));
 vi.mock('@/lib/sentry-observability', () => ({ reportSentryException: mocks.reportSentryException }));
 vi.mock('@/lib/api/observed-route', () => ({ withObservedRouteHandler: (_route: string, _feature: string, handler: unknown) => handler }));
@@ -23,7 +23,7 @@ describe('metrics retention cron price history refresh', () => {
     process.env.CRON_SECRET = 'test-cron-secret';
     delete process.env.LUNIDEX_CRON_SECRET;
     mocks.sql.mockResolvedValue([{ count: 0 }]);
-    mocks.getNeonClient.mockReturnValue(mocks.sql);
+    mocks.getSupabaseDatabaseClient.mockReturnValue(mocks.sql);
     mocks.refreshDuePriceHistoryCards.mockResolvedValue({ attempted: 2, captured: 1, failed: 1 });
   });
 
@@ -38,7 +38,7 @@ describe('metrics retention cron price history refresh', () => {
     const response = await GET(request());
 
     expect(response.status).toBe(401);
-    expect(mocks.getNeonClient).not.toHaveBeenCalled();
+    expect(mocks.getSupabaseDatabaseClient).not.toHaveBeenCalled();
     expect(mocks.refreshDuePriceHistoryCards).not.toHaveBeenCalled();
   });
 

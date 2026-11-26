@@ -13,7 +13,7 @@ import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
 import { SyncStatusPanel } from '@/components/auth/SyncStatusPanel';
 import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
-import { useAuth } from '@/lib/neon/AuthProvider';
+import { useAuth } from '@/lib/supabase/AuthProvider';
 import { useTranslation } from '@/lib/i18n';
 import { usePrimeDexStore } from '@/store/primedex';
 import { encodeTCGCollectionKey, getTCGCollectionCardQuantity } from '@/lib/tcg-collections';

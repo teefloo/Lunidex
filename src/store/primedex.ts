@@ -319,7 +319,7 @@ export interface PrimeDexStore {
 
 /**
  * Keys that make up the remote user snapshot. These fields are read from and
- * written to the authenticated user's Neon `user_state` row; they are no
+ * written to the authenticated user's Supabase `user_state` row; they are no
  * longer persisted as an anonymous browser-first snapshot.
  */
 export const SYNCED_KEYS = [

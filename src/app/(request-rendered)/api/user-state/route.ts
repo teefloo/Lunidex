@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readJsonBodyResult, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
-import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
-import { isInactiveAccountError } from '@/lib/neon/errors';
-import { getNeonClient, type NeonSql } from '@/lib/neon/server';
+import { ensureSupabaseUser, getSupabaseUserFromRequest } from '@/lib/supabase/auth';
+import { isInactiveAccountError } from '@/lib/supabase/errors';
+import { getSupabaseDatabaseClient, type SupabaseSql } from '@/lib/supabase/database';
 import { normalizeUserStateData } from '@/lib/tcg-owned-cards';
 import { rateLimit } from '@/lib/rate-limit';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
@@ -36,17 +36,24 @@ function isExpectedDependencyFailure(error: unknown): boolean {
   const candidate = error as { name?: unknown; code?: unknown };
   const name = typeof candidate.name === 'string' ? candidate.name : '';
   const code = typeof candidate.code === 'string' ? candidate.code : '';
-  return name === 'NeonDbError'
-    || name === 'FetchError'
+  return name === 'FetchError'
     || name === 'TimeoutError'
     || name === 'AbortError'
     || code.startsWith('08')
     || code === '53300'
-    || code === '57P01';
+    || code === '57P01'
+    || code === '57P02'
+    || code === '57P03'
+    || code === '58030'
+    || code === 'ECONNREFUSED'
+    || code === 'ECONNRESET'
+    || code === 'ETIMEDOUT'
+    || code === 'ENETUNREACH'
+    || code === 'EAI_AGAIN';
 }
 
 async function getCurrentState(
-  sql: NeonSql,
+  sql: SupabaseSql,
   userId: string,
 ): Promise<UserStateRow | null> {
   const rows = await sql`
@@ -59,17 +66,17 @@ async function getCurrentState(
 }
 
 async function getUserState(request: NextRequest): Promise<NextResponse> {
-  const sql = getNeonClient();
+  const sql = getSupabaseDatabaseClient();
   if (!sql) return unavailable();
 
-  const user = await getNeonUserFromRequest(request);
+  const user = await getSupabaseUserFromRequest(request);
   if (!user) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
 
   if (!rateLimit(`user-state-read:${user.id}`, 120)) {
     return NextResponse.json({ error: 'Too many requests' }, { status: 429, headers: { 'Cache-Control': 'private, no-store' } });
   }
 
-  if (await ensureNeonUser(sql, user) === false) {
+  if (await ensureSupabaseUser(sql, user) === false) {
     return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
   }
   const row = await getCurrentState(sql, user.id);
@@ -83,10 +90,10 @@ async function putUserState(request: NextRequest): Promise<NextResponse> {
   const originError = requireTrustedMutationOrigin(request);
   if (originError) return originError;
 
-  const sql = getNeonClient();
+  const sql = getSupabaseDatabaseClient();
   if (!sql) return unavailable();
 
-  const user = await getNeonUserFromRequest(request);
+  const user = await getSupabaseUserFromRequest(request);
   if (!user) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
 
   // Writes rewrite the full snapshot; the client debounces, so a generous
@@ -123,7 +130,7 @@ async function putUserState(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Invalid state version' }, { status: 400 });
   }
 
-  if (await ensureNeonUser(sql, user) === false) {
+  if (await ensureSupabaseUser(sql, user) === false) {
     return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
   }
 

@@ -13,7 +13,7 @@ import { getTCGCardLanguageName, type TCGCardLanguage } from '@/lib/tcg-language
 import { TCGLanguageSelector } from './TCGLanguageSelector';
 import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
 import { SyncStatusPanel } from '@/components/auth/SyncStatusPanel';
-import { useAuth } from '@/lib/neon/AuthProvider';
+import { useAuth } from '@/lib/supabase/AuthProvider';
 import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
 
 interface TCGLegacySetAlbumResolverProps {

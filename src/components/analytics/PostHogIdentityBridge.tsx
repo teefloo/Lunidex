@@ -4,7 +4,7 @@ import { useEffect, useSyncExternalStore } from 'react';
 
 import { usePathname } from 'next/navigation';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
-import { useAuth } from '@/lib/neon/AuthProvider';
+import { useAuth } from '@/lib/supabase/AuthProvider';
 import {
   getProductConsent,
   getServerProductConsent,

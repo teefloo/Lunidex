@@ -20,7 +20,7 @@ const mocks = vi.hoisted(() => ({
   },
 }));
 
-vi.mock('@/lib/neon/AuthProvider', () => ({ useAuth: () => mocks.auth }));
+vi.mock('@/lib/supabase/AuthProvider', () => ({ useAuth: () => mocks.auth }));
 vi.mock('@/lib/i18n', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
 vi.mock('next/dynamic', () => ({ default: () => () => null }));
 vi.mock('./AuthModalBoundary', () => ({ AuthModalBoundary: () => null }));

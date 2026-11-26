@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTCGCardLocalizedCached } from '@/lib/api/server-cache';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
-import { getNeonClient } from '@/lib/neon/server';
+import { getSupabaseDatabaseClient } from '@/lib/supabase/database';
 import { isValidTcgCardId } from '@/lib/tcg-owned-cards';
 import { isTCGCardLanguage } from '@/lib/tcg-language';
 import { getQualifiedCardmarketObservations, type TCGPriceVariant } from '@/lib/tcg-qualified-price-history';
@@ -67,7 +67,7 @@ async function getPriceHistory(request: NextRequest, { params }: RouteParams) {
   const days = requestedDays(request);
   if (!language || !variant || days === null) return noStoreJson({ error: 'Invalid language, variant, or days' }, 400);
 
-  const sql = getNeonClient();
+  const sql = getSupabaseDatabaseClient();
   if (!sql) return noStoreJson({ history: [], status: 'unavailable' });
   const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
   try {
@@ -161,7 +161,7 @@ async function capturePriceHistory(request: NextRequest, { params }: RouteParams
   }
   if (!isTCGCardLanguage(language)) return noStoreJson({ error: 'Invalid language' }, 400);
 
-  const sql = getNeonClient();
+  const sql = getSupabaseDatabaseClient();
   if (!sql) return noStoreJson({ captured: 0, variants: [], status: 'unavailable' });
   try {
     // This fetcher disables TCGdex's English fallback so language identity in

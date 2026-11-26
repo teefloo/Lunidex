@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { NeonSql } from '@/lib/neon/server';
+import type { SupabaseSql } from '@/lib/supabase/database';
 import { upsertQualifiedCardmarketObservations } from './tcg-price-history-store';
 
 describe('qualified TCG price history persistence', () => {
@@ -19,7 +19,7 @@ describe('qualified TCG price history persistence', () => {
       sourceDay: '2026-11-06',
     };
 
-    const captured = await upsertQualifiedCardmarketObservations(sqlMock as unknown as NeonSql, [observation]);
+    const captured = await upsertQualifiedCardmarketObservations(sqlMock as unknown as SupabaseSql, [observation]);
 
     expect(captured).toBe(0);
     expect(sqlMock).toHaveBeenCalledOnce();

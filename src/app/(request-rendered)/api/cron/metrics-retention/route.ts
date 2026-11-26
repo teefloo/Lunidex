@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getNeonClient } from '@/lib/neon/server';
+import { getSupabaseDatabaseClient } from '@/lib/supabase/database';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
 import { refreshDuePriceHistoryCards, type PriceHistoryRefreshSummary } from '@/lib/tcg-price-history-refresh';
 import { reportSentryException } from '@/lib/sentry-observability';
@@ -41,7 +41,7 @@ async function getMetricsRetention(request: NextRequest): Promise<NextResponse> 
   const authorization = request.headers.get('authorization');
   if (authorization !== `Bearer ${secret}`) return unauthorized();
 
-  const sql = getNeonClient();
+  const sql = getSupabaseDatabaseClient();
   if (!sql) return NextResponse.json({ error: 'Application database unavailable' }, { status: 503, headers: NO_STORE_HEADERS });
 
   try {

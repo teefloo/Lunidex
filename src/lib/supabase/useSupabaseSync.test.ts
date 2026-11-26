@@ -14,7 +14,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock('@/lib/app-api', () => ({ fetchAppApi: mocks.fetchAppApi }));
 vi.mock('@/lib/i18n', () => ({ useTranslation: () => ({ i18n: mocks.i18n }) }));
-vi.mock('@/lib/neon/AuthProvider', async () => {
+vi.mock('@/lib/supabase/AuthProvider', async () => {
   const { createContext } = await import('react');
   return { AuthContext: createContext(null) };
 });
@@ -41,11 +41,11 @@ vi.mock('./tcg-custom-collection-layout-cache', () => ({
   pruneTCGCustomCollectionLayoutTombstones: mocks.pruneLayoutCache,
 }));
 
-import { AuthContext } from '@/lib/neon/AuthProvider';
+import { AuthContext } from '@/lib/supabase/AuthProvider';
 import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
 import { usePrimeDexStore } from '@/store/primedex';
 import { retrySyncAccess, setSyncAccessStatus } from '@/store/sync-access';
-import { useNeonSync } from './useSupabaseSync';
+import { useSupabaseSync } from './useSupabaseSync';
 import { saveTCGInvestmentConfirmed } from '@/lib/tcg-investment-save';
 import { getSyncWriteStatus, resetSyncWriteStatus } from '@/store/sync-write-status';
 import type { TCGInvestment } from '@primedex/core/lib/tcg-investments';
@@ -65,7 +65,7 @@ function response(status: number, payload: unknown): Response {
 }
 
 function SyncProbe() {
-  useNeonSync();
+  useSupabaseSync();
   return createElement('output', null, useSyncAccessStatus());
 }
 

@@ -17,7 +17,7 @@ import { isSortable } from '@dnd-kit/react/sortable';
 import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import { useMounted } from '@/hooks/useMounted';
 import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
-import { useAuth } from '@/lib/neon/AuthProvider';
+import { useAuth } from '@/lib/supabase/AuthProvider';
 import { useTranslation } from '@/lib/i18n';
 import { fetchCustomCollectionValue, getTCGCustomCollectionCardDetails } from '@/lib/api/tcg';
 import type { TCGCustomCollectionCardDetail } from '@/lib/api/tcg';

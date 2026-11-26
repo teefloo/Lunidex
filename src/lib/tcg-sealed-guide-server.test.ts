@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { NeonSql } from '@/lib/neon/server';
+import type { SupabaseSql } from '@/lib/supabase/database';
 import { getPublicSealedGuide } from './tcg-sealed-guide-server';
 
 const asOf = '2026-09-28';
@@ -17,7 +17,7 @@ function database() {
     if (statement.includes('tcg_sealed_price_snapshots')) return products.map((product) => ({ ...point(product.cardmarket_product_id, asOf, 1200), source_at: '2026-09-28T06:00:00.000Z' }));
     throw new Error('Unexpected database query');
   };
-  return { sql: { query } as unknown as NeonSql, statements };
+  return { sql: { query } as unknown as SupabaseSql, statements };
 }
 
 describe('public sealed guide data boundary', () => {

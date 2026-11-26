@@ -11,7 +11,7 @@ import { getFirstPersistedTcgValue, getPersistedTcgAddition } from '@/lib/tcg-pe
 import { setProductTrackingIdentity, trackTcgPersistedValue, trackReturnAfterActivation } from '@/lib/product-measurement';
 import { capturePostHogEvent } from '@/lib/posthog-client';
 import { retryAsync } from '@/lib/retry';
-import { AuthContext } from '@/lib/neon/AuthProvider';
+import { AuthContext } from '@/lib/supabase/AuthProvider';
 import { confirmTCGInvestmentSaves, rejectPendingTCGInvestmentSaves, type TCGInvestmentSaveFailure } from '@/lib/tcg-investment-save';
 import {
   confirmPendingSyncChanges,
@@ -209,7 +209,7 @@ async function saveRemoteState(
  * snapshot. Failed writes keep the local edit pending so the user can retry it;
  * the remote state remains authoritative after a confirmed save.
  */
-export function useNeonSync(): void {
+export function useSupabaseSync(): void {
   const { i18n } = useTranslation();
   const ctx = useContext(AuthContext);
   const user = ctx?.user ?? null;
@@ -387,7 +387,7 @@ export function useNeonSync(): void {
             const previousAccepted = acceptedSnapshotRef.current;
             const removed = getPersistedTcgAddition(confirmed.tcgCollectionCards, previousAccepted?.tcgCollectionCards ?? []);
             if (removed && getPersistedTcgAddition(local.tcgCollectionCards, previousAccepted?.tcgCollectionCards ?? [])) {
-              capturePostHogEvent('tcg_card_ownership_toggled', { ...removed, state: 'removed', persistence: 'neon', authenticated: true });
+              capturePostHogEvent('tcg_card_ownership_toggled', { ...removed, state: 'removed', persistence: 'supabase', authenticated: true });
               void trackReturnAfterActivation('owned_remove');
             }
             for (const state of ['added', 'removed'] as const) {
@@ -397,11 +397,11 @@ export function useNeonSync(): void {
               const changed = state === 'added'
                 ? [...after].some((id) => !before.has(id) && requested.has(id))
                 : [...before].some((id) => !after.has(id) && !requested.has(id));
-              if (changed) capturePostHogEvent('tcg_wishlist_toggled', { state, persistence: 'neon', authenticated: true });
+              if (changed) capturePostHogEvent('tcg_wishlist_toggled', { state, persistence: 'supabase', authenticated: true });
             }
             const addition = getPersistedTcgAddition(acceptedSnapshotRef.current?.tcgCollectionCards ?? [], confirmed.tcgCollectionCards, local.tcgCollectionCards);
             if (addition) {
-              capturePostHogEvent('tcg_card_ownership_toggled', { ...addition, state: 'added', persistence: 'neon', authenticated: true });
+              capturePostHogEvent('tcg_card_ownership_toggled', { ...addition, state: 'added', persistence: 'supabase', authenticated: true });
               const firstValue = previousAccepted && getFirstPersistedTcgValue(previousAccepted, confirmed.tcgCollectionCards, local.tcgCollectionCards);
               if (firstValue) void trackTcgPersistedValue(firstValue, userId);
               trackReturnAfterActivation('owned_add');
@@ -598,6 +598,3 @@ export function useNeonSync(): void {
     };
   }, [enabled, hasHydrated, i18n, loading, onlineVersion, userId]);
 }
-
-// Kept as a source-compatible alias for existing deep imports.
-export { useNeonSync as useSupabaseSync };

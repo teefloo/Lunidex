@@ -1,6 +1,6 @@
 # Supabase Edge Function guide
 
-This guide applies to the Deno function under `supabase/functions/poll-tcg-prices/`. It is separate from the Node.js/npm application and from the Neon runtime.
+This guide applies to the Deno function under `supabase/functions/poll-tcg-prices/`. It is an independently deployed scheduled helper, separate from the Node.js/npm web runtime.
 
 ## Runtime and security
 

@@ -95,6 +95,7 @@ supabase/.temp/
 
 # Local database exports and migration artifacts
 .neon-migration/
+.migration/
 
 # =============================================================================
 # 5. Logs & Debug
