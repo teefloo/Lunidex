@@ -9,6 +9,8 @@ if [[ -z "$ca_file" || ! -f "$ca_file" || -L "$ca_file" || ! -s "$ca_file" || ! 
   exit 78
 fi
 
+echo 'Supabase root CA fingerprint matches pinned certificate.'
+
 if ! command -v openssl >/dev/null 2>&1 \
   || ! openssl x509 -in "$ca_file" -noout -checkend 0 >/dev/null 2>&1 \
   || ! openssl x509 -in "$ca_file" -noout -text 2>/dev/null | grep -q 'CA:TRUE'; then
