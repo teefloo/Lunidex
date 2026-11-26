@@ -40,7 +40,7 @@ describe('isAllowedSupabaseAuthUser', () => {
   });
 
   it('denies an unverified email even when the UUID matches', () => {
-    expect(isAllowedSupabaseAuthUser({ id: ownerId, email: 'owner@example.test', email_confirmed_at: null }, env)).toBe(false);
+    expect(isAllowedSupabaseAuthUser({ id: ownerId, email: 'owner@example.test', email_confirmed_at: undefined }, env)).toBe(false);
   });
 
   it('fails closed when the allowlist is missing or malformed', () => {

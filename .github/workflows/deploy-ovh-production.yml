@@ -73,7 +73,6 @@ jobs:
       NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
       NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED: ${{ vars.NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED || 'false' }}
-      SUPABASE_ALLOWED_USER_ID: ${{ secrets.SUPABASE_ALLOWED_USER_ID }}
       SUPABASE_CA_CERT_B64: ${{ vars.SUPABASE_CA_CERT_B64 }}
       SUPABASE_ROLLBACK_IMAGE_REF: ${{ vars.SUPABASE_ROLLBACK_IMAGE_REF }}
       SUPABASE_ROLLBACK_IMAGE_REVISION: ${{ vars.SUPABASE_ROLLBACK_IMAGE_REVISION }}
@@ -128,10 +127,6 @@ jobs:
             exit 78
           fi
           if [[ "$DEPLOYMENT_MODE" == 'deploy' ]]; then
-            [[ "$SUPABASE_ALLOWED_USER_ID" =~ ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ ]] || {
-              echo 'Set the verified owner UUID in the server-only SUPABASE_ALLOWED_USER_ID environment secret.' >&2
-              exit 78
-            }
             [[ -n "$SUPABASE_CA_CERT_B64" ]] || {
               echo 'Set the pinned public root certificate in the SUPABASE_CA_CERT_B64 environment variable.' >&2
               exit 78
@@ -407,6 +402,10 @@ jobs:
             fi
           }
 
+          [[ "$SUPABASE_ALLOWED_USER_ID" =~ ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ ]] || {
+            echo 'SUPABASE_ALLOWED_USER_ID must be a verified owner UUID stored as a server-only secret.' >&2
+            exit 78
+          }
           append_env SUPABASE_DATABASE_URL "$SUPABASE_DATABASE_URL" yes
           append_env SUPABASE_ALLOWED_USER_ID "$SUPABASE_ALLOWED_USER_ID" yes
           if [[ -n "$SUPABASE_SECRET_KEY" ]]; then

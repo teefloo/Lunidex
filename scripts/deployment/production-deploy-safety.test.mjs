@@ -102,6 +102,8 @@ test('Compose, deploy, and manual rollback use immutable digest references', () 
   assert.match(`${workflow}\n${deploy}\n${rollback}`, /neon-public-only:d0f5e1af2cf95dd43eb046069c0d37f0a2add93e/);
   assert.match(rollback, /Neon Auth and cloud data remain unavailable/);
   assert.doesNotMatch(rollback, /neon-public-only[^\n]*Supabase-compatible/);
+  assert.match(workflow, /legacy d0f5 Neon image is public-only emergency recovery, never a Supabase candidate/i);
+  assert.doesNotMatch(workflow, /d0f5e1af[^\n]*Supabase rollback candidate/i);
   assert.doesNotMatch(read(path.join(repositoryRoot, 'scripts/deployment/rehearse-rollback-production.sh')), /ace4b8/);
 });
 
@@ -266,6 +268,31 @@ test('production runtime prefers the Supabase secret key and retains service-rol
   assert.match(prepare.run, /if \[\[ -n "\$SUPABASE_SECRET_KEY" \]\][\s\S]*append_env SUPABASE_SECRET_KEY[\s\S]*elif \[\[ -n "\$SUPABASE_SERVICE_ROLE_KEY" \]\][\s\S]*append_env SUPABASE_SERVICE_ROLE_KEY/);
   assert.match(deploy, /SUPABASE_SECRET_KEY=\.\+\$[\s\S]*SUPABASE_SERVICE_ROLE_KEY=\.\+\$/);
   assert.doesNotMatch(prepare.run, /echo ["']?\$SUPABASE_(?:SECRET_KEY|SERVICE_ROLE_KEY)/);
+});
+
+test('owner allowlist secret is available only to server-runtime environment preparation', () => {
+  const parsed = yaml.load(read(workflowPath));
+  const job = parsed.jobs.deploy;
+  const prepare = stepByName(job.steps, 'Prepare the server-only production environment');
+  const build = stepByName(job.steps, 'Build and publish the candidate image');
+
+  assert.equal(job.env.SUPABASE_ALLOWED_USER_ID, undefined);
+  assert.match(prepare.env.SUPABASE_ALLOWED_USER_ID, /secrets\.SUPABASE_ALLOWED_USER_ID/);
+  assert.match(prepare.run, /append_env SUPABASE_ALLOWED_USER_ID \"\$SUPABASE_ALLOWED_USER_ID\" yes/);
+  assert.doesNotMatch(build.run, /SUPABASE_ALLOWED_USER_ID/);
+  assert.doesNotMatch(JSON.stringify(build.env ?? {}), /SUPABASE_ALLOWED_USER_ID/);
+});
+
+test('authenticated schema closure leaves only explicit anon projection usage and postgres server usage', () => {
+  const migration = read(path.join(repositoryRoot, 'supabase/migrations/20261126162737_lunidex_restrict_authenticated_data_api.sql'));
+  const pgTap = read(path.join(repositoryRoot, 'supabase/tests/account-rls.sql'));
+
+  assert.match(migration, /revoke usage on schema public from public/i);
+  assert.match(migration, /grant usage on schema public to anon/i);
+  assert.match(pgTap, /not has_schema_privilege\('authenticated', 'public', 'USAGE'\)/);
+  assert.match(pgTap, /has_schema_privilege\('anon', 'public', 'USAGE'\)/);
+  assert.match(pgTap, /has_schema_privilege\('postgres', 'public', 'USAGE'\)/);
+  assert.match(pgTap, /both existing accounts retain their user-state rows/);
 });
 
 test('preflight performs no SSH or production file/container mutation', () => {

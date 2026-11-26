@@ -6,6 +6,11 @@
 
 begin;
 
+-- Remove PostgreSQL's default PUBLIC schema access and regrant only the
+-- intentional anonymous projection role. The postgres owner/superuser keeps
+-- server-side access; authenticated receives no direct PostgREST usage.
+revoke usage on schema public from public;
+grant usage on schema public to anon;
 revoke all on schema public, app, analytics from authenticated;
 revoke all on all tables in schema public from authenticated;
 revoke all on all sequences in schema public from authenticated;

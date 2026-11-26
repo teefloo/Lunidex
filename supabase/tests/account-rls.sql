@@ -1,6 +1,6 @@
 begin;
 
-select plan(16);
+select plan(18);
 
 insert into app.users (id)
 values
@@ -43,6 +43,14 @@ select ok(
 select ok(
   not has_schema_privilege('authenticated', 'public', 'USAGE'),
   'authenticated has no direct PostgREST access to the public schema'
+);
+select ok(
+  has_schema_privilege('anon', 'public', 'USAGE'),
+  'anon retains schema usage required for the allowlisted public projections'
+);
+select ok(
+  has_schema_privilege('postgres', 'public', 'USAGE'),
+  'the postgres server role retains public schema usage'
 );
 select ok(
   not has_schema_privilege('authenticated', 'app', 'USAGE'),
