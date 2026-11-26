@@ -54,8 +54,13 @@ describe('AuthModal with Supabase SSR Auth', () => {
 
   beforeEach(() => {
     (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+    vi.stubEnv('NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED', 'false');
     mocks.getSession.mockResolvedValue({ data: { session: null }, error: null });
     mocks.getUser.mockResolvedValue({ data: { user: { id: 'qa-user', email: 'qa@lunidex.invalid', user_metadata: { name: 'QA trainer' } } }, error: null });
+    mocks.signIn.mockResolvedValue({
+      data: { session: { access_token: 'synthetic-token', user: { id: 'qa-user', email: 'qa@lunidex.invalid' } } },
+      error: null,
+    });
     const client = {
       auth: {
         getSession: mocks.getSession,
@@ -80,7 +85,7 @@ describe('AuthModal with Supabase SSR Auth', () => {
     });
     mocks.updateUser.mockResolvedValue({ error: null });
     mocks.cachedClient = client;
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => null }));
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => ({ allowed: true }) }));
     container = document.createElement('div');
     document.body.appendChild(container);
     root = createRoot(container);
@@ -90,10 +95,12 @@ describe('AuthModal with Supabase SSR Auth', () => {
     act(() => root.unmount());
     container.remove();
     vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
     vi.resetAllMocks();
   });
 
   it.each(['signin', 'signup'] as const)('keeps the %s form mounted until the first Auth request finishes', async (initialMode) => {
+    if (initialMode === 'signup') vi.stubEnv('NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED', 'true');
     let finishRequest!: (result: { error: { message: string } }) => void;
     const request = new Promise<{ error: { message: string } }>((resolve) => { finishRequest = resolve; });
     const authAction = initialMode === 'signin' ? mocks.signIn : mocks.signUp;
@@ -146,8 +153,11 @@ describe('AuthModal with Supabase SSR Auth', () => {
   });
 
   it.each(['signin', 'signup'] as const)('still closes after a successful first %s request', async (initialMode) => {
+    if (initialMode === 'signup') vi.stubEnv('NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED', 'true');
     const authAction = initialMode === 'signin' ? mocks.signIn : mocks.signUp;
-    authAction.mockResolvedValue({ error: null });
+    authAction.mockResolvedValue(initialMode === 'signin'
+      ? { data: { session: { access_token: 'synthetic-token', user: { id: 'qa-user', email: 'qa@lunidex.invalid' } } }, error: null }
+      : { error: null });
     await act(async () => root.render(createElement(AuthProvider, null, createElement(ModalOwner, { initialMode }))));
     await act(async () => container.querySelector('button')?.click());
     const dialog = document.querySelector('[role="dialog"]');
@@ -204,6 +214,10 @@ describe('AuthModal with Supabase SSR Auth', () => {
       data: { user: { id: 'recovery-user', email: 'qa@lunidex.invalid', user_metadata: {} } },
       error: null,
     });
+    mocks.getSession.mockResolvedValue({
+      data: { session: { access_token: 'synthetic-recovery-token', user: { id: 'recovery-user', email: 'qa@lunidex.invalid' } } },
+      error: null,
+    });
 
     await act(async () => root.render(createElement(AuthProvider, null, createElement(ExposeAuthAction))));
 
@@ -234,6 +248,10 @@ describe('AuthModal with Supabase SSR Auth', () => {
       .mockResolvedValueOnce({ error: null });
     mocks.getUser.mockResolvedValueOnce({
       data: { user: { id: 'different-user', email: 'other@lunidex.invalid', user_metadata: {} } },
+      error: null,
+    });
+    mocks.getSession.mockResolvedValue({
+      data: { session: { access_token: 'synthetic-recovery-token', user: { id: 'recovery-user', email: 'qa@lunidex.invalid' } } },
       error: null,
     });
 

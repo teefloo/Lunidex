@@ -9,6 +9,8 @@ const mocks = vi.hoisted(() => ({
   getSession: vi.fn(),
   getUser: vi.fn(),
   onAuthStateChange: vi.fn(),
+  signOut: vi.fn(),
+  fetch: vi.fn(),
 }));
 
 vi.mock('./client', () => ({
@@ -40,11 +42,15 @@ describe('Supabase AuthProvider session handling', () => {
     mocks.getSession.mockResolvedValue({ data: { session: null }, error: null });
     mocks.getUser.mockResolvedValue({ data: { user: null }, error: null });
     mocks.onAuthStateChange.mockReturnValue({ data: { subscription: { unsubscribe: vi.fn() } } });
+    mocks.signOut.mockResolvedValue({ error: null });
+    mocks.fetch.mockResolvedValue({ ok: true, status: 200, json: async () => ({ allowed: true }) });
+    vi.stubGlobal('fetch', mocks.fetch);
     mocks.authClient = {
       auth: {
         getSession: mocks.getSession,
         getUser: mocks.getUser,
         onAuthStateChange: mocks.onAuthStateChange,
+        signOut: mocks.signOut,
       },
     };
     container = document.createElement('div');
@@ -55,6 +61,7 @@ describe('Supabase AuthProvider session handling', () => {
   afterEach(() => {
     act(() => root.unmount());
     container.remove();
+    vi.unstubAllGlobals();
     vi.clearAllMocks();
   });
 
@@ -89,6 +96,38 @@ describe('Supabase AuthProvider session handling', () => {
     await renderProvider();
     expect(container.querySelector('output')?.dataset.user).toBe('7d4d38a6-bc79-4fb7-b9f6-07e7f448a660');
     expect(container.querySelector('output')?.dataset.name).toBe('Trainer');
+    expect(mocks.fetch).toHaveBeenCalledWith('/api/auth/access', expect.objectContaining({
+      headers: { Authorization: 'Bearer test-token' },
+      cache: 'no-store',
+    }));
+  });
+
+  it('does not expose a signed-in session rejected by the server allowlist', async () => {
+    mocks.getSession.mockResolvedValue({
+      data: { session: { access_token: 'other-token', user: { id: 'e3dc9ee8-46bd-4e1c-9be5-6802e8c0ad37', email: 'other@example.test' } } },
+      error: null,
+    });
+    mocks.fetch.mockResolvedValue({ ok: false, status: 401, json: async () => ({ allowed: false }) });
+
+    await renderProvider();
+
+    expect(container.querySelector('output')?.dataset.user).toBe('');
+    expect(container.querySelector('output')?.dataset.sessionStatus).toBe('resolved');
+    expect(mocks.signOut).toHaveBeenCalledWith({ scope: 'local' });
+  });
+
+  it('fails closed without signing out when the allowlist check is temporarily unavailable', async () => {
+    mocks.getSession.mockResolvedValue({
+      data: { session: { access_token: 'test-token', user: { id: '7d4d38a6-bc79-4fb7-b9f6-07e7f448a660', email: 'owner@example.test' } } },
+      error: null,
+    });
+    mocks.fetch.mockResolvedValue({ ok: false, status: 503, json: async () => ({}) });
+
+    await renderProvider();
+
+    expect(container.querySelector('output')?.dataset.user).toBe('');
+    expect(container.querySelector('output')?.dataset.sessionStatus).toBe('unavailable');
+    expect(mocks.signOut).not.toHaveBeenCalled();
   });
 
   it('allows retry after a transient Auth failure', async () => {

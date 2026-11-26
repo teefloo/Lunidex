@@ -69,6 +69,7 @@ describe('AuthModal', () => {
 
   beforeEach(() => {
     (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+    vi.stubEnv('NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED', 'false');
     mocks.auth.user = null;
     container = document.createElement('div');
     document.body.appendChild(container);
@@ -78,6 +79,7 @@ describe('AuthModal', () => {
   afterEach(() => {
     act(() => root.unmount());
     container.remove();
+    vi.unstubAllEnvs();
   });
 
   it('closes an open sign-in dialog when the session becomes authenticated', async () => {
@@ -98,6 +100,7 @@ describe('AuthModal', () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
   it('opens the existing form in signup mode when requested by the demo', async () => {
+    vi.stubEnv('NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED', 'true');
     await act(async () => root.render(createElement(AuthModal, { open: true, initialMode: 'signup', onOpenChange: vi.fn() })));
     expect(container.textContent).toContain('Create your account');
     expect(container.textContent).toContain('Name');
@@ -112,6 +115,7 @@ describe('AuthModal', () => {
   });
 
   it('names empty signup fields without showing sample values as entered data', async () => {
+    vi.stubEnv('NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED', 'true');
     await act(async () => root.render(createElement(AuthModal, { open: true, initialMode: 'signup', onOpenChange: vi.fn() })));
 
     const name = container.querySelector<HTMLInputElement>('input[autocomplete="name"]');
@@ -122,6 +126,15 @@ describe('AuthModal', () => {
     expect(email?.name).toBe('email');
     expect(password?.name).toBe('password');
     expect([name?.placeholder, email?.placeholder, password?.placeholder]).toEqual(['', '', '']);
+  });
+
+  it('keeps registration unavailable and hides signup controls when the build flag is false', async () => {
+    await act(async () => root.render(createElement(AuthModal, { open: true, initialMode: 'signup', onOpenChange: vi.fn() })));
+
+    expect(container.textContent).toContain('Welcome back');
+    expect(container.textContent).not.toContain('Create your account');
+    expect(container.textContent).not.toContain('Create account');
+    expect(container.querySelector('input[autocomplete="name"]')).toBeNull();
   });
 
   it('keeps the modal open when a password suggestion consumes Escape', async () => {

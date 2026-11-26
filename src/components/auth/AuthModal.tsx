@@ -33,7 +33,8 @@ export default function AuthModal({
 }) {
   const { t } = useTranslation();
   const { signIn, signUp, resetPassword, user } = useAuth();
-  const [mode, setMode] = useState<Mode>(initialMode);
+  const registrationEnabled = process.env.NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED === 'true';
+  const [mode, setMode] = useState<Mode>(() => registrationEnabled ? initialMode : 'signin');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -270,24 +271,26 @@ export default function AuthModal({
           </p>
         )}
 
-        <p className="text-center text-xs text-foreground/60">
-          {mode === 'signin'
-            ? tt('auth.no_account', "Don't have an account?")
-            : tt('auth.have_account', 'Already have an account?')}{' '}
-          <button
-            type="button"
-            disabled={busy}
-            onClick={() => {
-              setMode(mode === 'signin' ? 'signup' : 'signin');
-              setErrorMessage(null);
-            }}
-            className="font-bold text-primary hover:underline"
-          >
+        {registrationEnabled && (
+          <p className="text-center text-xs text-foreground/60">
             {mode === 'signin'
-              ? tt('auth.signup_cta', 'Create account')
-              : tt('auth.signin_cta', 'Sign in')}
-          </button>
-        </p>
+              ? tt('auth.no_account', "Don't have an account?")
+              : tt('auth.have_account', 'Already have an account?')}{' '}
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => {
+                setMode(mode === 'signin' ? 'signup' : 'signin');
+                setErrorMessage(null);
+              }}
+              className="font-bold text-primary hover:underline"
+            >
+              {mode === 'signin'
+                ? tt('auth.signup_cta', 'Create account')
+                : tt('auth.signin_cta', 'Sign in')}
+            </button>
+          </p>
+        )}
       </DialogContent>
     </Dialog>
   );

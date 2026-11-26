@@ -110,6 +110,29 @@ function mapSession(session: Session | null): AppSession | null {
   return { user, expires_at: session.expires_at ?? null };
 }
 
+type SessionAccessResult = 'allowed' | 'denied' | 'unavailable';
+
+async function checkServerSessionAccess(session: Session | null): Promise<SessionAccessResult> {
+  if (!session?.access_token) return 'denied';
+
+  try {
+    const response = await fetch('/api/auth/access', {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${session.access_token}` },
+      cache: 'no-store',
+      credentials: 'same-origin',
+    });
+    if (response.status === 401 || response.status === 403) return 'denied';
+    if (!response.ok) return 'unavailable';
+    const result: unknown = await response.json();
+    return typeof result === 'object' && result !== null && 'allowed' in result && result.allowed === true
+      ? 'allowed'
+      : 'denied';
+  } catch {
+    return 'unavailable';
+  }
+}
+
 function localePrefix(): string {
   if (typeof window === 'undefined') return '/en';
   const locale = window.location.pathname.split('/').filter(Boolean)[0] ?? '';
@@ -155,25 +178,55 @@ function ConnectedAuthProvider({ client, children }: { client: SupabaseClient; c
 
   useEffect(() => {
     let active = true;
+    let accessCheckRevision = 0;
+    const resolveSession = async (nextSession: Session | null) => {
+      const currentRevision = ++accessCheckRevision;
+      if (!nextSession) {
+        setSession(null);
+        setStatus('resolved');
+        return;
+      }
+
+      setSession(null);
+      setStatus('checking');
+      const access = await checkServerSessionAccess(nextSession);
+      if (!active || currentRevision !== accessCheckRevision) return;
+
+      if (access === 'allowed') {
+        setSession(mapSession(nextSession));
+        setStatus('resolved');
+      } else if (access === 'denied') {
+        setSession(null);
+        setStatus('resolved');
+        // Clear only this browser's rejected session; do not revoke the user's
+        // account or any data at the provider.
+        void client.auth.signOut({ scope: 'local' }).catch(() => {});
+      } else {
+        setSession(null);
+        setStatus('unavailable');
+      }
+    };
     const update = async () => {
+      setStatus('checking');
       try {
         const { data, error } = await client.auth.getSession();
         if (!active) return;
         if (error) {
+          setSession(null);
           setStatus('unavailable');
           return;
         }
-        setSession(mapSession(data.session));
-        setStatus('resolved');
+        await resolveSession(data.session);
       } catch {
-        if (active) setStatus('unavailable');
+        if (active) {
+          setSession(null);
+          setStatus('unavailable');
+        }
       }
     };
     void update();
     const { data: listener } = client.auth.onAuthStateChange((_event, nextSession) => {
-      if (!active) return;
-      setSession(mapSession(nextSession));
-      setStatus('resolved');
+      if (active) void resolveSession(nextSession);
     });
     const onVisible = () => {
       if (document.visibilityState === 'visible') void update();
@@ -183,6 +236,7 @@ function ConnectedAuthProvider({ client, children }: { client: SupabaseClient; c
     return () => {
       active = false;
       listener.subscription.unsubscribe();
+      accessCheckRevision += 1;
       window.removeEventListener('primedex:auth-changed', onVisible);
       document.removeEventListener('visibilitychange', onVisible);
     };
@@ -206,6 +260,9 @@ function ConnectedAuthProvider({ client, children }: { client: SupabaseClient; c
       session,
       user: currentUser,
       signUp: async (email, password, name) => {
+        if (process.env.NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED !== 'true') {
+          return { error: { name: 'RegistrationDisabled', message: 'New account registration is currently disabled.' } };
+        }
         const normalizedEmail = normalizeEmail(email);
         const displayName = name === undefined ? 'Lunidex trainer' : normalizeDisplayName(name);
         if (!displayName) return { error: { name: 'ValidationError', message: 'Enter a display name containing visible characters.' } };
@@ -227,10 +284,16 @@ function ConnectedAuthProvider({ client, children }: { client: SupabaseClient; c
         if (!normalizedEmail) return { error: { name: 'ValidationError', message: 'Enter your email address.' } };
         rememberProductOauth('password', false);
         return run(async () => {
-          const { error } = await client.auth.signInWithPassword({ email: normalizedEmail, password });
+          const { data, error } = await client.auth.signInWithPassword({ email: normalizedEmail, password });
           if (!error) {
-            const { error: verifyError } = await client.auth.getUser();
-            if (verifyError) return { error: verifyError };
+            const access = await checkServerSessionAccess(data.session);
+            if (access === 'denied') {
+              await client.auth.signOut({ scope: 'local' });
+              return { error: new Error('This account is not enabled for Lunidex access.') };
+            }
+            if (access === 'unavailable') {
+              return { error: new Error('Authentication access could not be verified. Please try again.') };
+            }
           }
           return { error };
         });
@@ -300,6 +363,15 @@ function ConnectedAuthProvider({ client, children }: { client: SupabaseClient; c
           } else if (resetToken === 'session') {
             const { data, error } = await client.auth.getUser();
             if (error || !data.user) return { error: error ?? new Error('The recovery session is missing.') };
+          }
+          const { data: sessionData, error: sessionError } = await client.auth.getSession();
+          if (sessionError) return { error: sessionError };
+          const access = await checkServerSessionAccess(sessionData.session);
+          if (access !== 'allowed') {
+            if (access === 'denied') await client.auth.signOut({ scope: 'local' });
+            return { error: new Error(access === 'denied'
+              ? 'This account is not enabled for Lunidex access.'
+              : 'Authentication access could not be verified. Please try again.') };
           }
           const { error } = await client.auth.updateUser({ password });
           if (!error && resetToken.startsWith('hash:')) verifiedRecoveryRef.current = null;

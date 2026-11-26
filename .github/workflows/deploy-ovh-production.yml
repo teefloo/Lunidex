@@ -72,6 +72,9 @@ jobs:
       AUTO_DEPLOY_ENABLED: ${{ vars.AUTO_DEPLOY_ENABLED || 'false' }}
       NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+      NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED: ${{ vars.NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED || 'false' }}
+      SUPABASE_ALLOWED_USER_ID: ${{ secrets.SUPABASE_ALLOWED_USER_ID }}
+      SUPABASE_CA_CERT_B64: ${{ vars.SUPABASE_CA_CERT_B64 }}
       SUPABASE_ROLLBACK_IMAGE_REF: ${{ vars.SUPABASE_ROLLBACK_IMAGE_REF }}
       SUPABASE_ROLLBACK_IMAGE_REVISION: ${{ vars.SUPABASE_ROLLBACK_IMAGE_REVISION }}
       NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN: ${{ vars.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN }}
@@ -123,6 +126,16 @@ jobs:
           if [[ -n "$CANDIDATE_IMAGE_DIGEST" && ! "$CANDIDATE_IMAGE_DIGEST" =~ ^sha256:[0-9a-f]{64}$ ]]; then
             echo 'A reused candidate must be supplied as a sha256 digest, without a tag or repository override.' >&2
             exit 78
+          fi
+          if [[ "$DEPLOYMENT_MODE" == 'deploy' ]]; then
+            [[ "$SUPABASE_ALLOWED_USER_ID" =~ ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ ]] || {
+              echo 'Set the verified owner UUID in the server-only SUPABASE_ALLOWED_USER_ID environment secret.' >&2
+              exit 78
+            }
+            [[ -n "$SUPABASE_CA_CERT_B64" ]] || {
+              echo 'Set the pinned public root certificate in the SUPABASE_CA_CERT_B64 environment variable.' >&2
+              exit 78
+            }
           fi
           if [[ "$GITHUB_EVENT_NAME" == 'workflow_dispatch' && -z "$CANDIDATE_IMAGE_DIGEST" && "$PRODUCTION_COMMIT" != "$GITHUB_SHA" ]]; then
             echo 'A newly built image must use the exact selected master SHA.' >&2
@@ -181,7 +194,7 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Require the production Supabase public configuration and rollback image
+      - name: Require the production Supabase public configuration and validate an optional rollback image
         shell: bash
         run: |
           set -Eeuo pipefail
@@ -193,14 +206,18 @@ jobs:
             echo 'Set NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY in the ovh-production environment.' >&2
             exit 78
           }
-          [[ "$SUPABASE_ROLLBACK_IMAGE_REF" =~ ^ghcr\.io/teefloo/lunidex@sha256:[0-9a-f]{64}$ ]] || {
-            echo 'Set SUPABASE_ROLLBACK_IMAGE_REF to a reviewed, Supabase-compatible GHCR digest.' >&2
-            exit 78
-          }
-          [[ "$SUPABASE_ROLLBACK_IMAGE_REVISION" =~ ^[0-9a-f]{40}$ ]] || {
-            echo 'Set SUPABASE_ROLLBACK_IMAGE_REVISION to the full source SHA of that image.' >&2
-            exit 78
-          }
+          if [[ -n "$SUPABASE_ROLLBACK_IMAGE_REF" || -n "$SUPABASE_ROLLBACK_IMAGE_REVISION" ]]; then
+            [[ "$SUPABASE_ROLLBACK_IMAGE_REF" =~ ^ghcr\.io/teefloo/lunidex@sha256:[0-9a-f]{64}$ ]] || {
+              echo 'A configured Supabase rollback reference must be an immutable GHCR digest.' >&2
+              exit 78
+            }
+            [[ "$SUPABASE_ROLLBACK_IMAGE_REVISION" =~ ^[0-9a-f]{40}$ ]] || {
+              echo 'A configured Supabase rollback reference requires its full source SHA.' >&2
+              exit 78
+            }
+          else
+            echo 'No prevalidated Supabase rollback digest is configured; deploy mode will require a healthy, digest-addressable running fallback snapshot.' >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Require production contact delivery configuration
         if: env.DEPLOYMENT_MODE == 'deploy'
@@ -239,6 +256,7 @@ jobs:
           printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
 
       - name: Verify the configured Supabase-compatible rollback image in isolation
+        if: env.SUPABASE_ROLLBACK_IMAGE_REF != ''
         shell: bash
         run: |
           set -Eeuo pipefail
@@ -286,6 +304,7 @@ jobs:
             --build-arg "NEXT_DEPLOYMENT_ID=$PRODUCTION_COMMIT"
             --build-arg "NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL"
             --build-arg "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"
+            --build-arg "NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED=$NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED"
             --build-arg "NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN=$NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN"
             --build-arg "NEXT_PUBLIC_POSTHOG_HOST=$NEXT_PUBLIC_POSTHOG_HOST"
             --build-arg "NEXT_PUBLIC_POSTHOG_ENABLED=$NEXT_PUBLIC_POSTHOG_ENABLED"
@@ -326,7 +345,11 @@ jobs:
             echo "- Candidate: \`$image_ref\`"
             echo '- Platform: \`linux/amd64\`'
             echo
-            echo "Rollback candidate: \`$SUPABASE_ROLLBACK_IMAGE_REF\` (reviewed for Supabase compatibility)."
+            if [[ -n "$SUPABASE_ROLLBACK_IMAGE_REF" ]]; then
+              echo "Supabase rollback candidate: \`$SUPABASE_ROLLBACK_IMAGE_REF\` (reviewed for Supabase compatibility)."
+            else
+              echo 'No Supabase rollback digest is configured. The VPS deploy script must snapshot a healthy digest-addressable prior image and its matching app.env; the legacy d0f5 Neon image is public-only emergency recovery, never a Supabase candidate.'
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Validate the candidate Compose contract and app health in isolation
@@ -356,6 +379,7 @@ jobs:
           SUPABASE_DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
           SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_ALLOWED_USER_ID: ${{ secrets.SUPABASE_ALLOWED_USER_ID }}
           LUNIDEX_CRON_SECRET: ${{ secrets.LUNIDEX_CRON_SECRET }}
           LUNIDEX_VAPID_PRIVATE_KEY: ${{ secrets.LUNIDEX_VAPID_PRIVATE_KEY }}
           LUNIDEX_VAPID_SUBJECT: ${{ vars.LUNIDEX_VAPID_SUBJECT }}
@@ -384,6 +408,7 @@ jobs:
           }
 
           append_env SUPABASE_DATABASE_URL "$SUPABASE_DATABASE_URL" yes
+          append_env SUPABASE_ALLOWED_USER_ID "$SUPABASE_ALLOWED_USER_ID" yes
           if [[ -n "$SUPABASE_SECRET_KEY" ]]; then
             append_env SUPABASE_SECRET_KEY "$SUPABASE_SECRET_KEY" yes
           elif [[ -n "$SUPABASE_SERVICE_ROLE_KEY" ]]; then
@@ -405,6 +430,28 @@ jobs:
             append_env LUNIDEX_HEAP_SAMPLER_RUN_ID "$HEAP_SAMPLING_RUN_ID" yes
           fi
           chmod 0600 "$app_env"
+
+      - name: Decode and verify the pinned Supabase root CA
+        if: env.DEPLOYMENT_MODE == 'deploy'
+        shell: bash
+        env:
+          SUPABASE_CA_CERT_B64: ${{ vars.SUPABASE_CA_CERT_B64 }}
+        run: |
+          set -Eeuo pipefail
+          ca_file="$RUNNER_TEMP/lunidex-supabase-ca.crt"
+          printf '%s' "$SUPABASE_CA_CERT_B64" | base64 --decode > "$ca_file"
+          [[ -s "$ca_file" ]] || { echo 'The configured Supabase CA value did not decode to a certificate.' >&2; exit 78; }
+          actual_fingerprint="$(openssl x509 -in "$ca_file" -noout -fingerprint -sha256 | sed 's/.*=//; s/://g' | tr '[:lower:]' '[:upper:]')"
+          [[ "$actual_fingerprint" == '807025ADD50DED219D2C9C7D299C004F824EB00CF7F65AFEF607D07B72E6CAFA' ]] || {
+            echo 'The configured Supabase CA fingerprint does not match the pinned certificate.' >&2
+            exit 78
+          }
+          openssl x509 -in "$ca_file" -noout -checkend 0 >/dev/null
+          openssl x509 -in "$ca_file" -noout -text | grep -q 'CA:TRUE' || {
+            echo 'The pinned Supabase certificate is not a CA certificate.' >&2
+            exit 78
+          }
+          chmod 0644 "$ca_file"
 
       - name: Configure the separate production SSH connection
         if: env.DEPLOYMENT_MODE == 'deploy'
@@ -482,12 +529,15 @@ jobs:
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
           ssh "${ssh_args[@]}" "$target" 'set -Eeuo pipefail; root=/opt/lunidex-production; install -d -m 0755 "$root/scripts/deployment" "$root/deploy/production" "$root/deploy/systemd-production"; if [[ ! -f "$root/.env" ]]; then umask 077; printf "%s\n" "APP_IMAGE_REF=ghcr.io/teefloo/lunidex@sha256:0000000000000000000000000000000000000000000000000000000000000000" > "$root/.env"; fi; chmod 0600 "$root/.env"'
           scp "${ssh_args[@]}" compose.production.yaml "$target:/opt/lunidex-production/"
-          scp "${ssh_args[@]}" scripts/deployment/deploy-production.sh scripts/deployment/rollback-production.sh scripts/deployment/rollback-candidates.sh scripts/deployment/healthcheck-production.sh scripts/deployment/check-supabase-auth.sh scripts/deployment/preflight-production.sh scripts/deployment/rehearse-rollback-production.sh scripts/deployment/production-memory-gate.sh scripts/deployment/require-supabase-ca.sh "$target:/opt/lunidex-production/scripts/deployment/"
+          scp "${ssh_args[@]}" scripts/deployment/deploy-production.sh scripts/deployment/rollback-production.sh scripts/deployment/rollback-candidates.sh scripts/deployment/verify-neon-public-only-image.sh scripts/deployment/healthcheck-production.sh scripts/deployment/check-supabase-auth.sh scripts/deployment/preflight-production.sh scripts/deployment/rehearse-rollback-production.sh scripts/deployment/production-memory-gate.sh scripts/deployment/require-supabase-ca.sh scripts/deployment/install-supabase-ca.sh "$target:/opt/lunidex-production/scripts/deployment/"
           scp "${ssh_args[@]}" scripts/deployment/activate-production-route.sh "$target:/opt/lunidex-production/scripts/deployment/"
           scp "${ssh_args[@]}" deploy/production/* "$target:/opt/lunidex-production/deploy/production/"
           scp "${ssh_args[@]}" deploy/systemd-production/* "$target:/opt/lunidex-production/deploy/systemd-production/"
+          ca_staging_path="/opt/lunidex-production/.supabase-ca.$PRODUCTION_COMMIT.tmp"
+          scp "${ssh_args[@]}" "$RUNNER_TEMP/lunidex-supabase-ca.crt" "$target:$ca_staging_path"
+          ssh "${ssh_args[@]}" "$target" "bash /opt/lunidex-production/scripts/deployment/install-supabase-ca.sh '$ca_staging_path'"
           scp "${ssh_args[@]}" "$RUNNER_TEMP/lunidex-production-app.env" "$target:/opt/lunidex-production/app.env.$PRODUCTION_COMMIT.tmp"
-          ssh "${ssh_args[@]}" "$target" "chmod 0600 /opt/lunidex-production/app.env.$PRODUCTION_COMMIT.tmp && mv /opt/lunidex-production/app.env.$PRODUCTION_COMMIT.tmp /opt/lunidex-production/app.env"
+          ssh "${ssh_args[@]}" "$target" "chmod 0600 /opt/lunidex-production/app.env.$PRODUCTION_COMMIT.tmp"
 
       - name: Verify the preinstalled Supabase CA before stopping preproduction
         if: env.DEPLOYMENT_MODE == 'deploy'
@@ -547,7 +597,7 @@ jobs:
           fi
           target="$OVH_PRODUCTION_DEPLOY_USER@$OVH_PRODUCTION_DEPLOY_HOST"
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
-          remote_command="set -Eeuo pipefail; umask 077; export DOCKER_CONFIG=\$(mktemp -d /tmp/lunidex-production-docker.XXXXXX); trap 'rm -rf \"\$DOCKER_CONFIG\"' EXIT; docker login ghcr.io --username teefloo --password-stdin; bash /opt/lunidex-production/scripts/deployment/deploy-production.sh '$IMAGE_REF' '$PRODUCTION_COMMIT' deploy '$SUPABASE_ROLLBACK_IMAGE_REF'"
+          remote_command="set -Eeuo pipefail; umask 077; export DOCKER_CONFIG=\$(mktemp -d /tmp/lunidex-production-docker.XXXXXX); trap 'rm -rf \"\$DOCKER_CONFIG\"' EXIT; docker login ghcr.io --username teefloo --password-stdin; bash /opt/lunidex-production/scripts/deployment/deploy-production.sh '$IMAGE_REF' '$PRODUCTION_COMMIT' deploy '$SUPABASE_ROLLBACK_IMAGE_REF' '/opt/lunidex-production/app.env.$PRODUCTION_COMMIT.tmp'"
           printf '%s' "$GITHUB_TOKEN" | ssh "${ssh_args[@]}" "$target" "$remote_command"
 
       - name: Verify the production deployment health
@@ -583,7 +633,9 @@ jobs:
         id: supabase_auth_probe
         continue-on-error: true
         shell: bash
-        run: bash scripts/deployment/check-supabase-auth.sh "$NEXT_PUBLIC_SUPABASE_URL"
+        env:
+          SUPABASE_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+        run: bash scripts/deployment/check-supabase-auth.sh "$NEXT_PUBLIC_SUPABASE_URL" "$SUPABASE_PUBLISHABLE_KEY"
 
       - name: Report Supabase availability independently of Node health
         if: always() && env.DEPLOYMENT_MODE == 'deploy'
@@ -598,10 +650,10 @@ jobs:
             echo '- The Docker health check and local /api/healthz response measure the Lunidex process only.'
             case "$SUPABASE_AUTH_PROBE_OUTCOME" in
               success)
-                echo '- Supabase Auth session endpoint responded. This unauthenticated probe confirms reachability only; it does not claim that a signed-in session works.'
+                echo '- Supabase Auth health endpoint responded using the public project key. This confirms provider reachability only; it does not claim that a signed-in session works.'
                 ;;
               failure)
-                echo '- **Supabase Auth reachability: NO-GO.** The provider health probe failed. This does not change the Node/container health verdict and does not cause an app rollback.'
+                echo '- **Supabase Auth reachability: NO-GO.** The project-keyed provider health probe failed. This does not change the Node/container health verdict and does not cause an app rollback.'
                 ;;
               *)
                 echo '- **Supabase Auth functional availability: INCOMPLETE.** The post-deploy provider probe did not run, so no Auth availability verdict is inferred from the application health result.'

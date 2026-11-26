@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
+import { isAllowedSupabaseAuthUser } from '@/lib/supabase/server-auth';
 
 export const runtime = 'nodejs';
 
@@ -54,7 +55,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       },
     },
   });
-  const { error } = await supabase.auth.exchangeCodeForSession(code);
-  if (error) destination.searchParams.set('auth', 'callback_error');
+  const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+  if (error || !data.user || !isAllowedSupabaseAuthUser(data.user)) {
+    await supabase.auth.signOut({ scope: 'local' }).catch(() => {});
+    destination.searchParams.set('auth', 'callback_error');
+  }
   return NextResponse.redirect(destination);
 }

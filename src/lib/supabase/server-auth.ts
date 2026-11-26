@@ -13,6 +13,39 @@ export interface SupabaseRequestUser {
   };
 }
 
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+export function isAllowedSupabaseUserId(
+  userId: string,
+  env: Record<string, string | undefined> = process.env,
+): boolean {
+  const allowedUserId = env.SUPABASE_ALLOWED_USER_ID?.trim().toLowerCase();
+  const normalizedUserId = userId.trim().toLowerCase();
+  return Boolean(
+    allowedUserId
+      && UUID_PATTERN.test(allowedUserId)
+      && UUID_PATTERN.test(normalizedUserId)
+      && normalizedUserId === allowedUserId,
+  );
+}
+
+/**
+ * Temporary production access is fail-closed to one verified Auth identity.
+ * The allowlist value is server-only and is never returned to the browser.
+ */
+export function isAllowedSupabaseAuthUser(
+  user: Pick<User, 'id' | 'email' | 'email_confirmed_at'>,
+  env: Record<string, string | undefined> = process.env,
+): boolean {
+  const confirmedEmail = user.email?.trim();
+
+  return Boolean(
+    isAllowedSupabaseUserId(user.id, env)
+      && confirmedEmail
+      && user.email_confirmed_at?.trim(),
+  );
+}
+
 export function resolveSupabaseAdminKey(
   env: Record<string, string | undefined> = process.env,
 ): string | null {
@@ -30,7 +63,7 @@ function getPublicConfig(): { url: string; key: string } | null {
 
 function mapAuthUser(user: User): SupabaseRequestUser | null {
   const email = user.email?.trim();
-  if (!user.id || !email) return null;
+  if (!email || !isAllowedSupabaseAuthUser(user)) return null;
   const metadata = user.user_metadata;
   const rawName = metadata.name ?? metadata.full_name ?? metadata.display_name;
   const name = typeof rawName === 'string' ? rawName.trim().slice(0, 120) : '';
@@ -74,10 +107,30 @@ function createCookieRequestClient(request: Request) {
   });
 }
 
+export type SupabaseRequestAuthResult =
+  | { status: 'allowed'; user: SupabaseRequestUser }
+  | { status: 'denied' }
+  | { status: 'unavailable' };
+
+export function isSupabaseAuthErrorUnavailable(error: unknown): boolean {
+  if (!error || typeof error !== 'object') return false;
+  const candidate = error as { status?: unknown; code?: unknown; name?: unknown };
+  const status = candidate.status;
+  if (typeof status === 'number') {
+    return [402, 408, 429, 500, 502, 503, 504].includes(status);
+  }
+  const code = typeof candidate.code === 'string' ? candidate.code.toLowerCase() : '';
+  const name = typeof candidate.name === 'string' ? candidate.name.toLowerCase() : '';
+  return code.includes('rate_limit')
+    || code.includes('quota')
+    || name.includes('fetch')
+    || name.includes('retryable');
+}
+
 /** Verify either a bearer token or the incoming SSR cookie with Supabase Auth. */
-export async function getSupabaseUserFromRequest(request: Request): Promise<SupabaseRequestUser | null> {
+export async function verifySupabaseUserFromRequest(request: Request): Promise<SupabaseRequestAuthResult> {
   const config = getPublicConfig();
-  if (!config) return null;
+  if (!config) return { status: 'unavailable' };
 
   try {
     const token = getBearerToken(request);
@@ -91,16 +144,23 @@ export async function getSupabaseUserFromRequest(request: Request): Promise<Supa
       accessToken = token;
     } else {
       const cookieClient = createCookieRequestClient(request);
-      if (!cookieClient) return null;
+      if (!cookieClient) return { status: 'unavailable' };
       client = cookieClient;
     }
 
     const { data, error } = await client.auth.getUser(accessToken);
-    if (error) return null;
-    return data.user ? mapAuthUser(data.user) : null;
+    if (error) return { status: isSupabaseAuthErrorUnavailable(error) ? 'unavailable' : 'denied' };
+    if (!data.user) return { status: 'denied' };
+    const user = mapAuthUser(data.user);
+    return user ? { status: 'allowed', user } : { status: 'denied' };
   } catch {
-    return null;
+    return { status: 'unavailable' };
   }
+}
+
+export async function getSupabaseUserFromRequest(request: Request): Promise<SupabaseRequestUser | null> {
+  const result = await verifySupabaseUserFromRequest(request);
+  return result.status === 'allowed' ? result.user : null;
 }
 
 /** Read the signed-in user during server rendering; never authorize from getSession(). */

@@ -29,9 +29,9 @@ http://localhost:3000/ko/auth/callback
 http://localhost:3000/zh/auth/callback
 ```
 
-Les modèles hébergés de confirmation et de récupération utilisent `{{ .ConfirmationURL }}`. Le SMTP personnalisé est activé sur `smtp.resend.com:465` avec un identifiant sauvegardé. Le tableau de bord masque l'expéditeur et aucun destinataire/compte de test sûr n'a été autorisé pour vérifier la livraison; l'identité d'expéditeur et la délivrabilité réelle restent donc non confirmées. Ne pas prétendre qu'un nouvel e-mail a été livré sans ce contrôle.
+Le modèle hébergé de confirmation utilise `{{ .ConfirmationURL }}`. Le modèle de récupération hébergé doit correspondre à la source `supabase/templates/recovery.html` : utiliser le `RedirectTo` exact avec `TokenHash` et `type=recovery`, puis ne vérifier le jeton qu'après soumission du formulaire de nouveau mot de passe. Cela évite qu'un scanner de liens consomme le jeton lors d'un GET. Le SMTP personnalisé est activé sur `smtp.resend.com:465` avec un identifiant sauvegardé. L'identité d'expéditeur et la livraison réelle ne sont pas vérifiées indépendamment; après déploiement, la livraison sera vérifiée par un envoi à l'adresse déjà vérifiée, sans documenter cette adresse.
 
-Aucune branche Supabase isolée de préproduction n'existe actuellement. Les essais synthétiques sur le projet hébergé Lunidex ne constituent pas un environnement Supabase de préproduction. Le projet Supabase Repère, utilisé par une autre application, n'a pas été consulté ni modifié. OAuth Google/GitHub reste désactivé faute d'identifiants client. Les quotas Supabase avaient été relevés sur le plan Free avec le pay-as-you-go désactivé; aucune dépense n'a été engagée.
+Aucune branche Supabase isolée de préproduction n'existe actuellement. Les essais synthétiques sur le projet hébergé Lunidex ne constituent pas un environnement Supabase de préproduction. Aucune donnée n'a été modifiée ou importée; les comptes et données existants d'origine inconnue doivent être préservés. Le projet Supabase Repère, utilisé par une autre application, n'a pas été consulté ni modifié. OAuth Google/GitHub reste désactivé faute d'identifiants client. Les quotas Supabase avaient été relevés sur le plan Free avec le pay-as-you-go désactivé; aucune dépense n'a été engagée.
 
 Le déploiement reste **NO-GO** : aucun digest GHCR de rollback Supabase-compatible n'a été publié et validé, et Neon n'a pas pu être exporté. Toute donnée déjà présente sur Supabase doit d'abord être inventoriée sans suppression; les comptes/données non marqués sont à préserver, et l'artefact synthétique connu ne doit être nettoyé qu'après vérification de son marqueur exact et de sa provenance. Ne déclencher `deploy` qu'après ces préconditions, vérification de la capacité du projet Lunidex, test SMTP autorisé, définition des variables/secrets de `ovh-production` et revue indépendante. Les migrations hébergées et les tests synthétiques ne prouvent pas l'import de production ni un cutover.
 
@@ -42,7 +42,9 @@ Le runbook de migration fournit les préconditions détaillées, les commandes s
 - Les images sont publiées sur GHCR et sélectionnées par référence immuable `ghcr.io/teefloo/lunidex@sha256:…`. L'image candidate porte un label de révision Git et `com.lunidex.backend=supabase`.
 - Le workflow `.github/workflows/deploy-ovh-production.yml` garde son mode manuel protégé et son mode `workflow_run` existant, encore conditionné à `AUTO_DEPLOY_ENABLED=true`. Cette tâche ne change pas cette variable. Le mode `preflight` valide uniquement le runner GitHub; il ne touche pas OVH.
 - Les checks d'image isolés testent le digest, l'architecture `linux/amd64`, le label backend, l'utilisateur, la commande, le contrat Compose et `/api/healthz`, sans secrets runtime ni réseau sortant.
-- La production utilise le pool `pg` Supabase avec un petit nombre de connexions et une URL de pooler partagé en mode session sur TLS vérifié. Le certificat racine est préinstallé sur l'hôte dans `/opt/lunidex-production/supabase-ca.crt`, monté en lecture seule dans le conteneur et chargé par Node via `NODE_EXTRA_CA_CERTS`; il n'est pas dans le build ni livré par Actions. `SUPABASE_SECRET_KEY` est la clé runtime serveur/admin préférée; `SUPABASE_SERVICE_ROLE_KEY` reste un repli legacy temporaire. L'URL publique et la clé publishable sont incorporées au build.
+- La production utilise le pool `pg` Supabase avec un petit nombre de connexions et une URL de pooler partagé en mode session sur TLS vérifié. `SUPABASE_CA_CERT_B64` est une variable publique de l'environnement GitHub `ovh-production`; le workflow la décode puis vérifie l'empreinte épinglée avant de transférer le CA vers un chemin temporaire sur l'hôte et de l'installer par renommage atomique en `/opt/lunidex-production/supabase-ca.crt` avec mode `0644`. Le CA est monté en lecture seule et chargé par Node via `NODE_EXTRA_CA_CERTS`; il ne va ni dans le contexte de build ni dans l'image. `SUPABASE_SECRET_KEY` est la clé runtime serveur/admin préférée; `SUPABASE_SERVICE_ROLE_KEY` reste un repli legacy temporaire. L'URL publique et la clé publishable sont incorporées au build.
+- L'accès applicatif temporaire est limité à l'identité `SUPABASE_ALLOWED_USER_ID` dans un secret server-only de `ovh-production`; chaque requête vérifie l'identité via `auth.getUser()` et exige un e-mail confirmé. L'ID n'est jamais placé dans le code, le bundle public, les logs ou les réponses API. Les rôles PostgREST `authenticated` n'ont aucun droit direct sur `public`, `app` ou `analytics`; les lectures publiques `anon` existantes restent disponibles. Le serveur Next.js reste le seul chemin de données authentifiées et vérifie l'allowlist avant les accès PostgreSQL.
+- Au premier accès autorisé du propriétaire, l'application crée `app.users`, `public.profiles` et un `public.user_state` vide avec des insertions `ON CONFLICT DO NOTHING`. Aucun profil ou snapshot existant n'est remplacé; les autres comptes et leurs lignes sont conservés et refusés. Les inscriptions sont cachées/désactivées dans le build sauf si le flag explicite `NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED=true` est activé; l'Auth hébergée doit également conserver l'inscription publique désactivée pendant cette fenêtre.
 - Le healthcheck Docker et `/api/healthz` mesurent seulement le processus. `check-supabase-auth.sh` teste uniquement la joignabilité anonyme de `/auth/v1/health`; aucune de ces sondes ne démontre l'isolation RLS ou une session authentifiée.
 
 ### Variables de build et de runtime
@@ -51,11 +53,15 @@ Variables publiques dans l'environnement GitHub protégé `ovh-production` :
 
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+- `NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED` (doit rester `false` pour cette fenêtre owner-only)
 - variables publiques de mesure/SEO déjà utilisées, si activées
+
+Variable publique utilisée uniquement pour installer le CA épinglé : `SUPABASE_CA_CERT_B64`. Secret runtime : `SUPABASE_ALLOWED_USER_ID`.
 
 Secrets runtime transmis à `/opt/lunidex-production/app.env` avec permissions `0600` :
 
 - `SUPABASE_DATABASE_URL`
+- `SUPABASE_ALLOWED_USER_ID`
 - `SUPABASE_SECRET_KEY` (preferred) or `SUPABASE_SERVICE_ROLE_KEY` (temporary legacy fallback)
 - `LUNIDEX_CRON_SECRET`
 - secrets optionnels de push/contact explicitement requis par l'environnement
@@ -64,7 +70,9 @@ Les variables `SUPABASE_MIGRATION_DATABASE_URL`, `NEON_SOURCE_DATABASE_URL`, `SU
 
 ### Rollback compatible
 
-Le job exige `SUPABASE_ROLLBACK_IMAGE_REF` (digest GHCR immuable) et `SUPABASE_ROLLBACK_IMAGE_REVISION` (SHA complet) dans l'environnement `ovh-production`. Le runner valide cette image sans réseau et exige le label `com.lunidex.backend=supabase`; le serveur répète le contrôle avant de remplacer l'application. Le déploiement refuse de démarrer si aucun rollback Supabase-compatible explicite n'est disponible. L'image Neon historique n'est jamais un candidat.
+Le job exige `SUPABASE_ROLLBACK_IMAGE_REF` (digest GHCR immuable) et `SUPABASE_ROLLBACK_IMAGE_REVISION` (SHA complet) dans l'environnement `ovh-production`. Le runner valide cette image sans réseau et exige le label `com.lunidex.backend=supabase`; le serveur répète le contrôle avant de remplacer l'application. Le déploiement refuse de démarrer si aucun rollback Supabase-compatible explicite n'est disponible. Le workflow transmet le nouvel `app.env` dans un fichier temporaire; le script sauvegarde de manière atomique l'environnement associé à la cible de rollback avant d'activer le nouveau conteneur. `rollback-production.sh --last-stable` restaure l'image et son `app.env` correspondant.
+
+Le SHA de l'image historique stable Neon est `d0f5e1af2cf95dd43eb046069c0d37f0a2add93e`. Elle n'est pas compatible Supabase, n'est pas une cible d'auto-rollback et ne sera jamais étiquetée comme telle. Elle ne peut servir que de recours public-only après vérification indépendante de son digest immuable et de son environnement Neon; ses fonctions Auth et données cloud sont indisponibles et elle peut afficher des données Neon obsolètes. Aucun digest Neon actuel n'est vérifié ici, donc le code refuse cette image comme rollback de production Supabase.
 
 Aucun digest rollback Supabase-compatible n'est validé dans le checkout de préparation; en l'absence d'une référence publiée et d'une validation préflight documentée, le déploiement reste NO-GO. L'image courante Neon et `Dockerfile.rollback-baseline` ne sont pas des alternatives valides.
 

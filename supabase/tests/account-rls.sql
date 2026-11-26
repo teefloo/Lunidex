@@ -41,9 +41,34 @@ select ok(
   'anon cannot select internal leaderboard user IDs'
 );
 select ok(
-  not has_column_privilege('authenticated', 'public.quiz_scores', 'user_id', 'SELECT'),
-  'authenticated cannot select internal leaderboard user IDs'
+  not has_schema_privilege('authenticated', 'public', 'USAGE'),
+  'authenticated has no direct PostgREST access to the public schema'
 );
+select ok(
+  not has_schema_privilege('authenticated', 'app', 'USAGE'),
+  'authenticated cannot query the internal application schema'
+);
+select ok(
+  not has_table_privilege('authenticated', 'public.user_state', 'SELECT'),
+  'authenticated cannot read application rows through the Data API'
+);
+select ok(
+  not exists (
+    select 1
+    from pg_proc procedure
+    join pg_namespace schema on schema.oid = procedure.pronamespace
+    where schema.nspname in ('public', 'app', 'analytics')
+      and has_function_privilege('authenticated', procedure.oid, 'EXECUTE')
+  ),
+  'authenticated cannot execute exposed application functions'
+);
+
+create table public.lunidex_auth_api_default_privileges_probe (id integer);
+select ok(
+  not has_table_privilege('authenticated', 'public.lunidex_auth_api_default_privileges_probe', 'SELECT'),
+  'new public tables remain closed to authenticated by default'
+);
+drop table public.lunidex_auth_api_default_privileges_probe;
 
 set local role anon;
 select is(
@@ -58,57 +83,33 @@ select is(
 );
 reset role;
 
-set local role authenticated;
-select set_config('request.jwt.claim.sub', '1b160c34-2b7b-49c0-bfd0-b97ec8a68f31', true);
 select is(
-  (select count(*) from public.user_state),
-  1::bigint,
-  'an authenticated owner reads their own snapshot'
+  (select count(*) from public.user_state where user_id in (
+    '1b160c34-2b7b-49c0-bfd0-b97ec8a68f31',
+    'e3dc9ee8-46bd-4e1c-9be5-6802e8c0ad37'
+  )),
+  2::bigint,
+  'both existing accounts retain their user-state rows after authenticated API access is closed'
 );
 select is(
-  (select count(*) from public.user_state where user_id = 'e3dc9ee8-46bd-4e1c-9be5-6802e8c0ad37'),
-  0::bigint,
-  'the first account cannot read the second account snapshot'
+  (select count(*) from public.profiles where id in (
+    '1b160c34-2b7b-49c0-bfd0-b97ec8a68f31',
+    'e3dc9ee8-46bd-4e1c-9be5-6802e8c0ad37'
+  )),
+  2::bigint,
+  'both existing profiles remain unchanged and present'
 );
 select is(
-  (select count(*) from public.public_profiles where id = '1b160c34-2b7b-49c0-bfd0-b97ec8a68f31'),
-  1::bigint,
-  'an active public profile is visible through the allowlisted view'
+  (select count(*) from app.users where id in (
+    '1b160c34-2b7b-49c0-bfd0-b97ec8a68f31',
+    'e3dc9ee8-46bd-4e1c-9be5-6802e8c0ad37'
+  )),
+  2::bigint,
+  'both account identity rows remain present'
 );
-
-select set_config('request.jwt.claim.sub', 'e3dc9ee8-46bd-4e1c-9be5-6802e8c0ad37', true);
-select is(
-  (select count(*) from public.user_state),
-  1::bigint,
-  'a second JWT reads only its own snapshot'
-);
-select is(
-  (select count(*) from public.user_state where user_id = '1b160c34-2b7b-49c0-bfd0-b97ec8a68f31'),
-  0::bigint,
-  'the second account cannot read the first account snapshot'
-);
-select is(
-  (select count(*) from public.public_profiles where id = '1b160c34-2b7b-49c0-bfd0-b97ec8a68f31'),
-  1::bigint,
-  'a second JWT can read an active public profile without its private email column'
-);
-
-reset role;
-update app.users
-set deletion_state = 'pending', deleted_at = now(), deletion_requested_at = now()
-where id = '1b160c34-2b7b-49c0-bfd0-b97ec8a68f31';
-
-set local role authenticated;
-select set_config('request.jwt.claim.sub', '1b160c34-2b7b-49c0-bfd0-b97ec8a68f31', true);
-select is(
-  (select count(*) from public.user_state),
-  0::bigint,
-  'a pending account JWT cannot read rows while account data is being removed'
-);
-select is(
-  (select count(*) from public.public_profiles where id = '1b160c34-2b7b-49c0-bfd0-b97ec8a68f31'),
-  0::bigint,
-  'a pending account JWT cannot read its previously public profile'
+select ok(
+  has_table_privilege(current_user, 'public.user_state', 'SELECT'),
+  'the server database role retains the access needed by guarded API handlers'
 );
 
 select * from finish();

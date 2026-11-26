@@ -142,6 +142,13 @@ async function expectDenied(request, label) {
   if (!error) fail(`${label} unexpectedly succeeded for an anonymous Data API request.`);
 }
 
+async function expectAuthenticatedApiDenied(request, label) {
+  const { data, error } = await request;
+  if (!error || error.code !== '42501' || (data?.length ?? 0) !== 0) {
+    fail(`${label} was not denied by the authenticated Data API grants.`);
+  }
+}
+
 async function run() {
   const config = validateStagingSmokeConfig(process.env);
   const admin = createClient(config.apiUrl, config.adminKey, {
@@ -231,79 +238,29 @@ async function run() {
       sessions.push({ account, client, accessToken: signIn.session.access_token });
     }
 
-    for (const [index, session] of sessions.entries()) {
-      const other = sessions[1 - index].account;
-      const ownRows = assertNoError(await session.client.from('user_state').select('user_id,data'), `Owner read ${session.account.label}`);
-      if (ownRows.length !== 1 || ownRows[0].user_id !== session.account.id
-        || ownRows[0].data?.tcgCollections?.[0] !== session.account.collectionKey
-        || ownRows[0].data?.tcgCollectionCards?.[0] !== session.account.collectionCard) {
-        fail(`The authenticated user ${session.account.label} could not read exactly its own state row.`);
-      }
-      const crossRows = assertNoError(
-        await session.client.from('user_state').select('user_id,data').eq('user_id', other.id),
-        `Cross-account read ${session.account.label}`,
+    for (const session of sessions) {
+      await expectAuthenticatedApiDenied(
+        session.client.from('user_state').select('user_id,data'),
+        `Authenticated direct table read for ${session.account.label}`,
       );
-      if (crossRows.length !== 0) fail(`Account ${session.account.label} could read another synthetic account's state.`);
     }
 
     if (config.checkAppApi) {
-      const readAppSnapshot = async (session, requestedUserId) => {
+      const checkAppAccess = async (session) => {
         const url = new URL('/api/user-state', config.appOrigin);
-        if (requestedUserId) url.searchParams.set('userId', requestedUserId);
         const response = await fetch(url, {
           headers: { authorization: `Bearer ${session.accessToken}` },
           signal: AbortSignal.timeout(10_000),
         });
-        if (!response.ok) fail(`The configured Lunidex test-app /api/user-state route returned HTTP ${response.status}.`);
-        return response.json();
+        if (response.status !== 401) {
+          fail(`The configured Lunidex test-app did not reject a synthetic account outside SUPABASE_ALLOWED_USER_ID (HTTP ${response.status}).`);
+        }
+        const body = await response.json().catch(() => null);
+        if (body && typeof body === 'object' && 'data' in body) {
+          fail('The configured Lunidex test-app exposed user data to a synthetic non-allowlisted account.');
+        }
       };
-      const [sessionA, sessionB] = sessions;
-      const [initialA, initialB] = await Promise.all([
-        readAppSnapshot(sessionA, sessionB.account.id),
-        readAppSnapshot(sessionB, sessionA.account.id),
-      ]);
-      if (initialA?.data?.tcgCollections?.[0] !== sessionA.account.collectionKey
-        || initialB?.data?.tcgCollections?.[0] !== sessionB.account.collectionKey) {
-        fail('The app API did not return each bearer its own synthetic collection snapshot.');
-      }
-
-      const addedCollection = 'tcg2:en:base3';
-      const addedCard = `${addedCollection}|base3-001|holo|1`;
-      const updatedA = {
-        ...initialA.data,
-        tcgCollections: [...initialA.data.tcgCollections, addedCollection],
-        tcgCollectionCards: [...initialA.data.tcgCollectionCards, addedCard],
-        tcgActiveCollections: [...initialA.data.tcgActiveCollections, addedCollection],
-      };
-      const putResponse = await fetch(new URL('/api/user-state', config.appOrigin), {
-        method: 'PUT',
-        headers: {
-          authorization: `Bearer ${sessionA.accessToken}`,
-          origin: config.appOrigin,
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({ data: updatedA, expectedUpdatedAt: initialA.updatedAt }),
-        signal: AbortSignal.timeout(10_000),
-      });
-      if (!putResponse.ok) fail(`The configured Lunidex test-app /api/user-state collection write returned HTTP ${putResponse.status}.`);
-      const writtenA = await putResponse.json();
-      if (writtenA?.data?.tcgCollections?.at(-1) !== addedCollection
-        || writtenA.data.tcgCollectionCards?.at(-1) !== addedCard) {
-        fail('The app API did not preserve the synthetic TCG collection write.');
-      }
-
-      const [afterA, afterB] = await Promise.all([
-        readAppSnapshot(sessionA, sessionB.account.id),
-        readAppSnapshot(sessionB, sessionA.account.id),
-      ]);
-      if (afterA?.data?.tcgCollections?.at(-1) !== addedCollection
-        || afterA.data.tcgCollectionCards?.at(-1) !== addedCard) {
-        fail('Account A could not read its own new collection after the app API write.');
-      }
-      if (JSON.stringify(afterB?.data) !== JSON.stringify(initialB?.data)
-        || afterB?.data?.tcgCollections?.includes(addedCollection)) {
-        fail('Account B state changed or exposed account A collection after the app API write.');
-      }
+      await Promise.all(sessions.map(checkAppAccess));
     }
 
     const publicRows = assertNoError(
