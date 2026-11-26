@@ -2,9 +2,38 @@
 
 ## État de la migration
 
-Ce document décrit la chaîne de déploiement, pas une migration de production exécutée. Au 26 novembre 2026, la production OVH tourne encore avec l'ancien runtime Neon et le projet Supabase Lunidex n'a pas reçu l'import de production. Le signup hébergé synthétique et son e-mail de confirmation Resend ont abouti; le lien de confirmation a fonctionné. Le login par mot de passe a aussi été validé. Le dernier e-mail de récupération utilise une URL valide `/auth/callback?token_hash=…` et ouvre le formulaire de nouveau mot de passe; le changement reste en attente de la validation manuelle de l'utilisateur. Les tests hébergés antérieurs ont validé le pool PostgreSQL Session Pooler `aws-0-eu-west-3.pooler.supabase.com:5432`, TLS strict avec `NODE_EXTRA_CA_CERTS=.migration/supabase-ca.crt`, `SELECT 1`, `pg_stat_ssl`, la réutilisation d'une session et un test transactionnel en lecture seule avec commit/rollback. Les tests RLS/isolation entre comptes et GET/PUT de collection via `/api/user-state` ont aussi réussi. Un compte synthétique de signup conserve actuellement une carte de collection de test; ne supprimer ce compte qu'après confirmation explicite au moment de l'action. L'accès à Neon reste bloqué par quota (SQLSTATE `53000` lors de la tentative précédente), donc aucun export ni import réel n'a été effectué. Les quotas Supabase ont été vérifiés sur le plan Free, avec le pay-as-you-go désactivé. OAuth Google/GitHub reste désactivé faute d'identifiants client. Le `Site URL` Auth est encore `localhost` pour les tests et devra être remplacé, avec les redirections de production explicitement allowlistées, avant la bascule. Le projet Supabase déjà connecté d'une autre application ne doit pas être utilisé ni modifié.
+Ce document décrit la chaîne de déploiement, pas une migration de production exécutée. Au 26 novembre 2026, la production OVH tourne encore avec l'ancien runtime Neon et le projet Supabase Lunidex n'a pas reçu l'import de production. Les vérifications hébergées antérieures ont exercé les parcours synthétiques de signup, login par mot de passe, confirmation et récupération. Les tests PostgreSQL ont validé le Session Pooler `aws-0-eu-west-3.pooler.supabase.com:5432`, TLS strict avec `NODE_EXTRA_CA_CERTS=.migration/supabase-ca.crt`, `SELECT 1`, `pg_stat_ssl`, la réutilisation d'une session et des tests RLS/isolation entre comptes ainsi que GET/PUT de collection via `/api/user-state`.
 
-Le déploiement reste **NO-GO** : aucun digest GHCR de rollback Supabase-compatible n'a été publié et validé, Neon n'a pas pu être exporté, et le compte synthétique avec sa carte de test doit être nettoyé puis contrôlé avant l'import définitif. Ne déclencher `deploy` qu'après ces préconditions, vérification de la capacité du projet Lunidex, configuration des redirections Auth de production, définition des variables/secrets de `ovh-production` et revue indépendante. Les migrations hébergées et les tests synthétiques ne prouvent pas l'import de production ni un cutover.
+Lors de cette préparation, aucune donnée de production n'a été importée ni modifiée. Le compte synthétique et sa collection de test précédemment consignés restent inchangés. Tout compte ou toute donnée existante dont l'origine n'est pas démontrée doit être considéré réel et préservé; aucun compte non marqué ni ses données ne doit être supprimé. Neon reste inaccessible à cause du quota (SQLSTATE `53000` lors de la tentative précédente), donc aucun export ni import de production n'a été effectué.
+
+La configuration Auth hébergée du projet Supabase Lunidex indique actuellement `Site URL: https://lunidex.app`. L'allowlist de redirection contient uniquement les callbacks exacts suivants, sans wildcard :
+
+```text
+https://lunidex.app/auth/callback
+https://lunidex.app/en/auth/callback
+https://lunidex.app/fr/auth/callback
+https://lunidex.app/es/auth/callback
+https://lunidex.app/de/auth/callback
+https://lunidex.app/it/auth/callback
+https://lunidex.app/ja/auth/callback
+https://lunidex.app/ko/auth/callback
+https://lunidex.app/zh/auth/callback
+http://localhost:3000/auth/callback
+http://localhost:3000/en/auth/callback
+http://localhost:3000/fr/auth/callback
+http://localhost:3000/es/auth/callback
+http://localhost:3000/de/auth/callback
+http://localhost:3000/it/auth/callback
+http://localhost:3000/ja/auth/callback
+http://localhost:3000/ko/auth/callback
+http://localhost:3000/zh/auth/callback
+```
+
+Les modèles hébergés de confirmation et de récupération utilisent `{{ .ConfirmationURL }}`. Le SMTP personnalisé est activé sur `smtp.resend.com:465` avec un identifiant sauvegardé. Le tableau de bord masque l'expéditeur et aucun destinataire/compte de test sûr n'a été autorisé pour vérifier la livraison; l'identité d'expéditeur et la délivrabilité réelle restent donc non confirmées. Ne pas prétendre qu'un nouvel e-mail a été livré sans ce contrôle.
+
+Aucune branche Supabase isolée de préproduction n'existe actuellement. Les essais synthétiques sur le projet hébergé Lunidex ne constituent pas un environnement Supabase de préproduction. Le projet Supabase Repère, utilisé par une autre application, n'a pas été consulté ni modifié. OAuth Google/GitHub reste désactivé faute d'identifiants client. Les quotas Supabase avaient été relevés sur le plan Free avec le pay-as-you-go désactivé; aucune dépense n'a été engagée.
+
+Le déploiement reste **NO-GO** : aucun digest GHCR de rollback Supabase-compatible n'a été publié et validé, et Neon n'a pas pu être exporté. Toute donnée déjà présente sur Supabase doit d'abord être inventoriée sans suppression; les comptes/données non marqués sont à préserver, et l'artefact synthétique connu ne doit être nettoyé qu'après vérification de son marqueur exact et de sa provenance. Ne déclencher `deploy` qu'après ces préconditions, vérification de la capacité du projet Lunidex, test SMTP autorisé, définition des variables/secrets de `ovh-production` et revue indépendante. Les migrations hébergées et les tests synthétiques ne prouvent pas l'import de production ni un cutover.
 
 Le runbook de migration fournit les préconditions détaillées, les commandes sans destruction et les limites connues : [Migration Neon → Supabase](../supabase-migration.md). Les informations sur l'ancien runtime et son ancienne image sont conservées dans [l'archive Supabase → Neon](../neon-migration.md); aucun digest Neon ne constitue un rollback valide après la bascule.
 
