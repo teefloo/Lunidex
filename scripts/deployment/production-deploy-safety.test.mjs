@@ -101,7 +101,7 @@ test('Compose, deploy, and manual rollback use immutable digest references', () 
   assert.match(rollback, /require-supabase-ca\.sh/);
   const caVerifier = read(path.join(repositoryRoot, 'scripts/deployment/verify-supabase-ca.sh'));
   const pinnedCaFingerprint = '807025AD50D4ED219D2C9C7D299C004F824EB00CF7F65AFEF607D07B72E6CAFA';
-  assert.ok(require.includes('verify-supabase-ca.sh'));
+  assert.ok(read(path.join(repositoryRoot, 'scripts/deployment/require-supabase-ca.sh')).includes('verify-supabase-ca.sh'));
   assert.ok(install.includes('verify-supabase-ca.sh'));
   assert.ok(workflow.includes('scripts/deployment/verify-supabase-ca.sh'));
   assert.ok(caVerifier.includes(pinnedCaFingerprint));
@@ -646,14 +646,16 @@ test('deployment atomically installs the pinned Supabase CA before stopping prep
   const transfer = stepByName(steps, 'Transfer isolated production files and environment');
   const verifyCa = stepByName(steps, 'Verify the preinstalled Supabase CA before stopping preproduction');
   const stopPreproduction = stepByName(steps, 'Stop preproduction before durable production deployment');
-  const caValidator = read(path.join(repositoryRoot, 'scripts/deployment/require-supabase-ca.sh'));
+  const caRequirement = read(path.join(repositoryRoot, 'scripts/deployment/require-supabase-ca.sh'));
+  const caValidator = read(path.join(repositoryRoot, 'scripts/deployment/verify-supabase-ca.sh'));
 
   assert.ok(steps.indexOf(transfer) < steps.indexOf(verifyCa));
   assert.ok(steps.indexOf(verifyCa) < steps.indexOf(stopPreproduction));
   assert.match(transfer.run, /scp[^\n]*\$RUNNER_TEMP\/lunidex-supabase-ca\.crt[^\n]*\$target:\$ca_staging_path/);
   assert.match(transfer.run, /install-supabase-ca\.sh/);
+  assert.match(transfer.run, /verify-supabase-ca\.sh/);
   assert.match(verifyCa.run, /require-supabase-ca\.sh/);
-  assert.match(caValidator, /mode 0644 or 0444/);
+  assert.match(caRequirement, /mode 0644 or 0444/);
   assert.match(caValidator, /openssl x509/);
   assert.doesNotMatch(caValidator, /cat |echo .*\$ca_file/);
 });
