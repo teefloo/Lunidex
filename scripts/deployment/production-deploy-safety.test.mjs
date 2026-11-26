@@ -99,6 +99,13 @@ test('Compose, deploy, and manual rollback use immutable digest references', () 
   assert.match(dockerignore, /^\*\.pem$/m);
   assert.match(deploy, /require-supabase-ca\.sh/);
   assert.match(rollback, /require-supabase-ca\.sh/);
+  const caVerifier = read(path.join(repositoryRoot, 'scripts/deployment/verify-supabase-ca.sh'));
+  const pinnedCaFingerprint = '807025AD50D4ED219D2C9C7D299C004F824EB00CF7F65AFEF607D07B72E6CAFA';
+  assert.match(require, /verify-supabase-ca\\.sh/);
+  assert.match(install, /verify-supabase-ca\\.sh/);
+  assert.match(workflow, /scripts\\/deployment\\/verify-supabase-ca\\.sh/);
+  assert.ok(caVerifier.includes(pinnedCaFingerprint));
+  assert.equal(workflow.split(pinnedCaFingerprint).length - 1, 1);
   assert.match(`${workflow}\n${deploy}\n${rollback}`, /neon-public-only:d0f5e1af2cf95dd43eb046069c0d37f0a2add93e/);
   assert.match(rollback, /Neon Auth and cloud data remain unavailable/);
   assert.doesNotMatch(rollback, /neon-public-only[^\n]*Supabase-compatible/);
