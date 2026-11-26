@@ -102,7 +102,7 @@ test('Compose, deploy, and manual rollback use immutable digest references', () 
   const caVerifier = read(path.join(repositoryRoot, 'scripts/deployment/verify-supabase-ca.sh'));
   const pinnedCaFingerprint = '807025AD50D4ED219D2C9C7D299C004F824EB00CF7F65AFEF607D07B72E6CAFA';
   assert.ok(read(path.join(repositoryRoot, 'scripts/deployment/require-supabase-ca.sh')).includes('verify-supabase-ca.sh'));
-  assert.ok(install.includes('verify-supabase-ca.sh'));
+  assert.ok(read(path.join(repositoryRoot, 'scripts/deployment/install-supabase-ca.sh')).includes('verify-supabase-ca.sh'));
   assert.ok(workflow.includes('scripts/deployment/verify-supabase-ca.sh'));
   assert.ok(caVerifier.includes(pinnedCaFingerprint));
   assert.equal(workflow.split(pinnedCaFingerprint).length - 1, 1);
