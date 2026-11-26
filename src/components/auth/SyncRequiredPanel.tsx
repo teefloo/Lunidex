@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { useTranslation } from '@/lib/i18n';
-import { useAuth } from '@/lib/supabase/AuthProvider';
+import { useAuth } from '@/lib/neon/AuthProvider';
 import { AuthModalBoundary } from './AuthModalBoundary';
 
 const AuthModal = dynamic(() => import('./AuthModal'), { ssr: false });

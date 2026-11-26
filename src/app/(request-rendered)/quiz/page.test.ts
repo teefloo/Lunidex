@@ -13,7 +13,7 @@ vi.mock('@/lib/i18n', () => ({ useTranslation: () => ({ t: (key: string) => key 
 vi.mock('@/lib/toast', () => ({ toast: { error: mocks.toast } }));
 vi.mock('next/navigation', () => ({ useSearchParams: () => new URLSearchParams() }));
 vi.mock('@/hooks/useLocaleHref', () => ({ useClientLanguage: () => 'en' }));
-vi.mock('@/lib/supabase/AuthProvider', () => ({ useAuth: () => ({ user: null }) }));
+vi.mock('@/lib/neon/AuthProvider', () => ({ useAuth: () => ({ user: null }) }));
 vi.mock('@/components/layout/Header', () => ({ default: () => null }));
 vi.mock('@/components/layout/PageHeader', () => ({ default: () => null }));
 vi.mock('@/components/dashboard/QuizLeaderboard', () => ({ default: () => null }));

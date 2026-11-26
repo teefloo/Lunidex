@@ -6,7 +6,7 @@ La route privée `/[locale]/tcg/investments` appartient à l'espace Collection. 
 
 Les achats sont des petits enregistrements `tcgInvestments` du store web et du document JSON existant `public.user_state.data`. Ils ne contiennent aucun objet de réponse TCGdex. Les dates d'acquisition et de valorisation peuvent rester inconnues. La langue de la carte est indépendante de la langue de l'interface.
 
-Le runtime actuel des collections est connecté au compte : les préférences utilisent IndexedDB, mais les données personnelles viennent du compte Supabase. Les investissements suivent ce comportement existant. Ils ne sont pas enregistrés dans un second stockage anonyme. Sans session ou avec le service indisponible, les panneaux d'accès existants s'affichent. Les données sont retirées de la session au changement de compte ou à la déconnexion.
+Le runtime actuel des collections est connecté au compte : les préférences utilisent IndexedDB, mais les données personnelles viennent du compte Neon. Les investissements suivent ce comportement existant. Ils ne sont pas enregistrés dans un second stockage anonyme. Sans session ou avec le service indisponible, les panneaux d'accès existants s'affichent. Les données sont retirées de la session au changement de compte ou à la déconnexion.
 
 `/api/user-state` détermine le propriétaire à partir de la session, filtre ses lectures et écritures par `user_id`, interdit le cache public et valide les lots. La synchronisation fusionne les achats par UUID et conserve les horloges de modification/suppression. Une écriture refusée reprend le dernier état accepté. Le formulaire attend la confirmation du compte avant de se fermer et conserve la saisie en cas d’échec. Les nouvelles tentatives réutilisent le même UUID, y compris après un délai réseau ambigu. Les formulaires sont retirés lorsque l’identité du compte change. Les sauvegardes JSON existantes incluent aussi ce champ.
 
@@ -41,7 +41,7 @@ Les tests de domaine couvrent frais, quantités, achats multiples, rendements pa
 E2E_INVESTMENTS=1 npx playwright test e2e/tcg-investments.spec.ts
 ```
 
-Cette commande démarre un serveur de test sur le port 3001 avec une authentification de fixture, dans `.next/investments-e2e`. Elle ne doit pas utiliser une base distante. Les captures se trouvent dans `/tmp/lunidex-investments-desktop.png` et `/tmp/lunidex-investments-mobile.png`. Ces tests ne constituent pas une validation d'une cotation réelle ni du runtime Supabase actuel.
+Cette commande démarre un serveur de test sur le port 3001 avec une authentification de fixture, dans `.next/investments-e2e`. Elle ne doit pas utiliser une base distante. Les captures se trouvent dans `/tmp/lunidex-investments-desktop.png` et `/tmp/lunidex-investments-mobile.png`. Ces tests ne constituent pas une validation d'une cotation réelle ou d'une base Neon distante.
 
 Vérifications effectuées le 19 octobre 2026 :
 
@@ -53,4 +53,4 @@ Vérifications effectuées le 19 octobre 2026 :
 
 ## Corrections du 20 octobre 2026
 
-Les parcours d’achat direct, de reprise après erreur, de validation et de retour navigateur ont été corrigés. Vérification finale du 20 octobre 2026 : 759 tests unitaires, 12 scénarios navigateur et un contrôle complémentaire de navigation réussis ; lint, TypeScript web/core, SEO des sources et build de production réussis. Un essai du build utilise le vrai TCGdex et un compte simulé. Ces résultats précèdent la migration du runtime et ne valident pas la base Supabase actuelle ni une collecte historique qualifiée.
+Les parcours d’achat direct, de reprise après erreur, de validation et de retour navigateur ont été corrigés. Vérification finale : 759 tests unitaires, 12 scénarios navigateur et un contrôle complémentaire de navigation réussis ; lint, TypeScript web/core, SEO des sources et build de production réussis. Un essai du build utilise le vrai TCGdex et un compte simulé. Les écritures Neon réelles et une collecte historique qualifiée ne sont pas validées par ces essais.

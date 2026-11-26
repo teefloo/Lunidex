@@ -12,7 +12,7 @@ import Header from '@/components/layout/Header';
 import { TCGPageTabs } from '@/components/tcg/TCGPageTabs';
 import { useTranslation } from '@/lib/i18n';
 import { usePrimeDexStore } from '@/store/primedex';
-import { useAuth } from '@/lib/supabase/AuthProvider';
+import { useAuth } from '@/lib/neon/AuthProvider';
 import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
 import { SyncStatusPanel } from '@/components/auth/SyncStatusPanel';
 import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';

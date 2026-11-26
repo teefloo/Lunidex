@@ -1,19 +1,22 @@
-# Historical Supabase-to-Neon migration scripts guide
+# Neon migration scripts guide
 
-These scripts are retained as historical evidence for the earlier Supabase-to-Neon migration. They are not application runtime code and must not be used for the current Neon-to-Supabase migration. Read `docs/supabase-migration.md` for the active runbook.
+These scripts are one-time migration tooling, not application runtime code. Run them from the repository root and read `neon/AGENTS.md` first.
 
 ## Preconditions and effects
 
-- `export-supabase.sh`, `import-to-neon.sh`, and `verify-migration.sh` describe the previous Supabase-to-Neon direction only. Do not run them with current credentials or reuse their artifacts.
+- `export-supabase.sh` requires `pg_dump`, `psql`, and `SUPABASE_DB_URL`. It writes the ignored `.neon-migration/` directory and reads the source database.
+- `import-to-neon.sh` requires `pg_restore`, `psql`, `NEON_DATABASE_URL`, and a prepared `.neon-migration/` export. It applies every ordered SQL migration in `neon/migrations/` before creating/updating the target schema, temporarily disables user triggers while loading data, and therefore changes the target database.
+- `verify-migration.sh` requires `psql`, both `SUPABASE_DB_URL` and `NEON_DATABASE_URL`, and compares row counts plus required Neon objects. A successful comparison is not a substitute for application/canary validation.
 - Keep connection strings out of source, logs, chat, and committed files. Do not broaden table lists, disable triggers, or alter source/target mappings without reviewing the entire migration workflow.
 
 ## Commands
 
-These archived scripts are not package entry points. The current entry points are:
+The package scripts are the supported entry points:
 
 ```bash
-npm run db:migrate:supabase:export
-npm run db:migrate:supabase:dry-run
+npm run db:neon:export
+npm run db:neon:import
+npm run db:neon:verify
 ```
 
 Export is read-oriented but creates local artifacts; import and verify access external databases. Do not run either against production, and do not push, deploy, or switch traffic as part of these scripts without explicit confirmation.

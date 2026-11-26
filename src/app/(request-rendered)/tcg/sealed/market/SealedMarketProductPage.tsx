@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ExternalLink } from 'lucide-react';
-import { getSupabaseDatabaseClient } from '@/lib/supabase/database';
+import { getNeonClient } from '@/lib/neon/server';
 import { getPublicSealedProduct, SealedNotFoundError } from '@/lib/tcg-sealed-server';
 import { buildPublicPriceChartPoints, publicExpansionName, publicMarketContactHref, summarizePublicPrice } from '@/lib/tcg-sealed-public-market';
 import { getServerLanguage, getServerT } from '@/lib/server-i18n';
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   const [lang, t, { id }] = await Promise.all([getServerLanguage(), getServerT(), params]);
   const path = `/tcg/sealed/market/${id}`;
   const idValue = productId(id);
-  const sql = idValue === null ? null : getSupabaseDatabaseClient();
+  const sql = idValue === null ? null : getNeonClient();
   const detail = sql && idValue !== null ? await getPublicSealedProduct(sql, idValue).catch(() => null) : null;
   const title = detail ? `${detail.product.name} — ${t('tcg.sealed.public_market.title')}` : t('tcg.sealed.public_market.title');
   const description = t('tcg.sealed.public_market.subtitle');
@@ -40,7 +40,7 @@ export default async function PublicSealedProductPage({ params }: ProductPagePro
   const [lang, t, { id: rawId }] = await Promise.all([getServerLanguage(), getServerT(), params]);
   const id = productId(rawId);
   if (id === null) notFound();
-  const sql = getSupabaseDatabaseClient();
+  const sql = getNeonClient();
   const detail = sql ? await getPublicSealedProduct(sql, id).catch((error: unknown) => {
     if (error instanceof SealedNotFoundError) notFound();
     return null;

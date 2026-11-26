@@ -224,7 +224,7 @@ export async function trackProductEvent(event: ProductEvent, propertyA?: string,
       client.syncPostHogConsent(getProductConsent());
       captured = client.capturePostHogEvent(event, { ...semanticProperties(event, propertyA, propertyB), ...context, ...properties });
     } catch {
-      // The existing Supabase counters also work when the optional SDK is unavailable.
+      // The existing Neon counters also work when the optional SDK is unavailable.
     }
     if (epoch !== measurementEpoch || getProductConsent().productMeasurement !== 'granted') return false;
     const session = currentSession();
@@ -259,7 +259,7 @@ export async function trackTcgPersistedValue(properties: PostHogProperties, user
   setProductTrackingIdentity(userId);
   if (activationRecord()?.owner === userId) return;
   const epoch = measurementEpoch;
-  const context = { ...getTcgTrackingContext(properties), authenticated: true, persistence: 'supabase' };
+  const context = { ...getTcgTrackingContext(properties), authenticated: true, persistence: 'neon' };
   await trackProductEvent(EVENTS.tcgFirstValueReached, undefined, undefined, context);
   if (epoch !== measurementEpoch || trackingUserId !== userId || getProductConsent().productMeasurement !== 'granted') return;
   if (await trackProductEvent(EVENTS.tcgActivationCompleted, 'first_persisted_card', undefined, context)) {

@@ -6,7 +6,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Check, Clock3, Loader2, Search, UserMinus, UserPlus, X } from 'lucide-react';
 import { toast } from '@/lib/toast';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/lib/supabase/AuthProvider';
+import { useAuth } from '@/lib/neon/AuthProvider';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import {

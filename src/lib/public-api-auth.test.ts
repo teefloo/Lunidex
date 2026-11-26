@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { NextRequest, NextResponse } from 'next/server';
-import type { SupabaseSql } from '@/lib/supabase/database';
+import type { NeonSql } from '@/lib/neon/server';
 import {
   authenticateApiKey,
   createApiKey,
@@ -14,14 +14,14 @@ import {
   sha256,
 } from '@/lib/public-api';
 
-const { getSupabaseDatabaseClient, getSupabaseUserFromRequest, ensureSupabaseUser, reportSentryException } = vi.hoisted(() => ({
-  getSupabaseDatabaseClient: vi.fn(),
-  getSupabaseUserFromRequest: vi.fn(),
-  ensureSupabaseUser: vi.fn(),
+const { getNeonClient, getNeonUserFromRequest, ensureNeonUser, reportSentryException } = vi.hoisted(() => ({
+  getNeonClient: vi.fn(),
+  getNeonUserFromRequest: vi.fn(),
+  ensureNeonUser: vi.fn(),
   reportSentryException: vi.fn(),
 }));
-vi.mock('@/lib/supabase/database', () => ({ getSupabaseDatabaseClient }));
-vi.mock('@/lib/supabase/auth', () => ({ getSupabaseUserFromRequest, ensureSupabaseUser }));
+vi.mock('@/lib/neon/server', () => ({ getNeonClient }));
+vi.mock('@/lib/neon/auth', () => ({ getNeonUserFromRequest, ensureNeonUser }));
 vi.mock('@/lib/sentry-observability', () => ({ reportSentryException }));
 
 const userId = '00000000-0000-4000-8000-000000000001';
@@ -31,7 +31,7 @@ function makeSql(rows: unknown[] = []) {
   const sql = (async (strings: TemplateStringsArray, ...values: unknown[]) => {
     calls.push({ statement: strings.join('?'), values });
     return rows;
-  }) as unknown as SupabaseSql & { calls: typeof calls };
+  }) as unknown as NeonSql & { calls: typeof calls };
   sql.calls = calls;
   return sql;
 }
@@ -54,15 +54,15 @@ function makeQuotaSql(permission: 'read' | 'read_write', blockedBuckets: string[
     }
     if (statement.includes('select deletion_state')) return [{ deletion_state: 'active' }];
     return [];
-  }) as unknown as SupabaseSql;
+  }) as unknown as NeonSql;
   const tx = ((strings: TemplateStringsArray, ...values: unknown[]) => ({
     statement: strings.join('?'),
     values,
-  })) as unknown as SupabaseSql;
+  })) as unknown as NeonSql;
   const sqlWithTransaction = sql as unknown as {
-    transaction: (callback: (tx: SupabaseSql) => unknown[]) => Promise<unknown[][]>;
+    transaction: (callback: (tx: NeonSql) => unknown[]) => Promise<unknown[][]>;
   };
-  sqlWithTransaction.transaction = async (callback: (tx: SupabaseSql) => unknown[]) => {
+  sqlWithTransaction.transaction = async (callback: (tx: NeonSql) => unknown[]) => {
     const statements = callback(tx) as Array<{ statement: string; values: unknown[] }>;
     transactionCalls.push(...statements);
     if (statements.some((statement) => statement.statement.includes('api_quota_buckets'))) {
@@ -91,20 +91,20 @@ function makeQuotaSql(permission: 'read' | 'read_write', blockedBuckets: string[
 
 describe('public API key authentication and management', () => {
   beforeEach(() => {
-    getSupabaseDatabaseClient.mockReset();
-    getSupabaseUserFromRequest.mockReset();
-    ensureSupabaseUser.mockReset();
+    getNeonClient.mockReset();
+    getNeonUserFromRequest.mockReset();
+    ensureNeonUser.mockReset();
     reportSentryException.mockReset();
   });
 
   it('returns an unavailable response when account access cannot be checked', async () => {
-    getSupabaseDatabaseClient.mockReturnValue(makeSql());
-    getSupabaseUserFromRequest.mockResolvedValue({
+    getNeonClient.mockReturnValue(makeSql());
+    getNeonUserFromRequest.mockResolvedValue({
       id: userId,
       email: 'trainer@example.test',
       user_metadata: {},
     });
-    ensureSupabaseUser.mockRejectedValue(new Error('database unavailable'));
+    ensureNeonUser.mockRejectedValue(new Error('database unavailable'));
 
     const result = await getUserSessionContext(new NextRequest('https://lunidex.app/api/account/api-keys'));
 
@@ -124,7 +124,7 @@ describe('public API key authentication and management', () => {
       permission: 'read_write',
       deletion_state: 'active',
     }]);
-    getSupabaseDatabaseClient.mockReturnValue(sql);
+    getNeonClient.mockReturnValue(sql);
 
     const result = await authenticateApiKey(request(material.token), 'read');
 
@@ -137,14 +137,14 @@ describe('public API key authentication and management', () => {
 
   it('denies write requests to read-only keys and blocks accounts being deleted', async () => {
     const material = createApiKeyMaterial();
-    getSupabaseDatabaseClient.mockReturnValue(makeSql([{
+    getNeonClient.mockReturnValue(makeSql([{
       id: material.id, user_id: userId, key_hash: material.hash, permission: 'read', deletion_state: 'active',
     }]));
     const permissionResponse = await authenticateApiKey(request(material.token), 'write');
     expect(permissionResponse).toBeInstanceOf(NextResponse);
     expect((permissionResponse as NextResponse).status).toBe(403);
 
-    getSupabaseDatabaseClient.mockReturnValue(makeSql([{
+    getNeonClient.mockReturnValue(makeSql([{
       id: material.id, user_id: userId, key_hash: material.hash, permission: 'read_write', deletion_state: 'pending',
     }]));
     const deletionResponse = await authenticateApiKey(request(material.token), 'read');
@@ -154,7 +154,7 @@ describe('public API key authentication and management', () => {
   it('rejects missing, mismatched, and revoked keys without disclosing key existence', async () => {
     const material = createApiKeyMaterial();
     const sql = makeSql([]);
-    getSupabaseDatabaseClient.mockReturnValue(sql);
+    getNeonClient.mockReturnValue(sql);
     const missingResponse = await authenticateApiKey(request('invalid'), 'read');
     expect((missingResponse as NextResponse).status).toBe(401);
     expect(sql.calls).toHaveLength(0);
@@ -162,11 +162,11 @@ describe('public API key authentication and management', () => {
     const mismatchSql = makeSql([{
       id: material.id, user_id: userId, key_hash: '0'.repeat(64), permission: 'read', deletion_state: 'active',
     }]);
-    getSupabaseDatabaseClient.mockReturnValue(mismatchSql);
+    getNeonClient.mockReturnValue(mismatchSql);
     const mismatchResponse = await authenticateApiKey(request(material.token), 'read');
     expect((mismatchResponse as NextResponse).status).toBe(401);
 
-    getSupabaseDatabaseClient.mockReturnValue(makeSql([]));
+    getNeonClient.mockReturnValue(makeSql([]));
     const revokedResponse = await authenticateApiKey(request(material.token), 'read');
     expect((revokedResponse as NextResponse).status).toBe(401);
     expect((mismatchResponse as NextResponse).headers.get('Cache-Control')).toBe('private, no-store');
@@ -178,12 +178,12 @@ describe('public API key authentication and management', () => {
       const statement = strings.join('?');
       calls.push({ statement, values });
       return [];
-    }) as unknown as SupabaseSql;
-    const sql = (async () => []) as unknown as SupabaseSql;
+    }) as unknown as NeonSql;
+    const sql = (async () => []) as unknown as NeonSql;
     const sqlWithTransaction = sql as unknown as {
-      transaction: (callback: (transaction: SupabaseSql) => unknown[]) => Promise<unknown[][]>;
+      transaction: (callback: (transaction: NeonSql) => unknown[]) => Promise<unknown[][]>;
     };
-    sqlWithTransaction.transaction = async (callback: (transaction: SupabaseSql) => unknown[]) => {
+    sqlWithTransaction.transaction = async (callback: (transaction: NeonSql) => unknown[]) => {
       callback(tx);
       return [[{ id: userId, deletion_state: 'active' }], [{ id: '00000000-0000-4000-8000-000000000002', created_at: '2026-09-26T10:00:00Z' }]];
     };
@@ -222,7 +222,7 @@ describe('public API key authentication and management', () => {
 
   it('enforces atomic account quotas and returns Retry-After on exhaustion', async () => {
     const exhausted = makeQuotaSql('read_write', ['read_minute', 'read_day']);
-    getSupabaseDatabaseClient.mockReturnValue(exhausted.sql);
+    getNeonClient.mockReturnValue(exhausted.sql);
     const handler = vi.fn(async () => apiResponse({ ok: true }));
     const limited = await runPublicApi(request(exhausted.token), '/api/v1/me', 'read', undefined, handler);
     expect(limited.status).toBe(429);
@@ -231,7 +231,7 @@ describe('public API key authentication and management', () => {
     expect(exhausted.transactionCalls.some((call) => call.statement.includes('eligible'))).toBe(true);
 
     const allowed = makeQuotaSql('read_write');
-    getSupabaseDatabaseClient.mockReturnValue(allowed.sql);
+    getNeonClient.mockReturnValue(allowed.sql);
     const written = await runPublicApi(request(allowed.token), '/api/v1/cards/base1-001', 'write', undefined, handler);
     expect(written.status).toBe(200);
     const requested = JSON.parse(String(allowed.transactionCalls[1].values[0])) as Array<{ bucket_type: string }>;
@@ -240,10 +240,10 @@ describe('public API key authentication and management', () => {
   });
 
   it('preserves the public API 503 and captures a quota reservation failure', async () => {
-    const error = new Error('Supabase database is over quota');
+    const error = new Error('Neon database is over quota');
     const fixture = makeQuotaSql('read_write');
     Object.assign(fixture.sql, { transaction: vi.fn().mockRejectedValue(error) });
-    getSupabaseDatabaseClient.mockReturnValue(fixture.sql);
+    getNeonClient.mockReturnValue(fixture.sql);
 
     const response = await runPublicApi(
       request(fixture.token),

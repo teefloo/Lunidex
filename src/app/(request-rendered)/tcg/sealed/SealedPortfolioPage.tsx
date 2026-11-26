@@ -33,7 +33,7 @@ import Header from '@/components/layout/Header';
 import PublicSealedGuideSection from '@/components/tcg/PublicSealedGuideSection';
 import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
 import { SyncStatusPanel } from '@/components/auth/SyncStatusPanel';
-import { useAuth } from '@/lib/supabase/AuthProvider';
+import { useAuth } from '@/lib/neon/AuthProvider';
 import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';
 import { useMounted } from '@/hooks/useMounted';
 import { useLocaleHref } from '@/hooks/useLocaleHref';

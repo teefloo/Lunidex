@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { NextRequest } from 'next/server';
-import type { SupabaseSql } from '@/lib/supabase/database';
+import type { NeonSql } from '@/lib/neon/server';
 
 const mocks = vi.hoisted(() => ({
   sql: vi.fn(),
@@ -14,7 +14,7 @@ vi.mock('@/lib/public-api', async (importOriginal) => {
     runPublicApi: async (...args: Parameters<typeof actual.runPublicApi>) => {
       const handler = args[4];
       return handler({
-        sql: mocks.sql as unknown as SupabaseSql,
+        sql: mocks.sql as unknown as NeonSql,
         userId: '00000000-0000-4000-8000-000000000001',
         keyId: '00000000-0000-4000-8000-000000000002',
         permission: 'read',

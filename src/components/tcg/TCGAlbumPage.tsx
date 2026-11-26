@@ -10,7 +10,7 @@ import type { TCGDemoOwnership } from '@/hooks/useTCGDemoOwnership';
 import { useClientLanguage, useLocaleHref } from '@/hooks/useLocaleHref';
 import { usePrimeDexStore } from '@/store/primedex';
 import type { TCGCard, TCGSet } from '@/types/tcg';
-import { useAuth } from '@/lib/supabase/AuthProvider';
+import { useAuth } from '@/lib/neon/AuthProvider';
 import { useTranslation } from '@/lib/i18n';
 import { fetchSetCollectionCards } from '@/lib/api/tcg';
 import {

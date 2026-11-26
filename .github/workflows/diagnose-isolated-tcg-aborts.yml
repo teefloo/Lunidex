@@ -102,8 +102,7 @@ jobs:
           }
           docker build --file Dockerfile --tag "$APP_IMAGE" \
             --build-arg NEXT_DEPLOYMENT_ID=isolated-diagnostic \
-            --build-arg NEXT_PUBLIC_SUPABASE_URL=https://lunidex-test.supabase.co \
-            --build-arg NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_example \
+            --build-arg NEXT_PUBLIC_NEON_AUTH_URL=https://auth.example.invalid \
             --build-arg 'NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN=' \
             --build-arg 'NEXT_PUBLIC_POSTHOG_HOST=' \
             --build-arg NEXT_PUBLIC_POSTHOG_ENABLED=false \

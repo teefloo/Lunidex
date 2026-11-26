@@ -42,7 +42,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
-import { useAuth } from '@/lib/supabase/AuthProvider';
+import { useAuth } from '@/lib/neon/AuthProvider';
 import {
   answerDailyQuizQuestion,
   startDailyQuizAttempt,

@@ -7,7 +7,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
-import { useAuth } from '@/lib/supabase/AuthProvider';
+import { useAuth } from '@/lib/neon/AuthProvider';
 import { fetchAppApi } from '@/lib/app-api';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
@@ -20,7 +20,7 @@ import ApiKeysCard from '@/components/dashboard/ApiKeysCard';
 /**
  * Account panel shown on the dashboard. Surfaces the signed-in identity and the
  * sign-out action (the avatar in the header now links here instead of opening a
- * popover). Renders nothing when Supabase Auth is unconfigured.
+ * popover). Renders nothing when Neon Auth is unconfigured.
  *
  * When the user is signed in, a "Public Profile" section is shown with:
  * - A handle input (3-30 lowercase alphanumeric + hyphens)

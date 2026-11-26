@@ -1,14 +1,14 @@
 'use client';
 
-import { getSupabaseAccessToken } from '@/lib/supabase/client';
+import { getNeonAccessToken } from '@/lib/neon/client';
 import type {
   LeaderboardPeriod,
   LeaderboardResponse,
 } from '@/lib/leaderboard';
 
-/** Returns the current Supabase JWT, or null when signed out / unconfigured. */
+/** Returns the current Neon JWT, or null when signed out / unconfigured. */
 async function getAccessToken(): Promise<string | null> {
-  return getSupabaseAccessToken();
+  return getNeonAccessToken();
 }
 
 interface QuizAttemptStartResponse {
@@ -47,7 +47,7 @@ export interface DailyQuizAnswerResult {
 
 /**
  * Starts a server-tracked daily attempt for the signed-in user. No-ops
- * (returns null) when Supabase Auth is unconfigured or the user is not authenticated.
+ * (returns null) when Neon Auth is unconfigured or the user is not authenticated.
  */
 export async function startDailyQuizAttempt(): Promise<DailyQuizAttempt | null> {
   const token = await getAccessToken();

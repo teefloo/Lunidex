@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
-import { getSupabaseDatabaseClient } from '@/lib/supabase/database';
+import { getNeonClient } from '@/lib/neon/server';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
 import { searchPublicSealedCatalogue } from '@/lib/tcg-sealed-server';
 import { sealedErrorResponse, unavailableResponse } from '@/lib/tcg-sealed-route';
@@ -10,7 +10,7 @@ const PUBLIC_MARKET_CACHE = 'public, max-age=0, s-maxage=3600, stale-while-reval
 const PRIVATE_NO_STORE = { 'Cache-Control': 'private, no-store' };
 
 async function getMarketCatalogue(request: NextRequest): Promise<NextResponse> {
-  const sql = getSupabaseDatabaseClient();
+  const sql = getNeonClient();
   if (!sql) return unavailableResponse();
   if (!rateLimit(`tcg-sealed-market:${ipKey(request)}`, 60)) {
     return NextResponse.json({ error: 'Too many market catalogue requests.' }, { status: 429, headers: PRIVATE_NO_STORE });

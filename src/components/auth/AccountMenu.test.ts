@@ -9,7 +9,7 @@ const mocks = vi.hoisted(() => ({
   user: null as null | { id: string; email: string; user_metadata: { name?: string; display_name?: string } },
 }));
 
-vi.mock('@/lib/supabase/AuthProvider', () => ({
+vi.mock('@/lib/neon/AuthProvider', () => ({
   useAuth: () => ({ enabled: true, loading: mocks.loading, user: mocks.user }),
 }));
 vi.mock('@/lib/i18n', () => ({

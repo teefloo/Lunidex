@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
-import { ensureSupabaseUser, getSupabaseUserFromRequest } from '@/lib/supabase/auth';
-import { isInactiveAccountError } from '@/lib/supabase/errors';
-import { getSupabaseDatabaseClient } from '@/lib/supabase/database';
+import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
+import { isInactiveAccountError } from '@/lib/neon/errors';
+import { getNeonClient } from '@/lib/neon/server';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
 import {
@@ -72,17 +72,17 @@ async function postQuizAttempt(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Too many requests' }, { status: 429, headers: noStoreHeaders() });
   }
 
-  const sql = getSupabaseDatabaseClient();
+  const sql = getNeonClient();
   if (!sql) {
     return NextResponse.json({ error: 'Quiz leaderboard unavailable' }, { status: 503, headers: noStoreHeaders() });
   }
 
-  const user = await getSupabaseUserFromRequest(request);
+  const user = await getNeonUserFromRequest(request);
   if (!user) {
     return NextResponse.json({ error: 'Authentication required' }, { status: 401, headers: noStoreHeaders() });
   }
 
-  if (await ensureSupabaseUser(sql, user) === false) {
+  if (await ensureNeonUser(sql, user) === false) {
     return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: noStoreHeaders() });
   }
 

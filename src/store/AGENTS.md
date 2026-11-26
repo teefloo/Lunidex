@@ -6,7 +6,7 @@ This guide applies to the web application's Zustand store in `src/store/primedex
 
 - Persistence uses Zustand `persist` with the IndexedDB adapter from `idb-keyval`. Keep browser storage details in this module.
 - Persist only IDs, primitives, filters, and small user-owned records. Never persist full PokéAPI, TCGdex, GraphQL, or other remote responses.
-- `SYNCED_KEYS` is the compatibility contract for local persistence and the Supabase sync implementation reached through `src/lib/supabase/sync-state.ts`. When changing a synchronized field, align its default, hydration, and server representation deliberately.
+- `SYNCED_KEYS` is the compatibility contract for local persistence and the Neon sync implementation reached through `src/lib/supabase/sync-state.ts`. When changing a synchronized field, align its default, hydration, and server representation deliberately.
 - `_hasHydrated` becomes true after asynchronous rehydration. Do not make persisted-state decisions before it is available, and keep the initial render SSR-safe.
 
 ## Usage and invariants
@@ -14,7 +14,7 @@ This guide applies to the web application's Zustand store in `src/store/primedex
 - Prefer actions such as `toggleCaught`, `addToTeam`, and `resetFilters` over array manipulation in components. Keep updates immutable.
 - Preserve the existing limits: teams contain at most 6 Pokémon, the Pokémon comparison list at most 3 entries, and the TCG comparison list at most 4 cards.
 - Keep API fetching in TanStack Query and `@/lib/api`; the store holds user choices and compact user-owned results, not the remote cache.
-- Auth and cloud sync are best-effort. The web app must remain usable with no Supabase variables and local IndexedDB only.
+- Auth and cloud sync are best-effort. The web app must remain usable with no Neon variables and local IndexedDB only.
 
 ## Verification
 

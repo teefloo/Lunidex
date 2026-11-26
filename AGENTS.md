@@ -16,8 +16,8 @@ Lunidex is a localized, local-first Pokémon dashboard and Pokémon TCG workspac
 
 - `src/`: the Next.js 16 / React 19 web application.
 - `packages/core/`: portable TypeScript domain types and pure helpers consumed by the web app.
-- `neon/migrations/`: the historical Neon schema baseline, retained for migration provenance.
-- `supabase/`: the active Supabase PostgreSQL schema, RLS policies, Auth/Data API configuration, and an archived Deno Edge Function.
+- `neon/migrations/`: the application schema used by the Neon-backed runtime.
+- `supabase/`: an archived Deno Edge Function and historical security material; it is not the web application's runtime authentication/database path.
 
 The web app remains usable without cloud configuration and uses IndexedDB for local persistence. Remote Pokémon data comes from PokéAPI and Pokémon TCG data from TCGdex through the centralized web API layer.
 
@@ -35,9 +35,9 @@ Do not rename those identifiers as part of a visible rebrand. Persisted data and
 - Use Node.js 22 and npm with the committed `package-lock.json`. Do not add a second package manager or lockfile.
 - Install reproducibly with `npm ci`; use `npm install` only when intentionally updating the local workspace installation.
 - Copy `.env.example` to `.env.local` for optional web configuration. This file is ignored and must never be committed.
-- The web runtime uses `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in browser code; `SUPABASE_DATABASE_URL` and the preferred `SUPABASE_SECRET_KEY` are server-only. `SUPABASE_SERVICE_ROLE_KEY` is accepted only as a temporary legacy fallback. The PostgreSQL URL must use the Supabase shared pooler in session mode with TLS certificate verification.
-- One-time migration tooling uses `NEON_SOURCE_DATABASE_URL`, `SUPABASE_MIGRATION_DATABASE_URL`, and `SUPABASE_PROJECT_REF`; these are operational secrets and must never be exposed in build args, logs, or browser code. The archived Edge Function has separate Supabase/VAPID/cron settings.
-- Without Supabase configuration, authentication, cloud sync, and server-backed features degrade to their established unavailable/local-first behavior.
+- The web runtime uses Neon variables: `NEXT_PUBLIC_NEON_AUTH_URL` is public; `NEON_AUTH_BASE_URL`, `NEON_AUTH_JWKS_URL`, `NEON_AUTH_COOKIE_SECRET`, and `NEON_DATABASE_URL` are server-only.
+- `SUPABASE_DB_URL` is only for the Neon migration tooling. `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, VAPID private material/subject, and `CRON_SECRET` belong only to the separately deployed Supabase Edge Function. The browser-facing `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, when configured, is public by design. Do not add Supabase runtime credentials to the web bundle.
+- Without Neon configuration, authentication, cloud sync, and server-backed features degrade to their established unavailable/local-first behavior.
 - Set `NEXT_PUBLIC_ENABLE_AGENTATION=true` only for the development overlay. Its local port is 4747 and the required development origins/CSP entries already exist; do not weaken production security headers for it.
 
 ## Commands
@@ -53,20 +53,18 @@ Run root commands from the repository root:
 | Type-check the web workspace | `npm run typecheck` |
 | Type-check shared core | `npx tsc --project packages/core/tsconfig.json --noEmit` |
 | Run the Vitest suite | `npm test` |
-| Export current Neon source data | `npm run db:migrate:supabase:export` |
-| Check an explicitly selected Supabase target without writes | `npm run db:migrate:supabase:dry-run` |
-| Import Auth identities (password reset required) | `npm run db:migrate:supabase:auth` |
-| Import application data into an empty target | `npm run db:migrate:supabase:data` |
-| Compare tables, keys, sequences, and Auth identities | `npm run db:migrate:supabase:verify` |
+| Export source data for Neon migration | `npm run db:neon:export` |
+| Import the prepared export into Neon | `npm run db:neon:import` |
+| Compare source and Neon after migration | `npm run db:neon:verify` |
 
-`npm run dev` and `npm run build` intentionally pass `--webpack`; keep that flag even though `next.config.ts` also declares a Turbopack root. Migration commands require the environment and safeguards in `docs/supabase-migration.md`; Auth/data import changes a target and is never a casual validation step. `scripts/neon/` and `neon/migrations/` are historical only.
+`npm run dev` and `npm run build` intentionally pass `--webpack`; keep that flag even though `next.config.ts` also declares a Turbopack root. The Neon migration commands require PostgreSQL client binaries and the environment described in `scripts/neon/AGENTS.md`; the import command changes a target database and is never a casual validation step.
 
 ## Verification and CI
 
 The checked-in workflow `.github/workflows/ci.yml` runs, in order, `npm ci`, `npm run lint`, `npm run typecheck`, `npm run seo:check`, `npm run build`, and the core TypeScript check. Run the checks relevant to the change; for a broad handoff, use the same sequence as CI.
 
 - Fix related lint and type failures instead of documenting them as expected regressions.
-- Schema, migration, Edge Function, and Supabase-specific validation is described by the closest database guide; do not substitute a web-only check for a database safety check.
+- Schema, migration, Edge Function, and Neon-specific validation is described by the closest database guide; do not substitute a web-only check for a database safety check.
 
 ## Tests
 
@@ -94,8 +92,8 @@ Vitest tests live beside the code they cover in `src/` and `packages/core/src/`.
 
 ## Security and data boundaries
 
-- Database URLs, `SUPABASE_SECRET_KEY`, the legacy `SUPABASE_SERVICE_ROLE_KEY`, VAPID private keys, cron credentials, and local database URLs are server/operation secrets. Never commit, log, expose, or place them in `NEXT_PUBLIC_*` variables.
-- The application authenticates through Supabase Auth. Server APIs use the privileged `postgres` connection, which bypasses RLS, and must continue enforcing ownership explicitly in each handler. Data API access is separately limited by RLS and grants.
+- Neon connection strings, auth cookie/JWKS secrets, service-role keys, VAPID private keys, cron credentials, and local database URLs are server/operation secrets. Never commit, log, expose, or place them in `NEXT_PUBLIC_*` variables.
+- The application authenticates through Neon Auth and enforces ownership in server/API code. The historical `src/lib/supabase` path is a compatibility name; do not infer that the web runtime uses Supabase Auth or Supabase RLS.
 - Keep security headers and CSP in `next.config.ts` strict. Add a remote origin or weaken a directive only when the project requirement is explicit and the complete impact is reviewed.
 - Treat authenticated, personalized, and mutation responses as non-public. Apply the established validation, authentication, rate limiting, and unavailable responses in Route Handlers.
 - Generated PWA files such as `public/sw.js`, `public/workbox-*.js`, and `public/fallback-*.js` come from the build; edit their source/configuration instead of hand-editing generated output.

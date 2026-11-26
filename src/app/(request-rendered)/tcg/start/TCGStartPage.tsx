@@ -16,7 +16,7 @@ import { getTCGSetImageCandidates } from '@/lib/tcg-images';
 import { usePrimeDexStore } from '@/store/primedex';
 import type { TCGCollectionSetSummary, TCGSet } from '@/types/tcg';
 import { getProductConsent, getServerProductConsent, subscribeProductConsent, setProductTrackingIdentity, trackTcgStartOpened, trackProductEvent } from '@/lib/product-measurement';
-import { useAuth } from '@/lib/supabase/AuthProvider';
+import { useAuth } from '@/lib/neon/AuthProvider';
 import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
 import { SyncStatusPanel } from '@/components/auth/SyncStatusPanel';
 import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';

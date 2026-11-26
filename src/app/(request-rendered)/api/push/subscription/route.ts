@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
-import { ensureSupabaseUser, getSupabaseUserFromRequest } from '@/lib/supabase/auth';
-import { isInactiveAccountError } from '@/lib/supabase/errors';
-import { getSupabaseDatabaseClient } from '@/lib/supabase/database';
+import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
+import { isInactiveAccountError } from '@/lib/neon/errors';
+import { getNeonClient } from '@/lib/neon/server';
 import { isAllowedPushEndpoint } from '@/lib/push-endpoint';
 import { rateLimit } from '@/lib/rate-limit';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
@@ -47,10 +47,10 @@ async function postPushSubscription(request: NextRequest) {
   const originError = requireTrustedMutationOrigin(request);
   if (originError) return originError;
 
-  const sql = getSupabaseDatabaseClient();
+  const sql = getNeonClient();
   if (!sql) return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
 
-  const user = await getSupabaseUserFromRequest(request);
+  const user = await getNeonUserFromRequest(request);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   // Registration rewrites subscription rows; throttle churn per account.
@@ -64,7 +64,7 @@ async function postPushSubscription(request: NextRequest) {
     return NextResponse.json({ error: 'A valid push subscription is required' }, { status: 400 });
   }
 
-  if (await ensureSupabaseUser(sql, user) === false) {
+  if (await ensureNeonUser(sql, user) === false) {
     return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: PRIVATE_NO_STORE_HEADERS });
   }
   try {
@@ -88,13 +88,13 @@ async function deletePushSubscription(request: NextRequest) {
   const originError = requireTrustedMutationOrigin(request);
   if (originError) return originError;
 
-  const sql = getSupabaseDatabaseClient();
+  const sql = getNeonClient();
   if (!sql) return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
 
-  const user = await getSupabaseUserFromRequest(request);
+  const user = await getNeonUserFromRequest(request);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  if (await ensureSupabaseUser(sql, user) === false) {
+  if (await ensureNeonUser(sql, user) === false) {
     return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: PRIVATE_NO_STORE_HEADERS });
   }
 

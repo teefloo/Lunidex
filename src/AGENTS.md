@@ -7,7 +7,7 @@ This guide supplements the repository guide for `src/`, the Next.js 16 / React 1
 - Routes live in `src/app/`; server-only Route Handlers live in `src/app/api/` and follow that directory's guide.
 - Reusable UI belongs in `src/components/`. API clients, pure helpers, localization, SEO, and feature calculations belong in `src/lib/`. Web-persisted Zustand state belongs in `src/store/primedex.ts`.
 - Portable domain rules and data models used by the web app belong in `packages/core`. Keep web UI state, persistence, API access, and server integrations in their `src/` modules.
-- Prefer Server Components and add `'use client'` only at the smallest interactive boundary. Keep server-only Supabase database clients, connection strings, `SUPABASE_SECRET_KEY`, legacy service-role keys, and database operations out of client bundles.
+- Prefer Server Components and add `'use client'` only at the smallest interactive boundary. Keep server-only Neon clients, connection strings, auth secrets, and database operations out of client bundles.
 - Use the `@/` alias for web imports, the centralized `@/lib/api` façade for remote data, and the existing named-export style for new reusable modules.
 
 ## Locale-aware web behavior
@@ -21,7 +21,7 @@ This guide supplements the repository guide for `src/`, the Next.js 16 / React 1
 
 - `src/store/primedex.ts` is the web application's Zustand store and uses IndexedDB persistence. Store IDs, primitives, filters, and small user-owned records, not API response blobs.
 - Wait for `_hasHydrated` before persisted-state decisions and use individual Zustand selectors where practical.
-- The app is local-first. Supabase Auth, sync, profiles, leaderboard, price alerts, and other server-backed features must retain their existing unavailable behavior when Supabase is not configured.
+- The app is local-first. Neon Auth, sync, profiles, leaderboard, price alerts, and other server-backed features must retain their existing unavailable behavior when Neon is not configured.
 - Keep `SYNCED_KEYS` and `src/lib/supabase/sync-state.ts` deliberate when changing synchronized fields; the `supabase` path is a compatibility identifier.
 
 ## Web verification

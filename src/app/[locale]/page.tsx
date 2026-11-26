@@ -58,7 +58,7 @@ export default async function LocalizedHomePage({
       <HomeArchiveExperience
         language={locale}
         initialSignedIn={false}
-        serviceAvailable={Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL)}
+        serviceAvailable={Boolean(process.env.NEXT_PUBLIC_NEON_AUTH_URL)}
       />
       <script id="lunidex-home-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd({ '@graph': jsonLd }) }} />
     </div>

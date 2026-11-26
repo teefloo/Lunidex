@@ -1,4 +1,4 @@
-import type { SupabaseSql } from '@/lib/supabase/database';
+import type { NeonSql } from '@/lib/neon/server';
 import { getTCGCardLocalizedCached } from '@/lib/api/server-cache';
 import { getQualifiedCardmarketObservations } from '@/lib/tcg-qualified-price-history';
 import type { TCGCard } from '@/types/tcg';
@@ -36,7 +36,7 @@ function isRefreshTarget(value: unknown): value is PriceHistoryRefreshTarget {
 
 /** Records a card/language that the strict localized price-history endpoint fetched successfully. */
 export async function recordPriceHistoryCardSeen(
-  sql: SupabaseSql,
+  sql: NeonSql,
   cardId: string,
   language: TCGCardLanguage,
   seenAt = new Date(),
@@ -56,7 +56,7 @@ export async function recordPriceHistoryCardSeen(
 }
 
 /** Claims at most twenty recently viewed targets in one atomic database statement. */
-export async function claimDuePriceHistoryRefreshTargets(sql: SupabaseSql): Promise<PriceHistoryRefreshTarget[]> {
+export async function claimDuePriceHistoryRefreshTargets(sql: NeonSql): Promise<PriceHistoryRefreshTarget[]> {
   const rows = await sql`
     with due as (
       select card_id, card_language
@@ -106,7 +106,7 @@ export async function refreshTrackedPriceHistoryCards(
 }
 
 /** Runs one bounded refresh pass using the existing strict localized TCGdex cache. */
-export async function refreshDuePriceHistoryCards(sql: SupabaseSql): Promise<PriceHistoryRefreshSummary> {
+export async function refreshDuePriceHistoryCards(sql: NeonSql): Promise<PriceHistoryRefreshSummary> {
   const targets = await claimDuePriceHistoryRefreshTargets(sql);
   return refreshTrackedPriceHistoryCards(targets, {
     fetchLocalizedCard: getTCGCardLocalizedCached,

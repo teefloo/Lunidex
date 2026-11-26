@@ -12,7 +12,7 @@ import { useMounted } from '@/hooks/useMounted';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import Header from '@/components/layout/Header';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
-import { useAuth } from '@/lib/supabase/AuthProvider';
+import { useAuth } from '@/lib/neon/AuthProvider';
 import { SyncRequiredPanel } from '@/components/auth/SyncRequiredPanel';
 import { SyncStatusPanel } from '@/components/auth/SyncStatusPanel';
 import { useSyncAccessStatus } from '@/hooks/useSyncAccessStatus';

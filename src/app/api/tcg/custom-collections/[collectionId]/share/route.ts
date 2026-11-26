@@ -2,9 +2,9 @@ import { createHash, randomBytes } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { readJsonBodyResult, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
-import { ensureSupabaseUser, getSupabaseUserFromRequest, type SupabaseRequestUser } from '@/lib/supabase/auth';
-import { isInactiveAccountError } from '@/lib/supabase/errors';
-import { getSupabaseDatabaseClient, type SupabaseSql } from '@/lib/supabase/database';
+import { ensureNeonUser, getNeonUserFromRequest, type NeonRequestUser } from '@/lib/neon/auth';
+import { isInactiveAccountError } from '@/lib/neon/errors';
+import { getNeonClient, type NeonSql } from '@/lib/neon/server';
 import { rateLimit } from '@/lib/rate-limit';
 import { SITE_URL } from '@/lib/site';
 import { getShareableTCGCollection } from '@/lib/tcg-collection-share';
@@ -30,7 +30,7 @@ interface RouteParams {
 
 type AuthorizedCollection =
   | { authorized: false; response: NextResponse }
-  | { authorized: true; sql: SupabaseSql; user: SupabaseRequestUser };
+  | { authorized: true; sql: NeonSql; user: NeonRequestUser };
 
 function noStoreJson(body: unknown, status = 200): NextResponse {
   return NextResponse.json(body, { status, headers: NO_STORE_HEADERS });
@@ -41,22 +41,22 @@ async function authorizedCollection(
   collectionId: string,
   action: string,
 ): Promise<AuthorizedCollection> {
-  const sql = getSupabaseDatabaseClient();
+  const sql = getNeonClient();
   if (!sql) return { authorized: false, response: noStoreJson({ error: 'Application database unavailable' }, 503) };
 
-  const user = await getSupabaseUserFromRequest(request);
+  const user = await getNeonUserFromRequest(request);
   if (!user) return { authorized: false, response: noStoreJson({ error: 'Authentication required' }, 401) };
   if (!UUID_PATTERN.test(collectionId)) return { authorized: false, response: noStoreJson({ error: 'Collection not found' }, 404) };
   if (!rateLimit(`tcg-collection-share:${action}:${user.id}`, action === 'read' ? 120 : 30)) {
     return { authorized: false, response: noStoreJson({ error: 'Too many requests' }, 429) };
   }
-  if (await ensureSupabaseUser(sql, user) === false) {
+  if (await ensureNeonUser(sql, user) === false) {
     return { authorized: false, response: noStoreJson({ error: 'Account deletion is in progress' }, 410) };
   }
   return { authorized: true, sql, user };
 }
 
-async function collectionIsSynced(sql: NonNullable<ReturnType<typeof getSupabaseDatabaseClient>>, userId: string, collectionId: string): Promise<boolean> {
+async function collectionIsSynced(sql: NonNullable<ReturnType<typeof getNeonClient>>, userId: string, collectionId: string): Promise<boolean> {
   const rows = await sql`
     select data
     from public.user_state

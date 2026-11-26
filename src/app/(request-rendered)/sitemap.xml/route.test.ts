@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
-  getSupabaseDatabaseClient: vi.fn(),
+  getNeonClient: vi.fn(),
   query: vi.fn(),
   sql: { query: vi.fn() },
 }));
 
-vi.mock('@/lib/supabase/database', () => ({
-  getSupabaseDatabaseClient: mocks.getSupabaseDatabaseClient,
-  isSupabaseConfiguredServer: true,
+vi.mock('@/lib/neon/server', () => ({
+  getNeonClient: mocks.getNeonClient,
+  isNeonConfiguredServer: true,
 }));
 
 import { GET } from './route';
@@ -17,11 +17,11 @@ describe('sitemap index', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     mocks.sql.query = mocks.query;
-    mocks.getSupabaseDatabaseClient.mockReturnValue(mocks.sql);
+    mocks.getNeonClient.mockReturnValue(mocks.sql);
   });
 
   it('omits sealed-product sitemaps when their data source is unavailable', async () => {
-    const error = new Error('Supabase project quota exceeded');
+    const error = new Error('Neon project quota exceeded');
     mocks.query.mockRejectedValue(error);
     const warning = vi.spyOn(console, 'warn').mockImplementation(() => {});
 

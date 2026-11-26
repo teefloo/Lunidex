@@ -17,15 +17,5 @@ graphify-out
 .env*
 app.env
 cloudflare-ips.env
-.migration/
-*.key
-*.pem
-*.p12
-*.pfx
-*.cer
-*.crt
-*.der
-*.jks
-*.keystore
 
 .rollback-baseline

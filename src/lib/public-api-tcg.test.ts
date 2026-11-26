@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { encodeTCGCollectionCardKey, encodeTCGCollectionKey } from '@primedex/core/lib/tcg-collections';
-import type { SupabaseSql } from '@/lib/supabase/database';
+import type { NeonSql } from '@/lib/neon/server';
 import { listCardHoldings, setCardHolding } from '@/lib/public-api-tcg';
 
 const { getTCGCardCached } = vi.hoisted(() => ({ getTCGCardCached: vi.fn() }));
@@ -66,7 +66,7 @@ function makeSql(initial: unknown) {
     throw new Error(`Unexpected SQL in public API test: ${statement}`);
   });
   return {
-    sql: query as unknown as SupabaseSql,
+    sql: query as unknown as NeonSql,
     query,
     get state() { return state; },
   };

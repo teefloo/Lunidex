@@ -3,9 +3,9 @@ import { act, createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-const loads = vi.hoisted(() => ({ supabase: vi.fn(), posthog: vi.fn(), sentry: vi.fn() }));
+const loads = vi.hoisted(() => ({ neon: vi.fn(), posthog: vi.fn(), sentry: vi.fn() }));
 vi.mock('@/lib/idle-scheduler', () => ({ scheduleIdleTask: (task: () => void) => { task(); return () => {}; } }));
-vi.mock('@/components/SupabaseSyncBridge', () => { loads.supabase(); return { SupabaseSyncBridge: () => createElement('span', null, 'sync') }; });
+vi.mock('@/components/NeonSyncBridge', () => { loads.neon(); return { NeonSyncBridge: () => createElement('span', null, 'sync') }; });
 vi.mock('@/components/pwa/RegisterPWA', () => ({ RegisterPWA: () => createElement('span', null, 'pwa') }));
 vi.mock('@/components/analytics/PostHogConsentBridge', () => { loads.posthog(); return { PostHogConsentBridge: () => null }; });
 vi.mock('@/components/analytics/PostHogIdentityBridge', () => ({ PostHogIdentityBridge: () => null }));
@@ -32,19 +32,19 @@ describe('optional client services', () => {
   }
 
   it('does not import unconfigured cloud or measurement services', async () => {
-    vi.stubEnv('NEXT_PUBLIC_SUPABASE_URL', '');
+    vi.stubEnv('NEXT_PUBLIC_NEON_AUTH_URL', '');
     vi.stubEnv('NEXT_PUBLIC_SENTRY_DSN', '');
     vi.stubEnv('NEXT_PUBLIC_POSTHOG_ENABLED', 'false');
     await renderServices(container => {
       expect(container.textContent).toBe('pwa');
-      expect(loads.supabase).not.toHaveBeenCalled();
+      expect(loads.neon).not.toHaveBeenCalled();
       expect(loads.sentry).not.toHaveBeenCalled();
       expect(loads.posthog).not.toHaveBeenCalled();
     });
   });
 
   it('keeps PWA and sync available when an optional measurement chunk fails', async () => {
-    vi.stubEnv('NEXT_PUBLIC_SUPABASE_URL', 'http://localhost/test');
+    vi.stubEnv('NEXT_PUBLIC_NEON_AUTH_URL', 'http://localhost/test');
     vi.stubEnv('NEXT_PUBLIC_SENTRY_DSN', 'configured-test-value');
     vi.stubEnv('NEXT_PUBLIC_POSTHOG_ENABLED', 'false');
     await renderServices(container => {

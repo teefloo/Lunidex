@@ -18,7 +18,7 @@ import { useEffect, useState } from 'react';
 import { usePrimeDexStore } from '@/store/primedex';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/lib/supabase/AuthProvider';
+import { useAuth } from '@/lib/neon/AuthProvider';
 
 export default function DashboardPage() {
   const { t } = useTranslation();

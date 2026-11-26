@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { LoaderCircle, LogIn, UserRound } from 'lucide-react';
-import { useAuth } from '@/lib/supabase/AuthProvider';
+import { useAuth } from '@/lib/neon/AuthProvider';
 import { useLocaleHref } from '@/hooks/useLocaleHref';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
