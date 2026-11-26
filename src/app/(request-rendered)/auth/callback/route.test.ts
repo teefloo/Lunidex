@@ -69,6 +69,19 @@ describe('Supabase Auth callback', () => {
     );
   });
 
+  it('uses the English reset route when a recovery callback arrives unlocalized', async () => {
+    const request = new NextRequest(
+      'https://lunidex.app/auth/callback?token_hash=opaque-recovery-hash&type=recovery',
+    );
+
+    const response = await GET(request);
+
+    expect(mocks.exchangeCodeForSession).not.toHaveBeenCalled();
+    expect(response.headers.get('location')).toBe(
+      'https://lunidex.app/en/auth/reset-password?mode=recovery&token_hash=opaque-recovery-hash',
+    );
+  });
+
   it('does not forward a token hash with any type other than recovery', async () => {
     const request = new NextRequest(
       'https://lunidex.app/fr/auth/callback?next=%2Ffr%2Fauth%2Freset-password%3Fmode%3Drecovery&token_hash=opaque-token&type=signup',

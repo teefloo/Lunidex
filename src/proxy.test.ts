@@ -556,4 +556,16 @@ describe('public localized proxy responses', () => {
 
     expect(fetchMock).toHaveBeenCalledTimes(513);
   });
+
+  it('localizes an unprefixed recovery callback while preserving its query', async () => {
+    const response = await proxy(new NextRequest(
+      'https://lunidex.test/auth/callback?token_hash=opaque-recovery-hash&type=recovery',
+      { headers: { 'accept-language': 'fr-CA,fr;q=0.9,en;q=0.8', 'user-agent': 'Mozilla/5.0' } },
+    ));
+
+    expect(response.status).toBe(308);
+    expect(response.headers.get('location')).toBe(
+      'https://lunidex.test/fr/auth/callback?token_hash=opaque-recovery-hash&type=recovery',
+    );
+  });
 });
