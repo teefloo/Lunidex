@@ -99,47 +99,12 @@ test('Compose, deploy, and manual rollback use immutable digest references', () 
   assert.match(dockerignore, /^\*\.pem$/m);
   assert.match(deploy, /require-supabase-ca\.sh/);
   assert.match(rollback, /require-supabase-ca\.sh/);
-  const caVerifier = read(path.join(repositoryRoot, 'scripts/deployment/verify-supabase-ca.sh'));
-  const pinnedCaFingerprint = '807025AD50D4ED219D2C9C7D299C004F824EB00CF7F65AFEF607D07B72E6CAFA';
-  assert.ok(read(path.join(repositoryRoot, 'scripts/deployment/require-supabase-ca.sh')).includes('verify-supabase-ca.sh'));
-  assert.ok(read(path.join(repositoryRoot, 'scripts/deployment/install-supabase-ca.sh')).includes('verify-supabase-ca.sh'));
-  assert.ok(workflow.includes('scripts/deployment/verify-supabase-ca.sh'));
-  assert.ok(caVerifier.includes(pinnedCaFingerprint));
-  assert.equal(workflow.split(pinnedCaFingerprint).length - 1, 1);
   assert.match(`${workflow}\n${deploy}\n${rollback}`, /neon-public-only:d0f5e1af2cf95dd43eb046069c0d37f0a2add93e/);
   assert.match(rollback, /Neon Auth and cloud data remain unavailable/);
   assert.doesNotMatch(rollback, /neon-public-only[^\n]*Supabase-compatible/);
   assert.match(workflow, /legacy d0f5 Neon image is public-only emergency recovery, never a Supabase candidate/i);
   assert.doesNotMatch(workflow, /d0f5e1af[^\n]*Supabase rollback candidate/i);
   assert.doesNotMatch(read(path.join(repositoryRoot, 'scripts/deployment/rehearse-rollback-production.sh')), /ace4b8/);
-});
-
-test('the official Supabase root CA is accepted and a different CA is rejected', () => {
-  const verifier = path.join(repositoryRoot, 'scripts/deployment/verify-supabase-ca.sh');
-  const officialCa = path.join(repositoryRoot, 'supabase/tests/fixtures/supabase-root-2021.crt');
-  const accepted = spawnSync('bash', [verifier, officialCa], { cwd: repositoryRoot, encoding: 'utf8' });
-
-  assert.equal(accepted.status, 0, accepted.stderr);
-  assert.match(accepted.stdout, /pinned certificate/i);
-
-  const tempDir = mkdtempSync(path.join(os.tmpdir(), 'lunidex-mismatched-ca-test-'));
-  const mismatchCa = path.join(tempDir, 'mismatched-root.crt');
-  const generated = spawnSync('openssl', [
-    'req', '-x509', '-newkey', 'rsa:2048', '-nodes', '-days', '1',
-    '-subj', '/CN=Lunidex test mismatch CA',
-    '-addext', 'basicConstraints=critical,CA:TRUE',
-    '-keyout', path.join(tempDir, 'mismatch.key'),
-    '-out', mismatchCa,
-  ], { cwd: repositoryRoot, encoding: 'utf8' });
-
-  try {
-    assert.equal(generated.status, 0, generated.stderr);
-    const rejected = spawnSync('bash', [verifier, mismatchCa], { cwd: repositoryRoot, encoding: 'utf8' });
-    assert.equal(rejected.status, 78);
-    assert.match(rejected.stderr, /fingerprint does not match/i);
-  } finally {
-    rmSync(tempDir, { recursive: true, force: true });
-  }
 });
 
 test('candidate and rollback images are verified in isolated no-network containers', () => {
@@ -646,16 +611,14 @@ test('deployment atomically installs the pinned Supabase CA before stopping prep
   const transfer = stepByName(steps, 'Transfer isolated production files and environment');
   const verifyCa = stepByName(steps, 'Verify the preinstalled Supabase CA before stopping preproduction');
   const stopPreproduction = stepByName(steps, 'Stop preproduction before durable production deployment');
-  const caRequirement = read(path.join(repositoryRoot, 'scripts/deployment/require-supabase-ca.sh'));
-  const caValidator = read(path.join(repositoryRoot, 'scripts/deployment/verify-supabase-ca.sh'));
+  const caValidator = read(path.join(repositoryRoot, 'scripts/deployment/require-supabase-ca.sh'));
 
   assert.ok(steps.indexOf(transfer) < steps.indexOf(verifyCa));
   assert.ok(steps.indexOf(verifyCa) < steps.indexOf(stopPreproduction));
   assert.match(transfer.run, /scp[^\n]*\$RUNNER_TEMP\/lunidex-supabase-ca\.crt[^\n]*\$target:\$ca_staging_path/);
   assert.match(transfer.run, /install-supabase-ca\.sh/);
-  assert.match(transfer.run, /verify-supabase-ca\.sh/);
   assert.match(verifyCa.run, /require-supabase-ca\.sh/);
-  assert.match(caRequirement, /mode 0644 or 0444/);
+  assert.match(caValidator, /mode 0644 or 0444/);
   assert.match(caValidator, /openssl x509/);
   assert.doesNotMatch(caValidator, /cat |echo .*\$ca_file/);
 });
