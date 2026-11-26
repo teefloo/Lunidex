@@ -22,8 +22,9 @@ const isolatedValidatorPath = path.join(repositoryRoot, 'scripts/deployment/vali
 const composeContractValidatorPath = path.join(repositoryRoot, 'scripts/deployment/validate-compose-runtime-contract.mjs');
 const currentMasterCheckPath = path.join(repositoryRoot, 'scripts/deployment/check-current-master-sha.sh');
 const rollbackCandidatesPath = path.join(repositoryRoot, 'scripts/deployment/rollback-candidates.sh');
-const verifyNeonFallbackPath = path.join(repositoryRoot, 'scripts/deployment/verify-neon-public-only-image.sh');
-const rollbackImageRef = `ghcr.io/teefloo/lunidex@sha256:${'b'.repeat(64)}`;
+const rollbackImagePolicyPath = path.join(repositoryRoot, 'scripts/deployment/supabase-production-rollback.sh');
+const rollbackImageRef = 'ghcr.io/teefloo/lunidex@sha256:bbbfeaef9efd4a150ff0d68bd6762c4f54a3cd14e804527a1619778523aef7ac';
+const rollbackRevision = '5703ceba7585e4ee4243ba03add60d53ba33f335';
 
 function validComposeConfig(image, overrides = {}) {
   return {
@@ -90,6 +91,10 @@ test('Compose, deploy, and manual rollback use immutable digest references', () 
   assert.match(rollback, /--last-stable\) rollback_mode='last-stable'/);
   assert.match(rollback, /SUPABASE_ROLLBACK_IMAGE_REF/);
   assert.match(workflow, /SUPABASE_ROLLBACK_IMAGE_REF/);
+  assert.ok(workflow.includes(rollbackImageRef));
+  assert.ok(workflow.includes(rollbackRevision));
+  assert.ok(read(rollbackImagePolicyPath).includes(rollbackImageRef));
+  assert.ok(read(rollbackImagePolicyPath).includes(rollbackRevision));
   assert.match(dockerfile, /LABEL com\.lunidex\.backend="supabase"/);
   assert.match(compose, /NODE_EXTRA_CA_CERTS:\s+\/etc\/ssl\/certs\/lunidex-supabase-ca\.crt/);
   assert.match(compose, /source:\s+\.\/supabase-ca\.crt[\s\S]*target:\s+\/etc\/ssl\/certs\/lunidex-supabase-ca\.crt[\s\S]*read_only:\s+true[\s\S]*create_host_path:\s+false/);
@@ -106,12 +111,32 @@ test('Compose, deploy, and manual rollback use immutable digest references', () 
   assert.ok(workflow.includes('scripts/deployment/verify-supabase-ca.sh'));
   assert.ok(caVerifier.includes(pinnedCaFingerprint));
   assert.equal(workflow.split(pinnedCaFingerprint).length - 1, 1);
-  assert.match(`${workflow}\n${deploy}\n${rollback}`, /neon-public-only:d0f5e1af2cf95dd43eb046069c0d37f0a2add93e/);
-  assert.match(rollback, /Neon Auth and cloud data remain unavailable/);
-  assert.doesNotMatch(rollback, /neon-public-only[^\n]*Supabase-compatible/);
-  assert.match(workflow, /legacy d0f5 Neon image is public-only emergency recovery, never a Supabase candidate/i);
-  assert.doesNotMatch(workflow, /d0f5e1af[^\n]*Supabase rollback candidate/i);
-  assert.doesNotMatch(read(path.join(repositoryRoot, 'scripts/deployment/rehearse-rollback-production.sh')), /ace4b8/);
+  assert.doesNotMatch(`${workflow}\n${deploy}\n${rollback}`, /NEON_|neon-public-only|d0f5e1af|ace4b8/i);
+  assert.doesNotMatch(read(path.join(repositoryRoot, 'scripts/deployment/rehearse-rollback-production.sh')), /ace4b8|d0f5e1af/);
+});
+
+test('production manual deploy and preflight have no Neon configuration gate or runtime injection', () => {
+  const workflow = yaml.load(read(workflowPath));
+  const job = workflow.jobs.deploy;
+  const prepare = stepByName(job.steps, 'Prepare the server-only production environment');
+  const preflight = job.steps.filter((step) => (step.if ?? '').includes("env.DEPLOYMENT_MODE == 'preflight'"));
+  const deploymentFiles = [
+    composePath,
+    deployPath,
+    rollbackPath,
+    rollbackCandidatesPath,
+    path.join(repositoryRoot, 'scripts/deployment/preflight-production.sh'),
+    path.join(repositoryRoot, 'scripts/deployment/validate-image-isolated.sh'),
+  ].map(read).join('\n');
+
+  assert.equal(workflow.on.workflow_dispatch.inputs.confirmation.required, true);
+  assert.equal(workflow.on.workflow_dispatch.inputs.deployment_mode.required, true);
+  assert.match(workflow.on.workflow_dispatch.inputs.confirmation.description, /DEPLOY_OVH_PRODUCTION/);
+  assert.doesNotMatch(JSON.stringify(job.env), /NEON_|NEON_DATABASE_URL|NEON_AUTH/);
+  assert.doesNotMatch(JSON.stringify(prepare.env), /NEON_|NEON_DATABASE_URL|NEON_AUTH/);
+  assert.doesNotMatch(prepare.run, /NEON_|NEON_DATABASE_URL|NEON_AUTH/);
+  assert.ok(preflight.length > 0);
+  assert.doesNotMatch(deploymentFiles, /NEON_|NEON_DATABASE_URL|NEON_AUTH/);
 });
 
 test('the official Supabase root CA is accepted and a different CA is rejected', () => {
@@ -464,7 +489,7 @@ test('current-master SHA guard accepts only the exact current master and fails c
   }
 });
 
-test('rollback candidate order prefers only a healthy Supabase image, then the explicit Supabase fallback', () => {
+test('rollback candidate order excludes Neon containers and prefers a healthy Supabase image then pinned fallback', () => {
   const tempDir = mkdtempSync(path.join(os.tmpdir(), 'lunidex-rollback-candidates-test-'));
   try {
     const supabaseFallback = rollbackImageRef;
@@ -491,14 +516,10 @@ test('rollback candidate order prefers only a healthy Supabase image, then the e
     assert.equal(neonRuntime.status, 0);
     assert.deepEqual(neonRuntime.stdout.trim().split('\n'), [supabaseFallback]);
 
-    const verifiedNeonFallback = run(prior, prior, 'true', 'healthy', '', 'neon',
-      'neon-public-only:d0f5e1af2cf95dd43eb046069c0d37f0a2add93e');
-    assert.equal(verifiedNeonFallback.status, 0);
-    assert.deepEqual(verifiedNeonFallback.stdout.trim().split('\n'), [prior]);
-
-    const unverifiedNeonFallback = run(prior, prior, 'true', 'healthy', '', 'neon', 'neon-public-only:wrong');
-    assert.equal(unverifiedNeonFallback.status, 0);
-    assert.equal(unverifiedNeonFallback.stdout.trim(), '');
+    const historicalNeonDigest = `ghcr.io/teefloo/lunidex@sha256:${'d'.repeat(64)}`;
+    const legacyNeonContainer = run(historicalNeonDigest, historicalNeonDigest, 'true', 'healthy', supabaseFallback, 'neon');
+    assert.equal(legacyNeonContainer.status, 0);
+    assert.deepEqual(legacyNeonContainer.stdout.trim().split('\n'), [supabaseFallback]);
 
     const invalidFallback = run(prior, prior, 'true', 'healthy', 'latest', 'supabase');
     assert.equal(invalidFallback.status, 64);
@@ -522,56 +543,17 @@ test('rollback candidate order prefers only a healthy Supabase image, then the e
   }
 });
 
-test('historical d0f5 fallback requires the exact digest, source revision, Neon env, and Neon driver', () => {
-  const tempDir = mkdtempSync(path.join(os.tmpdir(), 'lunidex-neon-fallback-test-'));
-  try {
-    const docker = path.join(tempDir, 'docker');
-    const envFile = path.join(tempDir, 'app.env');
-    const imageRef = `ghcr.io/teefloo/lunidex@sha256:${'d'.repeat(64)}`;
-    writeFileSync(envFile, 'NEON_DATABASE_URL=postgres://synthetic.invalid/db\n', { mode: 0o600 });
-    writeFileSync(docker, `#!/bin/sh
-if [ "$1" = image ] && [ "$2" = inspect ]; then
-  case "$4" in
-    *RepoDigests*) printf '%s\\n' "$MOCK_REPO_DIGEST" ;;
-    *org.opencontainers.image.revision*) printf '%s\\n' "$MOCK_REVISION" ;;
-    *com.lunidex.backend*) printf '%s\\n' "$MOCK_BACKEND" ;;
-  esac
-  exit 0
-fi
-if [ "$1" = run ]; then [ "$MOCK_NEON_DRIVER" = true ]; exit $?; fi
-exit 99
-`, { mode: 0o700 });
-    chmodSync(docker, 0o700);
-    const run = (overrides = {}, inputRef = imageRef) => spawnSync('bash', [verifyNeonFallbackPath, inputRef, envFile], {
-      cwd: tempDir,
-      encoding: 'utf8',
-      env: {
-        ...process.env,
-        PATH: `${tempDir}:${process.env.PATH ?? ''}`,
-        MOCK_REPO_DIGEST: imageRef,
-        MOCK_REVISION: 'd0f5e1af2cf95dd43eb046069c0d37f0a2add93e',
-        MOCK_BACKEND: 'neon',
-        MOCK_NEON_DRIVER: 'true',
-        ...overrides,
-      },
-    });
+test('rollback policy accepts only the fixed Supabase digest, revision and backend label', () => {
+  const policy = `source ${JSON.stringify(rollbackImagePolicyPath)}; production_validate_supabase_rollback_image "$@"`;
+  const run = (...args) => spawnSync('bash', ['-c', policy, 'rollback-policy-test', ...args], {
+    cwd: repositoryRoot,
+    encoding: 'utf8',
+  });
 
-    const verified = run();
-    assert.equal(verified.status, 0);
-    assert.equal(verified.stdout.trim(), 'neon-public-only:d0f5e1af2cf95dd43eb046069c0d37f0a2add93e');
-    assert.doesNotMatch(verified.stdout + verified.stderr, /postgres:\/\//);
-
-    assert.equal(run({ MOCK_REVISION: 'a'.repeat(40) }).status, 78);
-    assert.equal(run({ MOCK_BACKEND: 'supabase' }).status, 78);
-    assert.equal(run({ MOCK_REPO_DIGEST: 'ghcr.io/teefloo/lunidex@sha256:' + 'e'.repeat(64) }).status, 78);
-    assert.equal(run({ MOCK_NEON_DRIVER: 'false' }).status, 1);
-    assert.equal(run({}, 'ghcr.io/teefloo/lunidex:latest').status, 78);
-
-    writeFileSync(envFile, 'SUPABASE_DATABASE_URL=postgres://synthetic.invalid/db\n', { mode: 0o600 });
-    assert.equal(run().status, 78);
-  } finally {
-    rmSync(tempDir, { recursive: true, force: true });
-  }
+  assert.equal(run(rollbackImageRef, rollbackRevision, 'supabase').status, 0);
+  assert.equal(run(`ghcr.io/teefloo/lunidex@sha256:${'d'.repeat(64)}`, rollbackRevision, 'neon').status, 78);
+  assert.equal(run(rollbackImageRef, 'd0f5e1af2cf95dd43eb046069c0d37f0a2add93e', 'neon').status, 78);
+  assert.equal(run('ghcr.io/teefloo/lunidex:ace4b8', rollbackRevision, 'supabase').status, 78);
 });
 
 test('both in-script and post-deploy health failures roll back without using Supabase as an app failure signal', () => {
@@ -590,11 +572,9 @@ test('both in-script and post-deploy health failures roll back without using Sup
   assert.match(deploy, /wait_for_app[\s\\]*&& bash \/opt\/lunidex-production\/scripts\/deployment\/healthcheck-production\.sh/);
   assert.match(rollback, /--last-stable/);
   assert.match(rollback, /previous_kind="\$\(cat \.previous-image-backend/);
-  assert.match(rollback, /verify-neon-public-only-image\.sh/);
-  assert.match(rollback, /append_candidate "\$previous_ref" neon-public-only \.previous-app\.env/);
   assert.match(rollback, /append_candidate "\$previous_ref" supabase \.previous-app\.env/);
   assert.match(rollback, /install_app_env "\$env_file"/);
-  assert.match(rollback, /Neon Auth and cloud data remain unavailable/);
+  assert.doesNotMatch(rollback, /neon|d0f5|ace4b8/i);
   assert.match(rollback, /docker compose -f compose\.production\.yaml pull app[\s\S]*healthcheck-production\.sh/);
   assert.match(rollback, /healthcheck-production\.sh/);
   assert.equal(health.id, 'production_health');

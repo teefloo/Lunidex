@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
+source /opt/lunidex-production/scripts/deployment/supabase-production-rollback.sh
 
 readonly image_pattern='^ghcr\.io/teefloo/lunidex@sha256:[0-9a-f]{64}$'
 rollback_mode='manual'
 case "${1:-}" in
   '') ;;
   --last-stable) rollback_mode='last-stable' ;;
-  --neon-public-only) rollback_mode='neon-public-only' ;;
   *)
-    echo 'Usage: rollback-production.sh [--last-stable|--neon-public-only]' >&2
+    echo 'Usage: rollback-production.sh [--last-stable]' >&2
     exit 64
     ;;
 esac
@@ -20,17 +20,9 @@ if [[ ! -f .env || ! -f app.env || -L app.env ]]; then
 fi
 bash /opt/lunidex-production/scripts/deployment/require-supabase-ca.sh
 
-configured_ref="$(sed -n 's/^SUPABASE_ROLLBACK_IMAGE_REF=//p' .env | tail -n 1)"
-if [[ -n "$configured_ref" && ! "$configured_ref" =~ $image_pattern ]]; then
-  echo 'Configured Supabase rollback image is not digest-pinned.' >&2
-  exit 78
-fi
+configured_ref="$PRODUCTION_SUPABASE_ROLLBACK_IMAGE_REF"
 previous_ref="$(cat .previous-image-ref 2>/dev/null || true)"
 previous_kind="$(cat .previous-image-backend 2>/dev/null || true)"
-if [[ -n "$previous_ref" && ! "$previous_ref" =~ $image_pattern ]]; then
-  echo 'The saved last-stable image reference is not digest-pinned.' >&2
-  exit 78
-fi
 
 declare -a candidate_refs=() candidate_kinds=() candidate_envs=()
 append_candidate() {
@@ -41,10 +33,14 @@ append_candidate() {
 }
 
 verify_supabase_image() {
-  local image_ref="$1" backend
+  local image_ref="$1" backend revision
   [[ "$image_ref" =~ $image_pattern ]] || return 1
   docker pull "$image_ref" >/dev/null
   backend="$(docker image inspect --format '{{ index .Config.Labels "com.lunidex.backend" }}' "$image_ref")"
+  if [[ "$image_ref" == "$PRODUCTION_SUPABASE_ROLLBACK_IMAGE_REF" ]]; then
+    revision="$(docker image inspect --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}' "$image_ref")"
+    production_validate_supabase_rollback_image "$image_ref" "$revision" "$backend" || return $?
+  fi
   [[ "$backend" == 'supabase' ]]
 }
 
@@ -56,44 +52,23 @@ case "$rollback_mode" in
     fi
     append_candidate "$configured_ref" supabase app.env
     ;;
-  last-stable|neon-public-only)
-    if [[ ! "$previous_ref" =~ $image_pattern || ! -f .previous-app.env || -L .previous-app.env ]]; then
-      echo 'The saved last-stable image and matching app.env are required.' >&2
-      exit 78
-    fi
-    chmod 0600 .previous-app.env
-    if [[ "$previous_kind" == 'neon-public-only:d0f5e1af2cf95dd43eb046069c0d37f0a2add93e' ]]; then
-      docker pull "$previous_ref" >/dev/null
-      verified_marker="$(bash /opt/lunidex-production/scripts/deployment/verify-neon-public-only-image.sh \
-        "$previous_ref" .previous-app.env)"
-      [[ "$verified_marker" == "$previous_kind" ]] || {
-        echo 'The saved public-only Neon fallback could not be independently verified.' >&2
-        exit 78
-      }
-      append_candidate "$previous_ref" neon-public-only .previous-app.env
-    elif [[ "$previous_kind" == 'supabase' ]]; then
-      verify_supabase_image "$previous_ref" || {
-        echo 'The saved last-stable image is not verified as Supabase-compatible.' >&2
-        exit 78
-      }
-      append_candidate "$previous_ref" supabase .previous-app.env
+  last-stable)
+    if [[ "$previous_ref" =~ $image_pattern && "$previous_ref" != "$configured_ref" \
+      && "$previous_kind" == 'supabase' && -f .previous-app.env && ! -L .previous-app.env ]]; then
+      chmod 0600 .previous-app.env
+      if verify_supabase_image "$previous_ref"; then
+        append_candidate "$previous_ref" supabase .previous-app.env
+      else
+        echo 'Skipping the saved last-stable image because its Supabase compatibility could not be verified.' >&2
+      fi
     else
-      echo 'The saved last-stable image has no recognized backend marker.' >&2
+      echo 'Skipping the saved last-stable reference because it is not a verified Supabase image; trying the approved immutable rollback image.' >&2
+    fi
+    verify_supabase_image "$configured_ref" || {
+      echo 'The approved immutable Supabase rollback image is unavailable or incompatible.' >&2
       exit 78
-    fi
-
-    if [[ "$rollback_mode" == 'neon-public-only' ]]; then
-      [[ "${candidate_kinds[0]}" == 'neon-public-only' ]] || {
-        echo 'No explicitly verified Neon public-only fallback is recorded.' >&2
-        exit 78
-      }
-    elif [[ -n "$configured_ref" && "$configured_ref" != "$previous_ref" ]]; then
-      verify_supabase_image "$configured_ref" || {
-        echo 'Configured Supabase rollback image is not verified as compatible.' >&2
-        exit 78
-      }
-      append_candidate "$configured_ref" supabase app.env
-    fi
+    }
+    append_candidate "$configured_ref" supabase app.env
     ;;
 esac
 
@@ -151,11 +126,7 @@ for index in "${!candidate_refs[@]}"; do
     exit 64
   }
 
-  if [[ "$kind" == 'neon-public-only' ]]; then
-    echo 'Emergency rollback uses historical Neon d0f5 as public-only fallback; Neon Auth and cloud data remain unavailable.' >&2
-  else
-    echo "Trying Supabase-compatible immutable rollback image $candidate."
-  fi
+  echo "Trying Supabase-compatible immutable rollback image $candidate."
   install_app_env "$env_file"
   write_image_ref "$candidate"
   if docker compose -f compose.production.yaml config --quiet \

@@ -19,8 +19,9 @@ if [[ "$mode" != 'deploy' ]]; then
   echo 'Production preflight is GitHub-only and cannot run on this VPS.' >&2
   exit 64
 fi
-if [[ -n "$rollback_image_ref" && ! "$rollback_image_ref" =~ ^ghcr\.io/teefloo/lunidex@sha256:[0-9a-f]{64}$ ]]; then
-  echo 'A configured Supabase rollback image must be digest-pinned in GHCR.' >&2
+source /opt/lunidex-production/scripts/deployment/supabase-production-rollback.sh
+if [[ "$rollback_image_ref" != "$PRODUCTION_SUPABASE_ROLLBACK_IMAGE_REF" ]]; then
+  echo 'The approved immutable Supabase rollback image is required.' >&2
   exit 78
 fi
 
@@ -72,14 +73,10 @@ write_rollback_ref() {
   mv "$tmp" .env
 }
 
-if [[ -n "$rollback_image_ref" ]]; then
-  docker pull "$rollback_image_ref"
-  rollback_backend="$(docker image inspect --format '{{ index .Config.Labels "com.lunidex.backend" }}' "$rollback_image_ref")"
-  if [[ "$rollback_backend" != 'supabase' ]]; then
-    echo 'Rollback image does not carry the Supabase backend compatibility label.' >&2
-    exit 78
-  fi
-fi
+docker pull "$rollback_image_ref"
+rollback_backend="$(docker image inspect --format '{{ index .Config.Labels "com.lunidex.backend" }}' "$rollback_image_ref")"
+rollback_revision="$(docker image inspect --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}' "$rollback_image_ref")"
+production_validate_supabase_rollback_image "$rollback_image_ref" "$rollback_revision" "$rollback_backend"
 
 exec 9>.deploy.lock
 if ! flock -n 9; then
@@ -90,19 +87,11 @@ fi
 previous_image_ref="$(sed -n 's/^APP_IMAGE_REF=//p' .env | tail -n 1)"
 running_image_ref="$(docker inspect --format '{{.Config.Image}}' lunidex-production-app 2>/dev/null || true)"
 running_backend="$(docker inspect --format '{{ index .Config.Labels "com.lunidex.backend" }}' lunidex-production-app 2>/dev/null || true)"
-running_image_revision="$(docker inspect --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}' lunidex-production-app 2>/dev/null || true)"
 was_running="$(docker inspect --format '{{.State.Running}}' lunidex-production-app 2>/dev/null || true)"
 container_health="$(docker inspect --format '{{.State.Health.Status}}' lunidex-production-app 2>/dev/null || true)"
 running_image_digest_ref=''
 if [[ -n "$running_image_ref" ]]; then
   running_image_digest_ref="$(docker image inspect --format '{{range .RepoDigests}}{{println .}}{{end}}' "$running_image_ref" 2>/dev/null | awk '/^ghcr\.io\/teefloo\/lunidex@sha256:[0-9a-f]{64}$/ { print; exit }')"
-fi
-legacy_public_fallback_marker=''
-if [[ "$running_image_revision" == 'd0f5e1af2cf95dd43eb046069c0d37f0a2add93e' \
-  && "$running_backend" != 'supabase' \
-  && "$running_image_digest_ref" =~ ^ghcr\.io/teefloo/lunidex@sha256:[0-9a-f]{64}$ ]]; then
-  legacy_public_fallback_marker="$(bash /opt/lunidex-production/scripts/deployment/verify-neon-public-only-image.sh \
-    "$running_image_digest_ref" app.env 2>/dev/null || true)"
 fi
 mapfile -t rollback_candidates < <(
   source /opt/lunidex-production/scripts/deployment/rollback-candidates.sh
@@ -112,11 +101,10 @@ mapfile -t rollback_candidates < <(
     "${was_running:-false}" \
     "$container_health" \
     "$rollback_image_ref" \
-    "$running_backend" \
-    "$legacy_public_fallback_marker"
+    "$running_backend"
 )
 if ((${#rollback_candidates[@]} == 0)); then
-  echo 'No Supabase-compatible rollback or verified legacy public-only image snapshot is available; refusing production deployment.' >&2
+  echo 'No healthy Supabase image or approved immutable rollback image is available; refusing production deployment.' >&2
   exit 78
 fi
 rollback_target_ref="${rollback_candidates[0]}"
@@ -197,11 +185,7 @@ install_app_env() {
 rollback_to_stable() {
   local candidate
   for candidate in "${rollback_candidates[@]}"; do
-    if [[ "$candidate" == "$running_image_digest_ref" && -n "$legacy_public_fallback_marker" ]]; then
-      echo "Candidate deployment failed; restoring the legacy Neon image $candidate as a public-only emergency fallback. Auth and cloud data remain unavailable." >&2
-    else
-      echo "Candidate deployment failed; trying Supabase-compatible immutable image $candidate." >&2
-    fi
+    echo "Candidate deployment failed; trying Supabase-compatible immutable image $candidate." >&2
     if [[ "$candidate" == "$running_image_digest_ref" && -f .previous-app.env ]]; then
       install_app_env .previous-app.env
     else
@@ -215,11 +199,7 @@ rollback_to_stable() {
       && bash /opt/lunidex-production/scripts/deployment/healthcheck-production.sh; then
       printf '%s\n' "$candidate" > .previous-image-ref
       chmod 0600 .previous-image-ref
-      if [[ "$candidate" == "$running_image_digest_ref" && -n "$legacy_public_fallback_marker" ]]; then
-        printf '%s\n' "$legacy_public_fallback_marker" > .previous-image-backend
-      else
-        printf '%s\n' 'supabase' > .previous-image-backend
-      fi
+      printf '%s\n' 'supabase' > .previous-image-backend
       chmod 0600 .previous-image-backend
       echo "Rollback image $candidate is healthy again." >&2
       return 0
@@ -259,11 +239,7 @@ wait_for_app
 bash /opt/lunidex-production/scripts/deployment/healthcheck-production.sh
 printf '%s\n' "${rollback_candidates[0]}" > .previous-image-ref
 chmod 0600 .previous-image-ref
-if [[ "${rollback_candidates[0]}" == "$running_image_digest_ref" && -n "$legacy_public_fallback_marker" ]]; then
-  printf '%s\n' "$legacy_public_fallback_marker" > .previous-image-backend
-else
-  printf '%s\n' 'supabase' > .previous-image-backend
-fi
+printf '%s\n' 'supabase' > .previous-image-backend
 chmod 0600 .previous-image-backend
 rm -f -- "$candidate_app_env"
 trap - ERR

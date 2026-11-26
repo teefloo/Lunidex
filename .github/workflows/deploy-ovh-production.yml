@@ -74,8 +74,8 @@ jobs:
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
       NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED: ${{ vars.NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED || 'false' }}
       SUPABASE_CA_CERT_B64: ${{ vars.SUPABASE_CA_CERT_B64 }}
-      SUPABASE_ROLLBACK_IMAGE_REF: ${{ vars.SUPABASE_ROLLBACK_IMAGE_REF }}
-      SUPABASE_ROLLBACK_IMAGE_REVISION: ${{ vars.SUPABASE_ROLLBACK_IMAGE_REVISION }}
+      SUPABASE_ROLLBACK_IMAGE_REF: ghcr.io/teefloo/lunidex@sha256:bbbfeaef9efd4a150ff0d68bd6762c4f54a3cd14e804527a1619778523aef7ac
+      SUPABASE_ROLLBACK_IMAGE_REVISION: 5703ceba7585e4ee4243ba03add60d53ba33f335
       NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN: ${{ vars.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN }}
       NEXT_PUBLIC_POSTHOG_HOST: ${{ vars.NEXT_PUBLIC_POSTHOG_HOST }}
       NEXT_PUBLIC_POSTHOG_ENABLED: ${{ vars.NEXT_PUBLIC_POSTHOG_ENABLED || 'false' }}
@@ -189,7 +189,7 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Require the production Supabase public configuration and validate an optional rollback image
+      - name: Require the production Supabase configuration and pinned rollback image
         shell: bash
         run: |
           set -Eeuo pipefail
@@ -201,18 +201,14 @@ jobs:
             echo 'Set NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY in the ovh-production environment.' >&2
             exit 78
           }
-          if [[ -n "$SUPABASE_ROLLBACK_IMAGE_REF" || -n "$SUPABASE_ROLLBACK_IMAGE_REVISION" ]]; then
-            [[ "$SUPABASE_ROLLBACK_IMAGE_REF" =~ ^ghcr\.io/teefloo/lunidex@sha256:[0-9a-f]{64}$ ]] || {
-              echo 'A configured Supabase rollback reference must be an immutable GHCR digest.' >&2
-              exit 78
-            }
-            [[ "$SUPABASE_ROLLBACK_IMAGE_REVISION" =~ ^[0-9a-f]{40}$ ]] || {
-              echo 'A configured Supabase rollback reference requires its full source SHA.' >&2
-              exit 78
-            }
-          else
-            echo 'No prevalidated Supabase rollback digest is configured; deploy mode will require a healthy, digest-addressable running fallback snapshot.' >> "$GITHUB_STEP_SUMMARY"
-          fi
+          [[ "$SUPABASE_ROLLBACK_IMAGE_REF" == 'ghcr.io/teefloo/lunidex@sha256:bbbfeaef9efd4a150ff0d68bd6762c4f54a3cd14e804527a1619778523aef7ac' ]] || {
+            echo 'The approved immutable Supabase rollback digest is missing or changed.' >&2
+            exit 78
+          }
+          [[ "$SUPABASE_ROLLBACK_IMAGE_REVISION" == '5703ceba7585e4ee4243ba03add60d53ba33f335' ]] || {
+            echo 'The approved Supabase rollback image source revision is missing or changed.' >&2
+            exit 78
+          }
 
       - name: Require production contact delivery configuration
         if: env.DEPLOYMENT_MODE == 'deploy'
@@ -340,11 +336,7 @@ jobs:
             echo "- Candidate: \`$image_ref\`"
             echo '- Platform: \`linux/amd64\`'
             echo
-            if [[ -n "$SUPABASE_ROLLBACK_IMAGE_REF" ]]; then
-              echo "Supabase rollback candidate: \`$SUPABASE_ROLLBACK_IMAGE_REF\` (reviewed for Supabase compatibility)."
-            else
-              echo 'No Supabase rollback digest is configured. The VPS deploy script must snapshot a healthy digest-addressable prior image and its matching app.env; the legacy d0f5 Neon image is public-only emergency recovery, never a Supabase candidate.'
-            fi
+            echo "Pinned Supabase rollback image: \`$SUPABASE_ROLLBACK_IMAGE_REF\` (source \`$SUPABASE_ROLLBACK_IMAGE_REVISION\`)."
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Validate the candidate Compose contract and app health in isolation
@@ -528,7 +520,7 @@ jobs:
           ssh_args=(-i "$HOME/.ssh/ovh_deploy" -o BatchMode=yes -o StrictHostKeyChecking=yes)
           ssh "${ssh_args[@]}" "$target" 'set -Eeuo pipefail; root=/opt/lunidex-production; install -d -m 0755 "$root/scripts/deployment" "$root/deploy/production" "$root/deploy/systemd-production"; if [[ ! -f "$root/.env" ]]; then umask 077; printf "%s\n" "APP_IMAGE_REF=ghcr.io/teefloo/lunidex@sha256:0000000000000000000000000000000000000000000000000000000000000000" > "$root/.env"; fi; chmod 0600 "$root/.env"'
           scp "${ssh_args[@]}" compose.production.yaml "$target:/opt/lunidex-production/"
-          scp "${ssh_args[@]}" scripts/deployment/deploy-production.sh scripts/deployment/rollback-production.sh scripts/deployment/rollback-candidates.sh scripts/deployment/verify-neon-public-only-image.sh scripts/deployment/healthcheck-production.sh scripts/deployment/check-supabase-auth.sh scripts/deployment/preflight-production.sh scripts/deployment/rehearse-rollback-production.sh scripts/deployment/production-memory-gate.sh scripts/deployment/require-supabase-ca.sh scripts/deployment/verify-supabase-ca.sh scripts/deployment/install-supabase-ca.sh "$target:/opt/lunidex-production/scripts/deployment/"
+          scp "${ssh_args[@]}" scripts/deployment/deploy-production.sh scripts/deployment/rollback-production.sh scripts/deployment/rollback-candidates.sh scripts/deployment/supabase-production-rollback.sh scripts/deployment/healthcheck-production.sh scripts/deployment/check-supabase-auth.sh scripts/deployment/preflight-production.sh scripts/deployment/rehearse-rollback-production.sh scripts/deployment/production-memory-gate.sh scripts/deployment/require-supabase-ca.sh scripts/deployment/verify-supabase-ca.sh scripts/deployment/install-supabase-ca.sh "$target:/opt/lunidex-production/scripts/deployment/"
           scp "${ssh_args[@]}" scripts/deployment/activate-production-route.sh "$target:/opt/lunidex-production/scripts/deployment/"
           scp "${ssh_args[@]}" deploy/production/* "$target:/opt/lunidex-production/deploy/production/"
           scp "${ssh_args[@]}" deploy/systemd-production/* "$target:/opt/lunidex-production/deploy/systemd-production/"

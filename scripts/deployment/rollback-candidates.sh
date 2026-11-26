@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
-# Print compatible Supabase images first. The historical d0f5 image is only a
-# public-only emergency fallback after its OCI revision and Neon driver have
-# been verified by the caller; it is never labelled as Supabase-compatible.
+# Print only healthy Supabase images. Legacy Neon images are never candidates.
 production_rollback_candidates() {
-  local configured_ref="${1:-}" container_digest_ref="${2:-}" running="${3:-false}" health="${4:-}" fallback_ref="${5:-}" container_backend="${6:-}" legacy_marker="${7:-}"
+  local configured_ref="${1:-}" container_digest_ref="${2:-}" running="${3:-false}" health="${4:-}" fallback_ref="${5:-}" container_backend="${6:-}"
   local digest_pattern='^ghcr\.io/teefloo/lunidex@sha256:[0-9a-f]{64}$'
 
   if [[ -n "$fallback_ref" && ! "$fallback_ref" =~ $digest_pattern ]]; then return 64; fi
@@ -13,12 +11,6 @@ production_rollback_candidates() {
     printf '%s\n' "$configured_ref"
   elif [[ "$container_digest_ref" =~ $digest_pattern && "$running" == 'true' \
     && "$health" == 'healthy' && "$container_backend" == 'supabase' ]]; then
-    printf '%s\n' "$container_digest_ref"
-  fi
-
-  if [[ "$running" == 'true' && "$health" == 'healthy' \
-    && "$legacy_marker" == 'neon-public-only:d0f5e1af2cf95dd43eb046069c0d37f0a2add93e' \
-    && "$container_backend" != 'supabase' && "$container_digest_ref" =~ $digest_pattern ]]; then
     printf '%s\n' "$container_digest_ref"
   fi
 

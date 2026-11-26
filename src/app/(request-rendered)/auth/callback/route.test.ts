@@ -102,6 +102,56 @@ describe('Supabase Auth callback', () => {
     );
   });
 
+  it('uses the canonical production origin for recovery redirects when Next exposes its internal listener URL', async () => {
+    vi.stubEnv('NODE_ENV', 'production');
+    const response = await GET(new NextRequest(
+      'http://0.0.0.0:3000/fr/auth/callback?next=%2Fen%2Fdashboard&token_hash=opaque-recovery-hash&type=recovery',
+    ));
+    const location = response.headers.get('location') ?? '';
+
+    expect(location).toBe(
+      'https://lunidex.app/fr/auth/reset-password?mode=recovery&token_hash=opaque-recovery-hash',
+    );
+    expect(location).not.toContain('0.0.0.0');
+    expect(location).not.toContain('next=');
+    expect(location).not.toContain('code=');
+    expect(mocks.verifyOtp).not.toHaveBeenCalled();
+    expect(mocks.exchangeCodeForSession).not.toHaveBeenCalled();
+  });
+
+  it('uses the canonical production origin for code callbacks and never returns the code in Location', async () => {
+    vi.stubEnv('NODE_ENV', 'production');
+    mocks.exchangeCodeForSession.mockResolvedValue({
+      data: { user: {
+        id: '7d4d38a6-bc79-4fb7-b9f6-07e7f448a660',
+        email: 'owner@example.test',
+        email_confirmed_at: '2026-11-26T10:00:00.000Z',
+        user_metadata: {},
+      } },
+      error: null,
+    });
+
+    const response = await GET(new NextRequest(
+      'http://0.0.0.0:3000/en/auth/callback?code=one-time-code&next=%2Fen%2Fdashboard',
+    ));
+    const location = response.headers.get('location') ?? '';
+
+    expect(mocks.exchangeCodeForSession).toHaveBeenCalledWith('one-time-code');
+    expect(location).toBe('https://lunidex.app/en/dashboard');
+    expect(location).not.toContain('0.0.0.0');
+    expect(location).not.toContain('one-time-code');
+    expect(location).not.toContain('code=');
+    expect(location).not.toContain('next=');
+    expect(mocks.signOut).not.toHaveBeenCalled();
+  });
+
+  it('keeps localhost callback redirects on the local development origin', async () => {
+    vi.stubEnv('NODE_ENV', 'development');
+    const response = await GET(new NextRequest('http://localhost:3000/en/auth/callback?auth=callback_error'));
+
+    expect(response.headers.get('location')).toBe('http://localhost:3000/en/dashboard?auth=callback_error');
+  });
+
   it('uses a prefetch-safe recovery link built from the exact RedirectTo and TokenHash', async () => {
     const template = readFileSync(resolve(process.cwd(), 'supabase/templates/recovery.html'), 'utf8');
     const href = template.match(/href="([^"]+)"/)?.[1];
