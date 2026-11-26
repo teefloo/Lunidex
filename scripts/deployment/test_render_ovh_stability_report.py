@@ -194,6 +194,43 @@ class RenderOvhStabilityReportTests(unittest.TestCase):
                 self.assertIn("**Verdict: NO-GO**", report)
                 self.assertNotIn("**OVH memory NO-GO reasons:**", report)
 
+    def test_auth_402_remains_no_go_while_later_memory_observations_can_pass(self):
+        report, status = build_report(
+            healthy_audit(
+                audit_result="success",
+                auth_session_status="402",
+            )
+        )
+
+        self.assertEqual(status, 1)
+        self.assertIn("**OVH memory verdict: GO**", report)
+        self.assertIn("**Neon Auth verdict: NO-GO**", report)
+        self.assertIn("Neon Auth session endpoint returned HTTP 402", report)
+        self.assertIn("Memory capture UTC: `2026-11-23T13:12:00Z`", report)
+
+    def test_auth_402_with_missing_memory_observations_is_incomplete_not_go(self):
+        report, status = build_report(
+            healthy_audit(
+                audit_result="success",
+                auth_session_status="402",
+                cgroup_current_bytes="",
+            )
+        )
+
+        self.assertEqual(status, 1)
+        self.assertIn("**OVH memory verdict: INCOMPLETE**", report)
+        self.assertIn("cgroup_current_bytes is missing or unavailable", report)
+        self.assertIn("**Neon Auth verdict: NO-GO**", report)
+        self.assertNotIn("**OVH memory verdict: GO**", report)
+
+    def test_missing_memory_capture_timestamp_is_incomplete_not_go(self):
+        report, status = build_report(healthy_audit(audit_captured_at=""))
+
+        self.assertEqual(status, 2)
+        self.assertIn("**OVH memory verdict: INCOMPLETE**", report)
+        self.assertIn("memory capture UTC timestamp is missing", report)
+        self.assertNotIn("**OVH memory verdict: GO**", report)
+
     def test_missing_metrics_and_skipped_run_are_incomplete(self):
         report, status = build_report(
             {
@@ -345,6 +382,16 @@ class RenderOvhStabilityReportTests(unittest.TestCase):
         self.assertNotIn("github.run_started_at", workflow)
         self.assertIn("date -u +%F", workflow)
         self.assertIn("audit_utc_date", workflow)
+        self.assertIn("AUDIT_CAPTURED_AT: ${{ needs.inspect.outputs.memory_captured_at }}", workflow)
+        self.assertNotIn("AUDIT_CAPTURED_AT: ${{ needs.inspect.outputs.audit_memory_captured_at }}", workflow)
+        self.assertIn("id: https\n        continue-on-error: true", workflow)
+
+        heap_step = inspect_job.split("- name: Retrieve one matching sanitized heap sample", 1)[1]
+        heap_step = heap_step.split("- name: Retrieve restart-safe memory points", 1)[0]
+        memory_points_step = inspect_job.split("- name: Retrieve restart-safe memory points", 1)[1]
+        self.assertIn("if: inputs.expected_heap_sample_run_id != '' && steps.slot.outputs.audit_date_valid == 'true'", heap_step)
+        self.assertIn("if: inputs.expected_heap_sample_run_id != '' && steps.slot.outputs.audit_date_valid == 'true'", memory_points_step)
+        self.assertNotIn("steps.https.outcome", heap_step + memory_points_step)
 
 if __name__ == "__main__":
     unittest.main()
