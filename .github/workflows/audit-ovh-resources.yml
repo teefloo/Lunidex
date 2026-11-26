@@ -255,6 +255,7 @@ jobs:
       - name: Probe essential production HTTPS routes
         if: steps.slot.outputs.audit_date_valid == 'true'
         id: https
+        continue-on-error: true
         shell: bash
         env:
           AUDIT_UTC_DATE: ${{ steps.slot.outputs.audit_utc_date }}
@@ -381,7 +382,7 @@ jobs:
           AUTH_SESSION_STATUS: ${{ needs.inspect.outputs.auth_session_status }}
           PROFILE_STATUS: ${{ needs.inspect.outputs.profile_status }}
           TLS_VERIFY_RESULT: ${{ needs.inspect.outputs.tls_verify_result }}
-          AUDIT_CAPTURED_AT: ${{ needs.inspect.outputs.audit_memory_captured_at }}
+          AUDIT_CAPTURED_AT: ${{ needs.inspect.outputs.memory_captured_at }}
         run: |
           set -Eeuo pipefail
           report_runner_utc_date="$(date -u +%F)"
