@@ -107,6 +107,34 @@ test('Compose, deploy, and manual rollback use immutable digest references', () 
   assert.doesNotMatch(read(path.join(repositoryRoot, 'scripts/deployment/rehearse-rollback-production.sh')), /ace4b8/);
 });
 
+test('the official Supabase root CA is accepted and a different CA is rejected', () => {
+  const verifier = path.join(repositoryRoot, 'scripts/deployment/verify-supabase-ca.sh');
+  const officialCa = path.join(repositoryRoot, 'supabase/tests/fixtures/supabase-root-2021.crt');
+  const accepted = spawnSync('bash', [verifier, officialCa], { cwd: repositoryRoot, encoding: 'utf8' });
+
+  assert.equal(accepted.status, 0, accepted.stderr);
+  assert.match(accepted.stdout, /pinned certificate/i);
+
+  const tempDir = mkdtempSync(path.join(os.tmpdir(), 'lunidex-mismatched-ca-test-'));
+  const mismatchCa = path.join(tempDir, 'mismatched-root.crt');
+  const generated = spawnSync('openssl', [
+    'req', '-x509', '-newkey', 'rsa:2048', '-nodes', '-days', '1',
+    '-subj', '/CN=Lunidex test mismatch CA',
+    '-addext', 'basicConstraints=critical,CA:TRUE',
+    '-keyout', path.join(tempDir, 'mismatch.key'),
+    '-out', mismatchCa,
+  ], { cwd: repositoryRoot, encoding: 'utf8' });
+
+  try {
+    assert.equal(generated.status, 0, generated.stderr);
+    const rejected = spawnSync('bash', [verifier, mismatchCa], { cwd: repositoryRoot, encoding: 'utf8' });
+    assert.equal(rejected.status, 78);
+    assert.match(rejected.stderr, /fingerprint does not match/i);
+  } finally {
+    rmSync(tempDir, { recursive: true, force: true });
+  }
+});
+
 test('candidate and rollback images are verified in isolated no-network containers', () => {
   const validator = read(isolatedValidatorPath);
   const workflow = read(workflowPath);
