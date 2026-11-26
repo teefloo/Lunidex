@@ -9,7 +9,6 @@ if [[ -z "$ca_file" || ! -f "$ca_file" || -L "$ca_file" || ! -s "$ca_file" || ! 
   exit 78
 fi
 
-echo 'Supabase root CA fingerprint matches pinned certificate.'
 
 if ! command -v openssl >/dev/null 2>&1 \
   || ! openssl x509 -in "$ca_file" -noout -checkend 0 >/dev/null 2>&1 \
@@ -23,3 +22,5 @@ if [[ "$fingerprint" != "$expected_fingerprint" ]]; then
   echo 'The Supabase root CA fingerprint does not match the pinned certificate.' >&2
   exit 78
 fi
+
+echo 'Supabase root CA fingerprint matches pinned certificate.'
