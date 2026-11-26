@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { getSupabaseUserFromRequest, ensureSupabaseUser } from '@/lib/supabase/auth';
-import { isInactiveAccountError } from '@/lib/supabase/errors';
-import { getSupabaseDatabaseClient, type SupabaseSql } from '@/lib/supabase/database';
+import { getNeonUserFromRequest, ensureNeonUser } from '@/lib/neon/auth';
+import { isInactiveAccountError } from '@/lib/neon/errors';
+import { getNeonClient, type NeonSql } from '@/lib/neon/server';
 import { SealedDomainError } from '@primedex/core/lib/sealed-ledger';
 import {
   SealedServerError,
@@ -9,7 +9,7 @@ import {
 } from '@/lib/tcg-sealed-server';
 
 export interface SealedRequestContext {
-  sql: SupabaseSql;
+  sql: NeonSql;
   userId: string;
 }
 
@@ -28,9 +28,9 @@ export function accountDeletionResponse(): NextResponse {
 }
 
 export async function getSealedRequestContext(request: NextRequest): Promise<SealedRequestContext | NextResponse> {
-  const sql = getSupabaseDatabaseClient();
+  const sql = getNeonClient();
   if (!sql) return unavailableResponse();
-  const user = await getSupabaseUserFromRequest(request);
+  const user = await getNeonUserFromRequest(request);
   if (!user) {
     return NextResponse.json(
       { error: 'Authentication required.' },
@@ -38,7 +38,7 @@ export async function getSealedRequestContext(request: NextRequest): Promise<Sea
     );
   }
   try {
-    if (await ensureSupabaseUser(sql, user) === false) return accountDeletionResponse();
+    if (await ensureNeonUser(sql, user) === false) return accountDeletionResponse();
   } catch (error) {
     if (isInactiveAccountError(error)) return accountDeletionResponse();
     return unavailableResponse();

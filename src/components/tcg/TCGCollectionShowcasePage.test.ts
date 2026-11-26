@@ -37,7 +37,7 @@ describe('TCG collection showcase query', () => {
     vi.clearAllMocks();
   });
 
-  it('does not poll Supabase while keeping mount and focus refreshes available', async () => {
+  it('does not poll Neon while keeping mount and focus refreshes available', async () => {
     await act(async () => {
       root.render(createElement(TCGCollectionShowcasePage, { token: 'share-token' }));
       await Promise.resolve();

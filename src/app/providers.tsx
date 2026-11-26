@@ -14,7 +14,7 @@ import {
   persistLanguageCookie,
 } from '@/lib/i18n';
 import type { SupportedLanguage } from '@/lib/languages';
-import { AuthProvider } from '@/lib/supabase/AuthProvider';
+import { AuthProvider } from '@/lib/neon/AuthProvider';
 import dynamic from 'next/dynamic';
 import { useClientLanguage } from '@/hooks/useLocaleHref';
 import { IdleClientServices } from '@/components/IdleClientServices';

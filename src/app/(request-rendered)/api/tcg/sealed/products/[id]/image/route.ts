@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
-import { getSupabaseDatabaseClient } from '@/lib/supabase/database';
+import { getNeonClient } from '@/lib/neon/server';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
 import { getSealedImageUrl } from '@/lib/tcg-sealed-server';
 import { positiveId, sealedErrorResponse, unavailableResponse } from '@/lib/tcg-sealed-route';
@@ -11,7 +11,7 @@ export const runtime = 'nodejs';
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
 
 async function getImage(request: NextRequest, context: { params: Promise<{ id: string }> }): Promise<Response> {
-  const sql = getSupabaseDatabaseClient();
+  const sql = getNeonClient();
   if (!sql) return unavailableResponse();
   if (!rateLimit(`tcg-sealed-image:${ipKey(request)}`, 120)) return NextResponse.json({ error: 'Too many sealed product image requests.' }, { status: 429, headers: { 'Cache-Control': 'private, no-store' } });
   const id = positiveId((await context.params).id);

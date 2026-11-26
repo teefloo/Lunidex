@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readJsonBody } from '@/lib/api/route-helpers';
-import { getSupabaseDatabaseClient } from '@/lib/supabase/database';
+import { getNeonClient } from '@/lib/neon/server';
 import { rateLimit, trustedClientIp } from '@/lib/rate-limit';
 import { createHash } from 'crypto';
 import { normalizeCampaignSlug } from '@/lib/campaigns';
@@ -57,8 +57,8 @@ async function postProductAnalytics(request: NextRequest): Promise<NextResponse>
   } else if (values.some((value, index) => value !== undefined && !allowed[event][index]?.includes(value as never))) {
     return new NextResponse(null, { status: 400, headers });
   }
-  // This route stores the bounded Supabase aggregate only; the consented browser SDK captures PostHog events separately.
-  const sql = getSupabaseDatabaseClient();
+  // This route stores the bounded Neon aggregate only; the consented browser SDK captures PostHog events separately.
+  const sql = getNeonClient();
   if (!sql) return new NextResponse(null, { status: 503, headers });
   try {
     await sql`

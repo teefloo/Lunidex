@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@supabase/ssr';
 import { isSupportedLanguage } from '@/lib/languages';
 import { DEFAULT_TCG_CARD_LANGUAGE, normalizeTCGCardLanguage } from '@/lib/tcg-language';
 
@@ -589,7 +588,7 @@ function hardNotFoundResponse(request: NextRequest, locale: string) {
   return response;
 }
 
-async function routeRequest(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   logRouteDiagnostic(request);
 
@@ -757,40 +756,6 @@ async function routeRequest(request: NextRequest) {
     });
   }
   return redirect;
-}
-
-/** Refresh Supabase SSR cookies on requests without using Proxy as an authorization boundary. */
-export async function proxy(request: NextRequest) {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  if (!supabaseUrl || !publishableKey) return routeRequest(request);
-
-  const refreshedCookies: Array<{
-    name: string;
-    value: string;
-    options: Parameters<NextResponse['cookies']['set']>[2];
-  }> = [];
-  const supabase = createServerClient(supabaseUrl, publishableKey, {
-    cookies: {
-      getAll: () => request.cookies.getAll(),
-      setAll: (cookiesToSet) => {
-        for (const cookie of cookiesToSet) {
-          request.cookies.set(cookie.name, cookie.value);
-          refreshedCookies.push(cookie);
-        }
-      },
-    },
-    auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: false },
-  });
-
-  // getClaims validates the access token locally and only calls Auth to
-  // refresh an expired session. Protected Route Handlers still call getUser.
-  await supabase.auth.getClaims().catch(() => null);
-  const response = await routeRequest(request);
-  for (const cookie of refreshedCookies) {
-    response.cookies.set(cookie.name, cookie.value, cookie.options);
-  }
-  return response;
 }
 
 export const config = {

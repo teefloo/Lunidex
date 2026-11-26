@@ -1,15 +1,15 @@
 'use client';
 
-import { getSupabaseAccessToken } from '@/lib/supabase/client';
+import { getNeonAccessToken } from '@/lib/neon/client';
 import { isLikelyNetworkError, reportHttpFailure, type ObservabilityContext } from '@/lib/sentry-observability';
 
-/** Returns the current Supabase Auth JWT for server-side application API calls. */
+/** Returns the current Neon Auth JWT for server-side application API calls. */
 export async function getAppAccessToken(): Promise<string | null> {
-  return getSupabaseAccessToken();
+  return getNeonAccessToken();
 }
 
 /**
- * Calls an application API route and forwards the Supabase Auth JWT. Database
+ * Calls an application API route and forwards the Neon Auth JWT. Database
  * credentials never enter this browser-side helper or the client bundle.
  */
 export async function fetchAppApi(

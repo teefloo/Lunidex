@@ -1,10 +1,8 @@
-import 'server-only';
-
-import { getSupabaseDatabaseClient } from '@/lib/supabase/database';
+import { getNeonClient } from '@/lib/neon/server';
 import type { PublicProfile, PublicProfileRow } from '@/types/dashboard';
 
 /**
- * Fetches a public profile by handle. Returns null when Supabase is not
+ * Fetches a public profile by handle. Returns null when Neon is not
  * configured, the handle is not found, or the profile is not public.
  *
  * This function is designed for use in RSC (server components) where no
@@ -14,7 +12,7 @@ import type { PublicProfile, PublicProfileRow } from '@/types/dashboard';
 export async function getPublicProfileByHandle(
   handle: string,
 ): Promise<PublicProfile | null> {
-  const sql = getSupabaseDatabaseClient();
+  const sql = getNeonClient();
   if (!sql) return null;
 
   const rows = await sql`

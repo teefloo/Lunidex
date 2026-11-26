@@ -173,17 +173,6 @@ const devConnectSrc =
   process.env.NODE_ENV === 'development'
     ? ' http://localhost:4747 http://127.0.0.1:4747'
     : '';
-const supabaseConnectSrc = (() => {
-  const configuredUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  if (!configuredUrl) return '';
-  try {
-    const url = new URL(configuredUrl);
-    if (url.protocol !== 'https:' && process.env.NODE_ENV !== 'development') return '';
-    return ` ${url.origin}`;
-  } catch {
-    return '';
-  }
-})();
 
 // unsafe-eval is required by Webpack HMR in dev; strip it in production.
 const scriptSrc =
@@ -198,7 +187,7 @@ const csp = [
   "img-src 'self' https://raw.githubusercontent.com https://pokeapi.co https://images.scrydex.com https://www.cardtrader.com https://images.pokemontcg.io https://assets.tcgdex.net https://images.tcgdex.net https://tcgplayer-cdn.tcgplayer.com https://tcg.pokemon.com https://mcdn.pokemon.com https://dz3we2x72f7ol.cloudfront.net https://*.googleusercontent.com https://avatars.githubusercontent.com data: blob: https://api.tcgdex.net",
   "font-src 'self' data:",
   "media-src 'self' https://raw.githubusercontent.com",
-  `connect-src 'self'${devConnectSrc}${supabaseConnectSrc} https://*.ingest.sentry.io https://*.ingest.de.sentry.io https://*.posthog.com https://pokeapi.co https://graphql.pokeapi.co https://api.tcgdex.net https://raw.githubusercontent.com`,
+  `connect-src 'self'${devConnectSrc} https://*.ingest.sentry.io https://*.ingest.de.sentry.io https://*.posthog.com https://pokeapi.co https://graphql.pokeapi.co https://api.tcgdex.net https://raw.githubusercontent.com`,
   "worker-src 'self' blob: data:",
   "frame-ancestors 'none'",
 ].join('; ');

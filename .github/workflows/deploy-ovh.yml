@@ -174,7 +174,7 @@ jobs:
       contents: read
       packages: write
     env:
-      NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_NEON_AUTH_URL: ${{ vars.NEXT_PUBLIC_NEON_AUTH_URL }}
       NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN: ${{ vars.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN }}
       NEXT_PUBLIC_POSTHOG_HOST: ${{ vars.NEXT_PUBLIC_POSTHOG_HOST }}
       NEXT_PUBLIC_POSTHOG_ENABLED: ${{ vars.NEXT_PUBLIC_POSTHOG_ENABLED }}
@@ -205,12 +205,11 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Require a test Supabase environment
+      - name: Require a test Neon environment
         shell: bash
         run: |
           set -Eeuo pipefail
-          : "${NEXT_PUBLIC_SUPABASE_URL:?Set this public URL to the isolated preproduction Supabase project}"
-          : "${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:?Set the preproduction publishable key}"
+          : "${NEXT_PUBLIC_NEON_AUTH_URL:?Set this public URL to the isolated preproduction Neon Auth branch}"
 
       - run: npm ci
 
@@ -241,8 +240,7 @@ jobs:
 
           build_args=(
             --build-arg "NEXT_DEPLOYMENT_ID=${GITHUB_SHA}"
-            --build-arg "NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL:-}"
-            --build-arg "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:-}"
+            --build-arg "NEXT_PUBLIC_NEON_AUTH_URL=${NEXT_PUBLIC_NEON_AUTH_URL:-}"
             --build-arg "NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN=${NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN:-}"
             --build-arg "NEXT_PUBLIC_POSTHOG_HOST=${NEXT_PUBLIC_POSTHOG_HOST:-}"
             --build-arg "NEXT_PUBLIC_POSTHOG_ENABLED=${NEXT_PUBLIC_POSTHOG_ENABLED:-false}"

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Send, Copy, Users, Wifi, WifiOff, MessageSquare, Loader2 } from 'lucide-react';
-import { getSupabaseAccessToken, isSupabaseAuthConfigured } from '@/lib/supabase/client';
+import { getNeonAccessToken, isNeonAuthConfigured } from '@/lib/neon/client';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
 import { toast } from '@/lib/toast';
@@ -54,7 +54,7 @@ export default function BattleRoom({ roomId, userId }: BattleRoomProps) {
   const [chatInput, setChatInput] = useState('');
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<unknown | null>(() => (
-    isSupabaseAuthConfigured
+    isNeonAuthConfigured
       ? null
       : new Error('Battle room is unavailable in this environment')
   ));
@@ -75,7 +75,7 @@ export default function BattleRoom({ roomId, userId }: BattleRoomProps) {
   }, []);
 
   const loadRoom = useCallback(async () => {
-    const token = await getSupabaseAccessToken();
+    const token = await getNeonAccessToken();
     if (!token) throw Object.assign(new Error('Session expired'), { status: 401 });
 
     const response = await fetch(`/api/battle/room?id=${encodeURIComponent(roomId)}`, {
@@ -87,7 +87,7 @@ export default function BattleRoom({ roomId, userId }: BattleRoomProps) {
   }, [applyRoom, roomId]);
 
   const joinRoom = useCallback(async () => {
-    const token = await getSupabaseAccessToken();
+    const token = await getNeonAccessToken();
     if (!token) throw Object.assign(new Error('Session expired'), { status: 401 });
 
     const response = await fetch(`/api/battle/room?id=${encodeURIComponent(roomId)}`, {
@@ -103,7 +103,7 @@ export default function BattleRoom({ roomId, userId }: BattleRoomProps) {
   }, [applyRoom, roomId]);
 
   useEffect(() => {
-    if (!isSupabaseAuthConfigured) return;
+    if (!isNeonAuthConfigured) return;
     let active = true;
     let interval: number | undefined;
 
@@ -149,7 +149,7 @@ export default function BattleRoom({ roomId, userId }: BattleRoomProps) {
     chatSendGuard.current = true;
     setChatSending(true);
     try {
-      const token = await getSupabaseAccessToken();
+      const token = await getNeonAccessToken();
       if (!token) {
         setChatError(Object.assign(new Error('Session expired'), { status: 401 }));
         return;

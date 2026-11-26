@@ -3,7 +3,6 @@ import { pathToFileURL } from 'node:url';
 import path from 'node:path';
 
 export const EXPECTED_MEMORY_LIMIT_BYTES = 2176n * 1024n * 1024n;
-export const EXPECTED_SUPABASE_CA_PATH = '/etc/ssl/certs/lunidex-supabase-ca.crt';
 const EXPECTED_CPUS = 1;
 
 function memoryLimitBytes(value) {
@@ -35,21 +34,10 @@ function cpuCount(value) {
 export function validateRenderedCompose(rendered, expectedImageRef) {
   const config = typeof rendered === 'string' ? JSON.parse(rendered) : rendered;
   const app = config?.services?.app ?? {};
-  const caMount = Array.isArray(app.volumes)
-    ? app.volumes.find((volume) => volume?.type === 'bind'
-      && volume.target === EXPECTED_SUPABASE_CA_PATH
-      && typeof volume.source === 'string'
-      && path.isAbsolute(volume.source ?? '')
-      && path.basename(volume.source) === 'supabase-ca.crt')
-    : null;
-  const caMountReadOnly = caMount?.read_only === true && caMount.bind?.create_host_path === false;
-  const nodeExtraCaCerts = app.environment?.NODE_EXTRA_CA_CERTS ?? null;
   const actual = {
     image: app.image ?? null,
     mem_limit: app.mem_limit ?? null,
     cpus: app.cpus ?? null,
-    ca_mount_read_only: caMountReadOnly,
-    node_extra_ca_certs: nodeExtraCaCerts,
   };
   const actualMemoryBytes = memoryLimitBytes(actual.mem_limit);
   const actualCpus = cpuCount(actual.cpus);
@@ -57,9 +45,7 @@ export function validateRenderedCompose(rendered, expectedImageRef) {
   return {
     ok: actual.image === expectedImageRef
       && actualMemoryBytes === EXPECTED_MEMORY_LIMIT_BYTES
-      && actualCpus === EXPECTED_CPUS
-      && actual.ca_mount_read_only
-      && actual.node_extra_ca_certs === EXPECTED_SUPABASE_CA_PATH,
+      && actualCpus === EXPECTED_CPUS,
     actual: {
       ...actual,
       mem_limit_bytes: actualMemoryBytes?.toString() ?? null,
@@ -84,7 +70,7 @@ if (isDirectExecution()) {
   const result = validateRenderedCompose(rendered, expectedImageRef);
   if (!result.ok) {
     console.error('The production Compose rendering did not match the immutable image and bounded runtime contract.');
-    console.error(`Actual services.app values: image=${JSON.stringify(result.actual.image)} mem_limit=${JSON.stringify(result.actual.mem_limit)} mem_limit_bytes=${result.actual.mem_limit_bytes ?? 'invalid'} cpus=${JSON.stringify(result.actual.cpus)} ca_mount_read_only=${result.actual.ca_mount_read_only} NODE_EXTRA_CA_CERTS=${JSON.stringify(result.actual.node_extra_ca_certs)}.`);
+    console.error(`Actual services.app values: image=${JSON.stringify(result.actual.image)} mem_limit=${JSON.stringify(result.actual.mem_limit)} mem_limit_bytes=${result.actual.mem_limit_bytes ?? 'invalid'} cpus=${JSON.stringify(result.actual.cpus)}.`);
     console.error(`Expected: image=${JSON.stringify(expectedImageRef)} mem_limit_bytes=${EXPECTED_MEMORY_LIMIT_BYTES} cpus=${EXPECTED_CPUS}.`);
     process.exit(78);
   }

@@ -5,7 +5,7 @@ import { useEffect, useState, type ComponentType } from 'react';
 import { scheduleIdleTask } from '@/lib/idle-scheduler';
 
 type DeferredComponents = {
-  SupabaseSyncBridge: ComponentType | null;
+  NeonSyncBridge: ComponentType | null;
   RegisterPWA: ComponentType | null;
   SentryConsentBridge: ComponentType | null;
   PostHogConsentBridge: ComponentType | null;
@@ -32,7 +32,7 @@ export function IdleClientServices() {
       const hasPostHog = process.env.NEXT_PUBLIC_POSTHOG_ENABLED === 'true'
         && Boolean(process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN);
       void Promise.allSettled([
-        process.env.NEXT_PUBLIC_SUPABASE_URL ? import('@/components/SupabaseSyncBridge') : Promise.resolve(null),
+        process.env.NEXT_PUBLIC_NEON_AUTH_URL ? import('@/components/NeonSyncBridge') : Promise.resolve(null),
         import('@/components/pwa/RegisterPWA'),
         process.env.NEXT_PUBLIC_SENTRY_DSN ? import('@/components/analytics/SentryConsentBridge') : Promise.resolve(null),
         hasPostHog ? import('@/components/analytics/PostHogConsentBridge') : Promise.resolve(null),
@@ -40,7 +40,7 @@ export function IdleClientServices() {
       ]).then(([sync, pwa, sentry, posthogConsent, posthogIdentity]) => {
         if (!active) return;
         setComponents({
-          SupabaseSyncBridge: fulfilled(sync)?.SupabaseSyncBridge ?? null,
+          NeonSyncBridge: fulfilled(sync)?.NeonSyncBridge ?? null,
           RegisterPWA: fulfilled(pwa)?.RegisterPWA ?? null,
           SentryConsentBridge: fulfilled(sentry)?.SentryConsentBridge ?? null,
           PostHogConsentBridge: fulfilled(posthogConsent)?.PostHogConsentBridge ?? null,
@@ -60,7 +60,7 @@ export function IdleClientServices() {
   if (!components) return null;
 
   const {
-    SupabaseSyncBridge,
+    NeonSyncBridge,
     RegisterPWA,
     SentryConsentBridge,
     PostHogConsentBridge,
@@ -69,7 +69,7 @@ export function IdleClientServices() {
 
   return (
     <>
-      {SupabaseSyncBridge && <SupabaseSyncBridge />}
+      {NeonSyncBridge && <NeonSyncBridge />}
       {RegisterPWA && <RegisterPWA />}
       {SentryConsentBridge && <SentryConsentBridge />}
       {PostHogConsentBridge && <PostHogConsentBridge />}

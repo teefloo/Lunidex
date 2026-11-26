@@ -6,7 +6,7 @@ import { useMounted } from '@/hooks/useMounted';
 import type { MouseEventHandler } from 'react';
 import { resolveCollectionEntry } from '@/lib/tcg-collection-entry';
 import { usePrimeDexStore } from '@/store/primedex';
-import { useAuth } from '@/lib/supabase/AuthProvider';
+import { useAuth } from '@/lib/neon/AuthProvider';
 import { countPhysicalTCGCards } from '@/lib/tcg-collections';
 
 interface HomeCollectionEntryProps {

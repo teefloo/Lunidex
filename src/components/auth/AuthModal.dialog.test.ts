@@ -11,7 +11,7 @@ const auth = vi.hoisted(() => ({
   resetPassword: vi.fn().mockResolvedValue({ error: null }),
 }));
 
-vi.mock('@/lib/supabase/AuthProvider', () => ({ useAuth: () => auth }));
+vi.mock('@/lib/neon/AuthProvider', () => ({ useAuth: () => auth }));
 vi.mock('@/lib/i18n', () => ({
   useTranslation: () => ({ t: (_key: string, options?: { defaultValue?: string }) => options?.defaultValue ?? _key }),
 }));

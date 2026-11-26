@@ -3,15 +3,15 @@ import { NextRequest } from 'next/server';
 
 const mocks = vi.hoisted(() => ({
   sql: vi.fn(),
-  getSupabaseDatabaseClient: vi.fn(),
-  getSupabaseUserFromRequest: vi.fn(),
-  ensureSupabaseUser: vi.fn(),
+  getNeonClient: vi.fn(),
+  getNeonUserFromRequest: vi.fn(),
+  ensureNeonUser: vi.fn(),
   reportSentryException: vi.fn(),
 }));
 
-vi.mock('@/lib/supabase/database', () => ({ getSupabaseDatabaseClient: mocks.getSupabaseDatabaseClient }));
-vi.mock('@/lib/supabase/auth', () => ({ getSupabaseUserFromRequest: mocks.getSupabaseUserFromRequest, ensureSupabaseUser: mocks.ensureSupabaseUser }));
-vi.mock('@/lib/supabase/errors', () => ({ isInactiveAccountError: () => false }));
+vi.mock('@/lib/neon/server', () => ({ getNeonClient: mocks.getNeonClient }));
+vi.mock('@/lib/neon/auth', () => ({ getNeonUserFromRequest: mocks.getNeonUserFromRequest, ensureNeonUser: mocks.ensureNeonUser }));
+vi.mock('@/lib/neon/errors', () => ({ isInactiveAccountError: () => false }));
 vi.mock('@/lib/rate-limit', () => ({ ipKey: () => 'test', rateLimit: () => true }));
 vi.mock('@/lib/sentry-observability', () => ({ reportSentryException: mocks.reportSentryException }));
 vi.mock('@/lib/api/observed-route', () => ({ withObservedRouteHandler: (_route: string, _feature: string, handler: unknown) => handler }));
@@ -21,12 +21,12 @@ import { GET } from './route';
 describe('quiz leaderboard API', () => {
   beforeEach(() => {
     vi.resetAllMocks();
-    mocks.getSupabaseDatabaseClient.mockReturnValue(mocks.sql);
-    mocks.getSupabaseUserFromRequest.mockResolvedValue(null);
+    mocks.getNeonClient.mockReturnValue(mocks.sql);
+    mocks.getNeonUserFromRequest.mockResolvedValue(null);
   });
 
   it('returns unavailable and reports the exception when the ranking query fails', async () => {
-    const error = new Error('Supabase database is over quota');
+    const error = new Error('Neon database is over quota');
     mocks.sql.mockRejectedValue(error);
 
     const response = await GET(new NextRequest('https://lunidex.test/api/quiz/leaderboard?period=day'));

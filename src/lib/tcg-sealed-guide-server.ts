@@ -1,4 +1,4 @@
-import type { SupabaseSql } from '@/lib/supabase/database';
+import type { NeonSql } from '@/lib/neon/server';
 import {
   buildGuideIndex,
   buildProductMovers,
@@ -64,7 +64,7 @@ function mapObservation(row: ObservationRow): GuideObservation {
 }
 
 /** Bounded public read path; private ledger and portfolio tables are never consulted. */
-export async function getPublicSealedGuide(sql: SupabaseSql, asOf: string) {
+export async function getPublicSealedGuide(sql: NeonSql, asOf: string) {
   const settingRows = await sql.query(`
     select value from public.tcg_sealed_settings where key = 'sealed_guide_basket_launch_v1' limit 1
   `, []) as unknown as Array<{ value: unknown }>;

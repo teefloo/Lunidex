@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import { Eye, EyeOff, Loader2, ShieldCheck, UserPlus } from 'lucide-react';
 import { toast } from '@/lib/toast';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useAuth } from '@/lib/supabase/AuthProvider';
+import { useAuth } from '@/lib/neon/AuthProvider';
 import { useTranslation } from '@/lib/i18n';
 import { getFriendPrivacySettings, updateFriendPrivacySettings } from '@/lib/friends';
 import type { FriendPrivacySettings } from '@/types/friends';

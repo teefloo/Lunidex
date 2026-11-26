@@ -1,8 +1,8 @@
 import { createHash, randomBytes, randomUUID, timingSafeEqual } from 'node:crypto';
 import { NextResponse, type NextRequest } from 'next/server';
-import { getSupabaseDatabaseClient, type SupabaseSql } from '@/lib/supabase/database';
-import { getSupabaseUserFromRequest, ensureSupabaseUser } from '@/lib/supabase/auth';
-import { isInactiveAccountError } from '@/lib/supabase/errors';
+import { getNeonClient, type NeonSql } from '@/lib/neon/server';
+import { getNeonUserFromRequest, ensureNeonUser } from '@/lib/neon/auth';
+import { isInactiveAccountError } from '@/lib/neon/errors';
 import { ipKey, rateLimit } from '@/lib/rate-limit';
 import { readJsonBody } from '@/lib/api/route-helpers';
 import { reportSentryException } from '@/lib/sentry-observability';
@@ -12,7 +12,7 @@ export type ApiOperation = 'read' | 'write';
 export type ApiCostClass = 'cards' | 'sealed' | undefined;
 
 export interface PublicApiContext {
-  sql: SupabaseSql;
+  sql: NeonSql;
   userId: string;
   keyId: string;
   permission: ApiPermission;
@@ -111,7 +111,7 @@ export async function authenticateApiKey(
   request: NextRequest,
   operation: ApiOperation,
 ): Promise<PublicApiContext | NextResponse> {
-  const sql = getSupabaseDatabaseClient();
+  const sql = getNeonClient();
   if (!sql) return apiError(503, 'API_UNAVAILABLE', 'The API is temporarily unavailable.');
 
   const authorization = request.headers.get('authorization')?.trim() ?? '';
@@ -385,12 +385,12 @@ export async function runPublicApi(
 }
 
 export async function getUserSessionContext(request: NextRequest): Promise<PublicApiContext | NextResponse> {
-  const sql = getSupabaseDatabaseClient();
+  const sql = getNeonClient();
   if (!sql) return apiError(503, 'API_UNAVAILABLE', 'The account service is temporarily unavailable.');
-  const user = await getSupabaseUserFromRequest(request);
+  const user = await getNeonUserFromRequest(request);
   if (!user) return apiError(401, 'AUTHENTICATION_REQUIRED', 'Sign in to manage API keys.');
   try {
-    if (await ensureSupabaseUser(sql, user) === false) {
+    if (await ensureNeonUser(sql, user) === false) {
       return apiError(410, 'ACCOUNT_UNAVAILABLE', 'This account is being deleted.');
     }
   } catch (error) {

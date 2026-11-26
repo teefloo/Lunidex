@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import HomeFaqSection from '@/components/layout/HomeFaqSection';
-import { isSupabaseConfiguredServer } from '@/lib/supabase/database';
-import { getServerAuthUser } from '@/lib/supabase/server-auth';
+import { isNeonConfiguredServer } from '@/lib/neon/server';
+import { getServerAuthUser } from '@/lib/neon/auth';
 import { getServerLanguage, getServerT, getServerTForLanguage } from '@/lib/server-i18n';
 import type { SupportedLanguage } from '@/lib/languages';
 import { localeHref } from '@/lib/seo';
@@ -29,10 +29,13 @@ export async function HomeArchiveExperience({
   const language = requestedLanguage ?? await getServerLanguage();
   const t = requestedLanguage ? getServerTForLanguage(language) : await getServerT();
   const initialSignedIn = requestedInitialSignedIn ?? Boolean(await getServerAuthUser());
-  const collectionServiceAvailable = Boolean(
-    requestedServiceAvailable
-      ?? (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY),
-  ) && isSupabaseConfiguredServer;
+  const collectionServiceAvailable = requestedServiceAvailable ?? Boolean(
+    process.env.NEXT_PUBLIC_NEON_AUTH_URL
+      && process.env.NEON_AUTH_BASE_URL
+      && process.env.NEON_AUTH_JWKS_URL
+      && process.env.NEON_AUTH_COOKIE_SECRET
+      && isNeonConfiguredServer,
+  );
   return (
     <div className="lunidex-home">
       <HomeHeader language={language} initialSignedIn={initialSignedIn} serviceAvailable={collectionServiceAvailable} />

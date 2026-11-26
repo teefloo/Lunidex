@@ -28,7 +28,7 @@ import {
 import { isIndexableTCGSetCardList } from '@/lib/tcg-seo';
 import type { TCGSet } from '@/types/tcg';
 import type { SupportedLanguage } from '@/lib/languages';
-import { getSupabaseDatabaseClient } from '@/lib/supabase/database';
+import { getNeonClient } from '@/lib/neon/server';
 import { SEALED_PRODUCT_CATEGORY_IDS } from '@primedex/core/types/sealed';
 
 const TCG_CARD_LIST_URL = 'https://api.tcgdex.net/v2/en/cards';
@@ -223,7 +223,7 @@ export async function getSitemapEntries(
       entries = buildTcgCardSitemapEntries(await getCompleteTcgCardIdsCached(), language);
       break;
     case 'sealed-products': {
-      const sql = getSupabaseDatabaseClient();
+      const sql = getNeonClient();
       if (!sql) throw new Error('Public sealed product sitemap requires the catalogue data service.');
       const rows = await sql.query(`
         select cardmarket_product_id

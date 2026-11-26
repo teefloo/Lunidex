@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
-import { getSupabaseDatabaseClient } from '@/lib/supabase/database';
+import { getNeonClient } from '@/lib/neon/server';
 import { synchronizeSealedCardmarket } from '@/lib/tcg-sealed-server';
 
 export const runtime = 'nodejs';
@@ -10,7 +10,7 @@ async function runSync(request: NextRequest): Promise<NextResponse> {
   const secret = process.env.LUNIDEX_CRON_SECRET ?? process.env.CRON_SECRET;
   if (!secret) return NextResponse.json({ error: 'Sealed sync unavailable.' }, { status: 503, headers: NO_STORE_HEADERS });
   if (request.headers.get('authorization') !== `Bearer ${secret}`) return NextResponse.json({ error: 'Unauthorized.' }, { status: 401, headers: NO_STORE_HEADERS });
-  const sql = getSupabaseDatabaseClient();
+  const sql = getNeonClient();
   if (!sql) return NextResponse.json({ error: 'Application database unavailable.' }, { status: 503, headers: NO_STORE_HEADERS });
   try {
     return NextResponse.json({ ok: true, sync: await synchronizeSealedCardmarket(sql) }, { headers: NO_STORE_HEADERS });

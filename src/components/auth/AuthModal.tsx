@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useAuth } from '@/lib/supabase/AuthProvider';
+import { useAuth } from '@/lib/neon/AuthProvider';
 import { useTranslation } from '@/lib/i18n';
 import LunidexLogo from '@/components/ui/LunidexLogo';
 import { POSTHOG_EVENTS } from '@/lib/posthog-events';
@@ -33,8 +33,7 @@ export default function AuthModal({
 }) {
   const { t } = useTranslation();
   const { signIn, signUp, resetPassword, user } = useAuth();
-  const registrationEnabled = process.env.NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED === 'true';
-  const [mode, setMode] = useState<Mode>(() => registrationEnabled ? initialMode : 'signin');
+  const [mode, setMode] = useState<Mode>(initialMode);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -271,26 +270,24 @@ export default function AuthModal({
           </p>
         )}
 
-        {registrationEnabled && (
-          <p className="text-center text-xs text-foreground/60">
+        <p className="text-center text-xs text-foreground/60">
+          {mode === 'signin'
+            ? tt('auth.no_account', "Don't have an account?")
+            : tt('auth.have_account', 'Already have an account?')}{' '}
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => {
+              setMode(mode === 'signin' ? 'signup' : 'signin');
+              setErrorMessage(null);
+            }}
+            className="font-bold text-primary hover:underline"
+          >
             {mode === 'signin'
-              ? tt('auth.no_account', "Don't have an account?")
-              : tt('auth.have_account', 'Already have an account?')}{' '}
-            <button
-              type="button"
-              disabled={busy}
-              onClick={() => {
-                setMode(mode === 'signin' ? 'signup' : 'signin');
-                setErrorMessage(null);
-              }}
-              className="font-bold text-primary hover:underline"
-            >
-              {mode === 'signin'
-                ? tt('auth.signup_cta', 'Create account')
-                : tt('auth.signin_cta', 'Sign in')}
-            </button>
-          </p>
-        )}
+              ? tt('auth.signup_cta', 'Create account')
+              : tt('auth.signin_cta', 'Sign in')}
+          </button>
+        </p>
       </DialogContent>
     </Dialog>
   );

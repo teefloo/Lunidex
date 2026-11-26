@@ -4,8 +4,8 @@ import { useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Wifi, Plus, LogIn } from 'lucide-react';
 import BattleRoom from '@/components/battle/BattleRoom';
-import { getSupabaseAccessToken } from '@/lib/supabase/client';
-import { useAuth } from '@/lib/supabase/AuthProvider';
+import { getNeonAccessToken } from '@/lib/neon/client';
+import { useAuth } from '@/lib/neon/AuthProvider';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
 import { RecoverableError } from '@/components/ui/RecoverableError';
@@ -28,7 +28,7 @@ export default function BattleRoomSection() {
     setCreating(true);
     setError(null);
     try {
-      const token = await getSupabaseAccessToken();
+      const token = await getNeonAccessToken();
       if (!token) throw Object.assign(new Error('Session expired'), { status: 401 });
 
       const res = await fetch('/api/battle/room', {
@@ -76,7 +76,7 @@ export default function BattleRoomSection() {
     return (
       <div className="rounded-sm border border-border/60 bg-card p-6">
         <p className="font-mono text-xs text-muted-foreground">
-          Sign in with Supabase Auth to create or join a battle room.
+          Sign in with Neon Auth to create or join a battle room.
         </p>
       </div>
     );
@@ -91,7 +91,7 @@ export default function BattleRoomSection() {
       <div className="flex items-center gap-2">
         <Wifi className="h-4 w-4 text-muted-foreground" />
         <p className="font-mono text-xs text-muted-foreground">
-          Create or join a battle room to play against a friend with Supabase synchronization
+          Create or join a battle room to play against a friend with Neon synchronization
         </p>
       </div>
 

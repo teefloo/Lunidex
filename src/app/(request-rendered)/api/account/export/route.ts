@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { ensureSupabaseUser, getSupabaseUserFromRequest } from '@/lib/supabase/auth';
-import { getSupabaseDatabaseClient } from '@/lib/supabase/database';
+import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
+import { getNeonClient } from '@/lib/neon/server';
 import { rateLimit } from '@/lib/rate-limit';
 import { normalizeUserStateData } from '@/lib/tcg-owned-cards';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
@@ -14,10 +14,10 @@ function unavailable(): NextResponse {
 }
 
 async function getAccountExport(request: NextRequest): Promise<NextResponse> {
-  const sql = getSupabaseDatabaseClient();
+  const sql = getNeonClient();
   if (!sql) return unavailable();
 
-  const user = await getSupabaseUserFromRequest(request);
+  const user = await getNeonUserFromRequest(request);
   if (!user) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
 
   // The export fans out to eleven parallel queries; keep it a rare operation.
@@ -28,7 +28,7 @@ async function getAccountExport(request: NextRequest): Promise<NextResponse> {
     );
   }
 
-  if (await ensureSupabaseUser(sql, user) === false) {
+  if (await ensureNeonUser(sql, user) === false) {
     return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
   }
 

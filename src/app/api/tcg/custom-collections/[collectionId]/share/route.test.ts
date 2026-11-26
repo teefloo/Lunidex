@@ -2,16 +2,16 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { NextRequest } from 'next/server';
 
 const mocks = vi.hoisted(() => ({
-  getSupabaseDatabaseClient: vi.fn(),
-  getSupabaseUserFromRequest: vi.fn(),
-  ensureSupabaseUser: vi.fn(),
+  getNeonClient: vi.fn(),
+  getNeonUserFromRequest: vi.fn(),
+  ensureNeonUser: vi.fn(),
   sql: vi.fn(),
 }));
 
-vi.mock('@/lib/supabase/database', () => ({ getSupabaseDatabaseClient: mocks.getSupabaseDatabaseClient }));
-vi.mock('@/lib/supabase/auth', () => ({
-  getSupabaseUserFromRequest: mocks.getSupabaseUserFromRequest,
-  ensureSupabaseUser: mocks.ensureSupabaseUser,
+vi.mock('@/lib/neon/server', () => ({ getNeonClient: mocks.getNeonClient }));
+vi.mock('@/lib/neon/auth', () => ({
+  getNeonUserFromRequest: mocks.getNeonUserFromRequest,
+  ensureNeonUser: mocks.ensureNeonUser,
 }));
 vi.mock('@/lib/api/observed-route', () => ({
   withObservedRouteHandler: (_route: string, _feature: string, handler: (...args: never[]) => unknown) => handler,
@@ -30,9 +30,9 @@ describe('owner TCG collection share controls', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.sql.mockResolvedValue([]);
-    mocks.getSupabaseDatabaseClient.mockReturnValue(mocks.sql);
-    mocks.getSupabaseUserFromRequest.mockResolvedValue({ id: userId, email: 'owner@example.com', user_metadata: {} });
-    mocks.ensureSupabaseUser.mockResolvedValue(true);
+    mocks.getNeonClient.mockReturnValue(mocks.sql);
+    mocks.getNeonUserFromRequest.mockResolvedValue({ id: userId, email: 'owner@example.com', user_metadata: {} });
+    mocks.ensureNeonUser.mockResolvedValue(true);
   });
 
   it('deletes the owner-scoped share immediately and returns no-store settings', async () => {
@@ -53,7 +53,7 @@ describe('owner TCG collection share controls', () => {
   });
 
   it('does not write a share revocation for an unauthenticated request', async () => {
-    mocks.getSupabaseUserFromRequest.mockResolvedValue(null);
+    mocks.getNeonUserFromRequest.mockResolvedValue(null);
     const request = new NextRequest(`https://lunidex.app/api/tcg/custom-collections/${collectionId}/share`, {
       method: 'DELETE',
       headers: { origin: 'https://lunidex.app' },

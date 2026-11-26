@@ -74,7 +74,7 @@ describe('consented TCG milestones', () => {
     await m.trackTcgPersistedValue({ set_id: 'sv01', tcg_language: 'fr' }, 'account-a');
     await m.trackTcgPersistedValue({ set_id: 'sv01', tcg_language: 'fr' }, 'account-a');
     expect(client.capturePostHogEvent.mock.calls.filter(([event]) => event === 'tcg_activation_completed')).toHaveLength(1);
-    expect(client.capturePostHogEvent).toHaveBeenCalledWith('tcg_activation_completed', expect.objectContaining({ source: 'campaign', campaign: 'autumn', activation_method: 'first_persisted_card', persistence: 'supabase', authenticated: true }));
+    expect(client.capturePostHogEvent).toHaveBeenCalledWith('tcg_activation_completed', expect.objectContaining({ source: 'campaign', campaign: 'autumn', activation_method: 'first_persisted_card', persistence: 'neon', authenticated: true }));
     await m.trackReturnAfterActivation('album_open');
     vi.advanceTimersByTime(31 * 60_000);
     await m.trackReturnAfterActivation('album_open'); await m.trackReturnAfterActivation('album_open');
@@ -129,7 +129,7 @@ describe('consented TCG milestones', () => {
     expect(m.consumeProductOauth()).toBeUndefined();
   });
 
-  it('preserves independent Supabase aggregate counters when PostHog is disabled', async () => {
+  it('preserves independent Neon aggregate counters when PostHog is disabled', async () => {
     const m = await import('./product-measurement'); m.setProductConsent(consent);
     client.capturePostHogEvent.mockReturnValue(false);
     await m.trackProductEvent('tcg_start_opened'); await m.trackProductEvent('tcg_start_opened');

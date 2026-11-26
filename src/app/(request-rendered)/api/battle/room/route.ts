@@ -4,9 +4,9 @@
  * POST /api/battle/room  — create a new battle room
  * GET  /api/battle/room?id=<uuid>  — fetch room state
  *
- * ─── Supabase SQL schema ──────────────────────────────────────────────────────
+ * ─── Neon SQL schema ──────────────────────────────────────────────────────
  *
- * The table is created by `supabase/migrations/0001_lunidex_app.sql`:
+ * The table is created by `neon/migrations/0001_lunidex_app.sql`:
  *
  * CREATE TABLE IF NOT EXISTS public.battle_rooms (
  *   id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -19,7 +19,7 @@
  *   created_at   TIMESTAMPTZ DEFAULT now()
  * );
  *
- * Authorization is enforced in this route after Supabase Auth verifies the
+ * Authorization is enforced in this route after Neon Auth verifies the
  * bearer token. An optional cleanup job can be scheduled by the deployment.
  *
  * ──────────────────────────────────────────────────────────────────────────
@@ -28,9 +28,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readJsonBody, requireTrustedMutationOrigin } from '@/lib/api/route-helpers';
 import { rateLimit } from '@/lib/rate-limit';
-import { ensureSupabaseUser, getSupabaseUserFromRequest } from '@/lib/supabase/auth';
-import { isInactiveAccountError } from '@/lib/supabase/errors';
-import { getSupabaseDatabaseClient } from '@/lib/supabase/database';
+import { ensureNeonUser, getNeonUserFromRequest } from '@/lib/neon/auth';
+import { isInactiveAccountError } from '@/lib/neon/errors';
+import { getNeonClient } from '@/lib/neon/server';
 import { withObservedRouteHandler } from '@/lib/api/observed-route';
 
 const MAX_TEAM_SIZE = 6;
@@ -91,16 +91,16 @@ async function postBattleRoom(req: NextRequest) {
   const originError = requireTrustedMutationOrigin(req);
   if (originError) return originError;
 
-  const sql = getSupabaseDatabaseClient();
+  const sql = getNeonClient();
   if (!sql) return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
-  const user = await getSupabaseUserFromRequest(req);
+  const user = await getNeonUserFromRequest(req);
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
   if (!rateLimit(`battle-room-create:${user.id}`, 10)) {
     return NextResponse.json({ error: 'Too many room creations' }, { status: 429 });
   }
-  if (await ensureSupabaseUser(sql, user) === false) {
+  if (await ensureNeonUser(sql, user) === false) {
     return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
   }
 
@@ -153,13 +153,13 @@ async function getBattleRoom(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid room id' }, { status: 400 });
   }
 
-  const sql = getSupabaseDatabaseClient();
+  const sql = getNeonClient();
   if (!sql) return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
-  const user = await getSupabaseUserFromRequest(req);
+  const user = await getNeonUserFromRequest(req);
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  if (await ensureSupabaseUser(sql, user) === false) {
+  if (await ensureNeonUser(sql, user) === false) {
     return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
   }
 
@@ -186,11 +186,11 @@ async function patchBattleRoom(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid room id' }, { status: 400 });
   }
 
-  const sql = getSupabaseDatabaseClient();
+  const sql = getNeonClient();
   if (!sql) return NextResponse.json({ error: 'Application database unavailable' }, { status: 503 });
-  const user = await getSupabaseUserFromRequest(req);
+  const user = await getNeonUserFromRequest(req);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (await ensureSupabaseUser(sql, user) === false) {
+  if (await ensureNeonUser(sql, user) === false) {
     return NextResponse.json({ error: 'Account deletion is in progress' }, { status: 410, headers: { 'Cache-Control': 'private, no-store' } });
   }
 

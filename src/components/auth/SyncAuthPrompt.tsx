@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { toast } from '@/lib/toast';
 import { useTranslation } from '@/lib/i18n';
 import { getSyncAccessStatus, onSyncAccessRequired, retrySyncAccess } from '@/store/sync-access';
-import { useAuth } from '@/lib/supabase/AuthProvider';
+import { useAuth } from '@/lib/neon/AuthProvider';
 import { AuthModalBoundary } from './AuthModalBoundary';
 
 const AuthModal = dynamic(() => import('./AuthModal'), { ssr: false });

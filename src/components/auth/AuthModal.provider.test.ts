@@ -6,18 +6,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
   cachedClient: null as object | null,
+  loadClient: vi.fn(),
   signIn: vi.fn(),
   signUp: vi.fn(),
   resetPassword: vi.fn(),
-  verifyOtp: vi.fn(),
-  updateUser: vi.fn(),
-  getSession: vi.fn(),
-  getUser: vi.fn(),
 }));
 
-vi.mock('@/lib/supabase/client', () => ({
-  isSupabaseAuthConfigured: true,
-  getSupabaseAuthClient: () => mocks.cachedClient,
+vi.mock('@/lib/neon/client', () => ({
+  isNeonAuthConfigured: true,
+  getNeonAuthClient: () => mocks.cachedClient,
+  loadNeonAuthClient: mocks.loadClient,
 }));
 vi.mock('@/lib/i18n', () => ({
   useTranslation: () => ({ t: (key: string, options?: { defaultValue?: string }) => options?.defaultValue ?? key }),
@@ -32,7 +30,7 @@ vi.mock('@/components/ui/input', () => ({
   Input: (props: ComponentProps<'input'>) => createElement('input', props),
 }));
 
-import { AuthProvider, useAuth } from '@/lib/supabase/AuthProvider';
+import { AuthProvider } from '@/lib/neon/AuthProvider';
 import AuthModal from './AuthModal';
 
 function ModalOwner({ initialMode }: { initialMode: 'signin' | 'signup' }) {
@@ -48,44 +46,23 @@ function fillAutofillField(input: HTMLInputElement, value: string) {
   input.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
-describe('AuthModal with Supabase SSR Auth', () => {
+describe('AuthModal during lazy SDK loading', () => {
   let container: HTMLDivElement;
   let root: Root;
 
   beforeEach(() => {
     (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
-    vi.stubEnv('NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED', 'false');
-    mocks.getSession.mockResolvedValue({ data: { session: null }, error: null });
-    mocks.getUser.mockResolvedValue({ data: { user: { id: 'qa-user', email: 'qa@lunidex.invalid', user_metadata: { name: 'QA trainer' } } }, error: null });
-    mocks.signIn.mockResolvedValue({
-      data: { session: { access_token: 'synthetic-token', user: { id: 'qa-user', email: 'qa@lunidex.invalid' } } },
-      error: null,
-    });
+    mocks.cachedClient = null;
     const client = {
-      auth: {
-        getSession: mocks.getSession,
-        getUser: mocks.getUser,
-        onAuthStateChange: () => ({ data: { subscription: { unsubscribe: vi.fn() } } }),
-        signInWithPassword: mocks.signIn,
-        signUp: mocks.signUp,
-        resetPasswordForEmail: mocks.resetPassword,
-        signInWithOAuth: vi.fn().mockResolvedValue({ error: null }),
-        signOut: vi.fn().mockResolvedValue({ error: null }),
-        verifyOtp: mocks.verifyOtp,
-        exchangeCodeForSession: vi.fn().mockResolvedValue({ error: null }),
-        updateUser: mocks.updateUser,
-      },
+      signIn: { email: mocks.signIn },
+      signUp: { email: mocks.signUp },
+      requestPasswordReset: mocks.resetPassword,
     };
-    mocks.verifyOtp.mockResolvedValue({
-      data: {
-        user: { id: 'recovery-user', email: 'qa@lunidex.invalid', user_metadata: {} },
-        session: { user: { id: 'recovery-user' } },
-      },
-      error: null,
+    mocks.loadClient.mockImplementation(async () => {
+      mocks.cachedClient = client;
+      return client;
     });
-    mocks.updateUser.mockResolvedValue({ error: null });
-    mocks.cachedClient = client;
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => ({ allowed: true }) }));
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => null }));
     container = document.createElement('div');
     document.body.appendChild(container);
     root = createRoot(container);
@@ -95,12 +72,10 @@ describe('AuthModal with Supabase SSR Auth', () => {
     act(() => root.unmount());
     container.remove();
     vi.unstubAllGlobals();
-    vi.unstubAllEnvs();
     vi.resetAllMocks();
   });
 
-  it.each(['signin', 'signup'] as const)('keeps the %s form mounted until the first Auth request finishes', async (initialMode) => {
-    if (initialMode === 'signup') vi.stubEnv('NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED', 'true');
+  it.each(['signin', 'signup'] as const)('keeps the %s form mounted until the first SDK request finishes', async (initialMode) => {
     let finishRequest!: (result: { error: { message: string } }) => void;
     const request = new Promise<{ error: { message: string } }>((resolve) => { finishRequest = resolve; });
     const authAction = initialMode === 'signin' ? mocks.signIn : mocks.signUp;
@@ -123,7 +98,7 @@ describe('AuthModal with Supabase SSR Auth', () => {
       dialog?.querySelector('form')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     });
 
-    // Completing the Auth request must not remount the owner and reset its form state.
+    // Loading the SDK must not remount the owner and reset its open/form state.
     const dialogWhilePending = document.querySelector('[role="dialog"]');
     await act(async () => finishRequest({ error: { message: 'Synthetic test rejection' } }));
     expect(dialogWhilePending).toBe(dialog);
@@ -136,7 +111,7 @@ describe('AuthModal with Supabase SSR Auth', () => {
     }));
   });
 
-  it('keeps the form open after requesting a password reset', async () => {
+  it('keeps the form open after the first password reset loads the SDK', async () => {
     mocks.resetPassword.mockResolvedValue({ error: null });
     await act(async () => root.render(createElement(AuthProvider, null, createElement(ModalOwner, { initialMode: 'signin' }))));
     await act(async () => container.querySelector('button')?.click());
@@ -145,19 +120,22 @@ describe('AuthModal with Supabase SSR Auth', () => {
     await act(async () => fillAutofillField(email!, 'qa@lunidex.invalid'));
     const reset = Array.from(dialog?.querySelectorAll('button') ?? []).find(button => button.textContent === 'Forgot password?');
     await act(async () => reset?.click());
-    expect(mocks.resetPassword).toHaveBeenCalledWith('qa@lunidex.invalid', expect.objectContaining({
-      redirectTo: expect.stringContaining('/auth/callback?next='),
-    }));
+    expect(mocks.resetPassword).toHaveBeenCalledWith(expect.objectContaining({ email: 'qa@lunidex.invalid' }));
     expect(document.querySelector('[role="dialog"]')).toBe(dialog);
     expect(email?.value).toBe('qa@lunidex.invalid');
   });
 
   it.each(['signin', 'signup'] as const)('still closes after a successful first %s request', async (initialMode) => {
-    if (initialMode === 'signup') vi.stubEnv('NEXT_PUBLIC_AUTH_REGISTRATION_ENABLED', 'true');
     const authAction = initialMode === 'signin' ? mocks.signIn : mocks.signUp;
-    authAction.mockResolvedValue(initialMode === 'signin'
-      ? { data: { session: { access_token: 'synthetic-token', user: { id: 'qa-user', email: 'qa@lunidex.invalid' } } }, error: null }
-      : { error: null });
+    authAction.mockResolvedValue({ error: null });
+    if (initialMode === 'signin') {
+      vi.stubGlobal('fetch', vi.fn()
+        .mockResolvedValueOnce({ ok: true, status: 200, json: async () => null })
+        .mockResolvedValue({ ok: true, status: 200, json: async () => ({
+          session: { expiresAt: '2027-01-01T00:00:00.000Z' },
+          user: { id: 'qa-user', email: 'qa@lunidex.invalid', name: 'QA trainer' },
+        }) }));
+    }
     await act(async () => root.render(createElement(AuthProvider, null, createElement(ModalOwner, { initialMode }))));
     await act(async () => container.querySelector('button')?.click());
     const dialog = document.querySelector('[role="dialog"]');
@@ -174,11 +152,28 @@ describe('AuthModal with Supabase SSR Auth', () => {
     expect(document.querySelector('[role="dialog"]')).toBeNull();
   });
 
-  it('shows an unavailable-service message for Supabase Auth outages', async () => {
+  it('keeps the form open if the SDK cannot be loaded', async () => {
+    mocks.loadClient.mockResolvedValue(null);
+    await act(async () => root.render(createElement(AuthProvider, null, createElement(ModalOwner, { initialMode: 'signin' }))));
+    await act(async () => container.querySelector('button')?.click());
+    const dialog = document.querySelector('[role="dialog"]');
+    await act(async () => {
+      fillAutofillField(dialog!.querySelector<HTMLInputElement>('input[type="email"]')!, 'qa@lunidex.invalid');
+      fillAutofillField(dialog!.querySelector<HTMLInputElement>('input[type="password"]')!, 'synthetic-only-password');
+    });
+    await act(async () => {
+      dialog?.querySelector('form')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    });
+    expect(document.querySelector('[role="dialog"]')).toBe(dialog);
+    expect(dialog?.querySelector('[role="alert"]')?.textContent).toBe('The service is temporarily unavailable. Please try again.');
+  });
+
+  it('shows an unavailable-service message for Neon quota errors', async () => {
     mocks.signIn.mockResolvedValue({
       error: {
-        message: 'Auth service is unavailable',
-        status: 503,
+        message: 'Your account or project has exceeded the quota.',
+        code: 'GENERIC_QUOTA_EXCEEDED',
+        cause: { code: '53000' },
       },
     });
     await act(async () => root.render(createElement(AuthProvider, null, createElement(ModalOwner, { initialMode: 'signin' }))));
@@ -195,76 +190,5 @@ describe('AuthModal with Supabase SSR Auth', () => {
 
     expect(dialog?.querySelector('[role="alert"]')?.textContent)
       .toBe('The service is temporarily unavailable. Please try again.');
-  });
-
-  it('keeps a verified recovery session available when the first password update is rejected', async () => {
-    function ExposeAuthAction() {
-      const updatePassword = useAuth().updatePassword;
-      return createElement('button', {
-        id: 'submit-recovery-password',
-        onClick: () => { void updatePassword('synthetic-new-password', 'hash:opaque-token').then(submitResult); },
-      }, 'Submit recovery password');
-    }
-    const submitResult = vi.fn();
-
-    mocks.updateUser
-      .mockResolvedValueOnce({ error: { name: 'AuthApiError', message: 'Password is too weak.' } })
-      .mockResolvedValueOnce({ error: null });
-    mocks.getUser.mockResolvedValueOnce({
-      data: { user: { id: 'recovery-user', email: 'qa@lunidex.invalid', user_metadata: {} } },
-      error: null,
-    });
-    mocks.getSession.mockResolvedValue({
-      data: { session: { access_token: 'synthetic-recovery-token', user: { id: 'recovery-user', email: 'qa@lunidex.invalid' } } },
-      error: null,
-    });
-
-    await act(async () => root.render(createElement(AuthProvider, null, createElement(ExposeAuthAction))));
-
-    await act(async () => container.querySelector<HTMLButtonElement>('#submit-recovery-password')?.click());
-    expect(submitResult).toHaveBeenLastCalledWith({ error: { name: 'AuthError', message: 'Password is too weak.' } });
-
-    submitResult.mockClear();
-    await act(async () => container.querySelector<HTMLButtonElement>('#submit-recovery-password')?.click());
-    expect(submitResult).toHaveBeenLastCalledWith({ error: null });
-    expect(mocks.verifyOtp).toHaveBeenCalledTimes(1);
-    expect(mocks.verifyOtp).toHaveBeenCalledWith({ token_hash: 'opaque-token', type: 'recovery' });
-    expect(mocks.getUser).toHaveBeenCalledTimes(1);
-    expect(mocks.updateUser).toHaveBeenCalledTimes(2);
-  });
-
-  it('does not reuse a verified recovery link after the active account changes', async () => {
-    const submitResult = vi.fn();
-    function ExposeAuthAction() {
-      const updatePassword = useAuth().updatePassword;
-      return createElement('button', {
-        id: 'submit-recovery-password',
-        onClick: () => { void updatePassword('synthetic-new-password', 'hash:opaque-token').then(submitResult); },
-      }, 'Submit recovery password');
-    }
-
-    mocks.updateUser
-      .mockResolvedValueOnce({ error: { name: 'AuthApiError', message: 'Temporary update failure.' } })
-      .mockResolvedValueOnce({ error: null });
-    mocks.getUser.mockResolvedValueOnce({
-      data: { user: { id: 'different-user', email: 'other@lunidex.invalid', user_metadata: {} } },
-      error: null,
-    });
-    mocks.getSession.mockResolvedValue({
-      data: { session: { access_token: 'synthetic-recovery-token', user: { id: 'recovery-user', email: 'qa@lunidex.invalid' } } },
-      error: null,
-    });
-
-    await act(async () => root.render(createElement(AuthProvider, null, createElement(ExposeAuthAction))));
-    await act(async () => container.querySelector<HTMLButtonElement>('#submit-recovery-password')?.click());
-    submitResult.mockClear();
-    await act(async () => container.querySelector<HTMLButtonElement>('#submit-recovery-password')?.click());
-
-    expect(submitResult).toHaveBeenLastCalledWith({
-      error: { name: 'Error', message: 'The recovery session is missing.' },
-    });
-    expect(mocks.verifyOtp).toHaveBeenCalledTimes(1);
-    expect(mocks.getUser).toHaveBeenCalledTimes(1);
-    expect(mocks.updateUser).toHaveBeenCalledTimes(1);
   });
 });
