@@ -14,6 +14,7 @@ import LunidexLogo from '@/components/ui/LunidexLogo';
 import { capturePostHogEvent } from '@/lib/posthog-client';
 import { POSTHOG_EVENTS } from '@/lib/posthog-events';
 import { classifyRecoverableError } from '@/lib/error-feedback';
+import { captureResetLink, isExpiredResetLinkError } from './reset-token';
 
 function createResetTokenStore() {
   let captured = false;
@@ -35,22 +36,10 @@ function createResetTokenStore() {
       if (captured) return;
 
       const url = new URL(window.location.href);
-      const tokenHash = url.searchParams.get('token_hash');
-      const code = url.searchParams.get('code');
-      const legacyToken = url.searchParams.get('token');
-      const hasRecoverySession = url.searchParams.get('mode') === 'recovery'
-        || url.hash.includes('access_token=');
-      resetToken = tokenHash ? `hash:${tokenHash}`
-        : code ? `code:${code}`
-          : legacyToken ?? (hasRecoverySession ? 'session' : null);
-      const hasCredentialInUrl = Boolean(tokenHash || code || legacyToken
-        || url.hash.includes('access_token=') || url.hash.includes('refresh_token='));
-      if (hasCredentialInUrl) {
-        url.searchParams.delete('token');
-        url.searchParams.delete('token_hash');
-        url.searchParams.delete('code');
-        if (url.hash.includes('access_token=') || url.hash.includes('refresh_token=')) url.hash = '';
-        window.history.replaceState(window.history.state, '', `${url.pathname}${url.search}${url.hash}`);
+      const capture = captureResetLink(url);
+      resetToken = capture.token;
+      if (capture.sanitizedLocation) {
+        window.history.replaceState(window.history.state, '', capture.sanitizedLocation);
       }
 
       captured = true;
@@ -68,6 +57,7 @@ export default function ResetPasswordPage() {
   const [confirmation, setConfirmation] = useState('');
   const [resetEmail, setResetEmail] = useState('');
   const [busy, setBusy] = useState(false);
+  const [resetLinkInvalid, setResetLinkInvalid] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const submitGuard = useRef(false);
   const [resetTokenStore] = useState(createResetTokenStore);
@@ -79,7 +69,7 @@ export default function ResetPasswordPage() {
   const resetToken = typeof resetTokenSnapshot === 'string' && resetTokenSnapshot.length > 0
     ? resetTokenSnapshot
     : null;
-  const hasResetToken = resetToken !== null;
+  const hasResetToken = resetToken !== null && !resetLinkInvalid;
   const hasCheckedResetToken = resetTokenSnapshot !== undefined;
 
   useEffect(() => {
@@ -124,6 +114,12 @@ export default function ResetPasswordPage() {
       const { error } = await updatePassword(password, resetToken);
       if (error) {
         capturePostHogEvent(POSTHOG_EVENTS.authPasswordUpdated, { result: 'error', error_type: error.name });
+        if (isExpiredResetLinkError(error)) {
+          setResetLinkInvalid(true);
+          setPassword('');
+          setConfirmation('');
+          return;
+        }
         setErrorMessage(safeErrorMessage(error));
         return;
       }
